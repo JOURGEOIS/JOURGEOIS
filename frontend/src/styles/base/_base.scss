@@ -1,0 +1,36 @@
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  &:focus {
+    color: $link-focus-color;
+  }
+
+  &:visited {
+    color: $link-visited-color;
+  }
+
+  &:hover {
+    color: $link-hover-color;
+    outline: 0;
+  }
+
+  &:active {
+    color: $link-active-color;
+  }
+}
+
+
+body {
+  color: $main-color;
+  font-weight: $fw-regular;
+  font-family: $ff-main;
+  letter-spacing: $ls-main;
+}
+

@@ -1,0 +1,115 @@
+/* 자주 쓰는 색 */
+$primary-color: $primary500;
+$danger-color: $red800;
+$main-color: $gray350;
+$sub-color: $gray100;
+$unchecked-color: $white300;
+
+$red-color: $red500;
+$emerald-color: $emerald500;
+$blue-color: $blue500;
+$navy-color: $navy600;
+
+$label-color: $sub-color;
+$placeholder-color: $unchecked-color;
+
+// link
+$link-focus-color: $main-color;
+$link-visited-color: $main-color;
+$link-hover-color: $main-color;
+$link-active-color: $main-color;
+
+
+
+/* [접근 금지] 컬러 파레트 */
+// blue
+$blue300: #90EAFC;
+$blue400: #60DEF7;
+$blue500: #11CDF2;
+$blue600: #00B8E5;
+$blue700: #0093C4;
+$blue800: #066A91;
+$blue900: #084F6B;
+$blue600p: #268CAD;
+$blue500p: #3FAFC9;
+$blue400p: #7FC6D6;
+$blue300p: #C5D6E3;
+
+
+// red
+$red300: #FFCFBF;
+$red400: #FFA182;
+$red500: #FF875C;
+$red600: #FF6F36;
+$red700: #FF5E1F;
+$red800: #F24500;
+$red900: #C43100;
+$red600p: #E35F42;
+$red500p: #F5765D;
+$red400p: #FA9E7F;
+$red300p: #FAD3C5;
+
+
+// primary
+$primary300: #CACAFC;
+$primary400: #A2A2FC;
+$primary500: #7979F7;
+$primary600: #5F5FED;
+$primary700: #4545D1;
+$primary800: #3D389C;
+$primary900: #383878;
+$primary600p: #5F5FBA;
+$primary500p: #7979D9;
+$primary400p: #A6A6ED;
+$primary300p: #CFCFE5;
+
+
+// emerald
+$emerald300: #8CEDED;
+$emerald400: #5BE3DE;
+$emerald500: #26D1D1;
+$emerald600: #1CB8B8;
+$emerald700: #10A1A1;
+$emerald800: #107575;
+$emerald900: #155C5C;
+$emerald600p: #1F9399;
+$emerald500p: #41B6B9;
+$emerald400p: #7DCDCF;
+$emerald300p: #BDD9D9;
+
+
+// navy
+$navy400: #C8CFDC;
+$navy500: #98A0B3;
+$navy600: #707991;
+$navy700: #464F69;
+$navy800: #323B54;
+$navy850: #262F4A;
+$navy900: #262F4A;
+
+
+// black
+$black100: #1A1A1A;
+$black200: #111111;
+
+
+//gray
+$gray: #949494;
+$gray100: #777777;
+$gray150: #616161;
+$gray200: #555555;
+$gray250: #3F3F3F;
+$gray300: #323232;
+$gray350: #2A2A2A;
+$gray400: #1F1F1F;
+
+
+//white
+$white: #FFFFFF;
+$white100: #FCFCFC;
+$white150: #F5F5F5;
+$white200: #EFEFEF;
+$white250: #E8E8E8;
+$white300: #DFDFDF;
+$white350: #C8C8C8;
+$white400: #B7B7B7;

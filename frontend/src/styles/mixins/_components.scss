@@ -1,0 +1,74 @@
+@mixin p-component($component-size:md) {
+  @if $component-size == xl {
+    padding: 3em 6em;
+  } @else if $component-size == lg {
+    padding: 2em 4em;
+  } @else if $component-size == md {
+    padding: 1em 2em;
+  } @else if $component-size == sm {
+    padding: 0.5em 1em;
+  } @else if $component-size == xs {
+    padding: 0.25em 0.5em;
+  } @else {
+    padding: 1em 2em;
+  }
+}
+
+@mixin m-component($component-size:md) {
+  @if $component-size == xl {
+    margin: 2em;
+  } @else if $component-size == lg {
+    margin: 1.5em;
+  } @else if $component-size == md {
+    margin: 1em;
+  } @else if $component-size == sm {
+    margin: 0.5em;
+  } @else if $component-size == xs {
+    margin: 0.25em;
+  } @else {
+    margin: 1em;
+  }
+}
+
+
+/* button */
+@mixin btn {
+  @include flex-center;
+  @include p-component;
+  @include m-component;
+  flex-grow: 1;
+  border-radius: $radius-btn;
+}
+
+/* modal */
+@mixin modal {
+  @include flex-center;
+  @include p-component;
+  @include m-component;
+  @include shadow-modal;
+  border-radius: $radius-modal;
+}
+
+/* popup */
+@mixin popup {
+  @include flex-center;
+  @include p-component;
+  @include m-component;
+  @include shadow-popup1;
+  border-radius: $radius-popup;
+}
+
+/* feed */
+@mixin feed {
+  @include flex-center;
+  @include p-component;
+  @include shadow-feed;
+  border-radius: $radius-feed;
+}
+
+@mixin hr($hr-color: $unchecked-color) {
+  display: block;
+  margin: 1em 0;
+  border: 0;
+  border-top: 1px solid $hr-color;
+}

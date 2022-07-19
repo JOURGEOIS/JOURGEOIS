@@ -1,26 +1,3 @@
-/* 자주 쓰는 색 */
-$primary-color: $primary500;
-$danger-color: $red800;
-$main-color: $gray350;
-$sub-color: $gray100;
-$unchecked-color: $white300;
-
-$red-color: $red500;
-$emerald-color: $emerald500;
-$blue-color: $blue500;
-$navy-color: $navy600;
-
-$label-color: $sub-color;
-$placeholder-color: $unchecked-color;
-
-// link
-$link-focus-color: $main-color;
-$link-visited-color: $main-color;
-$link-hover-color: $main-color;
-$link-active-color: $main-color;
-
-
-
 /* [접근 금지] 컬러 파레트 */
 // blue
 $blue300: #90EAFC;
@@ -112,4 +89,26 @@ $white200: #EFEFEF;
 $white250: #E8E8E8;
 $white300: #DFDFDF;
 $white350: #C8C8C8;
+
+
+/* 자주 쓰는 색 */
+$primary-color: $primary500;
+$danger-color: $red800;
+$main-color: $gray350;
+$sub-color: $gray100;
+$unchecked-color: $white300;
+
+$red-color: $red500;
+$emerald-color: $emerald500;
+$blue-color: $blue500;
+$navy-color: $navy600;
+
+$label-color: $sub-color;
+$placeholder-color: $unchecked-color;
+
+// link
+$link-focus-color: $main-color;
+$link-visited-color: $main-color;
+$link-hover-color: $main-color;
+$link-active-color: $main-color;
 $white400: #B7B7B7;

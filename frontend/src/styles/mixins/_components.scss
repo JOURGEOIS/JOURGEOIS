@@ -34,7 +34,6 @@
 @mixin btn {
   @include flex-center;
   @include p-component;
-  @include m-component;
   flex-grow: 1;
   border-radius: $radius-btn;
 }

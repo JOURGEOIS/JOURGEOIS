@@ -1,0 +1,44 @@
+button {
+  @include btn;
+  @include font($fs-btn, $fw-bold);
+  border: 0;
+  font-size: $fs-md;
+  letter-spacing: $ls-btn;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @media #{$tablet} {
+    max-width: 600px;
+    font-size: $fs-lg;
+  }
+}
+
+$colors: (
+  "primary": $primary-color,
+  "red": $red-color,
+  "emerald": $emerald-color,
+  "blue": $blue-color,
+  "navy": $navy-color,
+  "main": $main-color,
+  "sub": $sub-color,
+);
+
+@each $key, $value in $colors {
+  .#{$key}-button {
+    background-color: if($key == "sub", $white150, $value);
+    color: if($key == "sub", $value, $white);
+  }
+
+  .#{$key}-outline-button {
+    border: 1px solid $value;
+    color: $value;
+    background-color: $white;
+  }
+
+  .#{$key}-blank-button {
+    color: $value;
+    background-color: $white;
+  }
+}

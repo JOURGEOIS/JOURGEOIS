@@ -4,20 +4,20 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  css : {
-    loaderOptions : {
-      sass : {
-        additionalData: `
-          @import "@/styles/style.scss";
-        `
-      }
-    }
-  },
+	css: {
+		preprocessorOptions: {
+			scss: {
+				additionalData: `
+          @import "./src/styles/style.scss";
+        `,
+			},
+		},
+	},
 
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
+	plugins: [vue()],
+	resolve: {
+		alias: {
+			"@": path.resolve(__dirname, "./src"),
+		},
+	},
 });

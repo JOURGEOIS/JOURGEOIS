@@ -7,7 +7,8 @@
     <!-- <header-basic :prev="trueValue" :success="trueValue">
       회원가입
     </header-basic> -->
-    <input-basic :data="data" :input-style="inputStyle"></input-basic>
+    <!-- <input-basic :data="data" :input-style="inputStyle"></input-basic> -->
+    <profile-image :profile-image="profileImage"></profile-image>
   </div>
 </template>
 
@@ -16,7 +17,14 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import ModalPopUp from "@/components/basics/ModalPopUp.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import InputBasic from "@/components/basics/InputBasic.vue";
+import ProfileImage from "@/components/basics/ProfileImage.vue";
 import { ref, reactive } from "vue";
+
+const profileImage = reactive({
+  image:
+    "https://github.com/JaeKP/image_repo/blob/main/img/%EB%91%98%EC%BD%94%EC%BD%94!!.png?raw=true",
+  width: "100px",
+});
 
 const data: object = reactive({
   button: true,

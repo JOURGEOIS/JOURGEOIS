@@ -4,7 +4,7 @@
     <!-- <button-basic :button-style="['sub-outline', '200px', 'medium']">
       다음
     </button-basic> -->
-    <header-basic :prev="trueValue" :success="trueValue">
+    <header-basic :prev="falseValue" :success="trueValue">
       회원가입
     </header-basic>
   </div>
@@ -14,9 +14,10 @@
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import ModalPopUp from "@/components/basics/ModalPopUp.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import { ref } from "vue";
 
-const trueValue: boolean = true;
-const falseValue: boolean = false;
+const trueValue: object = ref(true);
+const falseValue: object = ref(false);
 </script>
 
 <style scoped></style>

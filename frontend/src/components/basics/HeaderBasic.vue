@@ -1,3 +1,12 @@
+<!-- 
+  부모에서 보내는 props => prev, success
+  -------------------------------------------------------------
+  prev가 true이면 이전으로 가기 버튼이 보인다. 
+  prev가 false이면 이전으로 가기 버튼이 보이지 않는다. 
+  success가 true이면 완료 버튼이 보인다.
+  success가 false이면 완료 버튼이 보이지 않는다. 
+-->
+
 <template>
   <header>
     <span class="material-icons" :style="{ visibility: iconVisibility }">

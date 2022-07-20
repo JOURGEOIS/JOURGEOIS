@@ -1,41 +1,48 @@
 <template>
-	<div id="title-container">
-		<!-- <div class="title-content" v-for="content in contents">
-			{{ content }}
+	<div class="title-container">
+		<div class="title-content" v-for="main in mainList">
+			{{ main }}
 		</div>
-		{{ prop1 }} -->
-		<!-- {{ props }} -->
-		{{ main }}
-		{{ sub }}
+		<div class="subtitle-content" v-for="sub in subList">
+			{{ sub }}
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 interface titleContent {
-	main: string[];
-	sub: string[];
+	mainList: string[];
+	subList: string[];
 }
 
 const props = defineProps({
 	contents: Object,
 });
 
-const main = props.contents.main;
-const sub = props.contents.sub;
+const { mainList, subList } = props.contents;
 </script>
 
 <style scoped lang="scss">
-#title-container {
-	color: $main-color;
-	border: 1px solid $main-color;
+.title-container {
 	padding: 1em 0;
+	margin-top: 1em;
+	background-color: $unchecked-color;
+	color: $main-color;
+
 	@include flex(column);
 
-	#title-content {
+	.title-content {
 		@include flex-xy(flex-start);
-		font-size: $fs-title;
-		font-weight: $fw-bold;
+		@include font($fs-main, $fw-medium);
+		color: $main-color;
+	}
+
+	.subtitle-content {
+		@include flex-xy(flex-start);
+		padding: $fs-xs 0;
+		font-size: $fs-sm;
+		font-weight: $fw-light;
 		color: $main-color;
 	}
 }

@@ -67,6 +67,7 @@
 
 @mixin hr($hr-color: $unchecked-color) {
   display: block;
+  width: 100%;
   margin: 1em 0;
   border: 0;
   border-top: 1px solid $hr-color;

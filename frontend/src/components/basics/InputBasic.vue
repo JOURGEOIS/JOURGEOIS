@@ -1,9 +1,19 @@
+<!--
+  부모에서 보내는 props => data, inputStyle
+  -------------------------------------------------
+  data: input에 대한 정보를 담은 객체
+    - button: (boolean) x버튼의 유무를 선택한다. 
+    - id: (string) 해당 input을 식별할 수 있는 유니크한 id값이다.
+    - label: (string): 라벨에 들어가는 값
+    - placeholder: (string) placeholder에 들어가는 값. 없을 경우 ""로 표기
+  inputStyle: normal과 error로 나뉘며 normal일 경우, 평범한 input을 가져온다. error일 경우,빨간색 input을 가져온다. 
+-->
+
 <template>
   <div class="label-container">
     <label :for="data.id"> {{ data.label }}</label>
     <div class="input-container">
       <input
-        class="normal-input"
         type="text"
         v-model="inputValue"
         :class="inputColor"
@@ -73,16 +83,16 @@ label {
 
 .input-container {
   @include flex-xy(flex-start, center);
-  width: 100%;
   position: relative;
+  width: 100%;
 }
 
 input {
   @include font($fs-md, $fw-medium);
-  background-color: $white;
   flex-grow: 1;
-  border: none;
   height: 40px;
+  border: none;
+  background-color: $white;
   color: $main-color;
 
   &:focus {
@@ -112,15 +122,16 @@ input {
   @include p-component(xs);
   position: absolute;
   right: 0px;
+
   &:hover {
     cursor: pointer;
   }
 }
 
 .material-icons {
-  font-size: $fs-lg;
-  color: $white100;
-  background-color: $white300;
   border-radius: 50em;
+  background-color: $white300;
+  color: $white100;
+  font-size: $fs-lg;
 }
 </style>

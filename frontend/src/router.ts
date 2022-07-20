@@ -5,14 +5,21 @@ const routes: any[] = [
   {
     path: "/",
     name: "Home",
-    component: () => import("@/views/Home.vue"),
+    component: () => import("@/views/HomeView.vue"),
+  },
+
+  // 회원가입 화면
+  {
+    path: "/signup",
+    name: "Signup",
+    component: () => import("@/views/SignupView.vue"),
   },
 
   // 로그인 화면
   {
     path: "/login",
     name: "Login",
-    component: () => import("@/views/Login.vue"),
+    component: () => import("@/views/LoginView.vue"),
   },
 
   // 연습 화면

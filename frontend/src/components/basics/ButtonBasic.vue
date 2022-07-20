@@ -38,9 +38,12 @@ const props = defineProps<{
   buttonStyle: string[];
 }>();
 
+// 버튼 색상 선택 (scss로 세팅한 클래스명을 부여해서 설정한다. -> 총 21가지의 선택지)
 const buttonColor = computed((): string => {
   return `${props.buttonStyle[0]}-button`;
 });
+
+// 버튼 너비 선택 (long or 특정 값 입력  )
 const buttonWidth = computed((): string => {
   if (props.buttonStyle[1] === "long") {
     return "calc(100vw - 32px)";
@@ -49,6 +52,7 @@ const buttonWidth = computed((): string => {
   }
 });
 
+// 버튼 폰트 사이즈 선택 (small or medium or large)
 const buttonFontSize = computed(() => {
   switch (props.buttonStyle[2]) {
     case "small":

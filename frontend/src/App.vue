@@ -1,12 +1,12 @@
 <template>
-  <router-view />
+	<router-view />
 </template>
 
 <script setup lang="ts"></script>
 
 <style lang="scss">
 #app {
-  margin-left: $margin-mobile;
-  margin-right: $margin-mobile;
+	margin-left: $margin-mobile;
+	margin-right: $margin-mobile;
 }
 </style>

@@ -22,3 +22,8 @@
     display: none;
   }
 }
+
+
+@mixin ignoreAppMargin {
+  margin-left: calc(-1 * $margin-mobile);
+}

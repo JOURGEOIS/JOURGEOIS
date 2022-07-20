@@ -4,7 +4,7 @@
     <!-- <button-basic :button-style="['sub-outline', '200px', 'medium']">
       다음
     </button-basic> -->
-    <header-basic :prev="falseValue" :success="trueValue">
+    <header-basic :prev="trueValue" :success="trueValue">
       회원가입
     </header-basic>
   </div>

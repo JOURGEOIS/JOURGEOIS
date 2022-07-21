@@ -34,19 +34,14 @@
 @mixin btn {
   @include flex-center;
   @include p-component;
-  flex-grow: 1;
   border-radius: $radius-btn;
 }
 
 /* modal */
 @mixin modal {
-  @include p-component;
   @include shadow-modal;
   border-radius: $radius-modal;
-
-  @media #{$tablet} {
-    @include p-component(lg);
-  }
+  padding: 3em 1.5em;
 }
 
 /* popup */

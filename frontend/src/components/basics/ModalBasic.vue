@@ -38,17 +38,16 @@ const { modalStyle }: any = selectModalColor(props.modalColor);
   @include modal;
   @include font($fs-md, $fw-regular);
   @include hide-scroll;
-  width: 300px;
-  max-height: 60vh;
   overflow-y: scroll;
+  max-height: 60vh;
 
   @media #{$tablet} {
-    width: 600px;
+    max-width: 600px;
     font-size: $fs-main;
   }
 
   @media #{$pc} {
-    width: 800px;
+    max-width: 800px;
   }
 }
 

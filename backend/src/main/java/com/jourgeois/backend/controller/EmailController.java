@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping("/auth")
+@RequestMapping("/email/auth")
 @Controller
 public class EmailController {
 
@@ -22,7 +22,7 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    @PostMapping("/email")
+    @PostMapping()
     public @ResponseBody ResponseEntity sendMail(@RequestBody EmailAuthForm userEmail) {
         boolean success = false;
         Map<String, Boolean> data = new HashMap<>();
@@ -31,7 +31,7 @@ public class EmailController {
             data.put("success", success);
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (Exception e) {
-            data.put("succes", false);
+            data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
     }

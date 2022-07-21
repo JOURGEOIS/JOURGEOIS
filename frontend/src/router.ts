@@ -19,7 +19,7 @@ const routes: any[] = [
   {
     path: "/login",
     name: "Login",
-    component: () => import("@/views/LoginView.vue"),
+    component: () => import("@/views/TheLoginView.vue"),
   },
 
   // 연습 화면

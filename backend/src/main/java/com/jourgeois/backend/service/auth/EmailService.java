@@ -2,7 +2,7 @@ package com.jourgeois.backend.service.auth;
 
 import com.jourgeois.backend.Utils.auth.MailAuthUtil;
 import com.jourgeois.backend.domain.auth.EmailToken;
-import com.jourgeois.backend.dto.EmailAuthForm;
+import com.jourgeois.backend.api.dto.EmailAuthForm;
 import com.jourgeois.backend.repository.auth.EmailTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

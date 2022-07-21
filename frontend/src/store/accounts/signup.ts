@@ -15,8 +15,8 @@ export interface SignupState {
 export const signup: Module<SignupState, RootState> = {
 	namespaced: true,
 	state: {
-		currentPage: 1,
-		totalPage: 5,
+		currentPage: 0,
+		totalPage: 4,
 		page1isCheckedList: [false, false, false, false],
 		page1allCheck: false,
 		page1checkContentList: [

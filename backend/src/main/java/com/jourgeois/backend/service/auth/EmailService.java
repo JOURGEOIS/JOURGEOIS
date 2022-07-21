@@ -1,6 +1,6 @@
 package com.jourgeois.backend.service.auth;
 
-import com.jourgeois.backend.Utils.auth.MailAuthUtil;
+import com.jourgeois.backend.util.auth.MailAuthUtil;
 import com.jourgeois.backend.domain.auth.EmailToken;
 import com.jourgeois.backend.api.dto.EmailAuthForm;
 import com.jourgeois.backend.repository.auth.EmailTokenRepository;
@@ -28,16 +28,15 @@ public class EmailService {
 
     @Transactional
     public boolean sendVerifyEmail(EmailAuthForm emailAuthForm) throws Exception {
-        String email = emailAuthForm.getEmail();
-        Assert.notNull(email, "이메일 주소는 필수입니다.");
+        Assert.notNull(emailAuthForm.getEmail(), "이메일 주소는 필수입니다.");
 
         // 이메일 인증 토큰 생성
-        EmailToken emailToken = MailAuthUtil.createEmailToken(email);
+        EmailToken emailToken = MailAuthUtil.createEmailToken(emailAuthForm);
 
         emailTokenRepository.save(emailToken);
 
         // 회원 가입 인증 이메일 전송
-        MimeMessage mailMessage = mailAuthUtil.createMessage(emailToken, emailAuthForm.getEmail());
+        MimeMessage mailMessage = mailAuthUtil.createMessage(emailToken);
 
         emailSenderService.sendEmail(mailMessage);
 
@@ -45,9 +44,9 @@ public class EmailService {
     }
 
     @Transactional
-    public boolean verifyEmail(EmailAuthForm authForm) throws Exception {
-        String email = authForm.getEmail();
-        String token = authForm.getToken();
+    public boolean verifyEmail(EmailAuthForm emailAuthForm) throws Exception {
+        String email = emailAuthForm.getEmail();
+        String token = emailAuthForm.getToken();
         Optional<EmailToken> validEmailToken = emailTokenRepository.findByIdAndTokenAndExpirationDateAfterAndExpiredAndVerified(email, token, LocalDateTime.now(), false, false);
 
         MailAuthUtil.setTokenToVerified(validEmailToken.orElseThrow(() -> new Exception("유효한 토큰 없음")));
@@ -56,8 +55,8 @@ public class EmailService {
     }
 
     @Transactional
-    public boolean checkVerified(String userEmail) throws Exception {
-        Optional<EmailToken> verifiedEmailToken = emailTokenRepository.findByIdAndExpiredAndVerified(userEmail, false, true);
+    public boolean checkVerified(EmailAuthForm emailAuthForm) throws Exception {
+        Optional<EmailToken> verifiedEmailToken = emailTokenRepository.findByIdAndExpiredAndVerified(emailAuthForm.getEmail(), false, true);
 
         MailAuthUtil.setTokenToExpired(verifiedEmailToken.orElseThrow(() -> new Exception("검증된 토큰 없음")));
 

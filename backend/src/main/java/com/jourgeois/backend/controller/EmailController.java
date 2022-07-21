@@ -50,12 +50,12 @@ public class EmailController {
         }
     }
 
-    @GetMapping("/confirmed")
-    public @ResponseBody ResponseEntity checkVerified(@RequestHeader String email) {
+    @PostMapping("/confirmed")
+    public @ResponseBody ResponseEntity checkVerified(@RequestBody EmailAuthForm emailAuthForm) {
         boolean verified = false;
         Map<String, Boolean> data = new HashMap<>();
         try {
-            verified = emailService.checkVerified(email);
+            verified = emailService.checkVerified(emailAuthForm);
             data.put("success", verified);
             return verified ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {

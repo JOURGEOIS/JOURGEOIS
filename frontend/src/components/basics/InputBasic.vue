@@ -14,16 +14,17 @@
     <label :for="data.id"> {{ data.label }}</label>
     <div class="input-container">
       <input
-        type="text"
-        v-model="inputValue"
-        :class="inputColor"
+        :type="data.type"
         :id="data.id"
+        :class="inputColor"
+        :value="modelValue"
         :placeholder="data.placeholder"
+        @input="$emit('update:modelValue', $event.target.value)"
       />
       <div
         class="input-icon"
         :style="{ visibility: buttonVisibility }"
-        @click="clickXButton"
+        @click="$emit('update:modelValue', '')"
       >
         <span class="material-icons"> close </span>
       </div>
@@ -40,11 +41,13 @@ export interface dataObject {
   id: string;
   label: string;
   placeholder: string;
+  type: string;
 }
 
 const props = defineProps<{
   data: dataObject;
   inputStyle: string;
+  modelValue: string;
 }>();
 
 // props.data.button의 값에 따라 x버튼이 보이는지 안보이는지 설정할 수 있다.
@@ -63,13 +66,6 @@ const inputColor = computed(() => {
     return "error-input";
   }
 });
-
-// 버튼을 클릭할 시, input이 리셋된다.
-let inputValue = ref("");
-
-const clickXButton = () => {
-  inputValue.value = "";
-};
 </script>
 
 <style scoped lang="scss">

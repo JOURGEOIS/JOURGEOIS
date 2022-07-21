@@ -16,7 +16,7 @@ export const signup: Module<SignupState, RootState> = {
 	namespaced: true,
 	state: {
 		currentPage: 0,
-		totalPage: 4,
+		totalPage: 3,
 		page1isCheckedList: [false, false, false, false],
 		page1allCheck: false,
 		page1checkContentList: [

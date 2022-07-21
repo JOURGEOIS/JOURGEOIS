@@ -26,7 +26,7 @@
 		<section class="button-container" v-if="showButtonContainer">
 			<!--인증메일 재전송 버튼 -->
 			<button-basic
-				:button-style="['primary-outline', '51%', 'small']"
+				:button-style="['primary-outline', '60%', 'small']"
 				@click="postCheckEmail"
 			>
 				인증메일 재전송
@@ -34,7 +34,7 @@
 
 			<!-- 완료 버튼: 다음 페이지로 이동 -->
 			<button-basic
-				:button-style="[nextButtonColor, '46%', 'small']"
+				:button-style="[nextButtonColor, '38%', 'small']"
 				:disabled="!isFullfillToNext"
 				@click="nextSignupPage"
 			>

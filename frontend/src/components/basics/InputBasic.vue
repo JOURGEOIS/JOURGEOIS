@@ -20,6 +20,7 @@
         :value="modelValue"
         :placeholder="data.placeholder"
         @input="$emit('update:modelValue', $event.target.value)"
+        autocapitalize="off"
       />
       <div
         class="input-icon"

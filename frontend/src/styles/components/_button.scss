@@ -1,7 +1,6 @@
 button {
   @include btn;
   @include font($fs-btn, $fw-bold);
-  font-weight: 900;
   border: 0;
   font-size: $fs-md;
   letter-spacing: $ls-btn;

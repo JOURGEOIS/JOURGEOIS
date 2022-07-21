@@ -1,7 +1,7 @@
 <template>
   <div class="login-view">
     <header-basic :prev="true" :success="false"> 로그인 </header-basic>
-    <section>
+    <section class="login-section">
       <the-login-form></the-login-form>
       <div class="login-link">
         <p>비밀번호 찾기</p>
@@ -46,6 +46,11 @@ section > *:first-child {
 .login-link {
   @include flex-center();
   gap: 2rem;
-  @include font($fs-md, $fw-regular);
+  color: $sub-color;
+  @include font(13px, $fw-regular);
+
+  @media #{$tablet} {
+    font-size: 14px;
+  }
 }
 </style>

@@ -50,4 +50,11 @@ public class MemberController {
         data.put("userInfo", memberService.findUserInfo(id));
         return new ResponseEntity<Map<String, Object>>(data, HttpStatus.OK);
     }
+
+    @GetMapping("/logout")
+    public HttpStatus logout(@RequestParam String email){
+        System.out.println(email + " ");
+        memberService.logout(email);
+        return HttpStatus.OK;
+    }
 }

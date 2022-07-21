@@ -1,0 +1,59 @@
+@mixin font($fs:$fs-main, $fw: $fw-regular) {
+  font-size: $fs;
+  font-weight: $fw;
+}
+
+@mixin font-size-primary($fs: $fs-main) {
+  font-size: $fs;
+  color: $danger-color;
+}
+
+@mixin font-size-danger($fs: $fs-main) {
+  font-size: $fs;
+  color: $danger-color;
+}
+
+@mixin font-size-unchecked($fs: $fs-main) {
+  font-size: $fs;
+  color: $unchecked-color;
+}
+
+@mixin font-size-red($fs: $fs-main) {
+  font-size: $fs;
+  color: $red-color;
+}
+
+@mixin font-size-emerald($fs: $fs-main) {
+  font-size: $fs;
+  color: $emerald-color;
+}
+
+@mixin font-size-blue($fs: $fs-main) {
+  font-size: $fs;
+  color: $blue-color;
+}
+
+@mixin font-size-navy($fs: $fs-main) {
+  font-size: $fs;
+  color: $navy-color;
+}
+
+@mixin font-size-sub($fs: $fs-main) {
+  font-size: $fs;
+  color: $sub-color;
+}
+
+@mixin font-size-unchecked($fs: $fs-main) {
+  font-size: $fs;
+  color: $unchecked-color;
+}
+
+@mixin font-size-label($fs: $fs-main) {
+  font-size: $fs;
+  color: $label-color;
+}
+
+@mixin font-size-placeholder($fs: $fs-main) {
+  font-size: $fs;
+  color: $placeholder-color;
+}

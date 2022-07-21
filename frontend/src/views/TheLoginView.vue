@@ -1,6 +1,6 @@
 <template>
   <div class="login-view">
-    <header-basic :prev="true" :success="true"> 로그인 </header-basic>
+    <header-basic :prev="true" :success="false"> 로그인 </header-basic>
     <section>
       <the-login-form></the-login-form>
     </section>

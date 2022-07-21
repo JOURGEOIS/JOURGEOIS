@@ -2,10 +2,14 @@
 
 <script setup lang="ts">
 import ConditionChecker from "@/components/accounts/ConditionChecker.vue";
-import { useStore } from "vuex";
 import { ref, reactive } from "vue";
 import TitleBlock from "./TitleBlock.vue";
 import InputBasic from "../basics/InputBasic.vue";
+import { useStore } from "vuex";
+const store = useStore();
+const nextSignupPage = () => {
+	store.dispatch("signup/nextSignupPage");
+};
 
 const titleContent = reactive({
 	mainList: ["비밀번호를 입력해주세요"],

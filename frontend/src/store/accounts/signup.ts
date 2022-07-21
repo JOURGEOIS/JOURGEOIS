@@ -58,7 +58,7 @@ export const signup: Module<SignupState, RootState> = {
 			}
 		},
 		PREV_SIGNUP_PAGE: (state) => {
-			if (state.currentPage > 1) {
+			if (state.currentPage > 0) {
 				state.currentPage--;
 			}
 		},

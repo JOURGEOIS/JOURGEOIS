@@ -42,7 +42,7 @@ public class MemberController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<?> signInp(@RequestParam String id,
+    public ResponseEntity<?> signIn(@RequestParam String id,
                                      @RequestParam String pw) {
         System.out.println(id + " " + pw);
         Map<String, Object> data = new HashMap<>();

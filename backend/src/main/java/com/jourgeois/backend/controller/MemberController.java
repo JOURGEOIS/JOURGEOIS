@@ -1,5 +1,6 @@
 package com.jourgeois.backend.controller;
 
+import com.jourgeois.backend.api.dto.ProfileDto;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,19 @@ public class MemberController {
         System.out.println(email + " ");
         memberService.logout(email);
         return HttpStatus.OK;
+    }
+
+
+    @PutMapping("/auth/profile")
+    public ResponseEntity changeProfile(@RequestBody ProfileDto profileDto){
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            memberService.changeProfile(profileDto);
+            data.put("success", true);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        }catch (Exception e){
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        }
     }
 }

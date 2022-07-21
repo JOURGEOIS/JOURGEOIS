@@ -1,5 +1,6 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.ProfileDto;
 import com.jourgeois.backend.api.dto.TokenResponseDto;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.domain.auth.RefreshToken;
@@ -7,6 +8,7 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
+import org.hibernate.annotations.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +46,22 @@ public class MemberService {
         validateDuplicateUser(m.getEmail());
         m.setPassword(passwordEncoder.encode(m.getPassword()));
         memberRepository.save(m);
+    }
+
+    @Transactional
+    public boolean changeProfile(ProfileDto data){
+        memberRepository.findByNicknameAndEmailIsNot(data.getNickname(), data.getEmail())
+                .ifPresentOrElse(
+                        (member -> {throw new IllegalArgumentException("닉네임 중복");}),
+                        ()->memberRepository.findByEmail(data.getEmail())
+                                .ifPresent(member -> {
+                                    member.setIntroduce(data.getIntroduce());
+                                    member.setProfileImg(data.getProfileImg());
+                                    member.setNickname(data.getNickname());
+                                    memberRepository.save(member);
+                                })
+                );
+        return true;
     }
 
     @Transactional

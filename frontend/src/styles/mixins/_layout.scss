@@ -23,7 +23,20 @@
   }
 }
 
-
 @mixin ignoreAppMargin {
   margin-left: calc(-1 * $margin-mobile);
+}
+
+@mixin accountLayOut {
+  width: 100%;
+
+  @media #{$tablet} {
+    width: 80%;
+    max-width: 600px;
+  }
+
+  @media #{$pc} {
+    width: 60%;
+    max-width: 1000px;
+  }
 }

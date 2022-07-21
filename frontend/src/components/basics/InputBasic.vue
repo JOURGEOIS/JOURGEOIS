@@ -74,10 +74,11 @@ const clickXButton = () => {
 
 <style scoped lang="scss">
 label-container {
-  width: calc(100% - 32px);
+  width: 100%;
 }
 
 label {
+  @include font($fs-md, $fw-medium);
   color: $label-color;
 }
 

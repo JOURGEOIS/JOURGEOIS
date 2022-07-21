@@ -55,7 +55,6 @@ public class MemberController {
 
     @GetMapping("/logout")
     public HttpStatus logout(@RequestParam String email){
-        System.out.println(email + " ");
         memberService.logout(email);
         return HttpStatus.OK;
     }

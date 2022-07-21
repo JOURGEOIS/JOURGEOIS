@@ -81,6 +81,12 @@ public class MemberService {
         return memberRepository.findByEmail(userId);
     }
 
+    @Transactional
+    public void logout(String email){
+        refreshTokenRepository.deleteByEmail(email);
+        System.out.println("토큰 삭제 완료");
+    }
+
     private void validateDuplicateUser(String email){
         System.out.println(email + " email");
         memberRepository.findByEmail(email)

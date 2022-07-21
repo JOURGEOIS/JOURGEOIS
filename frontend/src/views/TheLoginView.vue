@@ -52,5 +52,9 @@ section > *:first-child {
   @media #{$tablet} {
     font-size: 14px;
   }
+
+  p {
+    cursor: pointer;
+  }
 }
 </style>

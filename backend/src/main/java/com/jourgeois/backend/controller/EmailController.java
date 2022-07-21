@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping("/email/auth")
+@RequestMapping("/email/cert")
 @Controller
 public class EmailController {
 

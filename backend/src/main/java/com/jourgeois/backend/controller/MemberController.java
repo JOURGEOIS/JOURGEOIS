@@ -1,5 +1,6 @@
 package com.jourgeois.backend.controller;
 
+import com.jourgeois.backend.api.dto.PasswordChangeForm;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,33 @@ public class MemberController {
         System.out.println(email + " ");
         memberService.logout(email);
         return HttpStatus.OK;
+    }
+
+    // 비밀번호 변경
+    @PutMapping("/auth/password")
+    public ResponseEntity changePassword(@RequestBody PasswordChangeForm passwordChangeForm) {
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            memberService.changePassword(passwordChangeForm);
+            data.put("success", true);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch (Exception e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        }
+    }
+
+    // 비밀번호 찾기
+    @PutMapping("/password")
+    public ResponseEntity findPassword(@RequestBody PasswordChangeForm passwordChangeForm) {
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            memberService.findPassword(passwordChangeForm);
+            data.put("success", true);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch (Exception e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        }
     }
 }

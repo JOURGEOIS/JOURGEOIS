@@ -1,5 +1,6 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.PasswordChangeForm;
 import com.jourgeois.backend.api.dto.TokenResponseDto;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.domain.auth.RefreshToken;
@@ -111,5 +112,36 @@ public class MemberService {
 
     public void deleteUser(Member m) throws Exception {
 
+    }
+
+    @Transactional
+    public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
+        String email = passwordChangeForm.getUserId();
+        memberRepository.findByEmail(email)
+                .ifPresentOrElse((member)-> {
+                            if(passwordEncoder.matches(passwordChangeForm.getPasswordOld(), member.getPassword())) {
+                                member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
+                                memberRepository.save(member);
+                            } else {
+                                throw new IllegalArgumentException("기존 비밀번호와 일치하지 않습니다.");
+                            }
+                        },
+                        () -> {throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");});
+    }
+
+    @Transactional
+    public void findPassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
+        String email = passwordChangeForm.getUserId();
+        memberRepository.findByEmail(email)
+                .ifPresentOrElse((member)-> {
+                            if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
+                                member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
+                                memberRepository.save(member);
+                            } else {
+                                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+                            }
+                        },
+                        () -> {throw new IllegalArgumentException("가입 정보가 없습니다.");}
+                );
     }
 }

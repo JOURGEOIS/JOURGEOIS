@@ -1,5 +1,7 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.ProfileDto;
+import com.jourgeois.backend.api.dto.PasswordChangeForm;
 import com.jourgeois.backend.api.dto.TokenResponseDto;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.domain.auth.RefreshToken;
@@ -7,6 +9,7 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
+import org.hibernate.annotations.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +47,22 @@ public class MemberService {
         validateDuplicateUser(m.getEmail());
         m.setPassword(passwordEncoder.encode(m.getPassword()));
         memberRepository.save(m);
+    }
+
+    @Transactional
+    public boolean changeProfile(ProfileDto data){
+        memberRepository.findByNicknameAndEmailIsNot(data.getNickname(), data.getEmail())
+                .ifPresentOrElse(
+                        (member -> {throw new IllegalArgumentException("닉네임 중복");}),
+                        ()->memberRepository.findByEmail(data.getEmail())
+                                .ifPresent(member -> {
+                                    member.setIntroduce(data.getIntroduce());
+                                    member.setProfileImg(data.getProfileImg());
+                                    member.setNickname(data.getNickname());
+                                    memberRepository.save(member);
+                                })
+                );
+        return true;
     }
 
     @Transactional
@@ -111,5 +130,36 @@ public class MemberService {
 
     public void deleteUser(Member m) throws Exception {
 
+    }
+
+    @Transactional
+    public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
+        String email = passwordChangeForm.getUserId();
+        memberRepository.findByEmail(email)
+                .ifPresentOrElse((member)-> {
+                            if(passwordEncoder.matches(passwordChangeForm.getPasswordOld(), member.getPassword())) {
+                                member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
+                                memberRepository.save(member);
+                            } else {
+                                throw new IllegalArgumentException("기존 비밀번호와 일치하지 않습니다.");
+                            }
+                        },
+                        () -> {throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");});
+    }
+
+    @Transactional
+    public void findPassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
+        String email = passwordChangeForm.getUserId();
+        memberRepository.findByEmail(email)
+                .ifPresentOrElse((member)-> {
+                            if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
+                                member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
+                                memberRepository.save(member);
+                            } else {
+                                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+                            }
+                        },
+                        () -> {throw new IllegalArgumentException("가입 정보가 없습니다.");}
+                );
     }
 }

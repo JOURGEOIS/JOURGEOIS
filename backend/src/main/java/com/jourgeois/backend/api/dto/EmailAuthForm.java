@@ -1,4 +1,4 @@
-package com.jourgeois.backend.dto;
+package com.jourgeois.backend.api.dto;
 
 public class EmailAuthForm {
     String email;

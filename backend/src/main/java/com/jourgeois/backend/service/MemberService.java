@@ -96,6 +96,19 @@ public class MemberService {
                 });
     }
 
+    @Transactional
+    public void signOut(String email){
+        Optional<Member> member = memberRepository.findByEmail(email);
+        member.ifPresent(selectMember -> {
+            refreshTokenRepository.deleteByEmail(selectMember.getEmail());
+            /*
+            프로필 사진 삭제
+             */
+            memberRepository.delete(selectMember);
+        });
+        System.out.println("회원 탈퇴 완료");
+    }
+
     // Dummy Data 생성
 //    public void makeDummyData(EntityManager em){
 //        em.persist(new Member("1", "1234", "전승준", "paasasd", "jsznawa@Naver.com", "1997-12-26", "a.img", "안녕하세요 전 승준입니다."));

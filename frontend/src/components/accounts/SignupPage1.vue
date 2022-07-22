@@ -3,8 +3,8 @@
 		<section>
 			<title-block :contents="titleContents" />
 			<agree-checker
-				:contents="agreeContents[0]"
-				@clickCheckIcon="switchIsChecked"
+				:contents="allCheckerContent"
+				@clickCheckIcon="switchAllIsChecked"
 			/>
 			<div
 				class="description"
@@ -14,22 +14,14 @@
 				{{ description }}
 			</div>
 			<hr class="hr1" />
-			<agree-checker
-				:contents="agreeContents[1]"
-				@clickCheckIcon="switchIsChecked"
-			/>
-			<agree-checker
-				:contents="agreeContents[2]"
-				@clickCheckIcon="switchIsChecked"
-			/>
-			<agree-checker
-				:contents="agreeContents[3]"
-				@clickCheckIcon="switchIsChecked"
-			/>
-			<agree-checker
-				:contents="agreeContents[4]"
-				@clickCheckIcon="switchIsChecked"
-			/>
+			<ul>
+				<li v-for="(agreeContent, idx) in agreeContents" :key="idx">
+					<agree-checker
+						:contents="agreeContent"
+						@clickCheckIcon="switchIsChecked"
+					/>
+				</li>
+			</ul>
 		</section>
 		<button-basic
 			:button-style="[buttonColor, 'long', 'small']"
@@ -45,7 +37,7 @@
 import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import AgreeChecker from "@/components/accounts/AgreeChecker.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import { reactive, watch, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -58,58 +50,72 @@ const descriptionList = [
 	"선택항목에 대한 동의를 거부하시는 경우에도 서비스는 이용이 가능합니다.",
 ];
 
+// 모두 동의
+const allCheckerContent = reactive({
+	order: 0,
+	isChecked: false,
+	checkContent: "모두 동의합니다.",
+	isModalBtn: false,
+});
+
+const switchAllIsChecked = () => {
+	const TF = allCheckerContent.isChecked ? false : true;
+	agreeContents.forEach((agreeContent) => {
+		agreeContent.isChecked = TF;
+	});
+	allCheckerContent.isChecked = !allCheckerContent.isChecked;
+};
+
+// 동의 조건 리스트
 const agreeContents = reactive([
-	reactive({
-		order: 0,
-		isChecked: false,
-		checkContent: "모두 동의합니다.",
-		isModalBtn: false,
-	}),
-	reactive({
+	{
 		order: 1,
 		isChecked: false,
 		checkContent: "만 14세 이상입니다.",
 		isModalBtn: false,
 		modalContent: "modal content 1",
-	}),
-	reactive({
+	},
+	{
 		order: 2,
 		isChecked: false,
 		checkContent: "[필수] 주류주아 계정 약관",
 		isModalBtn: true,
 		modalContent: "modal content 2",
-	}),
-	reactive({
+	},
+	{
 		order: 3,
 		isChecked: false,
 		checkContent: "[필수] 개인정보 수집 및 이용 동의",
 		isModalBtn: true,
 		modalContent: "modal content 3",
-	}),
-	reactive({
+	},
+	{
 		order: 4,
 		isChecked: false,
 		checkContent: "[선택] 프로필정보 추가 수집 동의",
 		isModalBtn: true,
 		modalContent: "modal content 4",
-	}),
+	},
 ]);
 
 const switchIsChecked = (order: number) => {
-	agreeContents[order].isChecked = !agreeContents[order].isChecked;
+	agreeContents[order - 1].isChecked = !agreeContents[order - 1].isChecked;
 };
-
-watch(agreeContents, () => {});
 
 const nextSignupPage = () => {
 	store.dispatch("signup/nextSignupPage");
 };
 
 const isFullfillToNext = computed(() => {
+	for (let i = 0; i < 3; i++) {
+		if (!agreeContents[i].isChecked) return false;
+	}
 	return true;
 });
 
-const buttonColor = isFullfillToNext ? "primary" : "unchecked";
+const buttonColor = computed(() => {
+	return isFullfillToNext.value ? "primary" : "unchecked";
+});
 </script>
 
 <style scoped lang="scss">

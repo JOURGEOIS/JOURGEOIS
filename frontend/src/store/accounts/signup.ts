@@ -53,7 +53,7 @@ export const signup: Module<SignupState, RootState> = {
 			state.page1isCheckedList[order] = !state.page1isCheckedList[order];
 		},
 		NEXT_SIGNUP_PAGE: (state) => {
-			if (state.currentPage < state.totalPage) {
+			if (state.currentPage <= state.totalPage) {
 				state.currentPage++;
 			}
 		},

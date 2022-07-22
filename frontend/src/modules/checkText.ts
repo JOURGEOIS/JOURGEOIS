@@ -26,6 +26,14 @@ function checkAsterisk(text: string): boolean {
 	return patternAsterisk.test(text);
 }
 
+// * 텍스트가 이메일인지 확인
+// @와 .을 가지면 true 반환
+function checkIsEmail(text: string): boolean {
+	const charA = /[@]/;
+	const charB = /[.]/;
+	return charA.test(text) && charB.test(text);
+}
+
 // * 비밀번호 영어 대문자, 소문자, 숫자, 특수문자 중 3종류 이상 조합
 // 위 경우를 만족하면 true 반환
 function checkTripleCombination(text: string) {
@@ -77,27 +85,30 @@ function checkEmailCondition(value: string): boolean {
 }
 
 export {
-	// 비속어 필터
+	// * 비속어 필터
 	checkBadWord,
 
-	// 한글+영어 체크
+	// * 한글+영어 체크
 	checkENKR,
 
-	// 텍스트에 특수문자 포함
+	// * 텍스트에 특수문자 포함
 	checkAsterisk,
 
-	// 영어 대문자/소문자/숫자/특수문자 중 3개 이상 포함
+	// * 영어 대문자/소문자/숫자/특수문자 중 3개 이상 포함
 	checkTripleCombination,
 
-	// 비밀번호 길이 체크
+	// * 텍스트가 이메일인지 확인
+	checkIsEmail,
+
+	// * 비밀번호 길이 체크
 	checkPasswordLength,
 
-	// 닉네임 길이 체크
+	// * 닉네임 길이 체크
 	checkNicknameLength,
 
-	// 비밀번호/비밀번호 확인 동일 여부 확인
+	// * 비밀번호/비밀번호 확인 동일 여부 확인
 	checkIsEqualPassword,
 
-	// 이메일 형식 체크
+	// * 이메일 형식 체크
 	checkEmailCondition,
 };

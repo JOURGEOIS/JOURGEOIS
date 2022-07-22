@@ -99,8 +99,13 @@ public class MemberController {
 
     @DeleteMapping("/auth/signOut")
     public ResponseEntity signOut(@RequestBody Map<String, String> user) {
-        memberService.signOut(user.get("email"));
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        try {
+            memberService.signOut(user.get("email"));
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
+        }
     }
 
     @PutMapping("/auth/profile")
@@ -113,7 +118,7 @@ public class MemberController {
         }catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
-            return new ResponseEntity(data, HttpStatus.CREATED);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
@@ -127,7 +132,7 @@ public class MemberController {
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (Exception e) {
             data.put("success", false);
-            return new ResponseEntity(data, HttpStatus.CREATED);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
@@ -141,7 +146,7 @@ public class MemberController {
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (Exception e) {
             data.put("success", false);
-            return new ResponseEntity(data, HttpStatus.CREATED);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 }

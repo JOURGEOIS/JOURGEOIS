@@ -43,10 +43,16 @@ public class MemberService {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public void createUser(Member m) throws Exception {
-        validateDuplicateUser(m.getEmail());
-        m.setPassword(passwordEncoder.encode(m.getPassword()));
-        memberRepository.save(m);
+    public boolean signUp(Member m) throws Exception {
+        try {
+            validateDuplicateUser(m.getEmail());
+            m.setPassword(passwordEncoder.encode(m.getPassword()));
+            memberRepository.save(m);
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Transactional
@@ -65,29 +71,55 @@ public class MemberService {
         return true;
     }
 
-    @Transactional
-    public TokenResponseDto signIn(String userId, String pw) {
-        // uesrId 확인
-        UserDetails userDetails = myUserDetailsService.loadUserByUsername(userId);
+    public boolean checkEmail(String email){
+        Optional<Member> result = memberRepository.findByEmail(email);
+        // 중복된 이메일이 없다면 사용 가능 return
+        if(result.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public boolean checkNickname(String nickname){
+        Member result = memberRepository.findByNickname(nickname);
+        // 중복된 닉네임이 없다면 사용 가능 return
+        if(result==null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Transactional
+    public TokenResponseDto login(String email, String password) {
+        // userId 확인
+        System.out.println("3333331231231231312");
+        UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
+
+        System.out.println("111111111");
         // pw 확인
-        if(!passwordEncoder.matches(pw, userDetails.getPassword())){
+        if(!passwordEncoder.matches(password, userDetails.getPassword())){
             throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
         }
 
         Authentication authentication =  new UsernamePasswordAuthenticationToken(
                 userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
 
+        System.out.println("222222222");
+
         // refresh token 발급 및 저장
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
-        RefreshToken token = RefreshToken.createToken(userId, refreshToken);
+        RefreshToken token = RefreshToken.createToken(email, refreshToken);
         System.out.println(refreshToken + " " + token);
         // 기존 토큰이 있으면 수정, 없으면 생성
-        refreshTokenRepository.findByEmail(userId)
+        refreshTokenRepository.findByEmail(email)
                 .ifPresentOrElse(
                         (tokenEntity)->tokenEntity.changeToken(refreshToken),
-                        ()->refreshTokenRepository.save(RefreshToken.createToken(userId, refreshToken))
+                        ()->refreshTokenRepository.save(RefreshToken.createToken(email, refreshToken))
                 );
+
+        System.out.println("33333333333333333");
 
         return TokenResponseDto.builder()
                 .accessToken("Bearer-"+jwtTokenProvider.createAccessToken(authentication))
@@ -114,12 +146,6 @@ public class MemberService {
                     throw new RuntimeException("이메일 중복");
                 });
     }
-
-    // Dummy Data 생성
-//    public void makeDummyData(EntityManager em){
-//        em.persist(new Member("1", "1234", "전승준", "paasasd", "jsznawa@Naver.com", "1997-12-26", "a.img", "안녕하세요 전 승준입니다."));
-//    }
-
     public void readUser(Member m) throws Exception {
 
     }
@@ -162,4 +188,5 @@ public class MemberService {
                         () -> {throw new IllegalArgumentException("가입 정보가 없습니다.");}
                 );
     }
+
 }

@@ -25,7 +25,7 @@ const props = defineProps<{
 const { modalStyle }: any = selectModalColor(props.modalColor);
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -76,6 +76,6 @@ const { modalStyle }: any = selectModalColor(props.modalColor);
 
 .danger-modal {
   color: $white;
-  background-color: $danger-color;
+  background-color: crimson;
 }
 </style>

@@ -1,8 +1,10 @@
 <template>
   <div class="forgot-pw-view">
-    <header-basic :prev="true" :success="false"> 비밀번호 찾기 </header-basic>
+    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+      비밀번호 찾기
+    </header-basic>
     <section class="forgot-pw-section">
-      <p>회원님의 비밀번호를 찾기 위해선 &nbsp</p>
+      <p>회원님의 비밀번호를 찾기 위해서　</p>
       <p>이름, 아이디, 이메일이 필요합니다.</p>
       <the-forgot-pw-form></the-forgot-pw-form>
     </section>
@@ -12,6 +14,7 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheForgotPwForm from "@/components/accounts/TheForgotPwForm.vue";
+import { clickPrevButton } from "../modules/clickEvent";
 </script>
 
 <style scoped lang="scss">
@@ -34,5 +37,9 @@ import TheForgotPwForm from "@/components/accounts/TheForgotPwForm.vue";
       }
     }
   }
+}
+
+a {
+  text-decoration: none;
 }
 </style>

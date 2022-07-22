@@ -17,7 +17,7 @@ const routes: any[] = [
 
   // 로그인 화면
   {
-    path: "/login",
+    path: "/user/login",
     name: "Login",
     component: () => import("@/views/TheLoginView.vue"),
   },
@@ -31,7 +31,7 @@ const routes: any[] = [
 
   // 비밀번호 찾기 화면
   {
-    path: "/forgot-password",
+    path: "/user/help/password",
     name: "ForgotPwView",
     component: () => import("@/views/ForgotPwView.vue"),
   },

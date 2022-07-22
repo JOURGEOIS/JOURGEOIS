@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitLoginForm" class="login-form">
+  <form @submit.prevent="submitLoginForm">
     <input-basic
       :data="emailInputData"
       :input-style="emailInputStyle"
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed } from "vue";
-
+import { useStore } from "vuex";
 import {
   checkTripleCombination,
   checkPasswordLength,
@@ -50,7 +50,7 @@ const buttonColor = computed(() => {
 // 이메일 input 데이터
 const emailInputData: object = reactive({
   button: true,
-  id: "login-email-input",
+  id: "login-id-input",
   label: "이메일",
   placeholder: "이메일을 입력하세요.",
   type: "text",
@@ -78,32 +78,44 @@ const pwConditionAErrorMessage: string =
 const pwConditionBErrorMessage: string =
   "비밀번호는 최소 8자 최대 20자로 입력되어야 합니다.";
 
-// 유효성 체크
+// 제출
+const store = useStore();
+const data = {
+  email: emailInputValue,
+  password: pwInputValue,
+};
+const login = (data: object) => store.dispatch("account/logIn", data);
+
 const submitLoginForm = () => {
   errorMessage.length = 0;
   const emailCondition = checkEmailCondition(emailInputValue.value);
   const pwConditionA = checkTripleCombination(pwInputValue.value);
   const pwConditionB = checkPasswordLength(pwInputValue.value);
-  if (!emailCondition) {
-    emailInputStyle.value = "error";
-    occurredError.value = true;
-    errorMessage.push(emailConditionErrorMessage);
-  }
-  if (!pwConditionB) {
-    pwInputStyle.value = "error";
-    occurredError.value = true;
-    errorMessage.push(pwConditionBErrorMessage);
-  }
-  if (!pwConditionA) {
-    pwInputStyle.value = "error";
-    occurredError.value = true;
-    errorMessage.push(pwConditionAErrorMessage);
+
+  if (emailCondition && pwConditionA && pwConditionB) {
+    login(data);
+  } else {
+    if (!emailCondition) {
+      emailInputStyle.value = "error";
+      occurredError.value = true;
+      errorMessage.push(emailConditionErrorMessage);
+    }
+    if (!pwConditionB) {
+      pwInputStyle.value = "error";
+      occurredError.value = true;
+      errorMessage.push(pwConditionBErrorMessage);
+    }
+    if (!pwConditionA) {
+      pwInputStyle.value = "error";
+      occurredError.value = true;
+      errorMessage.push(pwConditionAErrorMessage);
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.login-form {
+form {
   @include flex(column);
   gap: 2rem;
   width: 100%;

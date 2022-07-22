@@ -1,10 +1,33 @@
 package com.jourgeois.backend.api.dto;
 
+
+import lombok.Builder;
+import org.springframework.web.multipart.MultipartFile;
+
+@Builder
 public class ProfileDto {
     private String email;
+    private String name;
     private String nickname;
     private String profileImg;
+    private MultipartFile profileLink;
     private String introduce;
+
+    public MultipartFile getProfileLink() {
+        return profileLink;
+    }
+
+    public void setProfileLink(MultipartFile profileLink) {
+        this.profileLink = profileLink;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getEmail() {
         return email;
@@ -41,8 +64,11 @@ public class ProfileDto {
     @Override
     public String toString() {
         return "ProfileDto{" +
-                "nickname='" + nickname + '\'' +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", profileImg='" + profileImg + '\'' +
+                ", profileLink=" + profileLink +
                 ", introduce='" + introduce + '\'' +
                 '}';
     }

@@ -17,13 +17,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { toRefs } from "vue";
 const props = defineProps<{
 	props: object;
 }>();
-let { isChecked, checkContent, isIconTypeDanger } = props.props;
+let { isChecked, checkContent, isIconTypeDanger } = toRefs(props.props);
 
-const iconType = isIconTypeDanger ? "block" : "check_circle_outline";
+const iconType = isIconTypeDanger.value ? "block" : "check_circle_outline";
 </script>
 
 <style scoped lang="scss">

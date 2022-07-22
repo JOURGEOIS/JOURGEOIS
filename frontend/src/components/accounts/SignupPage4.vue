@@ -63,7 +63,7 @@
 			:button-style="[nextButtonColor, 'long', 'small']"
 			class="next-button"
 			:disabled="!isFullfillToNext"
-			@click="nextSignupPage"
+			@click="completeSignupPage"
 		>
 			완료
 		</button-basic>
@@ -80,7 +80,11 @@ import { useStore } from "vuex";
 import { react } from "@babel/types";
 const store = useStore();
 
-import { checkBadWord, checkAsterisk } from "../../modules/checkText";
+import {
+	checkBadWord,
+	checkAsterisk,
+	checkENKR,
+} from "../../modules/checkText";
 
 // 제목 컴포넌트
 const nameTitleContents = reactive({
@@ -135,7 +139,7 @@ const nicknameInputStyle = ref("normal");
 // 조건 체크에 대한 props들
 const nameEnKrCheckerProps = reactive({
 	isChecked: false,
-	checkContent: "이름은 숫자 또는 영어만 입력해주세요.",
+	checkContent: "이름은 한글 또는 영어만 입력해주세요.",
 	isIconTypeDanger: false,
 });
 
@@ -171,6 +175,11 @@ const numEnKrCheckerProps = reactive({
 
 // input값 변경에 따른 함수 실행
 watchEffect(() => {
+	nameEnKrCheckerProps.isChecked =
+		!!nameInputValue.value && checkENKR(nameInputValue.value) ? true : false;
+});
+
+watchEffect(() => {
 	birthLengthCheckerProps.isChecked =
 		birthInputValue.value.length === 8 ? true : false;
 });
@@ -201,7 +210,9 @@ watchEffect(() => {
 
 const isFullfillToNext = computed(() => {
 	return (
+		nameEnKrCheckerProps.isChecked &&
 		birthLengthCheckerProps.isChecked &&
+		nicknameLengthCheckerProps.isChecked &&
 		!duplicatedNicknameCheckerProps.isChecked &&
 		!badWordsCheckerProps.isChecked &&
 		!numEnKrCheckerProps.isChecked
@@ -214,8 +225,11 @@ const nextButtonColor = computed(() => {
 });
 
 // 다음 페이지로 이동
-const nextSignupPage = () => {
+const completeSignupPage = () => {
 	store.dispatch("signup/nextSignupPage");
+	setTimeout(() => {
+		alert("됐다!");
+	}, 500);
 };
 </script>
 

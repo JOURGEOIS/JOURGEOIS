@@ -29,13 +29,14 @@ const props = defineProps<{
 	contents: object;
 }>();
 
-let { order, isChecked, checkContent, isModalBtn, modalContent } =
-	props.contents;
+let { order, isChecked, checkContent, isModalBtn, modalContent } = toRefs(
+	props.contents
+);
 
 const emit = defineEmits<{ (e: "clickCheckIcon", order: number): void }>();
 // 체크 표시 switch
 const clickCheckIconInner = () => {
-	emit("clickCheckIcon", order);
+	emit("clickCheckIcon", order.value);
 };
 
 const showModal = () => {

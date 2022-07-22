@@ -93,6 +93,12 @@ public class MemberController {
         return HttpStatus.OK;
     }
 
+    @DeleteMapping("/signOut")
+    public ResponseEntity signOut(@RequestBody Map<String, String> user) {
+        memberService.signOut(user.get("email"));
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
     @PutMapping("/auth/profile")
     public ResponseEntity changeProfile(@RequestBody ProfileDto profileDto){
         Map<String, Boolean> data = new HashMap<>();

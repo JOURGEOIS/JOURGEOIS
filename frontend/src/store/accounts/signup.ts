@@ -15,8 +15,8 @@ export interface SignupState {
 export const signup: Module<SignupState, RootState> = {
 	namespaced: true,
 	state: {
-		currentPage: 1,
-		totalPage: 5,
+		currentPage: 0,
+		totalPage: 3,
 		page1isCheckedList: [false, false, false, false],
 		page1allCheck: false,
 		page1checkContentList: [
@@ -58,7 +58,7 @@ export const signup: Module<SignupState, RootState> = {
 			}
 		},
 		PREV_SIGNUP_PAGE: (state) => {
-			if (state.currentPage > 1) {
+			if (state.currentPage > 0) {
 				state.currentPage--;
 			}
 		},

@@ -9,8 +9,9 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
-import org.hibernate.annotations.Table;
+import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -29,18 +31,23 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MyUserDetailsService myUserDetailsService;
     private final RefreshTokenRepository refreshTokenRepository;
-
+    private final S3Util s3Util;
+    private final String s3Url;
     @Autowired
     MemberService(MemberRepository memberRepository,
                   PasswordEncoder passwordEncoder,
                   JwtTokenProvider jwtTokenProvider,
                   MyUserDetailsService myUserDetailsService,
-                  RefreshTokenRepository refreshTokenRepository){
+                  RefreshTokenRepository refreshTokenRepository,
+                  S3Util s3Util,
+                  @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.myUserDetailsService = myUserDetailsService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.s3Util = s3Util;
+        this.s3Url = s3Url;
     }
 
     public boolean signUp(Member m) throws Exception {
@@ -62,10 +69,19 @@ public class MemberService {
                         (member -> {throw new IllegalArgumentException("닉네임 중복");}),
                         ()->memberRepository.findByEmail(data.getEmail())
                                 .ifPresent(member -> {
+                                    member.setName(data.getName());
                                     member.setIntroduce(data.getIntroduce());
-                                    member.setProfileImg(data.getProfileImg());
                                     member.setNickname(data.getNickname());
-                                    memberRepository.save(member);
+                                    try{
+                                        if(data.getProfileLink()!=null && !data.getProfileLink().isEmpty()){
+                                            s3Util.deleteFile(member.getProfileImg());
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), data.getNickname()));
+                                        }
+                                    } catch (IOException e){
+                                        throw new IllegalArgumentException("이미지 업로드 오류");
+                                    } finally {
+                                        memberRepository.save(member);
+                                    }
                                 })
                 );
         return true;
@@ -128,8 +144,16 @@ public class MemberService {
     }
 
     @Transactional
-    public Optional<Member> findUserInfo(String userId){
-        return memberRepository.findByEmail(userId);
+    public ProfileDto findUserInfo(String userId){
+        Optional<Member> member = memberRepository.findByEmail(userId);
+        return ProfileDto.builder()
+                .email(member.get().getEmail())
+                .name(member.get().getName())
+                .nickname(member.get().getNickname())
+                .introduce(member.get().getIntroduce())
+                .profileImg(s3Url+ member.get().getProfileImg())
+                .build();
+
     }
 
     @Transactional

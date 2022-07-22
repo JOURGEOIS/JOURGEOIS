@@ -4,6 +4,7 @@ import com.jourgeois.backend.api.dto.ProfileDto;
 import com.jourgeois.backend.api.dto.PasswordChangeForm;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.service.MemberService;
+import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,14 @@ import java.util.Map;
 //@RequiredArgsConstructor
 public class MemberController {
 
-    private MemberService memberService;
+    private final MemberService memberService;
+    private final S3Util s3Uploader;
 
     @Autowired
-    MemberController(MemberService memberService) {this.memberService = memberService;}
+    MemberController(MemberService memberService, S3Util s3Uploader) {
+        this.memberService = memberService;
+        this.s3Uploader = s3Uploader;
+    }
 
     @PostMapping(value = "/signup")
     public ResponseEntity<?> signUp(@RequestBody Member member){
@@ -30,7 +35,6 @@ public class MemberController {
         Map<String, Boolean> data = new HashMap<>();
         // 이메일 중복, 닉네임 중복 재 검사
         boolean flag = memberService.checkEmail(member.getEmail()) && memberService.checkNickname(member.getNickname());
-
         try {
             if(flag) {
                 boolean res = memberService.signUp(member);
@@ -93,20 +97,21 @@ public class MemberController {
         return HttpStatus.OK;
     }
 
-    @DeleteMapping("/signOut")
+    @DeleteMapping("/auth/signOut")
     public ResponseEntity signOut(@RequestBody Map<String, String> user) {
         memberService.signOut(user.get("email"));
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @PutMapping("/auth/profile")
-    public ResponseEntity changeProfile(@RequestBody ProfileDto profileDto){
+    public ResponseEntity changeProfile(@ModelAttribute ProfileDto profileDto){
         Map<String, Boolean> data = new HashMap<>();
         try {
             memberService.changeProfile(profileDto);
             data.put("success", true);
             return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
+            System.out.println(e);
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.CREATED);
         }

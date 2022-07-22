@@ -172,14 +172,16 @@ public class MemberService {
     }
 
     @Transactional
-    public void signOut(String email){
+    public void signOut(String email) throws Exception{
         Optional<Member> member = memberRepository.findByEmail(email);
-        member.ifPresent(selectMember -> {
+        member.ifPresentOrElse(selectMember -> {
             refreshTokenRepository.deleteByEmail(selectMember.getEmail());
-            /*
-            프로필 사진 삭제
-             */
+            String userProfile = selectMember.getProfileImg();
+            if(!userProfile.equals("default/1.png"))
+                s3Util.deleteFile(userProfile);
             memberRepository.delete(selectMember);
+        }, () -> {
+            throw new IllegalArgumentException("가입된 회원이 아닙니다.");
         });
         System.out.println("회원 탈퇴 완료");
     }

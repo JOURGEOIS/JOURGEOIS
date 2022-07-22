@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitLoginForm">
+  <form @submit.prevent="submitLoginForm" class="login-form">
     <input-basic
       :data="emailInputData"
       :input-style="emailInputStyle"
@@ -50,7 +50,7 @@ const buttonColor = computed(() => {
 // 이메일 input 데이터
 const emailInputData: object = reactive({
   button: true,
-  id: "login-id-input",
+  id: "login-email-input",
   label: "이메일",
   placeholder: "이메일을 입력하세요.",
   type: "text",
@@ -78,7 +78,7 @@ const pwConditionAErrorMessage: string =
 const pwConditionBErrorMessage: string =
   "비밀번호는 최소 8자 최대 20자로 입력되어야 합니다.";
 
-// 제출
+// 유효성 체크
 const submitLoginForm = () => {
   errorMessage.length = 0;
   const emailCondition = checkEmailCondition(emailInputValue.value);
@@ -103,7 +103,7 @@ const submitLoginForm = () => {
 </script>
 
 <style scoped lang="scss">
-form {
+.login-form {
   @include flex(column);
   gap: 2rem;
   width: 100%;

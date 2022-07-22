@@ -28,6 +28,13 @@ const routes: any[] = [
     name: "PracticeView",
     component: () => import("@/views/PracticeView.vue"),
   },
+
+  // 비밀번호 찾기 화면
+  {
+    path: "/forgot-password",
+    name: "ForgotPwView",
+    component: () => import("@/views/ForgotPwView.vue"),
+  },
 ];
 
 const router = createRouter({

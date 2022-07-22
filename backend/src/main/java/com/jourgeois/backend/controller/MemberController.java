@@ -27,7 +27,7 @@ public class MemberController {
         this.s3Uploader = s3Uploader;
     }
 
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "/signUp")
     public ResponseEntity<?> signUp(@RequestBody Member member){
         System.out.println("===========================");
         System.out.println(member.toString());

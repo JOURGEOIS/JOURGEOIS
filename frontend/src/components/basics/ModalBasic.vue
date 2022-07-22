@@ -1,8 +1,9 @@
 <!-- 
   :modal-color="색상"
   modal-color 프롭스에 따라 색상이 변합니다.
-  modal-color가 primary이면 프라이머리컬러 pop-up이 생성됩니다.
-  modal-color가 white이면 하얀색 pop-up이 생성됩니다. 
+  modal-color가 primary이면 프라이머리컬러 모달이 생성됩니다.
+  modal-color가 white이면 하얀색 모달이 생성됩니다. 
+  modal-color가 danger이면 빨간색 모달이 생성됩니다.
 -->
 
 <template>

@@ -84,7 +84,7 @@ public class MemberController {
         Map<String, Object> data = new HashMap<>();
         data.put("token", memberService.login(email ,password));
         data.put("userInfo", memberService.findUserInfo(email));
-        return new ResponseEntity<Map<String, Object>>(data, HttpStatus.OK);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @GetMapping("/logout")

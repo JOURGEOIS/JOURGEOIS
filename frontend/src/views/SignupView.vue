@@ -1,16 +1,14 @@
 <template>
 	<div class="signup-view">
 		<progress-bar :progress="progress"></progress-bar>
-		<header-basic :prev="true" :success="false"> 회원가입 </header-basic>
+		<header-basic :prev="true" @prevClicked="prevSignupPage" :success="false">
+			회원가입
+		</header-basic>
 		<section class="signup-section">
 			<signup-page1 v-if="currentPage === 0" />
 			<signup-page2 v-if="currentPage === 1" />
 			<signup-page3 v-if="currentPage === 2" />
 			<signup-page4 v-if="currentPage === 3" />
-			<hr />
-			현재 페이지 : {{ currentPage }}
-			<button @click="prevSignupPage">이전</button>
-			<button @click="nextSignupPage">다음</button>
 		</section>
 	</div>
 </template>
@@ -47,7 +45,7 @@ const prevSignupPage = () => {
 
 	.signup-section {
 		width: 100%;
-		margin-top: 2rem;
+		margin-top: 1rem;
 
 		@media #{$tablet} {
 			width: 80%;

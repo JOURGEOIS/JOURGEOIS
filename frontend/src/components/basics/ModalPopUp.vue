@@ -25,13 +25,24 @@ const { modalStyle }: any = selectModalColor(props.modalColor);
 </script>
 
 <style lang="scss">
-@import "@/styles/style.scss";
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
 .modal-container {
   @include flex-xy(center, flex-start);
   width: 100vw;
   height: 100vh;
   position: fixed;
   top: 0;
+  animation: fade-in 1s;
 }
 
 .modal-popup {

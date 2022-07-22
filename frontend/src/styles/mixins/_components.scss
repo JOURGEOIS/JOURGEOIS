@@ -48,7 +48,7 @@
 @mixin popup {
   @include flex-xy(flex-start, center);
   @include p-component;
-  @include shadow-popup1;
+  @include shadow-modal;
   border-radius: $radius-popup;
 }
 

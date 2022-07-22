@@ -40,7 +40,7 @@ public class MemberService {
                   MyUserDetailsService myUserDetailsService,
                   RefreshTokenRepository refreshTokenRepository,
                   S3Util s3Util,
-                  @Value("${jwt.secret-key}") String s3Url){
+                  @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;

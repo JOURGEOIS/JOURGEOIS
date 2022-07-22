@@ -104,7 +104,7 @@ public class MemberController {
     }
 
     @PutMapping("/auth/profile")
-    public ResponseEntity changeProfile(@RequestBody ProfileDto profileDto){
+    public ResponseEntity changeProfile(@ModelAttribute ProfileDto profileDto){
         Map<String, Boolean> data = new HashMap<>();
         try {
             memberService.changeProfile(profileDto);

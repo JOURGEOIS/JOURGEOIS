@@ -1,16 +1,23 @@
 <template>
 	<div class="title-container">
-		<div class="title-content" v-for="main in mainList">
-			{{ main }}
+		<div
+			class="main-title"
+			v-if="mainList !== undefined && mainList.length !== 0"
+		>
+			<div class="title-content" v-for="(main, idx) in mainList" :key="idx">
+				{{ main }}
+			</div>
 		</div>
-		<div class="subtitle-content" v-for="sub in subList">
-			{{ sub }}
+		<div class="sub-title" v-if="subList !== undefined && subList.length !== 0">
+			<div class="subtitle-content" v-for="(sub, idx) in subList" :key="idx">
+				{{ sub }}
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed } from "vue";
 interface titleContent {
 	mainList: string[];
 	subList: string[];
@@ -25,13 +32,13 @@ const { mainList, subList } = props.contents;
 
 <style scoped lang="scss">
 .title-container {
-	padding: 1em 0;
-	margin-top: 1em;
-	background-color: $unchecked-color;
+	padding-bottom: 2rem;
 	color: $main-color;
-
 	@include flex(column);
 
+	.sub-title {
+		padding: $fs-xs 0;
+	}
 	.title-content {
 		@include flex-xy(flex-start);
 		@include font($fs-main, $fw-medium);
@@ -40,7 +47,6 @@ const { mainList, subList } = props.contents;
 
 	.subtitle-content {
 		@include flex-xy(flex-start);
-		padding: $fs-xs 0;
 		font-size: $fs-sm;
 		font-weight: $fw-light;
 		color: $main-color;

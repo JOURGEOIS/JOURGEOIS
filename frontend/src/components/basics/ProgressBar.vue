@@ -1,5 +1,7 @@
 <template>
-	<section id="progress-bar">{{ progress }}</section>
+	<section class="progress-bar">
+		<div class="progress-bar-inner" :style="{ width: progress + 'vw' }"></div>
+	</section>
 </template>
 
 <script setup lang="ts">
@@ -9,10 +11,15 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
-#progress-bar {
+.progress-bar {
 	width: 100vw;
-	height: $fs-xs;
-	border: 1px solid black;
-	@include ignoreAppMargin;
+	height: 3px;
+	background-color: $unchecked-color;
+	.progress-bar-inner {
+		width: 10vw;
+		height: 3px;
+		background-color: $primary-color;
+		transition: width 0.5s ease-in-out;
+	}
 }
 </style>

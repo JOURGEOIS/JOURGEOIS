@@ -30,10 +30,6 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0' // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
 
-//    implementation 'mysql:mysql-connector-java:8.0.28'
-
-
-
 }
 
 tasks.named('test') {

@@ -1,13 +1,20 @@
 package com.jourgeois.backend.domain;
 
+import lombok.*;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "MEMBER")
 public class Member {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, name = "UID")
-    private String uid;
+    private Long uid;
     @Column(name = "EMAIL")
     private String email;
     @Column(name = "PASSWORD")
@@ -24,27 +31,28 @@ public class Member {
     private String introduce;
 //    private String createDate;
 
-    public Member(String uid, String password, String name, String nickname, String email, String birthday, String profileImg, String introduce) {
-        this.uid = uid;
-        this.password = password;
-        this.name = name;
-        this.nickname = nickname;
-        this.email = email;
-        this.birthday = birthday;
-        this.profileImg = profileImg;
-        this.introduce = introduce;
-//        this.createDate = createDate;
-    }
+    private String roles;
 
-    public Member() {
-
-    }
-
-    public String getUid() {
+//    public Member(String password, String name, String nickname, String email, String birthday, String profileImg, String introduce) {
+//        this.password = password;
+//        this.name = name;
+//        this.nickname = nickname;
+//        this.email = email;
+//        this.birthday = birthday;
+//        this.profileImg = profileImg;
+//        this.introduce = introduce;
+////        this.createDate = createDate;
+//    }
+//
+//    public Member() {
+//
+//    }
+//
+    public Long getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 
@@ -103,7 +111,7 @@ public class Member {
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
     }
-//
+
 //    public String getCreateDate() {
 //        return createDate;
 //    }
@@ -125,4 +133,26 @@ public class Member {
                 ", introduce='" + introduce + '\'' +
                 '}';
     }
+
+    public List<String> getRoleList() {
+        if (roles.length() > 0) {
+            System.out.println("roles " + roles.split(",").toString());
+            return Arrays.asList(roles.split(","));
+        }
+        return new ArrayList<>();
+    }
+
+    @Builder
+    public Member(String email, String pw) {
+        this.email = email;
+        this.password = pw;
+        this.roles = "ROLE_USER";
+    }
+
+//    public static Member testCreate(String userId, String pw) {
+//        return Member.builder()
+//                .userId(userId)
+//                .pw(pw)
+//                .build();
+//    }
 }

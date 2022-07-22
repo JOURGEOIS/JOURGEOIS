@@ -15,7 +15,7 @@
 				isModalBtn ? { visibility: 'visible' } : { visibility: 'hidden' },
 			]"
 			class="checker-link"
-			@click="showModal"
+			@click="clickModalIconInner"
 		>
 			<span class="material-icons checker-arrow-icon"> arrow_forward_ios </span>
 		</span>
@@ -33,14 +33,20 @@ let { order, isChecked, checkContent, isModalBtn, modalContent } = toRefs(
 	props.contents
 );
 
-const emit = defineEmits<{ (e: "clickCheckIcon", order: number): void }>();
+const emit = defineEmits<{
+	(e: "clickCheckIcon", order: number): void;
+	(e: "clickModalIcon"): void;
+}>();
+
 // 체크 표시 switch
 const clickCheckIconInner = () => {
 	emit("clickCheckIcon", order.value);
 };
 
-const showModal = () => {
-	alert(modalContent);
+// 모달 켜고 끄기
+const clickModalIconInner = () => {
+	console.log("hihi");
+	emit("clickModalIcon");
 };
 </script>
 

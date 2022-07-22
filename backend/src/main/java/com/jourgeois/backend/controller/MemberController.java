@@ -97,7 +97,7 @@ public class MemberController {
         return HttpStatus.OK;
     }
 
-    @DeleteMapping("/signOut")
+    @DeleteMapping("/auth/signOut")
     public ResponseEntity signOut(@RequestBody Map<String, String> user) {
         memberService.signOut(user.get("email"));
         return ResponseEntity.status(HttpStatus.OK).body(null);

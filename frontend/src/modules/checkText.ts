@@ -94,8 +94,8 @@ function checkBirthFormat(text: string) {
 
 	if (isNaN(year) || isNaN(month) || isNaN(day)) return false;
 	if (1900 > year || year > now.getFullYear()) return false;
-	if (month > 12) return false;
-	if (day > 31) return false;
+	if (month > 12 || month < 1) return false;
+	if (day > 31 || day < 1) return false;
 	return true;
 }
 

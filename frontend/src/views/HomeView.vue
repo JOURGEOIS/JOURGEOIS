@@ -3,6 +3,7 @@
     <router-link to="/">Home</router-link> <br />
     <router-link to="/user/signup">회원가입</router-link> <br />
     <router-link to="/user/login">로그인</router-link>
+    <router-link to="/user/help/info">유저정보수정</router-link>
   </div>
 </template>
 

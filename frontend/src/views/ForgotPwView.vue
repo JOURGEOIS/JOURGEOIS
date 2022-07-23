@@ -4,17 +4,48 @@
       비밀번호 찾기
     </header-basic>
     <section class="forgot-pw-section">
-      <p>회원님의 비밀번호를 찾기 위해서　</p>
-      <p>이름, 아이디, 이메일이 필요합니다.</p>
-      <the-forgot-pw-form></the-forgot-pw-form>
+      <component :is="currentComponent"> </component>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import TheForgotPwForm from "@/components/accounts/TheForgotPwForm.vue";
-import { clickPrevButton } from "../modules/clickEvent";
+import { computed, defineAsyncComponent, onBeforeMount } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+const index = computed(() => store.getters["password/getForgotPwCurrentTab"]);
+
+const componentArray = [
+  defineAsyncComponent(
+    () => import("@/components/accounts/TheForgotPwForm.vue")
+  ),
+  defineAsyncComponent(
+    () => import("@/components/accounts/ThePwChangeForm.vue")
+  ),
+];
+
+const currentComponent = computed(() => {
+  return componentArray[index.value];
+});
+
+//vuex 리셋하기 (현재 탭, 에러 메시지, 이메일 정보)
+const changeCurrentComponent = (value: number) =>
+  store.dispatch("password/changeForgotPwCurrentTab", value);
+
+const toggleForgotPwErrorMsg = (value: boolean) => {
+  store.dispatch("password/toggleForgotPwErrorMsg", value);
+};
+
+const changeForgotPwEmail = (email: string) =>
+  store.dispatch("password/changeForgotPwEmail", email);
+
+onBeforeMount(() => {
+  changeCurrentComponent(0);
+  toggleForgotPwErrorMsg(false);
+  changeForgotPwEmail("");
+});
 </script>
 
 <style scoped lang="scss">
@@ -25,17 +56,9 @@ import { clickPrevButton } from "../modules/clickEvent";
   @include accountLayOut;
 
   section {
+    @include flex(column);
     width: 100%;
     margin-top: 2rem;
-
-    p {
-      color: $sub-color;
-      @include font($fs-main, $fw-medium);
-
-      @media #{$tablet} {
-        display: inline;
-      }
-    }
   }
 }
 

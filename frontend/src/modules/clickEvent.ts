@@ -1,9 +1,11 @@
-import { useRouter } from "vue-router";
-const router = useRouter();
+import router from "../router";
 
 // 이전 페이지로 이동 버튼 클릭
-function clickPrevButton() {
-  router.go(-1);
+function clickHome() {
+  router.push({
+    path: "/",
+    name: "Home",
+  });
 }
 
-export { clickPrevButton };
+export { clickHome };

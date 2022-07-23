@@ -33,6 +33,7 @@
 					></input-basic>
 					<section class="condition-checker-section">
 						<condition-checker :props="birthLengthCheckerProps" />
+						<condition-checker :props="birthFormatCheckerProps" />
 					</section>
 				</div>
 			</section>
@@ -58,6 +59,7 @@
 				</div>
 			</section>
 		</div>
+
 		<!-- 다음 -->
 		<button-basic
 			:button-style="[nextButtonColor, 'long', 'small']"
@@ -84,6 +86,7 @@ import {
 	checkBadWord,
 	checkAsterisk,
 	checkENKR,
+	checkBirthFormat,
 } from "../../modules/checkText";
 
 // 제목 컴포넌트
@@ -122,6 +125,7 @@ const birthInputData: object = reactive({
 	// label: "생년월일",
 	placeholder: "YYYYMMDD",
 	type: "text",
+	maxlength: 10,
 });
 
 const nicknameInputData: object = reactive({
@@ -146,6 +150,12 @@ const nameEnKrCheckerProps = reactive({
 const birthLengthCheckerProps = reactive({
 	isChecked: false,
 	checkContent: "생년월일 8자리를 입력해주세요.",
+	isIconTypeDanger: false,
+});
+
+const birthFormatCheckerProps = reactive({
+	isChecked: false,
+	checkContent: "입력형식이 일치합니다.",
 	isIconTypeDanger: false,
 });
 
@@ -180,8 +190,31 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-	birthLengthCheckerProps.isChecked =
-		birthInputValue.value.length === 8 ? true : false;
+	const t = ref(birthInputValue.value);
+	const birthLength = t.value.length;
+	const lastChar = t.value[birthLength - 1];
+
+	// 입력 완료 시
+	if (birthLength === 10) {
+		birthLengthCheckerProps.isChecked =
+			birthInputValue.value.length === 10 ? true : false;
+
+		birthFormatCheckerProps.isChecked = checkBirthFormat(t.value);
+	} else if (birthLength === 5 || birthLength === 8) {
+		// 지울 때
+		if (lastChar === "/") {
+			birthInputValue.value = t.value.substring(0, birthLength - 1);
+		} else if (isNaN(Number(lastChar))) {
+			birthInputValue.value = t.value.substring(0, birthLength - 2);
+		} else {
+			// 입력할 때
+			birthInputValue.value =
+				birthInputValue.value.substring(0, birthLength - 1) + "/" + lastChar;
+		}
+	}
+	// else if (birthLength == 7 || birthLength == 12) {
+	// 	birthInputValue.value = birthInputValue.value.substring(0, birthLength - 3);
+	// }
 });
 
 watchEffect(() => {
@@ -212,6 +245,7 @@ const isFullfillToNext = computed(() => {
 	return (
 		nameEnKrCheckerProps.isChecked &&
 		birthLengthCheckerProps.isChecked &&
+		birthFormatCheckerProps.isChecked &&
 		nicknameLengthCheckerProps.isChecked &&
 		!duplicatedNicknameCheckerProps.isChecked &&
 		!badWordsCheckerProps.isChecked &&

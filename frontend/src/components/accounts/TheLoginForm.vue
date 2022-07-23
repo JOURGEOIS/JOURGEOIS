@@ -72,6 +72,7 @@ const pwInputData: object = reactive({
   label: "비밀번호",
   placeholder: "비밀번호를 입력하세요.",
   type: "password",
+  maxlength: 20,
 });
 
 const pwInputStyle = ref("normal");

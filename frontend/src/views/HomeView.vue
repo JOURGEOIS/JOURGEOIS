@@ -1,8 +1,8 @@
 <template>
 	<div class="tmp-container">
 		<router-link to="/">Home</router-link> <br />
-		<router-link to="/signup">회원가입</router-link> <br />
-		<router-link to="/login">로그인</router-link>
+		<router-link to="/user/signup">회원가입</router-link> <br />
+		<router-link to="/user/login">로그인</router-link>
 	</div>
 </template>
 

@@ -1,19 +1,26 @@
 package com.jourgeois.backend.controller;
 
-import com.jourgeois.backend.service.MemberService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.jourgeois.backend.api.dto.TokenResponseDto;
+import com.jourgeois.backend.service.TokenService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/auth")
+@Slf4j
 public class AuthController {
-    MemberService memberService;
+    private  final TokenService tokenService;
 
-    @GetMapping(value = "/email")
-    public String authEmail(){
-        System.out.println("Controller - /auth/email 입니다.");
-//        memberService.createUser();
-        return "";
+    @Autowired
+    AuthController(TokenService tokenService){
+        this.tokenService = tokenService;
+    }
+
+    @PostMapping("/auth/token")
+    public TokenResponseDto reissueAccessToken(@RequestHeader String refreshToken){
+        System.out.println("token: " + refreshToken);
+        return tokenService.reissueAccessToken(refreshToken);
     }
 }

@@ -52,7 +52,7 @@ import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
-import { checkIsEmail } from "../../modules/checkText";
+import { checkEmailCondition } from "../../modules/checkText";
 
 // 제목 컴포넌트
 const titleContents = reactive({
@@ -93,7 +93,7 @@ const submitCheckEmailForm = () => {
 // 이메일이 1자라도 입력되면 true 반환
 const isFullfillToSubmit = computed(() => {
 	// 입력이 있다면
-	return checkIsEmail(emailInputValue.value);
+	return checkEmailCondition(emailInputValue.value);
 });
 
 const submitButtonColor = computed(() => {

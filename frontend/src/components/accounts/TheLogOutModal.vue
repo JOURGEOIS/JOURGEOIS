@@ -1,14 +1,17 @@
 <template>
-  <modal-basic modal-color="white" v-if="logOutModalStatus">
+  <modal-basic modal-color="white" @offModal="toggleLogOutModal(false)">
     <div class="logout-modal-content">
       <p>로그아웃 하시겠어요?</p>
       <div class="logout-modal-button">
-        <button-basic :button-style="['main-blank', '50%', 'small']"
-          >취소</button-basic
+        <button-basic
+          :button-style="['main-blank', '50%', 'small']"
+          @click="toggleLogOutModal(false)"
         >
-        <button-basic :button-style="['primary', '50%', 'small']"
-          >로그아웃</button-basic
-        >
+          취소
+        </button-basic>
+        <button-basic :button-style="['primary', '50%', 'small']">
+          로그아웃
+        </button-basic>
       </div>
     </div>
   </modal-basic>
@@ -18,12 +21,10 @@
 import ModalBasic from "@/components/basics/ModalBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { useStore } from "vuex";
-import { computed } from "vue";
 
 const store = useStore();
-const logOutModalStatus = computed(
-  () => store.getters["account/getLogOutModalStatus"]
-);
+const toggleLogOutModal = (value: boolean) =>
+  store.dispatch("account/toggleLogOutModal", value);
 </script>
 
 <style scoped lang="scss">

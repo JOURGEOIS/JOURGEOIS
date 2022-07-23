@@ -6,6 +6,8 @@
     - id: (string) 해당 input을 식별할 수 있는 유니크한 id값이다.
     - label: (string): 라벨에 들어가는 값
     - placeholder: (string) placeholder에 들어가는 값. 없을 경우 ""로 표기
+    - type(string): input 타입
+    - maxlength(number): input maxLength
   inputStyle: normal과 error로 나뉘며 normal일 경우, 평범한 input을 가져온다. error일 경우,빨간색 input을 가져온다. 
 -->
 

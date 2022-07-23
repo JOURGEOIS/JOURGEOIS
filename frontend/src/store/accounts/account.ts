@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import drf from "../../api/drf";
 import axios from "axios";
+import { clickHome } from "../../modules/clickEvent";
 
 // Signup의 State 타입을 설정한다.
 export interface AccountState {
@@ -43,7 +44,7 @@ export const account: Module<AccountState, RootState> = {
     toggleLoginError: ({ commit }, value) => {
       commit("SET_LOGIN_ERROR_MSG", value);
     },
-    login: ({ commit }, { email, password }) => {
+    login: ({ commit, dispatch }, { email, password }) => {
       axios({
         url: drf.accounts.login(),
         method: "post",
@@ -53,13 +54,33 @@ export const account: Module<AccountState, RootState> = {
         },
       })
         .then((response) => {
+          const { userInfo, token } = response.data;
+          const { accessToken, refreshToken } = token;
+          dispatch("personalInfo/saveUserInfo", userInfo, { root: true });
+          dispatch(
+            "personalInfo/saveToken",
+            { accessToken, refreshToken },
+            { root: true }
+          );
+          clickHome();
+        })
+        .catch((error) => {
+          commit("SET_LOGIN_ERROR_MSG", true);
+        });
+    },
+    logout: ({ commit, dispatch, rootGetters }) => {
+      axios({
+        url: drf.accounts.signOut(),
+        method: "post",
+        data: {
+          id: rootGetters["personalInfo/userInfoId"],
+        },
+      })
+        .then((response) => {
           console.log(response.data);
-          console.log("성공");
         })
         .catch((error) => {
           console.log(error);
-          console.log("실패");
-          commit("SET_LOGIN_ERROR_MSG", true);
         });
     },
   },

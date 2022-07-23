@@ -4,11 +4,14 @@
   modal-color가 primary이면 프라이머리컬러 모달이 생성됩니다.
   modal-color가 white이면 하얀색 모달이 생성됩니다. 
   modal-color가 danger이면 빨간색 모달이 생성됩니다.
+
+  @offModal이벤트를 emit하여 모달을 off하는 함수를 연결하면, 모달 외부를 클릭하면 모달이 꺼진다. 
+  ex)부모에서 @offModal="toggleLogoutModal(false)"
 -->
 
 <template>
   <teleport to="body">
-    <div class="modal-container">
+    <div class="modal-container" @click.self="offModal">
       <div class="modal-basic" :class="modalStyle">
         <slot></slot>
       </div>
@@ -18,10 +21,17 @@
 
 <script setup lang="ts">
 import selectModalColor from "../../modules/selectModalColor";
+import { defineEmits } from "vue";
+
 const props = defineProps<{
   modalColor: string;
 }>();
 const { modalStyle }: any = selectModalColor(props.modalColor);
+
+const emit = defineEmits<{ (event: "offModal"): void }>();
+const offModal = () => {
+  emit("offModal");
+};
 </script>
 
 <style lang="scss" scoped>

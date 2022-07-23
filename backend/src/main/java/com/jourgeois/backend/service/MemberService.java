@@ -9,8 +9,9 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
-import org.hibernate.annotations.Table;
+import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -29,24 +31,35 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MyUserDetailsService myUserDetailsService;
     private final RefreshTokenRepository refreshTokenRepository;
-
+    private final S3Util s3Util;
+    private final String s3Url;
     @Autowired
     MemberService(MemberRepository memberRepository,
                   PasswordEncoder passwordEncoder,
                   JwtTokenProvider jwtTokenProvider,
                   MyUserDetailsService myUserDetailsService,
-                  RefreshTokenRepository refreshTokenRepository){
+                  RefreshTokenRepository refreshTokenRepository,
+                  S3Util s3Util,
+                  @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.myUserDetailsService = myUserDetailsService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.s3Util = s3Util;
+        this.s3Url = s3Url;
     }
 
-    public void createUser(Member m) throws Exception {
-        validateDuplicateUser(m.getEmail());
-        m.setPassword(passwordEncoder.encode(m.getPassword()));
-        memberRepository.save(m);
+    public boolean signUp(Member m) throws Exception {
+        try {
+            validateDuplicateUser(m.getEmail());
+            m.setPassword(passwordEncoder.encode(m.getPassword()));
+            memberRepository.save(m);
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Transactional
@@ -56,38 +69,73 @@ public class MemberService {
                         (member -> {throw new IllegalArgumentException("닉네임 중복");}),
                         ()->memberRepository.findByEmail(data.getEmail())
                                 .ifPresent(member -> {
+                                    member.setName(data.getName());
                                     member.setIntroduce(data.getIntroduce());
-                                    member.setProfileImg(data.getProfileImg());
                                     member.setNickname(data.getNickname());
-                                    memberRepository.save(member);
+                                    try{
+                                        if(data.getProfileLink()!=null && !data.getProfileLink().isEmpty()){
+                                            s3Util.deleteFile(member.getProfileImg());
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), data.getNickname()));
+                                        }
+                                    } catch (IOException e){
+                                        throw new IllegalArgumentException("이미지 업로드 오류");
+                                    } finally {
+                                        memberRepository.save(member);
+                                    }
                                 })
                 );
         return true;
     }
 
-    @Transactional
-    public TokenResponseDto signIn(String userId, String pw) {
-        // uesrId 확인
-        UserDetails userDetails = myUserDetailsService.loadUserByUsername(userId);
+    public boolean checkEmail(String email){
+        Optional<Member> result = memberRepository.findByEmail(email);
+        // 중복된 이메일이 없다면 사용 가능 return
+        if(result.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public boolean checkNickname(String nickname){
+        Member result = memberRepository.findByNickname(nickname);
+        // 중복된 닉네임이 없다면 사용 가능 return
+        if(result==null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Transactional
+    public TokenResponseDto login(String email, String password) {
+        // userId 확인
+        System.out.println("3333331231231231312");
+        UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
+
+        System.out.println("111111111");
         // pw 확인
-        if(!passwordEncoder.matches(pw, userDetails.getPassword())){
+        if(!passwordEncoder.matches(password, userDetails.getPassword())){
             throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
         }
 
         Authentication authentication =  new UsernamePasswordAuthenticationToken(
                 userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
 
+        System.out.println("222222222");
+
         // refresh token 발급 및 저장
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
-        RefreshToken token = RefreshToken.createToken(userId, refreshToken);
+        RefreshToken token = RefreshToken.createToken(email, refreshToken);
         System.out.println(refreshToken + " " + token);
         // 기존 토큰이 있으면 수정, 없으면 생성
-        refreshTokenRepository.findByEmail(userId)
+        refreshTokenRepository.findByEmail(email)
                 .ifPresentOrElse(
                         (tokenEntity)->tokenEntity.changeToken(refreshToken),
-                        ()->refreshTokenRepository.save(RefreshToken.createToken(userId, refreshToken))
+                        ()->refreshTokenRepository.save(RefreshToken.createToken(email, refreshToken))
                 );
+
+        System.out.println("33333333333333333");
 
         return TokenResponseDto.builder()
                 .accessToken("Bearer-"+jwtTokenProvider.createAccessToken(authentication))
@@ -96,8 +144,16 @@ public class MemberService {
     }
 
     @Transactional
-    public Optional<Member> findUserInfo(String userId){
-        return memberRepository.findByEmail(userId);
+    public ProfileDto findUserInfo(String userId){
+        Optional<Member> member = memberRepository.findByEmail(userId);
+        return ProfileDto.builder()
+                .email(member.get().getEmail())
+                .name(member.get().getName())
+                .nickname(member.get().getNickname())
+                .introduce(member.get().getIntroduce())
+                .profileImg(s3Url+ member.get().getProfileImg())
+                .build();
+
     }
 
     @Transactional
@@ -115,21 +171,19 @@ public class MemberService {
                 });
     }
 
-    // Dummy Data 생성
-//    public void makeDummyData(EntityManager em){
-//        em.persist(new Member("1", "1234", "전승준", "paasasd", "jsznawa@Naver.com", "1997-12-26", "a.img", "안녕하세요 전 승준입니다."));
-//    }
-
-    public void readUser(Member m) throws Exception {
-
-    }
-
-    public void updateUser(Member m) throws Exception {
-
-    }
-
-    public void deleteUser(Member m) throws Exception {
-
+    @Transactional
+    public void signOut(String email) throws Exception{
+        Optional<Member> member = memberRepository.findByEmail(email);
+        member.ifPresentOrElse(selectMember -> {
+            refreshTokenRepository.deleteByEmail(selectMember.getEmail());
+            String userProfile = selectMember.getProfileImg();
+            if(!userProfile.equals("default/1.png"))
+                s3Util.deleteFile(userProfile);
+            memberRepository.delete(selectMember);
+        }, () -> {
+            throw new IllegalArgumentException("가입된 회원이 아닙니다.");
+        });
+        System.out.println("회원 탈퇴 완료");
     }
 
     @Transactional
@@ -162,4 +216,5 @@ public class MemberService {
                         () -> {throw new IllegalArgumentException("가입 정보가 없습니다.");}
                 );
     }
+
 }

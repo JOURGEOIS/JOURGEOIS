@@ -20,6 +20,17 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+#cloud:
+#  aws:
+#    s3:
+#      bucket: jourgeois-profile-image
+#    region:
+#      static: ap-northeast-2
+#    credentials:
+#      accessKey: AKIA3UA3EZT64ZXACMGY
+#      secretKey: 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
+#    stack:
+#      auto: false
 jwt:
   secret-key: secret-key-ssafy-daejeon-jourgeois-service-HS512-algorithm
   token-validity-in-sec: 1

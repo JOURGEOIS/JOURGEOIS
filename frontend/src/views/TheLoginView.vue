@@ -9,16 +9,13 @@
         <router-link to="/user/help/password">
           <p>비밀번호 찾기</p>
         </router-link>
-        <router-link to="/signup">
+        <router-link to="/user/signup">
           <p>회원가입</p>
         </router-link>
       </div>
       <the-social-login></the-social-login>
     </section>
   </div>
-  <failure-pop-up v-if="loginFailModalStatus">
-    로그인에 실패했습니다.
-  </failure-pop-up>
 </template>
 
 <script setup lang="ts">

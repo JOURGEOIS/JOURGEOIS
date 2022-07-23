@@ -1,12 +1,12 @@
 import { Module } from "vuex";
 import { RootState } from "../index";
 
-export interface PersonalInfo {
+export interface PersonalInfoState {
   accessToken: string;
   refreshToken: string;
 }
 
-export const personalInfo: Module<PersonalInfo, RootState> = {
+export const personalInfo: Module<PersonalInfoState, RootState> = {
   namespaced: true,
 
   state: {

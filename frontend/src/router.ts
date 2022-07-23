@@ -10,7 +10,7 @@ const routes: any[] = [
 
   // 회원가입 화면
   {
-    path: "/signup",
+    path: "/user/signup",
     name: "Signup",
     component: () => import("@/views/SignupView.vue"),
   },

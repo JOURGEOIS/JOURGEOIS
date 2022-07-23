@@ -1,8 +1,9 @@
 <!-- 
   :modal-color="색상"
   modal-color 프롭스에 따라 색상이 변합니다.
-  modal-color가 purple이면 프라이머리컬러 pop-up이 생성됩니다.
-  modal-color가 white이면 하얀색 pop-up이 생성됩니다. 
+  modal-color가 primary이면 프라이머리컬러 pop-up이 생성됩니다.
+  modal-color가 white이면 하얀색 pop-up이 생성됩니다.
+  modal-color가 danger이면 빨간색 pop-up이 생성됩니다.
 -->
 
 <template>
@@ -24,14 +25,25 @@ const props = defineProps<{
 const { modalStyle }: any = selectModalColor(props.modalColor);
 </script>
 
-<style lang="scss">
-@import "@/styles/style.scss";
+<style scoped lang="scss">
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
 .modal-container {
   @include flex-xy(center, flex-start);
   width: 100vw;
   height: 100vh;
   position: fixed;
   top: 0;
+  animation: fade-in 1s;
 }
 
 .modal-popup {
@@ -60,5 +72,10 @@ const { modalStyle }: any = selectModalColor(props.modalColor);
 .white-modal {
   color: $main-color;
   background-color: $white;
+}
+
+.danger-modal {
+  color: $white;
+  background-color: crimson;
 }
 </style>

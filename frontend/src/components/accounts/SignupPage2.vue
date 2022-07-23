@@ -32,13 +32,13 @@
 				인증메일 재전송
 			</button-basic>
 
-			<!-- 완료 버튼: 다음 페이지로 이동 -->
+			<!-- 다음 버튼: 다음 페이지로 이동 -->
 			<button-basic
 				:button-style="[nextButtonColor, '38%', 'small']"
 				:disabled="!isFullfillToNext"
 				@click="nextSignupPage"
 			>
-				완료
+				다음
 			</button-basic>
 		</section>
 	</div>
@@ -51,6 +51,8 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
+
+import { checkEmailCondition } from "../../modules/checkText";
 
 // 제목 컴포넌트
 const titleContents = reactive({
@@ -89,16 +91,13 @@ const submitCheckEmailForm = () => {
 };
 
 // 이메일이 1자라도 입력되면 true 반환
-let submitButtonColor = ref("unchecked");
 const isFullfillToSubmit = computed(() => {
 	// 입력이 있다면
-	if (emailInputValue.value) {
-		submitButtonColor.value = "primary";
-		return true;
-	} else {
-		submitButtonColor.value = "unchecked";
-		return false;
-	}
+	return checkEmailCondition(emailInputValue.value);
+});
+
+const submitButtonColor = computed(() => {
+	return isFullfillToSubmit.value ? "primary" : "unchecked";
 });
 
 // 인증메일 전송 로직

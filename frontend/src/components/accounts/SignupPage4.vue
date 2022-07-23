@@ -33,6 +33,7 @@
 					></input-basic>
 					<section class="condition-checker-section">
 						<condition-checker :props="birthLengthCheckerProps" />
+						<condition-checker :props="birthFormatCheckerProps" />
 					</section>
 				</div>
 			</section>
@@ -58,12 +59,13 @@
 				</div>
 			</section>
 		</div>
+
 		<!-- 다음 -->
 		<button-basic
 			:button-style="[nextButtonColor, 'long', 'small']"
 			class="next-button"
 			:disabled="!isFullfillToNext"
-			@click="nextSignupPage"
+			@click="completeSignupPage"
 		>
 			완료
 		</button-basic>
@@ -80,7 +82,12 @@ import { useStore } from "vuex";
 import { react } from "@babel/types";
 const store = useStore();
 
-import { checkBadWord, checkAsterisk } from "../../modules/checkText";
+import {
+	checkBadWord,
+	checkAsterisk,
+	checkENKR,
+	checkBirthFormat,
+} from "../../modules/checkText";
 
 // 제목 컴포넌트
 const nameTitleContents = reactive({
@@ -118,6 +125,7 @@ const birthInputData: object = reactive({
 	// label: "생년월일",
 	placeholder: "YYYYMMDD",
 	type: "text",
+	maxlength: 10,
 });
 
 const nicknameInputData: object = reactive({
@@ -135,13 +143,19 @@ const nicknameInputStyle = ref("normal");
 // 조건 체크에 대한 props들
 const nameEnKrCheckerProps = reactive({
 	isChecked: false,
-	checkContent: "이름은 숫자 또는 영어만 입력해주세요.",
+	checkContent: "이름은 한글 또는 영어만 입력해주세요.",
 	isIconTypeDanger: false,
 });
 
 const birthLengthCheckerProps = reactive({
 	isChecked: false,
 	checkContent: "생년월일 8자리를 입력해주세요.",
+	isIconTypeDanger: false,
+});
+
+const birthFormatCheckerProps = reactive({
+	isChecked: false,
+	checkContent: "입력형식이 일치합니다.",
 	isIconTypeDanger: false,
 });
 
@@ -171,8 +185,36 @@ const numEnKrCheckerProps = reactive({
 
 // input값 변경에 따른 함수 실행
 watchEffect(() => {
-	birthLengthCheckerProps.isChecked =
-		birthInputValue.value.length === 8 ? true : false;
+	nameEnKrCheckerProps.isChecked =
+		!!nameInputValue.value && checkENKR(nameInputValue.value) ? true : false;
+});
+
+watchEffect(() => {
+	const t = ref(birthInputValue.value);
+	const birthLength = t.value.length;
+	const lastChar = t.value[birthLength - 1];
+
+	// 입력 완료 시
+	if (birthLength === 10) {
+		birthLengthCheckerProps.isChecked =
+			birthInputValue.value.length === 10 ? true : false;
+
+		birthFormatCheckerProps.isChecked = checkBirthFormat(t.value);
+	} else if (birthLength === 5 || birthLength === 8) {
+		// 지울 때
+		if (lastChar === "/") {
+			birthInputValue.value = t.value.substring(0, birthLength - 1);
+		} else if (isNaN(Number(lastChar))) {
+			birthInputValue.value = t.value.substring(0, birthLength - 2);
+		} else {
+			// 입력할 때
+			birthInputValue.value =
+				birthInputValue.value.substring(0, birthLength - 1) + "/" + lastChar;
+		}
+	}
+	// else if (birthLength == 7 || birthLength == 12) {
+	// 	birthInputValue.value = birthInputValue.value.substring(0, birthLength - 3);
+	// }
 });
 
 watchEffect(() => {
@@ -201,7 +243,10 @@ watchEffect(() => {
 
 const isFullfillToNext = computed(() => {
 	return (
+		nameEnKrCheckerProps.isChecked &&
 		birthLengthCheckerProps.isChecked &&
+		birthFormatCheckerProps.isChecked &&
+		nicknameLengthCheckerProps.isChecked &&
 		!duplicatedNicknameCheckerProps.isChecked &&
 		!badWordsCheckerProps.isChecked &&
 		!numEnKrCheckerProps.isChecked
@@ -214,8 +259,11 @@ const nextButtonColor = computed(() => {
 });
 
 // 다음 페이지로 이동
-const nextSignupPage = () => {
+const completeSignupPage = () => {
 	store.dispatch("signup/nextSignupPage");
+	setTimeout(() => {
+		alert("됐다!");
+	}, 500);
 };
 </script>
 

@@ -1,11 +1,17 @@
 <template>
   <div class="login-view">
-    <header-basic :prev="true" :success="false"> 로그인 </header-basic>
+    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+      로그인
+    </header-basic>
     <section class="login-section">
       <the-login-form></the-login-form>
       <div class="login-link">
-        <p>비밀번호 찾기</p>
-        <p>회원가입</p>
+        <router-link to="/user/help/password">
+          <p>비밀번호 찾기</p>
+        </router-link>
+        <router-link to="/user/signup">
+          <p>회원가입</p>
+        </router-link>
       </div>
       <the-social-login></the-social-login>
     </section>
@@ -16,6 +22,14 @@
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheLoginForm from "@/components/accounts/TheLoginForm.vue";
 import TheSocialLogin from "@/components/accounts/TheSocialLogin.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
+const store = useStore();
+
+const loginFailModalStatus = computed(
+  () => store.getters["account/getLoginFailModalStatus"]
+);
 </script>
 
 <style scoped lang="scss">
@@ -55,6 +69,9 @@ section > *:first-child {
 
   p {
     cursor: pointer;
+  }
+  a {
+    text-decoration: none;
   }
 }
 </style>

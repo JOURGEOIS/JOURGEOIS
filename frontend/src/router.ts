@@ -10,14 +10,14 @@ const routes: any[] = [
 
   // 회원가입 화면
   {
-    path: "/signup",
+    path: "/user/signup",
     name: "Signup",
     component: () => import("@/views/SignupView.vue"),
   },
 
   // 로그인 화면
   {
-    path: "/login",
+    path: "/user/login",
     name: "Login",
     component: () => import("@/views/TheLoginView.vue"),
   },
@@ -27,6 +27,13 @@ const routes: any[] = [
     path: "/practice",
     name: "PracticeView",
     component: () => import("@/views/PracticeView.vue"),
+  },
+
+  // 비밀번호 찾기 화면
+  {
+    path: "/user/help/password",
+    name: "ForgotPwView",
+    component: () => import("@/views/ForgotPwView.vue"),
   },
 ];
 

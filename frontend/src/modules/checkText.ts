@@ -26,6 +26,14 @@ function checkAsterisk(text: string): boolean {
 	return patternAsterisk.test(text);
 }
 
+// * 텍스트가 이메일인지 확인
+// @와 .을 가지면 true 반환
+function checkIsEmail(text: string): boolean {
+	const charA = /[@]/;
+	const charB = /[.]/;
+	return charA.test(text) && charB.test(text);
+}
+
 // * 비밀번호 영어 대문자, 소문자, 숫자, 특수문자 중 3종류 이상 조합
 // 위 경우를 만족하면 true 반환
 function checkTripleCombination(text: string) {
@@ -69,35 +77,56 @@ function checkIsEqualPassword(pw1: string, pw2: string) {
 	return pw1 === pw2;
 }
 
-// 이메일 형식 체크
+// * 이메일 형식 체크
 function checkEmailCondition(value: string): boolean {
 	const emailValid =
-		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+		/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 	return emailValid.test(value);
 }
 
+// * 생일 형식 체크
+function checkBirthFormat(text: string) {
+	const [Y, M, D] = text.split("/");
+	const year = Number(Y);
+	const month = Number(M);
+	const day = Number(D);
+	const now = new Date();
+
+	if (isNaN(year) || isNaN(month) || isNaN(day)) return false;
+	if (1900 > year || year > now.getFullYear()) return false;
+	if (month > 12 || month < 1) return false;
+	if (day > 31 || day < 1) return false;
+	return true;
+}
+
 export {
-	// 비속어 필터
+	// * 비속어 필터
 	checkBadWord,
 
-	// 한글+영어 체크
+	// * 한글+영어 체크
 	checkENKR,
 
-	// 텍스트에 특수문자 포함
+	// * 텍스트에 특수문자 포함
 	checkAsterisk,
 
-	// 영어 대문자/소문자/숫자/특수문자 중 3개 이상 포함
+	// * 영어 대문자/소문자/숫자/특수문자 중 3개 이상 포함
 	checkTripleCombination,
 
-	// 비밀번호 길이 체크
+	// * 텍스트가 이메일인지 확인
+	checkIsEmail,
+
+	// * 비밀번호 길이 체크
 	checkPasswordLength,
 
-	// 닉네임 길이 체크
+	// * 닉네임 길이 체크
 	checkNicknameLength,
 
-	// 비밀번호/비밀번호 확인 동일 여부 확인
+	// * 비밀번호/비밀번호 확인 동일 여부 확인
 	checkIsEqualPassword,
 
-	// 이메일 형식 체크
+	// * 이메일 형식 체크
 	checkEmailCondition,
+
+	// * 생일 형식 체크
+	checkBirthFormat,
 };

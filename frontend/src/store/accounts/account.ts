@@ -65,7 +65,6 @@ export const account: Module<AccountState, RootState> = {
           clickHome();
         })
         .catch((error) => {
-          console.log(error);
           commit("SET_LOGIN_ERROR_MSG", true);
         });
     },

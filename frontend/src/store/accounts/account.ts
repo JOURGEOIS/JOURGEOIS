@@ -54,7 +54,6 @@ export const account: Module<AccountState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           const { userInfo, token } = response.data;
           const { accessToken, refreshToken } = token;
           dispatch("personalInfo/saveUserInfo", userInfo, { root: true });
@@ -67,7 +66,6 @@ export const account: Module<AccountState, RootState> = {
         })
         .catch((error) => {
           console.log(error);
-          console.log("실패");
           commit("SET_LOGIN_ERROR_MSG", true);
         });
     },

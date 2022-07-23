@@ -10,7 +10,7 @@ export interface AccountState {
 }
 
 export const account: Module<AccountState, RootState> = {
-	namespaced: true,
+  namespaced: true,
 
   state: {
     logOutModalStatus: false,
@@ -35,28 +35,23 @@ export const account: Module<AccountState, RootState> = {
     },
   },
 
-	actions: {
-		toggleLogOutModal: ({ commit }, value) => {
-			commit("SET_LOGOUT_MODAL", value);
-		},
+  actions: {
+    toggleLogOutModal: ({ commit }, value) => {
+      commit("SET_LOGOUT_MODAL", value);
+    },
 
     toggleLoginError: ({ commit }, value) => {
       commit("SET_LOGIN_ERROR_MSG", value);
     },
     login: ({ commit }, { email, password }) => {
-      console.log(email, password);
-      console.log(drf.accounts.login());
-      axios
-        .post(
-          drf.accounts.login(),
-          {},
-          {
-            params: {
-              email: email,
-              password: encodeURIComponent(password),
-            },
-          }
-        )
+      axios({
+        url: drf.accounts.login(),
+        method: "post",
+        data: {
+          email,
+          password,
+        },
+      })
         .then((response) => {
           console.log(response.data);
           console.log("성공");

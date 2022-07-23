@@ -1,3 +1,27 @@
+<!-- 
+  부모에서 보내는 props=> :button-style="[컬러, 길이, 폰트 크기]"
+  --------------------------------------------------------------
+  1. 컬러: 색깔과 버튼 스타일을 선택할 수 있다. (총 21가지의 선택지)
+  색은 primary, red, emerald, blue, navy, main, sub가 있다. 
+  스타일은 기본, outline, blank가 있다. 
+  ex1) 'primary'
+  ex2) 'primary-outline'
+  ex3) 'primary-blank'
+
+  2. 길이: 버튼의 길이를 조정할 수 있다. 
+  long혹은 직접 너비를 입력할수 있다.
+  long을 선택할 경우 마진을 제외하고 꽉찬다. 단, tablet부터는 max-width가 정해져있다. 
+  ex1) 'long'
+  ex2) '16px'
+
+  3. 폰트 크기: 버튼 내 폰트 크기를 설정할 수 있다. 
+  small(15px), medium(17px), large(20px)
+  --------------------------------------------------------------
+  예시
+  :button-style="['sub-outline', 'long', 'large']"
+  :button-style="['primary-outline', '15px', 'small']"
+-->
+
 <template>
   <button
     :class="buttonColor"

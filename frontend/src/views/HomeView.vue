@@ -1,9 +1,9 @@
 <template>
-	<div class="tmp-container">
-		<router-link to="/">Home</router-link> <br />
-		<router-link to="/signup">회원가입</router-link> <br />
-		<router-link to="/login">로그인</router-link>
-	</div>
+  <div class="tmp-container">
+    <router-link to="/">Home</router-link> <br />
+    <router-link to="/user/signup">회원가입</router-link> <br />
+    <router-link to="/user/login">로그인</router-link>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -18,9 +18,9 @@ const actions = () => store.dispatch("moduleA/plusOneCounter");
 
 <style scoped lang="scss">
 .tmp-container {
-	@include flex(column);
-	align-items: center;
-	padding: 30px;
-	@include font(20px, $fw-bold);
+  @include flex(column);
+  align-items: center;
+  padding: 30px;
+  @include font(20px, $fw-bold);
 }
 </style>

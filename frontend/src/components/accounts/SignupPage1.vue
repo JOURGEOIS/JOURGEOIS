@@ -1,4 +1,5 @@
 <template>
+	<the-personal-info-use-modal></the-personal-info-use-modal>
 	<div class="content-container">
 		<section>
 			<title-block :contents="titleContents" />
@@ -14,14 +15,23 @@
 				{{ description }}
 			</div>
 			<hr class="hr1" />
-			<ul>
-				<li v-for="(agreeContent, idx) in agreeContents" :key="idx">
-					<agree-checker
-						:contents="agreeContent"
-						@clickCheckIcon="switchIsChecked"
-					/>
-				</li>
-			</ul>
+			<agree-checker
+				:contents="agreeContents[0]"
+				@clickCheckIcon="switchIsChecked"
+			/>
+			<agree-checker
+				:contents="agreeContents[1]"
+				@clickCheckIcon="switchIsChecked"
+			/>
+			<agree-checker
+				:contents="agreeContents[2]"
+				@clickCheckIcon="switchIsChecked"
+				@clickModalIcon="togglePersonalInfoUseModal"
+			/>
+			<agree-checker
+				:contents="agreeContents[3]"
+				@clickCheckIcon="switchIsChecked"
+			/>
 		</section>
 		<button-basic
 			:button-style="[buttonColor, 'long', 'small']"
@@ -34,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+import ThePersonalInfoUseModal from "@/components/accounts/ThePersonalInfoUseModal.vue";
 import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import AgreeChecker from "@/components/accounts/AgreeChecker.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
@@ -50,21 +61,13 @@ const descriptionList = [
 	"선택항목에 대한 동의를 거부하시는 경우에도 서비스는 이용이 가능합니다.",
 ];
 
-// 모두 동의
+// 전체 동의 조건 리스트
 const allCheckerContent = reactive({
 	order: 0,
 	isChecked: false,
 	checkContent: "모두 동의합니다.",
 	isModalBtn: false,
 });
-
-const switchAllIsChecked = () => {
-	const TF = allCheckerContent.isChecked ? false : true;
-	agreeContents.forEach((agreeContent) => {
-		agreeContent.isChecked = TF;
-	});
-	allCheckerContent.isChecked = !allCheckerContent.isChecked;
-};
 
 // 동의 조건 리스트
 const agreeContents = reactive([
@@ -98,14 +101,31 @@ const agreeContents = reactive([
 	},
 ]);
 
+// 전체 동의 체크 toggle 함수
+const switchAllIsChecked = () => {
+	const TF = allCheckerContent.isChecked ? false : true;
+	agreeContents.forEach((agreeContent) => {
+		agreeContent.isChecked = TF;
+	});
+	allCheckerContent.isChecked = !allCheckerContent.isChecked;
+};
+
+// 조건별 체크표시 toggle
 const switchIsChecked = (order: number) => {
 	agreeContents[order - 1].isChecked = !agreeContents[order - 1].isChecked;
 };
 
+// 개인정보 이용
+const togglePersonalInfoUseModal = () => {
+	store.dispatch("signup/togglePersonalInfoUseModal");
+};
+
+// 다음 회원가입 페이지로 이동시키는 함수
 const nextSignupPage = () => {
 	store.dispatch("signup/nextSignupPage");
 };
 
+// 다음 페이지로 이동 조건 만족 여부 boolean
 const isFullfillToNext = computed(() => {
 	for (let i = 0; i < 3; i++) {
 		if (!agreeContents[i].isChecked) return false;
@@ -113,6 +133,7 @@ const isFullfillToNext = computed(() => {
 	return true;
 });
 
+// 조건 만족 여부에 따라 변하는 다음 버튼 색상
 const buttonColor = computed(() => {
 	return isFullfillToNext.value ? "primary" : "unchecked";
 });

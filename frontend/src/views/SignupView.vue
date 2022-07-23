@@ -1,7 +1,11 @@
 <template>
 	<div class="signup-view">
 		<progress-bar :progress="progress"></progress-bar>
-		<header-basic :prev="true" @prevClicked="prevSignupPage" :success="false">
+		<header-basic
+			:prev="true"
+			@prevClicked="clickPrevIconSignupPage"
+			:success="false"
+		>
 			회원가입
 		</header-basic>
 		<section class="signup-section">
@@ -20,8 +24,10 @@ import SignupPage3 from "@/components/accounts/SignupPage3.vue";
 import SignupPage4 from "@/components/accounts/SignupPage4.vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import ProgressBar from "@/components/basics/ProgressBar.vue";
+const router = useRouter();
 const store = useStore();
 
 // 현재 페이지 번호 및 페이지 이동
@@ -33,6 +39,14 @@ const nextSignupPage = () => {
 
 const prevSignupPage = () => {
 	store.dispatch("signup/prevSignupPage");
+};
+
+const clickPrevIconSignupPage = () => {
+	if (progress.value === 0) {
+		router.go(-1);
+	} else {
+		prevSignupPage();
+	}
 };
 </script>
 

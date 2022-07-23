@@ -10,7 +10,7 @@ export interface AccountState {
 }
 
 export const account: Module<AccountState, RootState> = {
-  namespaced: true,
+	namespaced: true,
 
   state: {
     logOutModalStatus: false,
@@ -35,10 +35,10 @@ export const account: Module<AccountState, RootState> = {
     },
   },
 
-  actions: {
-    toggleLogOutModal: ({ commit }, value) => {
-      commit("SET_LOGOUT_MODAL", value);
-    },
+	actions: {
+		toggleLogOutModal: ({ commit }, value) => {
+			commit("SET_LOGOUT_MODAL", value);
+		},
 
     toggleLoginError: ({ commit }, value) => {
       commit("SET_LOGIN_ERROR_MSG", value);

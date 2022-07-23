@@ -52,7 +52,7 @@ const iconType = isIconTypeDanger.value ? "block" : "check_circle_outline";
 
 	// 체크 항목 내용
 	.checker-content {
-		@include font(10px, $fw-regular);
+		@include font(12px, $fw-regular);
 	}
 }
 </style>

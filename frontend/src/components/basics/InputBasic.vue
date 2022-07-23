@@ -17,6 +17,7 @@
 				:type="data.type"
 				:id="data.id"
 				:class="inputColor"
+				:disabled="data.isDisabled"
 				:value="modelValue"
 				:placeholder="data.placeholder"
 				:maxlength="data.maxlength"
@@ -26,6 +27,7 @@
 			<div
 				class="input-icon"
 				:style="{ visibility: buttonVisibility }"
+				v-if="!data.isDisabled"
 				@click="$emit('update:modelValue', '')"
 			>
 				<span class="material-icons"> close </span>
@@ -45,6 +47,7 @@ export interface dataObject {
 	placeholder: string;
 	type: string;
 	maxlength: number;
+	isDisabled: boolean;
 }
 
 const props = defineProps<{

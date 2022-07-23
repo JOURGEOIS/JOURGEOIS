@@ -8,6 +8,9 @@
 					:input-style="emailInputStyle"
 					v-model="emailInputValue"
 				></input-basic>
+				<section class="condition-checker-section" v-if="showDuplicateAlert">
+					<condition-checker :props="emailDuplicateCheckerProps" />
+				</section>
 				<title-block :contents="infoContents" v-if="showButtonContainer" />
 				<!-- 인증메일 전송 버튼 -->
 				<div>
@@ -15,7 +18,7 @@
 						:button-style="[submitButtonColor, 'long', 'small']"
 						class="submit-check-email-button"
 						v-if="!showButtonContainer"
-						:disabled="!emailInputValue"
+						:disabled="!isFullfillToSubmit"
 						@click="postCheckEmail"
 					>
 						인증메일 전송
@@ -36,7 +39,7 @@
 			<button-basic
 				:button-style="[nextButtonColor, '38%', 'small']"
 				:disabled="!isFullfillToNext"
-				@click="nextSignupPage"
+				@click="confirmEmailAuthentication"
 			>
 				다음
 			</button-basic>
@@ -45,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import ConditionChecker from "@/components/accounts/ConditionChecker.vue";
 import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
@@ -68,17 +72,21 @@ const infoContents = reactive({
 	],
 });
 
+// 조건 체크에 대한 props들
+const emailDuplicateCheckerProps = reactive({
+	isChecked: true,
+	checkContent: "이미 등록된 이메일입니다!",
+	isIconTypeDanger: true,
+});
+
 // input-value
 const emailInputValue = ref("");
 
-// 이메일 input 데이터
-const emailInputData: object = reactive({
-	button: true,
-	id: "signup-email-input",
-	placeholder: "example@naver.com",
-	type: "text",
+// 이메일이 형식에 맞다면 true 반환
+const isFullfillToSubmit = computed(() => {
+	// 입력이 있다면
+	return checkEmailCondition(emailInputValue.value);
 });
-
 // email input스타일 normal로 정의
 const emailInputStyle = ref("normal");
 
@@ -90,23 +98,37 @@ const submitCheckEmailForm = () => {
 	showButtonContainer = ref(true);
 };
 
-// 이메일이 1자라도 입력되면 true 반환
-const isFullfillToSubmit = computed(() => {
-	// 입력이 있다면
-	return checkEmailCondition(emailInputValue.value);
-});
-
 const submitButtonColor = computed(() => {
 	return isFullfillToSubmit.value ? "primary" : "unchecked";
 });
 
-// 인증메일 전송 로직
-const postCheckEmail = () => {
-	alert("인증메일 전송이 완료되었습니다.");
-	showButtonContainer.value = true;
+// 이메일 인증 함수
+const checkEmailDuplication = (payload: object) => {
+	store.dispatch("signup/checkEmailDuplication", payload);
 };
 
+// 인증메일 전송 로직
+const postCheckEmail = () => {
+	checkEmailDuplication({
+		emailInputValue,
+		showButtonContainer,
+		showDuplicateAlert,
+	});
+};
+
+// 이메일 input 데이터
+const emailInputData: object = reactive({
+	button: true,
+	id: "signup-email-input",
+	placeholder: "example@naver.com",
+	type: "text",
+	isDisabled: showButtonContainer,
+});
+
 // 인증메일 전송 이후
+
+// 중복된 이메일인 경우 경고 표시
+const showDuplicateAlert = ref(false);
 
 // 이메일 인증이 완료되어 다음 페이지로 넘어가도 될 때 true 반환
 const isFullfillToNext = computed(() => {
@@ -121,6 +143,11 @@ const nextButtonColor = computed(() => {
 // 다음 페이지로 이동
 const nextSignupPage = () => {
 	store.dispatch("signup/nextSignupPage");
+};
+
+// 이메일 인증 확인
+const confirmEmailAuthentication = (payload: object) => {
+	store.dispatch("signup/confirmEmailAuthentication", payload);
 };
 </script>
 
@@ -137,5 +164,9 @@ const nextSignupPage = () => {
 		display: inline-flex;
 		justify-content: space-between;
 	}
+}
+
+.condition-checker-section {
+	margin-top: 5px;
 }
 </style>

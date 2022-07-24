@@ -205,6 +205,7 @@ export const signup: Module<SignupState, RootState> = {
 						showDuplicateAlert.value = true;
 						showButtonContainer.value = false;
 						emailInputValue.value = "";
+						loadingStatus.value = false;
 					}
 				})
 				.catch((err) => {

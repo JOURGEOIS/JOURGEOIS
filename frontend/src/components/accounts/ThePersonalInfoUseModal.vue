@@ -1,5 +1,9 @@
 <template>
-	<modal-basic modal-color="white" v-if="personalInfoUseModalStatus">
+	<modal-basic
+		modal-color="white"
+		v-if="personalInfoUseModalStatus"
+		@offModal="togglePersonalInfoUseModal"
+	>
 		<div class="modal-content">
 			<section class="modal-content-section">
 				<article class="description">
@@ -362,6 +366,10 @@ const store = useStore();
 const personalInfoUseModalStatus = computed(
 	() => store.getters["signup/getPersonalInfoUseModalStatus"]
 );
+
+const togglePersonalInfoUseModal = () => {
+	store.dispatch("signup/togglePersonalInfoUseModal");
+};
 </script>
 
 <style scoped lang="scss">

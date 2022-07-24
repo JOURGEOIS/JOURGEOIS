@@ -32,7 +32,7 @@
 		<button-basic
 			:button-style="[nextButtonColor, 'long', 'small']"
 			class="next-button"
-			:disabled="!isFullfillToNext"
+			:disabled="!isFulfillToNext"
 			@click="nextSignupPage"
 		>
 			다음
@@ -125,7 +125,7 @@ watchEffect(() => {
 			: false;
 });
 
-const isFullfillToNext = computed(() => {
+const isFulfillToNext = computed(() => {
 	return (
 		pwLengthCheckerProps.isChecked &&
 		pwTripleCheckerProps.isChecked &&
@@ -135,7 +135,7 @@ const isFullfillToNext = computed(() => {
 
 // 완료 버튼 색 설정
 const nextButtonColor = computed(() => {
-	return isFullfillToNext.value ? "primary" : "disabled";
+	return isFulfillToNext.value ? "primary" : "disabled";
 });
 
 // 다음 페이지로 이동

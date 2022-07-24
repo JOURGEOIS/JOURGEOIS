@@ -65,9 +65,13 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       localStorage.setItem("userInfo", jsonUserInfo);
       commit("SET_USER_INFO", data);
     },
-    removeUserInfo: ({ commit }, data) => {
-      localStorage.setItem("userInfo", "{}");
+    removeUserInfo: ({ commit }) => {
+      localStorage.setItem("userInfo", "");
       commit("SET_USER_INFO", {});
+    },
+    resetUserInfo: ({ commit, dispatch }) => {
+      dispatch("removeToken");
+      dispatch("removeUserInfo");
     },
   },
 };

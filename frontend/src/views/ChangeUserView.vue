@@ -1,5 +1,9 @@
 <template>
   <div class="change-user-info-view">
+    <!-- 헤더 -->
+    <header-basic :prev="true" :success="true" @prevClicked="$router.go(-1)">
+      개인정보 수정
+    </header-basic>
     <section>
       <div class="change-user-info-link">
         <p @click="toggleLogOutModal(true)">로그아웃</p>
@@ -11,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
 import { useStore } from "vuex";
 import { computed } from "vue";
@@ -29,6 +34,10 @@ const toggleLogOutModal = (value: boolean) =>
   justify-content: flex-start;
   align-items: center;
   @include accountLayOut;
+
+  p {
+    cursor: pointer;
+  }
 }
 
 section {

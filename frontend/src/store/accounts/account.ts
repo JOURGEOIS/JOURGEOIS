@@ -8,6 +8,7 @@ import axios from "axios";
 export interface AccountState {
   logOutModalStatus: boolean;
   logOutPopupStatus: boolean;
+  failModalStatus: boolean;
   loginErrorStatus: boolean;
 }
 
@@ -17,6 +18,7 @@ export const account: Module<AccountState, RootState> = {
   state: {
     logOutModalStatus: false,
     logOutPopupStatus: false,
+    failModalStatus: false,
     loginErrorStatus: false,
   },
 
@@ -26,6 +28,9 @@ export const account: Module<AccountState, RootState> = {
     },
     getLogOutPopupStatus: (state) => {
       return state.logOutPopupStatus;
+    },
+    getFailModalStatus: (state) => {
+      return state.failModalStatus;
     },
     getLoginErrorStatus: (state) => {
       return state.loginErrorStatus;
@@ -38,6 +43,9 @@ export const account: Module<AccountState, RootState> = {
     },
     SET_LOGOUT_POPUP: (state, value) => {
       state.logOutPopupStatus = value;
+    },
+    SET_FAIL_MODAL: (state, value) => {
+      state.failModalStatus = value;
     },
     SET_LOGIN_ERROR_MSG: (state, value) => {
       state.loginErrorStatus = value;
@@ -52,9 +60,15 @@ export const account: Module<AccountState, RootState> = {
       commit("SET_LOGOUT_POPUP", value);
     },
 
+    toggleFailModalStatus: ({ commit }, value) => {
+      commit("SET_FAIL_MODAL", value);
+    },
+
     toggleLoginError: ({ commit }, value) => {
       commit("SET_LOGIN_ERROR_MSG", value);
     },
+
+    // 로그인
     login: ({ commit, dispatch }, { email, password }) => {
       axios({
         url: drf.accounts.login(),
@@ -79,24 +93,28 @@ export const account: Module<AccountState, RootState> = {
           commit("SET_LOGIN_ERROR_MSG", true);
         });
     },
+
+    // 로그아웃
     logout: ({ commit, dispatch, rootGetters }) => {
       console.log(rootGetters["personalInfo/getUserInfoId"]);
       axios({
         url: drf.accounts.logout(),
-        method: "post",
-        data: {
-          id: rootGetters["personalInfo/getUserInfoId"],
+        method: "get",
+        params: {
+          email: rootGetters["personalInfo/getUserInfoId"],
         },
       })
         .then((response) => {
-          console.log(response.data);
-          // 성공시 로그아웃 모달 off => 홈으로 이동 =>> 로그아웃 성공 팝업
+          // 성공시 1. 로그아웃 모달 off 2. 정보 지우기 3. 홈으로 이동 4.로그아웃 성공 팝업
           commit("SET_LOGOUT_MODAL", false);
+          dispatch("personalInfo/resetUserInfo", {}, { root: true });
           clickHome();
           commit("SET_LOGOUT_POPUP", true);
         })
         .catch((error) => {
-          console.log(error.response);
+          // 실패 시, 홈으로 이동 후 에러 모달 on
+          clickHome();
+          commit("SET_FAIL_MODAL", true);
         });
     },
   },

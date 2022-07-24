@@ -60,7 +60,7 @@
 			</section>
 		</div>
 
-		<!-- 다음 -->
+		<!-- 완료 -->
 		<button-basic
 			:button-style="[nextButtonColor, 'long', 'small']"
 			class="next-button"
@@ -265,10 +265,16 @@ const nextButtonColor = computed(() => {
 
 // 다음 페이지로 이동
 const completeSignupPage = () => {
-	store.dispatch("signup/nextSignupPage");
-	setTimeout(() => {
-		alert("됐다!");
-	}, 500);
+	const userInfo = {
+		name: nameInputValue.value,
+		nickname: nicknameInputValue.value,
+		birth: birthInputValue.value,
+	};
+	store.dispatch("signup/saveSignupUserInfo", userInfo);
+	// store.dispatch("signup/nextSignupPage");
+	// setTimeout(() => {
+	// 	alert("됐다!");
+	// }, 500);
 };
 </script>
 

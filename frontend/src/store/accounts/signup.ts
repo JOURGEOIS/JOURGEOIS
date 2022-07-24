@@ -13,8 +13,11 @@ export interface SignupState {
 	errorModalStatus: boolean;
 
 	// 유저 개인정보
-	signUpEmail: string;
 	emailAuthentication: boolean;
+	signUpEmail: string;
+	signUpName: string;
+	signUpBirth: string;
+	signUpNickName: string;
 }
 
 // state의 타입추론이 잘 되게 하기 위해 사용한다.
@@ -27,8 +30,11 @@ export const signup: Module<SignupState, RootState> = {
 		errorModalStatus: false,
 
 		// 유저 개인정보
-		signUpEmail: localStorage.getItem("sigunUpEmail") || "",
+		signUpEmail: localStorage.getItem("signUpEmail") || "",
 		emailAuthentication: false,
+		signUpName: localStorage.getItem("signUpName") || "",
+		signUpBirth: localStorage.getItem("signUpBirth") || "",
+		signUpNickName: localStorage.getItem("signUpNickName") || "",
 	},
 	getters: {
 		getCurrentPage: (state) => {
@@ -87,6 +93,15 @@ export const signup: Module<SignupState, RootState> = {
 		// * 이메일 임시 인증 완료 체크
 		SET_EMAIL_AUTHENTICATION: (state) => {
 			state.emailAuthentication = true;
+		},
+
+		// * 회원가입 완료 시 개인정보 state 저장
+		SET_SIGNUP_USER_INFO: (state, userInfo) => {
+			const { name, nickname, birth } = userInfo;
+			console.log(userInfo);
+			state.signUpName = name;
+			state.signUpNickName = nickname;
+			state.signUpBirth = birth.split("/").join("");
 		},
 
 		// * 에러 모달 toggle 함수
@@ -207,6 +222,11 @@ export const signup: Module<SignupState, RootState> = {
 					console.dir(err);
 					alert("에러 발생!");
 				});
+		},
+
+		// * 회원가입 완료 시 개인정보 state 저장
+		saveSignupUserInfo: ({ commit }, userInfo) => {
+			commit("SET_SIGNUP_USER_INFO", userInfo);
 		},
 
 		// * 에러 모달 toggle 함수

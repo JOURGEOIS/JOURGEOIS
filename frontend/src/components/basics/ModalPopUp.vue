@@ -17,7 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import selectModalColor from "../../modules/selectModalColor";
+import { selectModalColor } from "../../modules/modalEvent";
+
 const props = defineProps<{
   modalColor: string;
 }>();

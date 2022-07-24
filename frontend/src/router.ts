@@ -22,11 +22,11 @@ const routes: any[] = [
     component: () => import("@/views/TheLoginView.vue"),
   },
 
-  // 연습 화면
+  // 유저 정보 수정
   {
-    path: "/practice",
-    name: "PracticeView",
-    component: () => import("@/views/PracticeView.vue"),
+    path: "/user/my-info",
+    name: "ChangeUserView",
+    component: () => import("@/views/ChangeUserView.vue"),
   },
 
   // 비밀번호 찾기 화면
@@ -34,6 +34,13 @@ const routes: any[] = [
     path: "/user/help/password",
     name: "ForgotPwView",
     component: () => import("@/views/ForgotPwView.vue"),
+  },
+
+  // 비밀번호 변경 화면
+  {
+    path: "/user/my-info/password",
+    name: "ChangePwView",
+    component: () => import("@/views/ChangePwView.vue"),
   },
 ];
 

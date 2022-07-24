@@ -1,6 +1,8 @@
 import { createStore } from "vuex";
 import { account, AccountState } from "../store/accounts/account";
 import { signup, SignupState } from "../store/accounts/signup";
+import { password, PasswordState } from "../store/accounts/password";
+
 import {
   personalInfo,
   PersonalInfoState,
@@ -11,9 +13,10 @@ export interface RootState {
   Account: AccountState;
   Signup: SignupState;
   personalInfo: PersonalInfoState;
+  password: PasswordState;
 }
 
 // store를 생성한다.
 export default createStore({
-  modules: { account, signup, personalInfo },
+  modules: { account, signup, personalInfo, password },
 });

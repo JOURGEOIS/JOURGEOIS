@@ -285,13 +285,45 @@ export const signup: Module<SignupState, RootState> = {
 
 		// * [Page3] 비밀번호 임시 저장
 		saveSignUpPw: ({ commit }, password) => {
-			console.log("되잖아");
 			commit("SET_SIGNUP_PW", password);
 		},
 
-		// * [Page5] 회원가입 완료 시 개인정보 state 저장
+		// * [Page Final] 회원가입 완료 전 개인정보 state 저장
 		saveSignupUserInfo: ({ commit }, userInfo) => {
 			commit("SET_SIGNUP_USER_INFO", userInfo);
+		},
+
+		// * [Page Final] 회원가입 완료 접수
+		submitSignUp: ({ commit, state, dispatch }) => {
+			console.log("submitSignUp 왔어");
+			axios({
+				method: "POST",
+				url: drf.accounts.signUp(),
+				data: {
+					email: state.signUpEmail,
+					password: state.signUpPw,
+					name: state.signUpName,
+					nickname: state.signUpNickName,
+					birthday: state.signUpBirth,
+				},
+			})
+				.then((res) => {
+					console.log("회원가입 axios 보냄!!", res.data);
+					// 회원가입 성공
+					if (res.data.success) {
+						alert("회원가입에 성공하였습니다.");
+						const loginUserInfo = {
+							email: state.signUpEmail,
+							password: state.signUpPw,
+						};
+						dispatch("account/login", loginUserInfo, { root: true });
+					}
+					// 회원가입 실패
+					else {
+						alert("회원가입에 실패하였습니다.");
+					}
+				})
+				.catch((err) => console.error(err.response));
 		},
 
 		// * 에러 모달 toggle 함수

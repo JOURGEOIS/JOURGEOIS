@@ -1,3 +1,4 @@
+<!-- 비밀번호 찾기 페이지 -->
 <template>
   <div class="forgot-pw-view">
     <!-- 헤더 -->

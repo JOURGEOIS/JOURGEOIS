@@ -104,7 +104,7 @@ export const account: Module<AccountState, RootState> = {
           email: rootGetters["personalInfo/getUserInfoId"],
         },
       })
-        .then((response) => {
+        .then(() => {
           // 성공시 1. 로그아웃 모달 off 2. 정보 지우기 3. 홈으로 이동 4.로그아웃 성공 팝업
           commit("SET_LOGOUT_MODAL", false);
           dispatch("personalInfo/resetUserInfo", {}, { root: true });

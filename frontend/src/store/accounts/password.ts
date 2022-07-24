@@ -11,6 +11,7 @@ export interface PasswordState {
   forgotPwEmail: string;
   forgotPwErrorMsgStatus: boolean;
   changePwCurrentTab: number;
+  changePwPopupStatus: boolean;
 }
 
 export const password: Module<PasswordState, RootState> = {
@@ -28,6 +29,9 @@ export const password: Module<PasswordState, RootState> = {
 
     // 비밀번호 변경 컴포넌트 index
     changePwCurrentTab: 0,
+
+    // 비밀번호 변경 성공 팝업
+    changePwPopupStatus: false,
   },
 
   getters: {
@@ -43,6 +47,9 @@ export const password: Module<PasswordState, RootState> = {
     getChangePwCurrentTab: (state) => {
       return state.changePwCurrentTab;
     },
+    getChangePwPopupStatus: (state) => {
+      return state.changePwPopupStatus;
+    },
   },
 
   mutations: {
@@ -57,6 +64,9 @@ export const password: Module<PasswordState, RootState> = {
     },
     SET_CHANGE_PW_CURRENT_TAB: (state, value: number) => {
       state.changePwCurrentTab = value;
+    },
+    SET_CHANGE_PW_POPUP: (state, value: boolean) => {
+      state.changePwPopupStatus = value;
     },
   },
 
@@ -75,6 +85,10 @@ export const password: Module<PasswordState, RootState> = {
 
     changePwCurrentTab: ({ commit }, value: number) => {
       commit("SET_CHANGE_PW_CURRENT_TAB", value);
+    },
+
+    toggleChangePwPopup: ({ commit }, value: boolean) => {
+      commit("SET_CHANGE_PW_POPUP", value);
     },
 
     // 비밀번호 찾기: 이름, 이메일을 입력하여 1. 서버에 존재하는 이메일과 이름인지 2. 둘이 매치가 되는지 확인한다.
@@ -116,6 +130,7 @@ export const password: Module<PasswordState, RootState> = {
         .catch(() => {
           // 에러메시지 하단에 배치
           authFailError.value = true;
+          loadingStatus.value = false;
         });
     },
 
@@ -140,7 +155,7 @@ export const password: Module<PasswordState, RootState> = {
 
     // 비밀번호 찾기 : 비밀번호 변경
     submitChangePwForm: (context, data) => {
-      const { userId, passwordNew, passwordConfirm, FailStatus } = data;
+      const { userId, passwordNew, passwordConfirm, failStatus } = data;
       axios({
         url: drf.accounts.forgotPassword(),
         method: "put",
@@ -156,12 +171,13 @@ export const password: Module<PasswordState, RootState> = {
         })
         .catch(() => {
           // 에러 메시지 하단에 배치
-          FailStatus.value = true;
+          failStatus.value = true;
         });
     },
 
     // 비밀번호 변경: 본인 인증
-    submitChangePwAuthForm: ({ rootGetters, commit }, data: string) => {
+    submitChangePwAuthForm: ({ rootGetters, commit }, data) => {
+      const { pwInputValue, failStatus } = data;
       axios({
         url: drf.accounts.changePassword(),
         method: "post",
@@ -170,7 +186,7 @@ export const password: Module<PasswordState, RootState> = {
         },
         data: {
           userId: rootGetters["personalInfo/getUserInfoId"],
-          passwordOld: data,
+          passwordOld: pwInputValue.value,
         },
       })
         .then(() => {
@@ -178,17 +194,32 @@ export const password: Module<PasswordState, RootState> = {
         })
         .catch((error) => {
           console.log(error);
+          failStatus.value = true;
         });
     },
-    submitPwForm: ({ rootGetters }, data) => {
+    // 비밀번호 변경: 비밀번호 변경
+    submitPwForm: ({ rootGetters, commit }, data) => {
+      const { passwordNew, passwordConfirm, failStatus } = data;
       axios({
         url: drf.accounts.changePassword(),
         method: "put",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
-        data,
-      });
+        data: {
+          passwordNew,
+          passwordConfirm,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          clickHome();
+          commit("SET_CHANGE_PW_POPUP", true);
+        })
+        .catch((err) => {
+          console.log(err);
+          failStatus.value = true;
+        });
     },
   },
 };

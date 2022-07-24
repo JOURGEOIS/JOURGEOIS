@@ -104,12 +104,11 @@ const pwConditionCErrorMessage: string =
 const pwChangeFailStatus = ref(false);
 
 // 제출
-const submit = (data: object) =>
-  store.dispatch("password/submitChangePwForm", data);
-const email = computed(() => store.getters["password/getForgotPwEmail"]);
+const submit = (data: object) => store.dispatch("password/submitPwForm", data);
 const submitPwChangeForm = () => {
   // 리셋
   errorMessage.length = 0;
+  pwChangeFailStatus.value = false;
   pwInputStyle.value = "normal";
   pwConfirmInputStyle.value = "normal";
 
@@ -123,10 +122,9 @@ const submitPwChangeForm = () => {
 
   // 비밀번호 변경시 전달할 데이터
   const data: object = {
-    userId: email.value,
     passwordNew: pwInputValue.value,
     passwordConfirm: pwConfirmInputValue.value,
-    FailStatus: pwChangeFailStatus,
+    failStatus: pwChangeFailStatus,
   };
 
   // 비밀번호 변경

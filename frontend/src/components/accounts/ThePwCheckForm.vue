@@ -20,6 +20,12 @@
       <p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
     </div>
 
+    <!-- catch 메시지-->
+    <p class="change-pw-Fail-message" v-if="pwChangeFailStatus">
+      오류가 발생했습니다. 잠시 후에 시도해주세요.
+    </p>
+
+    <!-- 비밀번호 찾기 창으로 이동 -->
     <router-link to="/user/help/password"
       >비밀번호가 기억나지 않으세요?</router-link
     >
@@ -79,13 +85,17 @@ const pwConditionAErrorMessage: string =
 const pwConditionBErrorMessage: string =
   "비밀번호는 최소 8자 최대 20자로 입력되어야 합니다.";
 
+// 에러 메시지
+const pwChangeFailStatus = ref(false);
+
 // 제출
-const submit = (data: string) =>
+const submit = (data: object) =>
   store.dispatch("password/submitChangePwAuthForm", data);
 
 const submitChangePwAuthForm = () => {
   // 리셋
   errorMessage.length = 0;
+  pwChangeFailStatus.value = false;
   pwInputStyle.value = "normal";
 
   // 유효성 검사 결과
@@ -93,10 +103,14 @@ const submitChangePwAuthForm = () => {
   const pwConditionB = checkPasswordLength(pwInputValue.value);
 
   // 제출시 전달할 데이터
+  const data = {
+    pwInputValue,
+    failStatus: pwChangeFailStatus,
+  };
 
   // 인증 제출
   if (pwConditionA && pwConditionB) {
-    submit(pwInputValue.value);
+    submit(data);
   } else {
     if (!pwConditionA) {
       pwInputStyle.value = "error";
@@ -151,6 +165,11 @@ const submitChangePwAuthForm = () => {
     margin-top: -16px;
     color: $gray100;
     @include font($fs-sm, $fw-regular);
+  }
+  .change-pw-Fail-message {
+    margin-top: -25px;
+    color: $danger-color;
+    @include font(13px, $fw-regular);
   }
 }
 </style>

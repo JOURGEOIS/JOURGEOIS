@@ -24,7 +24,7 @@ const routes: any[] = [
 
   // 유저 정보 수정
   {
-    path: "/user/help/info",
+    path: "/user/my-info",
     name: "ChangeUserView",
     component: () => import("@/views/ChangeUserView.vue"),
   },
@@ -34,6 +34,13 @@ const routes: any[] = [
     path: "/user/help/password",
     name: "ForgotPwView",
     component: () => import("@/views/ForgotPwView.vue"),
+  },
+
+  // 비밀번호 변경 화면
+  {
+    path: "/user/my-info/password",
+    name: "ChangePwView",
+    component: () => import("@/views/ChangePwView.vue"),
   },
 ];
 

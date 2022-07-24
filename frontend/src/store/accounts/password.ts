@@ -10,6 +10,7 @@ export interface PasswordState {
   forgotPwCurrentTab: number;
   forgotPwEmail: string;
   forgotPwErrorMsgStatus: boolean;
+  changePwCurrentTab: number;
 }
 
 export const password: Module<PasswordState, RootState> = {
@@ -24,6 +25,9 @@ export const password: Module<PasswordState, RootState> = {
 
     // 비밀번호 찾기 에러 메시지 status
     forgotPwErrorMsgStatus: false,
+
+    // 비밀번호 변경 컴포넌트 index
+    changePwCurrentTab: 0,
   },
 
   getters: {
@@ -36,6 +40,9 @@ export const password: Module<PasswordState, RootState> = {
     getForgotPwErrorMsgStatus: (state) => {
       return state.forgotPwErrorMsgStatus;
     },
+    getChangePwCurrentTab: (state) => {
+      return state.changePwCurrentTab;
+    },
   },
 
   mutations: {
@@ -47,6 +54,9 @@ export const password: Module<PasswordState, RootState> = {
     },
     SET_FORGOT_PW_ERROR_MSG: (state, value: boolean) => {
       state.forgotPwErrorMsgStatus = value;
+    },
+    SET_CHANGE_PW_CURRENT_TAB: (state, value: number) => {
+      state.changePwCurrentTab = value;
     },
   },
 
@@ -61,6 +71,10 @@ export const password: Module<PasswordState, RootState> = {
 
     toggleForgotPwErrorMsg: ({ commit }, value: boolean) => {
       commit("SET_FORGOT_PW_ERROR_MSG", value);
+    },
+
+    changePwCurrentTab: ({ commit }, value: number) => {
+      commit("SET_CHANGE_PW_CURRENT_TAB", value);
     },
 
     // 비밀번호 찾기: 이름, 이메일을 입력하여 1. 서버에 존재하는 이메일과 이름인지 2. 둘이 매치가 되는지 확인한다.
@@ -85,7 +99,7 @@ export const password: Module<PasswordState, RootState> = {
     },
 
     // 비밀번호 찾기: 본인확인을 위해 이메일을 발송한다.
-    submitForgoPwtAuthForm: ({ getters }, payload) => {
+    submitForgotPwAuthForm: ({ getters }, payload) => {
       const { btnStatus, loadingStatus, authFailError } = payload;
       axios({
         url: drf.email.emailCert(),
@@ -144,6 +158,37 @@ export const password: Module<PasswordState, RootState> = {
           // 에러 메시지 하단에 배치
           FailStatus.value = true;
         });
+    },
+
+    // 비밀번호 변경: 본인 인증
+    submitChangePwAuthForm: ({ rootGetters, commit }, data: string) => {
+      axios({
+        url: drf.accounts.changePassword(),
+        method: "post",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          userId: rootGetters["personalInfo/getUserInfoId"],
+          passwordOld: data,
+        },
+      })
+        .then(() => {
+          commit("SET_CHANGE_PW_CURRENT_TAB", 1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    submitPwForm: ({ rootGetters }, data) => {
+      axios({
+        url: drf.accounts.changePassword(),
+        method: "put",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data,
+      });
     },
   },
 };

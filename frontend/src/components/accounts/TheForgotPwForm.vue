@@ -1,25 +1,39 @@
+<!-- 비밀번호 찾기 페이지의 첫번째 컴포넌트 
+  이름과 이메일을 기입하여 서버에 전송한다. 
+  1. 이름과 이메일이 서버에 존재하는가.
+  2. 이름과 이메일이 서로 매치가 되는가. 
+  
+  또한, 프론트단에서 진행하는 유효성 검사(90번째 줄)와 에러 메시지가 표시되는 공간이 인풋과 버튼 사이에 존재한다. 
+-->
 <template>
   <div class="forgot-fw-title">
     <p>회원님의 비밀번호를 찾기 위해서 &nbsp;</p>
     <p>이름과 이메일이 필요합니다.</p>
   </div>
   <form class="forgot-fw-form" @submit.prevent="submitForgotPwForm">
+    <!-- input: 이름 -->
     <input-basic
       :data="nameInputData"
       :input-style="nameInputStyle"
       v-model="nameInputValue"
     ></input-basic>
+
+    <!-- input: 이메일 -->
     <input-basic
       :data="emailInputData"
       :input-style="emailInputStyle"
       v-model="emailInputValue"
     ></input-basic>
+
+    <!-- catch 메시지 -->
     <div class="forgot-pw-error-message" v-if="forgotPwErrorMsg">
       <p>
         주류주아에 등록되지 않은 이메일이거나, 이름 또는 이메일을 잘못
         입력하였습니다.
       </p>
     </div>
+
+    <!-- 유효성 검사 -->
     <div class="forgot-pw-error-message" v-if="occurredError">
       <p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
     </div>
@@ -130,7 +144,6 @@ const submitForgotPwForm = () => {
 
 <style scoped lang="scss">
 .forgot-fw-title {
-  margin-bottom: 16px;
   p {
     color: $sub-color;
     @include font($fs-main, $fw-medium);
@@ -142,9 +155,8 @@ const submitForgotPwForm = () => {
 }
 .forgot-fw-form {
   @include flex(column);
-  gap: 2rem;
+  gap: 32px;
   width: 100%;
-  margin-top: 32px;
 
   .forgot-pw-error-message {
     margin-top: -25px;

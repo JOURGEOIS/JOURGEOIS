@@ -5,7 +5,9 @@
         <div class="icon-line line-left"></div>
         <div class="icon-line line-right"></div>
       </div>
-      <slot></slot>
+      <div class="check-title">
+        <slot></slot>
+      </div>
     </div>
   </modal-pop-up>
 </template>
@@ -91,12 +93,16 @@ import ModalPopUp from "@/components/basics/ModalPopUp.vue";
 }
 
 .success-popup-content {
+  position: relative;
   @include flex-center();
   gap: 16px;
+  height: 30px;
 }
 
 .check-icon {
-  position: relative;
+  position: absolute;
+  top: -10px;
+  left: -10px;
   width: 39px;
   height: 39px;
 
@@ -121,5 +127,9 @@ import ModalPopUp from "@/components/basics/ModalPopUp.vue";
       animation: icon-line-right 0.5s;
     }
   }
+}
+
+.check-title {
+  margin-left: 45px;
 }
 </style>

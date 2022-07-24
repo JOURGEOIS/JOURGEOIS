@@ -1,13 +1,13 @@
-<!-- 비밀번호 찾기 페이지 -->
+<!-- 비밀번호 변경 페이지 -->
 <template>
-  <div class="forgot-pw-view">
+  <div class="change-pw-view">
     <!-- 헤더 -->
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-      비밀번호 찾기
+      비밀번호 재설정
     </header-basic>
 
     <!-- 동적 컴포넌트로 페이지를 구성한다.  -->
-    <section class="forgot-pw-section">
+    <section class="change-pw-section">
       <component :is="currentComponent"> </component>
     </section>
   </div>
@@ -19,17 +19,14 @@ import { computed, defineAsyncComponent, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-const index = computed(() => store.getters["password/getForgotPwCurrentTab"]);
+const index = computed(() => store.getters["password/getChangePwCurrentTab"]);
 
 const componentArray = [
   defineAsyncComponent(
-    () => import("@/components/accounts/TheForgotPwForm.vue")
+    () => import("@/components/accounts/ThePwCheckForm.vue")
   ),
   defineAsyncComponent(
-    () => import("@/components/accounts/TheForgotAuthForm.vue")
-  ),
-  defineAsyncComponent(
-    () => import("@/components/accounts/TheForgotPwChangeForm.vue")
+    () => import("@/components/accounts/ThePwChangeForm.vue")
   ),
 ];
 
@@ -37,26 +34,17 @@ const currentComponent = computed(() => {
   return componentArray[index.value];
 });
 
-//vuex 리셋하기 (현재 탭, 에러 메시지, 이메일 정보)
+// vuex 리셋하기 (현재 탭)
 const changeCurrentComponent = (value: number) =>
-  store.dispatch("password/changeForgotPwCurrentTab", value);
-
-const toggleForgotPwErrorMsg = (value: boolean) => {
-  store.dispatch("password/toggleForgotPwErrorMsg", value);
-};
-
-const changeForgotPwEmail = (email: string) =>
-  store.dispatch("password/changeForgotPwEmail", email);
+  store.dispatch("password/changePwCurrentTab", value);
 
 onBeforeMount(() => {
   changeCurrentComponent(0);
-  toggleForgotPwErrorMsg(false);
-  changeForgotPwEmail("");
 });
 </script>
 
 <style scoped lang="scss">
-.forgot-pw-view {
+.change-pw-view {
   @include flex(column);
   justify-content: flex-start;
   align-items: center;
@@ -66,11 +54,7 @@ onBeforeMount(() => {
     @include flex(column);
     width: 100%;
     gap: 36px;
-    margin-top: 2rem;
+    margin-top: 36px;
   }
-}
-
-a {
-  text-decoration: none;
 }
 </style>

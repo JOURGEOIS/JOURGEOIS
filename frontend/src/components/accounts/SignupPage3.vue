@@ -32,8 +32,8 @@
 		<button-basic
 			:button-style="[nextButtonColor, 'long', 'small']"
 			class="next-button"
-			:disabled="!isFullfillToNext"
-			@click="nextSignupPage"
+			:disabled="!isFulfillToNext"
+			@click="clickNextPage"
 		>
 			다음
 		</button-basic>
@@ -125,7 +125,7 @@ watchEffect(() => {
 			: false;
 });
 
-const isFullfillToNext = computed(() => {
+const isFulfillToNext = computed(() => {
 	return (
 		pwLengthCheckerProps.isChecked &&
 		pwTripleCheckerProps.isChecked &&
@@ -135,12 +135,18 @@ const isFullfillToNext = computed(() => {
 
 // 완료 버튼 색 설정
 const nextButtonColor = computed(() => {
-	return isFullfillToNext.value ? "primary" : "disabled";
+	return isFulfillToNext.value ? "primary" : "disabled";
 });
 
-// 다음 페이지로 이동
-const nextSignupPage = () => {
-	store.dispatch("signup/nextSignupPage");
+// 다음 버튼 눌렀을 때
+const clickNextPage = (password: string) => {
+	// 이동 전에 pwInputValue.value vuex에 저장
+	store.dispatch("signup/saveSignUpPw", pwInputValue.value);
+	// 다음 페이지로 이동
+	const nextSignupPage = () => {
+		store.dispatch("signup/nextSignupPage");
+	};
+	nextSignupPage();
 };
 </script>
 

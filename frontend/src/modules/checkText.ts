@@ -8,7 +8,7 @@ function checkBadWord(targetText: string): boolean {
 // * 텍스트가 한글 또는 영어만을 포함
 // 정규식을 이용한 숫자/영어/한글/특수문자 판별
 // 참고 : https://kingofbackend.tistory.com/79
-function checkENKR(text: string): boolean {
+function checkEnKr(text: string): boolean {
 	const pattern1 = /[0-9]/; //숫자
 	const pattern2 = /[a-zA-Z]/; //영어
 	const pattern3 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; //한글
@@ -87,6 +87,8 @@ function checkEmailCondition(value: string): boolean {
 // * 생일 형식 체크
 function checkBirthFormat(text: string) {
 	const [Y, M, D] = text.split("/");
+	if (Y.length !== 4 || M.length !== 2 || D.length !== 2) return false;
+
 	const year = Number(Y);
 	const month = Number(M);
 	const day = Number(D);
@@ -104,7 +106,7 @@ export {
 	checkBadWord,
 
 	// * 한글+영어 체크
-	checkENKR,
+	checkEnKr,
 
 	// * 텍스트에 특수문자 포함
 	checkAsterisk,

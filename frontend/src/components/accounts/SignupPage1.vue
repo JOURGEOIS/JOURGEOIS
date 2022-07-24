@@ -35,7 +35,7 @@
 		</section>
 		<button-basic
 			:button-style="[buttonColor, 'long', 'small']"
-			:disabled="!isFullfillToNext"
+			:disabled="!isFulfillToNext"
 			@click="nextSignupPage"
 		>
 			다음
@@ -126,7 +126,7 @@ const nextSignupPage = () => {
 };
 
 // 다음 페이지로 이동 조건 만족 여부 boolean
-const isFullfillToNext = computed(() => {
+const isFulfillToNext = computed(() => {
 	for (let i = 0; i < 3; i++) {
 		if (!agreeContents[i].isChecked) return false;
 	}
@@ -135,7 +135,7 @@ const isFullfillToNext = computed(() => {
 
 // 조건 만족 여부에 따라 변하는 다음 버튼 색상
 const buttonColor = computed(() => {
-	return isFullfillToNext.value ? "primary" : "unchecked";
+	return isFulfillToNext.value ? "primary" : "unchecked";
 });
 </script>
 

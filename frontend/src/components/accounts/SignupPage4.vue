@@ -64,7 +64,7 @@
 		<button-basic
 			:button-style="[nextButtonColor, 'long', 'small']"
 			class="next-button"
-			:disabled="!isFullfillToNext"
+			:disabled="!isFulfillToNext"
 			@click="completeSignupPage"
 		>
 			완료
@@ -85,9 +85,11 @@ const store = useStore();
 import {
 	checkBadWord,
 	checkAsterisk,
-	checkENKR,
+	checkEnKr,
 	checkBirthFormat,
 } from "../../modules/checkText";
+
+import { checkNicknameDuplication } from "../../modules/checkUserInfo";
 
 // 제목 컴포넌트
 const nameTitleContents = reactive({
@@ -143,7 +145,7 @@ const nicknameInputStyle = ref("normal");
 // 조건 체크에 대한 props들
 const nameEnKrCheckerProps = reactive({
 	isChecked: false,
-	checkContent: "이름은 한글 또는 영어만 입력해주세요.",
+	checkContent: "한글 또는 영어로 구성되었습니다.",
 	isIconTypeDanger: false,
 });
 
@@ -167,26 +169,26 @@ const nicknameLengthCheckerProps = reactive({
 
 const duplicatedNicknameCheckerProps = reactive({
 	isChecked: false,
-	checkContent: "중복된 닉네임입니다.",
-	isIconTypeDanger: true,
+	checkContent: "중복되지 않은 닉네임입니다.",
+	isIconTypeDanger: false,
 });
 
 const badWordsCheckerProps = reactive({
 	isChecked: false,
-	checkContent: "부적절한 단어가 포함되었습니다.",
-	isIconTypeDanger: true,
+	checkContent: "적절한 단어로 구성되었습니다.",
+	isIconTypeDanger: false,
 });
 
 const numEnKrCheckerProps = reactive({
 	isChecked: false,
-	checkContent: "영어, 숫자, 한글이 아닌 문자가 포함되었습니다.",
-	isIconTypeDanger: true,
+	checkContent: "영어, 숫자, 한글로 구성되었습니다.",
+	isIconTypeDanger: false,
 });
 
 // input값 변경에 따른 함수 실행
 watchEffect(() => {
 	nameEnKrCheckerProps.isChecked =
-		!!nameInputValue.value && checkENKR(nameInputValue.value) ? true : false;
+		!!nameInputValue.value && checkEnKr(nameInputValue.value) ? true : false;
 });
 
 watchEffect(() => {
@@ -212,9 +214,6 @@ watchEffect(() => {
 				birthInputValue.value.substring(0, birthLength - 1) + "/" + lastChar;
 		}
 	}
-	// else if (birthLength == 7 || birthLength == 12) {
-	// 	birthInputValue.value = birthInputValue.value.substring(0, birthLength - 3);
-	// }
 });
 
 watchEffect(() => {
@@ -223,39 +222,45 @@ watchEffect(() => {
 		2 <= nicknameLength && nicknameLength <= 12 ? true : false;
 });
 
-// watchEffect(() => {
-// duplicatedNicknameCheckerProps.isChecked = isDuplicatedNickname(nicknameInputValue.value)
-// 	? true
-// 	: false;
-// });
-
+// * 닉네임 중복 확인 Debounce
+let debounce: any;
 watchEffect(() => {
-	badWordsCheckerProps.isChecked = checkBadWord(nicknameInputValue.value)
-		? true
-		: false;
+	// watch 실행용 dummy code
+	nicknameInputValue.value;
+	if (debounce) {
+		clearTimeout(debounce);
+	}
+	debounce = setTimeout(async () => {
+		const a = await checkNicknameDuplication(nicknameInputValue.value);
+		duplicatedNicknameCheckerProps.isChecked = a.available;
+	}, 200);
 });
 
 watchEffect(() => {
-	numEnKrCheckerProps.isChecked = checkAsterisk(nicknameInputValue.value)
-		? true
-		: false;
+	badWordsCheckerProps.isChecked =
+		!!nicknameInputValue.value && !checkBadWord(nicknameInputValue.value);
 });
 
-const isFullfillToNext = computed(() => {
+watchEffect(() => {
+	numEnKrCheckerProps.isChecked =
+		!!nicknameInputValue.value && !checkAsterisk(nicknameInputValue.value);
+});
+
+const isFulfillToNext = computed(() => {
 	return (
 		nameEnKrCheckerProps.isChecked &&
 		birthLengthCheckerProps.isChecked &&
 		birthFormatCheckerProps.isChecked &&
 		nicknameLengthCheckerProps.isChecked &&
-		!duplicatedNicknameCheckerProps.isChecked &&
-		!badWordsCheckerProps.isChecked &&
-		!numEnKrCheckerProps.isChecked
+		duplicatedNicknameCheckerProps.isChecked &&
+		badWordsCheckerProps.isChecked &&
+		numEnKrCheckerProps.isChecked
 	);
 });
 
 // 완료 버튼 색 설정
 const nextButtonColor = computed(() => {
-	return isFullfillToNext.value ? "primary" : "disabled";
+	return isFulfillToNext.value ? "primary" : "disabled";
 });
 
 // 다음 페이지로 이동

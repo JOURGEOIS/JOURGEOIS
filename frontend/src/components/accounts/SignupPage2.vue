@@ -83,7 +83,7 @@ const emailDuplicateCheckerProps = reactive({
 });
 
 // input-value
-const emailInputValue = ref("");
+const emailInputValue = ref(store.state.signup.signUpEmail);
 
 // 이메일이 형식에 맞다면 true 반환
 const isFulfillToSubmit = computed(() => {

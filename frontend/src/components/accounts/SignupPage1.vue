@@ -48,7 +48,7 @@ import ThePersonalInfoUseModal from "@/components/accounts/ThePersonalInfoUseMod
 import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import AgreeChecker from "@/components/accounts/AgreeChecker.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watchEffect, toRefs } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -61,10 +61,17 @@ const descriptionList = [
 	"선택항목에 대한 동의를 거부하시는 경우에도 서비스는 이용이 가능합니다.",
 ];
 
+const signUpAgreeChecked = computed(
+	() => store.getters["signup/getSignUpAgreeChecked"]
+);
+
+const [isChecked0, isChecked1, isChecked2, isChecked3, isChecked4]: any =
+	toRefs(signUpAgreeChecked.value);
+
 // 전체 동의 조건 리스트
 const allCheckerContent = reactive({
 	order: 0,
-	isChecked: false,
+	isChecked: isChecked0,
 	checkContent: "모두 동의합니다.",
 	isModalBtn: false,
 });
@@ -73,28 +80,28 @@ const allCheckerContent = reactive({
 const agreeContents = reactive([
 	{
 		order: 1,
-		isChecked: false,
+		isChecked: isChecked1,
 		checkContent: "만 14세 이상입니다.",
 		isModalBtn: false,
 		modalContent: "modal content 1",
 	},
 	{
 		order: 2,
-		isChecked: false,
+		isChecked: isChecked2,
 		checkContent: "[필수] 주류주아 계정 약관",
 		isModalBtn: true,
 		modalContent: "modal content 2",
 	},
 	{
 		order: 3,
-		isChecked: false,
+		isChecked: isChecked3,
 		checkContent: "[필수] 개인정보 수집 및 이용 동의",
 		isModalBtn: true,
 		modalContent: "modal content 3",
 	},
 	{
 		order: 4,
-		isChecked: false,
+		isChecked: isChecked4,
 		checkContent: "[선택] 프로필정보 추가 수집 동의",
 		isModalBtn: true,
 		modalContent: "modal content 4",
@@ -103,16 +110,12 @@ const agreeContents = reactive([
 
 // 전체 동의 체크 toggle 함수
 const switchAllIsChecked = () => {
-	const TF = allCheckerContent.isChecked ? false : true;
-	agreeContents.forEach((agreeContent) => {
-		agreeContent.isChecked = TF;
-	});
-	allCheckerContent.isChecked = !allCheckerContent.isChecked;
+	store.dispatch("signup/toggleAllAgreeChecked");
 };
 
 // 조건별 체크표시 toggle
 const switchIsChecked = (order: number) => {
-	agreeContents[order - 1].isChecked = !agreeContents[order - 1].isChecked;
+	store.dispatch("signup/toggleAgreeChecked", order);
 };
 
 // 개인정보 이용

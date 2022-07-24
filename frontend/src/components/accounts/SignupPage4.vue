@@ -263,18 +263,26 @@ const nextButtonColor = computed(() => {
 	return isFulfillToNext.value ? "primary" : "disabled";
 });
 
-// 다음 페이지로 이동
-const completeSignupPage = () => {
+// 로그인 함수
+const login = (userData: object) => store.dispatch("account/login", userData);
+
+// 회원가입 함수
+const submitSignUp = () => store.dispatch("signup/submitSignUp");
+
+// 회원가입 완료 후 로그인 연결
+const completeSignupPage = async () => {
 	const userInfo = {
 		name: nameInputValue.value,
 		nickname: nicknameInputValue.value,
 		birth: birthInputValue.value,
 	};
-	store.dispatch("signup/saveSignupUserInfo", userInfo);
-	// store.dispatch("signup/nextSignupPage");
-	// setTimeout(() => {
-	// 	alert("됐다!");
-	// }, 500);
+	await store.dispatch("signup/saveSignupUserInfo", userInfo);
+	await store.dispatch("signup/nextSignupPage");
+	setTimeout(() => {
+		// 회원가입 신청
+		console.log("submitSignUp 호출할게");
+		submitSignUp();
+	}, 500);
 };
 </script>
 

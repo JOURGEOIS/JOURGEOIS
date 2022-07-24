@@ -52,15 +52,15 @@
 					></input-basic>
 					<section class="condition-checker-section">
 						<condition-checker :props="nicknameLengthCheckerProps" />
-						<condition-checker :props="duplicatedNicknameCheckerProps" />
 						<condition-checker :props="badWordsCheckerProps" />
 						<condition-checker :props="numEnKrCheckerProps" />
+						<condition-checker :props="duplicatedNicknameCheckerProps" />
 					</section>
 				</div>
 			</section>
 		</div>
 
-		<!-- 다음 -->
+		<!-- 완료 -->
 		<button-basic
 			:button-style="[nextButtonColor, 'long', 'small']"
 			class="next-button"
@@ -192,15 +192,15 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
+	birthInputValue.value;
 	const t = ref(birthInputValue.value);
 	const birthLength = t.value.length;
 	const lastChar = t.value[birthLength - 1];
-
+	birthFormatCheckerProps.isChecked = false;
+	birthLengthCheckerProps.isChecked = false;
 	// 입력 완료 시
 	if (birthLength === 10) {
-		birthLengthCheckerProps.isChecked =
-			birthInputValue.value.length === 10 ? true : false;
-
+		birthLengthCheckerProps.isChecked = true;
 		birthFormatCheckerProps.isChecked = checkBirthFormat(t.value);
 	} else if (birthLength === 5 || birthLength === 8) {
 		// 지울 때
@@ -265,10 +265,16 @@ const nextButtonColor = computed(() => {
 
 // 다음 페이지로 이동
 const completeSignupPage = () => {
-	store.dispatch("signup/nextSignupPage");
-	setTimeout(() => {
-		alert("됐다!");
-	}, 500);
+	const userInfo = {
+		name: nameInputValue.value,
+		nickname: nicknameInputValue.value,
+		birth: birthInputValue.value,
+	};
+	store.dispatch("signup/saveSignupUserInfo", userInfo);
+	// store.dispatch("signup/nextSignupPage");
+	// setTimeout(() => {
+	// 	alert("됐다!");
+	// }, 500);
 };
 </script>
 

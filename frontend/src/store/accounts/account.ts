@@ -16,7 +16,7 @@ export const account: Module<AccountState, RootState> = {
 
   state: {
     logOutModalStatus: false,
-    logOutPopupStatus: true,
+    logOutPopupStatus: false,
     loginErrorStatus: false,
   },
 

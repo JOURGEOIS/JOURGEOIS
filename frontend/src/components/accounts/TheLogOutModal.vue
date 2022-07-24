@@ -9,7 +9,10 @@
         >
           취소
         </button-basic>
-        <button-basic :button-style="['primary', '50%', 'small']">
+        <button-basic
+          :button-style="['primary', '50%', 'small']"
+          @click="clickLogout"
+        >
           로그아웃
         </button-basic>
       </div>
@@ -25,6 +28,10 @@ import { useStore } from "vuex";
 const store = useStore();
 const toggleLogOutModal = (value: boolean) =>
   store.dispatch("account/toggleLogOutModal", value);
+
+const clickLogout = () => {
+  store.dispatch("account/logout");
+};
 </script>
 
 <style scoped lang="scss">

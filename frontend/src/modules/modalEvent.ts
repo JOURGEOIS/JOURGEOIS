@@ -1,6 +1,6 @@
 import { computed } from "vue";
 
-export default function selectModalColor(data: string): object {
+function selectModalColor(data: string): object {
   const modalStyle = computed((): string => {
     return `${data}-modal`;
   });
@@ -9,3 +9,5 @@ export default function selectModalColor(data: string): object {
     modalStyle,
   };
 }
+
+export { selectModalColor };

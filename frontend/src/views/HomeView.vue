@@ -5,16 +5,25 @@
     <router-link to="/user/login">로그인</router-link>
     <router-link to="/user/help/info">유저정보수정</router-link>
   </div>
+  <success-pop-up v-if="logOutPopupStatus"> 로그아웃 되었습니다</success-pop-up>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
+import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 const store = useStore();
-const state = computed(() => store.state.moduleA.counter);
-const getters = computed(() => store.getters["moduleA/getCounter"]);
-const mutations = () => store.commit("moduleA/SET_COUNTER");
-const actions = () => store.dispatch("moduleA/plusOneCounter");
+
+const logOutPopupStatus = computed(
+  () => store.getters["account/getLogOutPopupStatus"]
+);
+
+onMounted(() => {
+  // 로그아웃 팝업 시간제 off
+  if (logOutPopupStatus) {
+    setTimeout(() => store.dispatch("account/toggleLogOutPopup", false), 3000);
+  }
+});
 </script>
 
 <style scoped lang="scss">

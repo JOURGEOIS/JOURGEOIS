@@ -20,12 +20,13 @@
 </template>
 
 <script setup lang="ts">
-import selectModalColor from "../../modules/selectModalColor";
+import { selectModalColor } from "../../modules/modalEvent";
 import { defineEmits } from "vue";
 
 const props = defineProps<{
   modalColor: string;
 }>();
+
 const { modalStyle }: any = selectModalColor(props.modalColor);
 
 const emit = defineEmits<{ (event: "offModal"): void }>();

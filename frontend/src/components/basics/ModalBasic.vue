@@ -21,7 +21,6 @@
 
 <script setup lang="ts">
 import { selectModalColor } from "../../modules/modalEvent";
-import { defineEmits } from "vue";
 
 const props = defineProps<{
   modalColor: string;

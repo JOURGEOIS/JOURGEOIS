@@ -1,3 +1,4 @@
+<!-- 비밀번호 변경 페이지 -->
 <template>
   <div class="change-pw-view">
     <!-- 헤더 -->

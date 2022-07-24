@@ -1,8 +1,11 @@
 <template>
   <div class="forgot-pw-view">
+    <!-- 헤더 -->
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       비밀번호 찾기
     </header-basic>
+
+    <!-- 동적 컴포넌트로 페이지를 구성한다.  -->
     <section class="forgot-pw-section">
       <component :is="currentComponent"> </component>
     </section>
@@ -22,7 +25,10 @@ const componentArray = [
     () => import("@/components/accounts/TheForgotPwForm.vue")
   ),
   defineAsyncComponent(
-    () => import("@/components/accounts/ThePwChangeForm.vue")
+    () => import("@/components/accounts/TheForgotAuthForm.vue")
+  ),
+  defineAsyncComponent(
+    () => import("@/components/accounts/TheForgotPwChangeForm.vue")
   ),
 ];
 
@@ -58,6 +64,7 @@ onBeforeMount(() => {
   section {
     @include flex(column);
     width: 100%;
+    gap: 36px;
     margin-top: 2rem;
   }
 }

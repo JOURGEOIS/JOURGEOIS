@@ -1,22 +1,40 @@
+<!-- 비밀번호 찾기 페이지의 세번째 컴포넌트 
+  이메일 인증까지 완료한 대상이 비밀번호를 수정한다. 
+  1. 비밀번호 기입
+  2. 비밀번호 확인
+  
+  또한, 프론트단에서 진행하는 유효성 검사(92번째 줄)와 에러 메시지가 표시되는 공간이 인풋과 버튼 사이에 존재한다. 
+-->
+
 <template>
   <div class="pw-change-title">
     <p>인증이 완료되었습니다.&nbsp;</p>
     <p>새로운 비밀번호를 설정해주세요.</p>
   </div>
   <form class="pw-change-form" @submit.prevent="submitPwChangeForm">
+    <!-- input: 비밀번호 입력 -->
     <input-basic
       :data="pwInputData"
       :input-style="pwInputStyle"
       v-model="pwInputValue"
     ></input-basic>
+
+    <!-- input: 비밀번호 확인 -->
     <input-basic
       :data="pwConfirmInputData"
       :input-style="pwConfirmInputStyle"
       v-model="pwConfirmInputValue"
     ></input-basic>
-    <div class="forgot-pw-error-message" :v-if="occurredError">
+
+    <!-- 유효성 검사 -->
+    <div class="forgot-pw-error-message" v-if="occurredError">
       <p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
     </div>
+
+    <!-- catch 메시지-->
+    <p class="forgot-pw-Fail-message" v-if="pwChangeFailStatus">
+      오류가 발생했습니다. 잠시 후에 시도해주세요.
+    </p>
     <button-basic
       :button-style="[buttonColor, 'long', 'small']"
       :disabled="pwInputValue == '' || pwConfirmInputValue == ''"
@@ -81,6 +99,9 @@ const pwConditionBErrorMessage: string =
 const pwConditionCErrorMessage: string =
   "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
 
+// 에러 메시지
+const pwChangeFailStatus = ref(false);
+
 // 제출
 const submit = (data: object) =>
   store.dispatch("password/submitChangePwForm", data);
@@ -104,6 +125,7 @@ const submitPwChangeForm = () => {
     userId: email.value,
     passwordNew: pwInputValue.value,
     passwordConfirm: pwConfirmInputValue.value,
+    FailStatus: pwChangeFailStatus,
   };
 
   // 비밀번호 변경
@@ -132,7 +154,6 @@ const submitPwChangeForm = () => {
 
 <style scoped lang="scss">
 .pw-change-title {
-  margin-bottom: 16px;
   p {
     color: $sub-color;
     @include font($fs-main, $fw-medium);
@@ -144,7 +165,7 @@ const submitPwChangeForm = () => {
 }
 .pw-change-form {
   @include flex(column);
-  gap: 2rem;
+  gap: 32px;
   width: 100%;
   margin-top: 32px;
 
@@ -157,6 +178,11 @@ const submitPwChangeForm = () => {
       margin: 0;
       padding: 0;
     }
+  }
+  .forgot-pw-Fail-message {
+    margin-top: -25px;
+    color: $danger-color;
+    @include font(13px, $fw-regular);
   }
 }
 </style>

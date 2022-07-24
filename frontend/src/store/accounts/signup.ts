@@ -16,6 +16,7 @@ export interface SignupState {
 	emailAuthentication: boolean;
 	signUpAgreeChecked: Array<boolean>;
 	signUpEmail: string;
+	signUpPw: string;
 	signUpName: string;
 	signUpBirth: string;
 	signUpNickName: string;
@@ -35,6 +36,7 @@ export const signup: Module<SignupState, RootState> = {
 		signUpEmail: "",
 		emailAuthentication: false,
 		signUpName: "",
+		signUpPw: "",
 		signUpBirth: "",
 		signUpNickName: "",
 	},
@@ -128,6 +130,11 @@ export const signup: Module<SignupState, RootState> = {
 			state.emailAuthentication = true;
 		},
 
+		// * [Page3] 비밀번호 임시 저장
+		SET_SIGNUP_PW: (state, password) => {
+			state.signUpPw = password;
+		},
+
 		// * 회원가입 완료 시 개인정보 state 저장
 		SET_SIGNUP_USER_INFO: (state, userInfo) => {
 			const { name, nickname, birth } = userInfo;
@@ -171,7 +178,7 @@ export const signup: Module<SignupState, RootState> = {
 			commit("SET_PERSONAL_INFO_USE_MODAL");
 		},
 
-		// * 중복 이메일 확인
+		// * [Page2] 중복 이메일 확인
 		checkEmailDuplication: ({ commit, dispatch }, payload) => {
 			const {
 				emailInputValue,
@@ -214,7 +221,7 @@ export const signup: Module<SignupState, RootState> = {
 				});
 		},
 
-		// * 인증용 이메일 전송
+		// * [Page2] 인증용 이메일 전송
 		sendEmailAuthentication: ({ commit }, payload) => {
 			const { email, showButtonContainer, loadingStatus } = toRefs(payload);
 			axios({
@@ -239,7 +246,7 @@ export const signup: Module<SignupState, RootState> = {
 				.catch((err) => console.error(err));
 		},
 
-		// * 이메일 인증 확인
+		// * [Page2] 이메일 인증 확인
 		confirmEmailAuthentication: (
 			{ commit, state, getters, dispatch },
 			payload
@@ -276,7 +283,13 @@ export const signup: Module<SignupState, RootState> = {
 				});
 		},
 
-		// * 회원가입 완료 시 개인정보 state 저장
+		// * [Page3] 비밀번호 임시 저장
+		saveSignUpPw: ({ commit }, password) => {
+			console.log("되잖아");
+			commit("SET_SIGNUP_PW", password);
+		},
+
+		// * [Page5] 회원가입 완료 시 개인정보 state 저장
 		saveSignupUserInfo: ({ commit }, userInfo) => {
 			commit("SET_SIGNUP_USER_INFO", userInfo);
 		},

@@ -1,3 +1,4 @@
+<!-- 비밀번호 변경 페이지 -->
 <template>
   <div class="change-pw-view">
     <!-- 헤더 -->
@@ -14,7 +15,7 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import { computed, defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -31,6 +32,14 @@ const componentArray = [
 
 const currentComponent = computed(() => {
   return componentArray[index.value];
+});
+
+// vuex 리셋하기 (현재 탭)
+const changeCurrentComponent = (value: number) =>
+  store.dispatch("password/changePwCurrentTab", value);
+
+onBeforeMount(() => {
+  changeCurrentComponent(0);
 });
 </script>
 

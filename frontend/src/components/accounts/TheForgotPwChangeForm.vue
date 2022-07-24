@@ -126,7 +126,7 @@ const submitPwChangeForm = () => {
     userId: email.value,
     passwordNew: pwInputValue.value,
     passwordConfirm: pwConfirmInputValue.value,
-    FailStatus: pwChangeFailStatus,
+    failStatus: pwChangeFailStatus,
   };
 
   // 비밀번호 변경

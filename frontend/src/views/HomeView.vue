@@ -6,10 +6,11 @@
     <router-link to="/user/my-info">유저정보수정</router-link>
     <router-link to="/user/my-info/password">비밀번호 변경</router-link>
   </div>
-  <success-pop-up v-if="logOutPopupStatus"> 로그아웃 되었습니다</success-pop-up>
-  <failure-pop-up v-if="failModalStatus"
-    >잠시 후에 시도해주세요.</failure-pop-up
+  <success-pop-up v-if="changePwPopupStatus">
+    비밀번호가 변경되었습니다</success-pop-up
   >
+  <success-pop-up v-if="logOutPopupStatus"> 로그아웃 되었습니다</success-pop-up>
+  <failure-pop-up v-if="failModalStatus">잠시 후에 시도해주세요</failure-pop-up>
 </template>
 
 <script setup lang="ts">
@@ -23,6 +24,10 @@ const logOutPopupStatus = computed(
   () => store.getters["account/getLogOutPopupStatus"]
 );
 
+const changePwPopupStatus = computed(
+  () => store.getters["password/getChangePwPopupStatus"]
+);
+
 const failModalStatus = computed(
   () => store.getters["account/getFailModalStatus"]
 );
@@ -31,6 +36,14 @@ onMounted(() => {
   // 로그아웃 팝업 시간제 off
   if (logOutPopupStatus) {
     setTimeout(() => store.dispatch("account/toggleLogOutPopup", false), 3000);
+  }
+
+  // 비밀번호 변경 팝업 시간제 off
+  if (changePwPopupStatus) {
+    setTimeout(
+      () => store.dispatch("password/toggleChangePwPopup", false),
+      3000
+    );
   }
 
   // 실패 팝업 시간제 off

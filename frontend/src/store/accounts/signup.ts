@@ -164,7 +164,6 @@ export const signup: Module<SignupState, RootState> = {
 
 		// * [Page1] 전체 체크 상태 바꾸기
 		toggleAllAgreeChecked: ({ commit }) => {
-			console.log("다 바뀌어라 얍");
 			commit("TOGGLE_ALL_AGREE_CHECKED");
 		},
 
@@ -260,7 +259,6 @@ export const signup: Module<SignupState, RootState> = {
 				},
 			})
 				.then((res) => {
-					console.log("1st");
 					if (res.data.success) {
 						commit("SET_EMAIL_AUTHENTICATION");
 					} else {
@@ -269,7 +267,6 @@ export const signup: Module<SignupState, RootState> = {
 					}
 				})
 				.then((res) => {
-					console.log("2nd");
 					if (getters.getEmailAuthentication) {
 						dispatch("nextSignupPage");
 					} else {
@@ -295,7 +292,6 @@ export const signup: Module<SignupState, RootState> = {
 
 		// * [Page Final] 회원가입 완료 접수
 		submitSignUp: ({ commit, state, dispatch }) => {
-			console.log("submitSignUp 왔어");
 			axios({
 				method: "POST",
 				url: drf.accounts.signUp(),
@@ -308,7 +304,6 @@ export const signup: Module<SignupState, RootState> = {
 				},
 			})
 				.then((res) => {
-					console.log("회원가입 axios 보냄!!", res.data);
 					// 회원가입 성공
 					if (res.data.success) {
 						alert("회원가입에 성공하였습니다.");

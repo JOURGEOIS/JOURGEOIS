@@ -70,7 +70,6 @@ export const account: Module<AccountState, RootState> = {
 
 		// 로그인
 		login: ({ commit, dispatch }, { email, password }) => {
-			console.log("로그인 함수 시작!!");
 			axios({
 				url: drf.accounts.login(),
 				method: "post",
@@ -97,7 +96,6 @@ export const account: Module<AccountState, RootState> = {
 
 		// 로그아웃
 		logout: ({ commit, dispatch, rootGetters }) => {
-			console.log(rootGetters["personalInfo/getUserInfoId"]);
 			axios({
 				url: drf.accounts.logout(),
 				method: "get",

@@ -280,7 +280,6 @@ const completeSignupPage = async () => {
 	await store.dispatch("signup/nextSignupPage");
 	setTimeout(() => {
 		// 회원가입 신청
-		console.log("submitSignUp 호출할게");
 		submitSignUp();
 	}, 500);
 };

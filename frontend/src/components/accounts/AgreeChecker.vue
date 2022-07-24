@@ -45,7 +45,6 @@ const clickCheckIconInner = () => {
 
 // 모달 켜고 끄기
 const clickModalIconInner = () => {
-	console.log("hihi");
 	emit("clickModalIcon");
 };
 </script>

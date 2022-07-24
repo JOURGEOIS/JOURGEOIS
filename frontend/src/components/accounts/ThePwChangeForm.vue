@@ -1,4 +1,4 @@
-<!-- 비밀번호 찾기 페이지의 세번째 컴포넌트 
+<!-- 비밀번호 변경 페이지의 두번째 컴포넌트 
   이메일 인증까지 완료한 대상이 비밀번호를 수정한다. 
   1. 비밀번호 기입
   2. 비밀번호 확인
@@ -7,11 +7,11 @@
 -->
 
 <template>
-  <div class="pw-change-title">
+  <div class="change-pw-title">
     <p>인증이 완료되었습니다.&nbsp;</p>
     <p>새로운 비밀번호를 입력해주세요.</p>
   </div>
-  <form class="pw-change-form" @submit.prevent="submitPwChangeForm">
+  <form class="change-pw-form" @submit.prevent="submitPwChangeForm">
     <!-- input: 비밀번호 입력 -->
     <input-basic
       :data="pwInputData"
@@ -27,12 +27,12 @@
     ></input-basic>
 
     <!-- 유효성 검사 -->
-    <div class="forgot-pw-error-message" v-if="occurredError">
+    <div class="change-pw-error-message" v-if="occurredError">
       <p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
     </div>
 
     <!-- catch 메시지-->
-    <p class="forgot-pw-Fail-message" v-if="pwChangeFailStatus">
+    <p class="change-pw-Fail-message" v-if="pwChangeFailStatus">
       오류가 발생했습니다. 잠시 후에 시도해주세요.
     </p>
     <button-basic
@@ -154,7 +154,7 @@ const submitPwChangeForm = () => {
 </script>
 
 <style scoped lang="scss">
-.pw-change-title {
+.change-pw-title {
   p {
     color: $sub-color;
     @include font($fs-main, $fw-medium);
@@ -164,13 +164,13 @@ const submitPwChangeForm = () => {
     }
   }
 }
-.pw-change-form {
+.change-pw-form {
   @include flex(column);
   gap: 32px;
   width: 100%;
   margin-top: 32px;
 
-  .forgot-pw-error-message {
+  .change-pw-error-message {
     margin-top: -25px;
     color: $danger-color;
     @include font($fs-sm, $fw-regular);
@@ -180,7 +180,7 @@ const submitPwChangeForm = () => {
       padding: 0;
     }
   }
-  .forgot-pw-Fail-message {
+  .change-pw-Fail-message {
     margin-top: -25px;
     color: $danger-color;
     @include font(13px, $fw-regular);

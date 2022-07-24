@@ -12,7 +12,7 @@
     <p>회원님의 비밀번호 재설정을 위한&nbsp;</p>
     <p>인증이 필요합니다.</p>
   </div>
-  <form class="forgot-pw-auth-form" @submit.prevent="submitForgoPwtAuthForm">
+  <form class="forgot-pw-auth-form" @submit.prevent="submitForgotPwAuthForm">
     <!-- input: 이메일 (disabled상태) -->
     <input-basic
       :data="emailInputData"
@@ -47,7 +47,7 @@
       <!-- 재전송 버튼: 이메일 재전송 -->
       <button-basic
         :button-style="['primary-outline', '60%', 'small']"
-        @click="submitForgoPwtAuthForm"
+        @click="submitForgotPwAuthForm"
       >
         인증메일 재전송
       </button-basic>
@@ -77,8 +77,8 @@ const store = useStore();
 const emailInputData: object = reactive({
   button: false,
   id: "forgot-pw-email-input",
-  label: "이메일",
-  placeholder: "이메일을 입력하세요.",
+  label: "",
+  placeholder: "",
   type: "text",
   isDisabled: true,
 });
@@ -106,9 +106,9 @@ const payload = {
   authFailError,
 };
 
-const submitForgoPwtAuthForm = () => {
+const submitForgotPwAuthForm = () => {
   loadingStatus.value = true;
-  store.dispatch("password/submitForgoPwtAuthForm", payload);
+  store.dispatch("password/submitForgotPwAuthForm", payload);
 };
 
 // 이메일 인증 확인

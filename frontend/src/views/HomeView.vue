@@ -3,7 +3,8 @@
     <router-link to="/">Home</router-link> <br />
     <router-link to="/user/signup">회원가입</router-link> <br />
     <router-link to="/user/login">로그인</router-link>
-    <router-link to="/user/help/info">유저정보수정</router-link>
+    <router-link to="/user/my-info">유저정보수정</router-link>
+    <router-link to="/user/my-info/password">비밀번호 변경</router-link>
   </div>
   <success-pop-up v-if="logOutPopupStatus"> 로그아웃 되었습니다</success-pop-up>
   <failure-pop-up v-if="failModalStatus"

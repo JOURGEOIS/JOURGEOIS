@@ -18,7 +18,7 @@
 						:button-style="[submitButtonColor, 'long', 'small']"
 						class="submit-check-email-button"
 						v-if="!showButtonContainer"
-						:disabled="!isFullfillToSubmit"
+						:disabled="!isFulfillToSubmit"
 						@click="postCheckEmail"
 					>
 						인증메일 전송
@@ -38,7 +38,7 @@
 			<!-- 다음 버튼: 다음 페이지로 이동 -->
 			<button-basic
 				:button-style="[nextButtonColor, '38%', 'small']"
-				:disabled="!isFullfillToNext"
+				:disabled="!isFulfillToNext"
 				@click="confirmEmailAuthentication"
 			>
 				다음
@@ -83,7 +83,7 @@ const emailDuplicateCheckerProps = reactive({
 const emailInputValue = ref("");
 
 // 이메일이 형식에 맞다면 true 반환
-const isFullfillToSubmit = computed(() => {
+const isFulfillToSubmit = computed(() => {
 	// 입력이 있다면
 	return checkEmailCondition(emailInputValue.value);
 });
@@ -99,7 +99,7 @@ const submitCheckEmailForm = () => {
 };
 
 const submitButtonColor = computed(() => {
-	return isFullfillToSubmit.value ? "primary" : "unchecked";
+	return isFulfillToSubmit.value ? "primary" : "unchecked";
 });
 
 // 이메일 인증 함수
@@ -131,13 +131,13 @@ const emailInputData: object = reactive({
 const showDuplicateAlert = ref(false);
 
 // 이메일 인증이 완료되어 다음 페이지로 넘어가도 될 때 true 반환
-const isFullfillToNext = computed(() => {
+const isFulfillToNext = computed(() => {
 	return true;
 });
 
 // 완료 버튼 색 설정
 const nextButtonColor = computed(() => {
-	return isFullfillToNext ? "primary" : "disabled";
+	return isFulfillToNext ? "primary" : "disabled";
 });
 
 // 다음 페이지로 이동

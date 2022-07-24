@@ -52,9 +52,9 @@
 					></input-basic>
 					<section class="condition-checker-section">
 						<condition-checker :props="nicknameLengthCheckerProps" />
-						<condition-checker :props="duplicatedNicknameCheckerProps" />
 						<condition-checker :props="badWordsCheckerProps" />
 						<condition-checker :props="numEnKrCheckerProps" />
+						<condition-checker :props="duplicatedNicknameCheckerProps" />
 					</section>
 				</div>
 			</section>
@@ -192,15 +192,15 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
+	birthInputValue.value;
 	const t = ref(birthInputValue.value);
 	const birthLength = t.value.length;
 	const lastChar = t.value[birthLength - 1];
-
+	birthFormatCheckerProps.isChecked = false;
+	birthLengthCheckerProps.isChecked = false;
 	// 입력 완료 시
 	if (birthLength === 10) {
-		birthLengthCheckerProps.isChecked =
-			birthInputValue.value.length === 10 ? true : false;
-
+		birthLengthCheckerProps.isChecked = true;
 		birthFormatCheckerProps.isChecked = checkBirthFormat(t.value);
 	} else if (birthLength === 5 || birthLength === 8) {
 		// 지울 때

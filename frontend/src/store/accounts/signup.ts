@@ -98,10 +98,11 @@ export const signup: Module<SignupState, RootState> = {
 		// * 회원가입 완료 시 개인정보 state 저장
 		SET_SIGNUP_USER_INFO: (state, userInfo) => {
 			const { name, nickname, birth } = userInfo;
-			console.log(userInfo);
 			state.signUpName = name;
 			state.signUpNickName = nickname;
-			state.signUpBirth = birth.split("/").join("");
+			const birthList = birth.split("/");
+			birthList[0] = birthList[0].substring(2, 4);
+			state.signUpBirth = birthList.join("-");
 		},
 
 		// * 에러 모달 toggle 함수

@@ -87,6 +87,8 @@ function checkEmailCondition(value: string): boolean {
 // * 생일 형식 체크
 function checkBirthFormat(text: string) {
 	const [Y, M, D] = text.split("/");
+	if (Y.length !== 4 || M.length !== 2 || D.length !== 2) return false;
+
 	const year = Number(Y);
 	const month = Number(M);
 	const day = Number(D);

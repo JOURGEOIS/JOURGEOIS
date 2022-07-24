@@ -24,17 +24,17 @@ export interface SignupState {
 export const signup: Module<SignupState, RootState> = {
 	namespaced: true,
 	state: {
-		currentPage: 3,
+		currentPage: 0,
 		totalPage: 3,
 		personalInfoUseModalStatus: false,
 		errorModalStatus: false,
 
 		// 유저 개인정보
-		signUpEmail: localStorage.getItem("signUpEmail") || "",
+		signUpEmail: "",
 		emailAuthentication: false,
-		signUpName: localStorage.getItem("signUpName") || "",
-		signUpBirth: localStorage.getItem("signUpBirth") || "",
-		signUpNickName: localStorage.getItem("signUpNickName") || "",
+		signUpName: "",
+		signUpBirth: "",
+		signUpNickName: "",
 	},
 	getters: {
 		getCurrentPage: (state) => {
@@ -58,6 +58,7 @@ export const signup: Module<SignupState, RootState> = {
 		},
 
 		getSignUpEmail: (state) => {
+			console.log(state.signUpEmail);
 			return state.signUpEmail;
 		},
 
@@ -129,8 +130,12 @@ export const signup: Module<SignupState, RootState> = {
 
 		// * 중복 이메일 확인
 		checkEmailDuplication: ({ commit, dispatch }, payload) => {
-			const { emailInputValue, showButtonContainer, showDuplicateAlert } =
-				toRefs(payload);
+			const {
+				emailInputValue,
+				showButtonContainer,
+				showDuplicateAlert,
+				loadingStatus,
+			} = toRefs(payload);
 			axios({
 				url: drf.accounts.signUpCheckEmail(),
 				method: "GET",
@@ -148,6 +153,7 @@ export const signup: Module<SignupState, RootState> = {
 						const payload = {
 							email: emailInputValue.value,
 							showButtonContainer,
+							loadingStatus,
 						};
 						dispatch("sendEmailAuthentication", payload);
 					}
@@ -166,7 +172,7 @@ export const signup: Module<SignupState, RootState> = {
 
 		// * 인증용 이메일 전송
 		sendEmailAuthentication: ({ commit }, payload) => {
-			const { email, showButtonContainer } = toRefs(payload);
+			const { email, showButtonContainer, loadingStatus } = toRefs(payload);
 			axios({
 				url: drf.email.emailCert(),
 				method: "post",
@@ -177,7 +183,8 @@ export const signup: Module<SignupState, RootState> = {
 				.then((res) => {
 					if (res.data.success) {
 						// 인증 메일 정상 전송
-						alert("인증 메일을 전송했습니다.");
+						// 로딩창 끄기
+						loadingStatus.value = false;
 						// 버튼 컨테이너를 보이게 하기
 						showButtonContainer.value = true;
 					} else {

@@ -45,6 +45,8 @@
 			</button-basic>
 		</section>
 	</div>
+	<!-- 이메일 전송 중에 나오는 로딩창 -->
+	<loading-basic v-if="loadingStatus"></loading-basic>
 </template>
 
 <script setup lang="ts">
@@ -52,7 +54,8 @@ import ConditionChecker from "@/components/accounts/ConditionChecker.vue";
 import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import { reactive, ref, computed } from "vue";
+import LoadingBasic from "@/components/basics/LoadingBasic.vue";
+import { reactive, ref, computed, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -108,11 +111,15 @@ const checkEmailDuplication = (payload: object) => {
 };
 
 // 인증메일 전송 로직
-const postCheckEmail = () => {
-	checkEmailDuplication({
+const loadingStatus = ref(false);
+const postCheckEmail = async () => {
+	// 로딩창 켜기
+	loadingStatus.value = true;
+	await checkEmailDuplication({
 		emailInputValue,
 		showButtonContainer,
 		showDuplicateAlert,
+		loadingStatus,
 	});
 };
 

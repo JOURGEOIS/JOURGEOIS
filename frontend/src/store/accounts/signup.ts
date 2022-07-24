@@ -14,6 +14,7 @@ export interface SignupState {
 
 	// 유저 개인정보
 	emailAuthentication: boolean;
+	signUpAgreeChecked: Array<boolean>;
 	signUpEmail: string;
 	signUpName: string;
 	signUpBirth: string;
@@ -30,6 +31,7 @@ export const signup: Module<SignupState, RootState> = {
 		errorModalStatus: false,
 
 		// 유저 개인정보
+		signUpAgreeChecked: [false, false, false, false, false],
 		signUpEmail: "",
 		emailAuthentication: false,
 		signUpName: "",
@@ -57,8 +59,12 @@ export const signup: Module<SignupState, RootState> = {
 			return state.errorModalStatus;
 		},
 
+		// 동의 체크와 관련된 것
+		getSignUpAgreeChecked: (state) => {
+			return state.signUpAgreeChecked;
+		},
+
 		getSignUpEmail: (state) => {
-			console.log(state.signUpEmail);
 			return state.signUpEmail;
 		},
 
@@ -81,17 +87,43 @@ export const signup: Module<SignupState, RootState> = {
 			}
 		},
 
-		// * 개인정보 이용 동의 모달 toggle
+		// * [Page1] 전체 체크 상태 바꾸기
+		TOGGLE_ALL_AGREE_CHECKED: (state) => {
+			for (let i = 4; i >= 0; i--) {
+				state.signUpAgreeChecked[i] = !state.signUpAgreeChecked[0];
+			}
+		},
+
+		// * [Page1] 일부 체크 상태 바꾸기
+		TOGGLE_AGREE_CHECKED: (state, order) => {
+			// 해당 체크 toggle
+			state.signUpAgreeChecked[order] = !state.signUpAgreeChecked[order];
+			// 일부 상태가 전체 체크/미체크인치 확인
+			let cnt = 0;
+			for (let i = 1; i < 5; i++) {
+				if (state.signUpAgreeChecked[i]) cnt++;
+			}
+			// 전체 미체크라면
+			if (cnt === 0) {
+				state.signUpAgreeChecked[0] = false;
+			}
+			// 전체 체크라면
+			else if (cnt === 4) {
+				state.signUpAgreeChecked[0] = true;
+			}
+		},
+
+		// * [Page1] 개인정보 이용 동의 모달 toggle
 		SET_PERSONAL_INFO_USE_MODAL: (state) => {
 			state.personalInfoUseModalStatus = !state.personalInfoUseModalStatus;
 		},
 
-		// * 이메일 인증 임시 저장
+		// * [Page2] 이메일 인증 임시 저장
 		SET_SIGNUP_EMAIL: (state, email) => {
 			state.signUpEmail = email;
 		},
 
-		// * 이메일 임시 인증 완료 체크
+		// * [Page2] 이메일 임시 인증 완료 체크
 		SET_EMAIL_AUTHENTICATION: (state) => {
 			state.emailAuthentication = true;
 		},
@@ -123,7 +155,18 @@ export const signup: Module<SignupState, RootState> = {
 			commit("PREV_SIGNUP_PAGE");
 		},
 
-		// * 개인정보 이용 동의 모달 toggle
+		// * [Page1] 전체 체크 상태 바꾸기
+		toggleAllAgreeChecked: ({ commit }) => {
+			console.log("다 바뀌어라 얍");
+			commit("TOGGLE_ALL_AGREE_CHECKED");
+		},
+
+		// * [Page1] 일부 체크 상태 바꾸기
+		toggleAgreeChecked: ({ commit }, order) => {
+			commit("TOGGLE_AGREE_CHECKED", order);
+		},
+
+		// * [Page1] 개인정보 이용 동의 모달 toggle
 		togglePersonalInfoUseModal: ({ commit }) => {
 			commit("SET_PERSONAL_INFO_USE_MODAL");
 		},

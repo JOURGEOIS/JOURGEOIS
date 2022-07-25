@@ -49,7 +49,7 @@ export const signup: Module<SignupState, RootState> = {
 			return state.totalPage;
 		},
 
-		getProgress: (state) => {
+		getProgress: (state): number => {
 			return (state.currentPage / (state.totalPage + 1)) * 100;
 		},
 
@@ -140,9 +140,7 @@ export const signup: Module<SignupState, RootState> = {
 			const { name, nickname, birth } = userInfo;
 			state.signUpName = name;
 			state.signUpNickName = nickname;
-			const birthList = birth.split("/");
-			birthList[0] = birthList[0].substring(2, 4);
-			state.signUpBirth = birthList.join("-");
+			state.signUpBirth = birth.replaceAll("/", "-");
 		},
 
 		// * 에러 모달 toggle 함수
@@ -216,6 +214,7 @@ export const signup: Module<SignupState, RootState> = {
 				})
 				.catch((err) => {
 					console.error(err);
+					loadingStatus.value = false;
 					alert("문제가 발생했습니다!");
 				});
 		},

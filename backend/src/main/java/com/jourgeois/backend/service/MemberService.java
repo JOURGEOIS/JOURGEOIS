@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -191,14 +192,23 @@ public class MemberService {
         String email = passwordChangeForm.getUserId();
         memberRepository.findByEmail(email)
                 .ifPresentOrElse((member)-> {
-                            if(passwordEncoder.matches(passwordChangeForm.getPasswordOld(), member.getPassword())) {
+                            if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
                                 member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
                                 memberRepository.save(member);
                             } else {
-                                throw new IllegalArgumentException("기존 비밀번호와 일치하지 않습니다.");
+                                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
                             }
                         },
-                        () -> {throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");});
+                        () -> {throw new NoSuchElementException("존재하지 않는 회원 입니다.");});
+    }
+
+    @Transactional
+    public boolean checkPassword(PasswordChangeForm passwordChangeForm) throws Exception {
+        String email = passwordChangeForm.getUserId();
+
+        Member member = memberRepository.findByEmail(email).get();
+
+        return passwordEncoder.matches(passwordChangeForm.getPasswordOld(), member.getPassword());
     }
 
     @Transactional
@@ -213,8 +223,11 @@ public class MemberService {
                                 throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
                             }
                         },
-                        () -> {throw new IllegalArgumentException("가입 정보가 없습니다.");}
+                        () -> {throw new NoSuchElementException("가입 정보가 없습니다.");}
                 );
     }
 
+    public boolean checkUser(String userId, String userName) {
+        return memberRepository.findByEmailAndName(userId, userName).isPresent();
+    }
 }

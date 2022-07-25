@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "/member")
@@ -80,10 +81,11 @@ public class MemberController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-
+    // 선아.... login시에 pswd 문제로 request body로 바꿨엉..
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email,
-                                     @RequestParam String password) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginForm) {
+        String email = loginForm.get("email");
+        String password = loginForm.get("password");
         System.out.println(email + " " + password);
         Map<String, Object> data = new HashMap<>();
         data.put("token", memberService.login(email ,password));
@@ -130,6 +132,30 @@ public class MemberController {
             memberService.changePassword(passwordChangeForm);
             data.put("success", true);
             return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        } catch (NoSuchElementException e) {
+            data.put("회원 정보 없음", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/password")
+    public ResponseEntity checkUser(@RequestParam String userId, String userName) {
+        Map<String, Boolean> data = new HashMap<>();
+        boolean isPresent = memberService.checkUser(userId, userName);
+        data.put("success", isPresent);
+        return isPresent ? new ResponseEntity(data, HttpStatus.ACCEPTED) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @PostMapping("/auth/password")
+    public ResponseEntity checkPassword(@RequestBody PasswordChangeForm passwordChangeForm) {
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            boolean result = memberService.checkPassword(passwordChangeForm);
+            data.put("success", result);
+            return result ? new ResponseEntity(data, HttpStatus.CREATED) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);

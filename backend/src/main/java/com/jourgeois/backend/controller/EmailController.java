@@ -50,6 +50,23 @@ public class EmailController {
         }
     }
 
+    @GetMapping("/verified")
+    public  @ResponseBody ResponseEntity<Object> verifyMailTest(@RequestParam String token, @RequestParam String email) {
+        EmailAuthForm authForm = new EmailAuthForm();
+        authForm.setToken(token);
+        authForm.setUserEmail(email);
+        boolean success = false;
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            success = emailService.verifyEmail(authForm);
+            data.put("success", success);
+            return success ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        } catch (Exception e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
     @PostMapping("/confirmed")
     public @ResponseBody ResponseEntity checkVerified(@RequestBody EmailAuthForm emailAuthForm) {
         boolean verified = false;

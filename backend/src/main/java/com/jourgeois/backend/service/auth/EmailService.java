@@ -29,17 +29,14 @@ public class EmailService {
     @Transactional
     public boolean sendVerifyEmail(EmailAuthForm emailAuthForm) throws Exception {
         Assert.notNull(emailAuthForm.getEmail(), "이메일 주소는 필수입니다.");
-
+        System.out.println(emailAuthForm.getEmail());
         // 이메일 인증 토큰 생성
         EmailToken emailToken = MailAuthUtil.createEmailToken(emailAuthForm);
-
+        System.out.println(emailToken.getId());
         emailTokenRepository.save(emailToken);
-
         // 회원 가입 인증 이메일 전송
         MimeMessage mailMessage = mailAuthUtil.createMessage(emailToken);
-
         emailSenderService.sendEmail(mailMessage);
-
         return true;
     }
 

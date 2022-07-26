@@ -7,6 +7,7 @@
 
 <template>
   <div class="sign-out-content">
+    <!-- 회원 탈퇴 설명 문구 -->
     <div class="sign-out-context">
       <p>
         사용하고 계신 아이디를 탈퇴하시면 회원정보 및 개인형 서비스 이용기록은
@@ -17,12 +18,16 @@
         <span>삭제</span>하시기 바랍니다.
       </p>
     </div>
+
+    <!-- 동의 여부 확인 -->
     <div class="sign-out-checker" @click="clickSignOutChecker">
       <span :class="agreeStatus" class="checker-icon material-icons">
         check_circle_outline
       </span>
       <span>위 내용을 확인하였으며, 이에 동의합니다.</span>
     </div>
+
+    <!-- 버튼 -->
     <div class="sign-out-btn">
       <button-basic
         :button-style="[buttonColor, 'long', 'small']"
@@ -39,6 +44,8 @@
       </button-basic>
     </div>
   </div>
+
+  <!-- 실패 팝업 -->
   <failure-pop-up v-if="failPopUp">잠시 후 다시 시도해주세요</failure-pop-up>
 </template>
 

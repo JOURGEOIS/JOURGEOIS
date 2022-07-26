@@ -13,7 +13,7 @@ async function checkNicknameDuplication(text: string): Promise<boolean> {
 			nickname: text,
 		},
 	});
-	return res.data;
+	return res.data.available;
 }
 
 export {

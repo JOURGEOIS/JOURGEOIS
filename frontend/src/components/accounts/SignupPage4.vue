@@ -231,7 +231,14 @@ watchEffect(() => {
 	}
 	debounce = setTimeout(async () => {
 		const a = await checkNicknameDuplication(nicknameInputValue.value);
-		duplicatedNicknameCheckerProps.isChecked = a;
+		// 서버/네트워크 정상
+		if (typeof a === "boolean") {
+			duplicatedNicknameCheckerProps.isChecked = a;
+		}
+		// 서버/네트워크 비정상
+		else {
+			alert("문제가 발생했습니다!");
+		}
 	}, 200);
 });
 

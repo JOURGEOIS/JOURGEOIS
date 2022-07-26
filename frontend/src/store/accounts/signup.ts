@@ -14,6 +14,7 @@ export interface SignupState {
 	profileUseModalStatus: boolean;
 	failModalStatus: boolean;
 	emailNonAuthModalStatus: boolean;
+	completeSignUpModalStatus: boolean;
 
 	// 유저 개인정보
 	emailAuthentication: boolean;
@@ -36,6 +37,7 @@ export const signup: Module<SignupState, RootState> = {
 		profileUseModalStatus: false,
 		failModalStatus: false,
 		emailNonAuthModalStatus: false,
+		completeSignUpModalStatus: false,
 
 		// 유저 개인정보
 		signUpAgreeChecked: [false, false, false, false, false],
@@ -51,11 +53,9 @@ export const signup: Module<SignupState, RootState> = {
 		getCurrentPage: (state) => {
 			return state.currentPage;
 		},
-
 		getTotalPage: (state) => {
 			return state.totalPage;
 		},
-
 		getProgress: (state): number => {
 			return (state.currentPage / (state.totalPage + 1)) * 100;
 		},
@@ -64,11 +64,9 @@ export const signup: Module<SignupState, RootState> = {
 		getServiceUseModalStatus: (state) => {
 			return state.serviceUseModalStatus;
 		},
-
 		getPersonalInfoUseModalStatus: (state) => {
 			return state.personalInfoUseModalStatus;
 		},
-
 		getProfileUseModalStatus: (state) => {
 			return state.profileUseModalStatus;
 		},
@@ -78,8 +76,14 @@ export const signup: Module<SignupState, RootState> = {
 			return state.failModalStatus;
 		},
 
+		// * [Page2] 이메일 인증 없이 다음 누른 경우
 		getEmailNonAuthModalStatus: (state) => {
 			return state.emailNonAuthModalStatus;
+		},
+
+		// * [Page5] 회원가입 성공 모달
+		getCompleteSignUpModalStatus: (state) => {
+			return state.completeSignUpModalStatus;
 		},
 
 		// * [Page1] 동의 체크와 관련
@@ -92,6 +96,7 @@ export const signup: Module<SignupState, RootState> = {
 			return state.signUpEmail;
 		},
 
+		// * [Page2] 이메일 인증 여부 가져오기
 		getEmailAuthentication: (state) => {
 			return state.emailAuthentication;
 		},
@@ -196,6 +201,12 @@ export const signup: Module<SignupState, RootState> = {
 
 		TOGGLE_EMAIL_NON_AUTH_MODAL_STATUS: (state, value) => {
 			state.emailNonAuthModalStatus = value;
+		},
+
+		// * 회원가입 성공 toggle 함수
+		TOGGLE_COMPLETE_SIGNUP_MODAL_STATUS: (state, value) => {
+			console.log("회원가입 성공 mutations", value);
+			state.completeSignUpModalStatus = value;
 		},
 	},
 
@@ -359,7 +370,7 @@ export const signup: Module<SignupState, RootState> = {
 		},
 
 		// * [Page Final] 회원가입 완료 접수
-		submitSignUp: ({ commit, state, dispatch }) => {
+		submitSignUp: ({ state, dispatch }) => {
 			axios({
 				method: "POST",
 				url: drf.accounts.signUp(),
@@ -374,12 +385,14 @@ export const signup: Module<SignupState, RootState> = {
 				.then((res) => {
 					// 회원가입 성공
 					if (res.data.success) {
-						alert("회원가입에 성공하였습니다.");
+						dispatch("toggleTimedCompleteSignUpModalStatus");
 						const loginUserInfo = {
 							email: state.signUpEmail,
 							password: state.signUpPw,
 						};
-						dispatch("account/login", loginUserInfo, { root: true });
+						setTimeout(() => {
+							dispatch("account/login", loginUserInfo, { root: true });
+						}, 3000);
 					}
 					// 회원가입 실패
 					else {
@@ -412,6 +425,23 @@ export const signup: Module<SignupState, RootState> = {
 				time = 3000;
 			}
 			setTimeout(() => dispatch("toggleEmailNonAuthModalStatus", false), time);
+		},
+
+		// * 회원가입 성공 모달 toggle 함수
+		toggleCompleteSignUpModalStatus: ({ commit }, value) => {
+			console.log("회원가입 성공 모달 actions", value);
+			commit("TOGGLE_COMPLETE_SIGNUP_MODAL_STATUS", value);
+		},
+
+		toggleTimedCompleteSignUpModalStatus: ({ dispatch }, time) => {
+			dispatch("toggleCompleteSignUpModalStatus", true);
+			if (typeof time !== "number") {
+				time = 3000;
+			}
+			setTimeout(
+				() => dispatch("toggleCompleteSignUpModalStatus", false),
+				time
+			);
 		},
 	},
 };

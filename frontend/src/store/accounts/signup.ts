@@ -28,7 +28,7 @@ export interface SignupState {
 export const signup: Module<SignupState, RootState> = {
 	namespaced: true,
 	state: {
-		currentPage: 3,
+		currentPage: 0,
 		totalPage: 3,
 		serviceUseModalStatus: false,
 		personalInfoUseModalStatus: false,
@@ -242,9 +242,6 @@ export const signup: Module<SignupState, RootState> = {
 						emailInputValue.value = "";
 						loadingStatus.value = false;
 					}
-				})
-				.then((res) => {
-					console.log(res);
 				})
 				.catch((err) => {
 					console.error(err);

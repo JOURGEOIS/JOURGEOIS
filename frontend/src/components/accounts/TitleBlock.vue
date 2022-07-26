@@ -23,9 +23,12 @@ interface titleContent {
 	subList: string[];
 }
 
-const props = defineProps({
-	contents: Object,
-});
+const props = defineProps<{
+	contents: {
+		mainList: string[];
+		subList: string[];
+	};
+}>();
 
 const { mainList, subList } = props.contents;
 </script>

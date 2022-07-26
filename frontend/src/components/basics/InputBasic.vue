@@ -23,7 +23,7 @@
         :value="modelValue"
         :placeholder="data.placeholder"
         :maxlength="data.maxlength"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @input="emitValue"
         autocapitalize="off"
         autocomplete="off"
       />
@@ -31,7 +31,7 @@
         class="input-icon"
         :style="{ visibility: buttonVisibility }"
         v-if="!data.isDisabled"
-        @click="$emit('update:modelValue', '')"
+        @click="emitValue"
       >
         <span class="material-icons"> close </span>
       </div>
@@ -75,6 +75,12 @@ const inputColor = computed(() => {
     return "error-input";
   }
 });
+
+// input.value emit하기
+const emit = defineEmits<{ (e: "update:modelValue", value: string): void }>();
+const emitValue = (e: Event) => {
+  emit("update:modelValue", (e.target as HTMLInputElement).value);
+};
 </script>
 
 <style scoped lang="scss">

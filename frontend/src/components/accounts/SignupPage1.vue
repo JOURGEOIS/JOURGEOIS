@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import ThePersonalInfoUseModal from "@/components/accounts/ThePersonalInfoUseModal.vue";
+import TheServiceUseModal from "@/components/accounts/TheServiceUseModal.vue";
 import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import AgreeChecker from "@/components/accounts/AgreeChecker.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
@@ -88,7 +89,7 @@ const agreeContents = reactive([
 	{
 		order: 2,
 		isChecked: isChecked2,
-		checkContent: "[필수] 주류주아 계정 약관",
+		checkContent: "[필수] 주류주아 서비스 이용 약관",
 		isModalBtn: true,
 		modalContent: "modal content 2",
 	},

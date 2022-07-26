@@ -57,9 +57,9 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import LoadingBasic from "@/components/basics/LoadingBasic.vue";
 import { reactive, ref, computed, onBeforeMount } from "vue";
 import { useStore } from "vuex";
-const store = useStore();
-
 import { checkEmailCondition } from "../../modules/checkText";
+
+const store = useStore();
 
 // 제목 컴포넌트
 const titleContents = reactive({
@@ -115,12 +115,14 @@ const loadingStatus = ref(false);
 const postCheckEmail = async () => {
 	// 로딩창 켜기
 	loadingStatus.value = true;
-	await checkEmailDuplication({
-		emailInputValue,
-		showButtonContainer,
-		showDuplicateAlert,
-		loadingStatus,
-	});
+	await checkEmailDuplication(
+		reactive({
+			emailInputValue,
+			showButtonContainer,
+			showDuplicateAlert,
+			loadingStatus,
+		})
+	);
 };
 
 // 이메일 input 데이터

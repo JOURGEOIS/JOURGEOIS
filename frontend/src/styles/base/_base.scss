@@ -46,11 +46,9 @@ li, ol {
 }
 
 a {
-  display: inline-block
-}
-
-a {
+  color: $link-color;
   display: inline-block;
+  
   &:focus {
     color: $link-focus-color;
   }

@@ -80,16 +80,15 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { react } from "@babel/types";
-const store = useStore();
-
 import {
 	checkBadWord,
 	checkAsterisk,
 	checkEnKr,
 	checkBirthFormat,
 } from "../../modules/checkText";
-
 import { checkNicknameDuplication } from "../../modules/checkUserInfo";
+
+const store = useStore();
 
 // 제목 컴포넌트
 const nameTitleContents = reactive({
@@ -232,7 +231,14 @@ watchEffect(() => {
 	}
 	debounce = setTimeout(async () => {
 		const a = await checkNicknameDuplication(nicknameInputValue.value);
-		duplicatedNicknameCheckerProps.isChecked = a.available;
+		// 서버/네트워크 정상
+		if (typeof a === "boolean") {
+			duplicatedNicknameCheckerProps.isChecked = a;
+		}
+		// 서버/네트워크 비정상
+		else {
+			alert("문제가 발생했습니다!");
+		}
 	}, 200);
 });
 

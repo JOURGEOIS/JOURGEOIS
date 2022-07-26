@@ -69,7 +69,7 @@ const emailInputValue = computed(
 const pwInputData: object = reactive({
   button: true,
   id: "change-pw-input",
-  label: "새 비밀번호",
+  label: "현재 비밀번호",
   placeholder: "비밀번호 (8 ~ 20자리)",
   type: "password",
 });

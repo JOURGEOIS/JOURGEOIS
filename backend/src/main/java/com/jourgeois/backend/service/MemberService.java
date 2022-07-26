@@ -175,7 +175,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void signOut(String email) throws Exception{
+    public void signOut(String email) throws NoSuchElementException{
         Optional<Member> member = memberRepository.findByEmail(email);
         member.ifPresentOrElse(selectMember -> {
             refreshTokenRepository.deleteByEmail(selectMember.getEmail());
@@ -184,13 +184,13 @@ public class MemberService {
                 s3Util.deleteFile(userProfile);
             memberRepository.delete(selectMember);
         }, () -> {
-            throw new IllegalArgumentException("가입된 회원이 아닙니다.");
+            throw new NoSuchElementException("가입된 회원이 아닙니다.");
         });
         System.out.println("회원 탈퇴 완료");
     }
 
     @Transactional
-    public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
+    public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException, NoSuchElementException {
         String email = passwordChangeForm.getUserId();
         memberRepository.findByEmail(email)
                 .ifPresentOrElse((member)-> {
@@ -205,7 +205,7 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean checkPassword(PasswordChangeForm passwordChangeForm) throws Exception {
+    public boolean checkPassword(PasswordChangeForm passwordChangeForm) throws NoSuchElementException {
         String email = passwordChangeForm.getUserId();
 
         Member member = memberRepository.findByEmail(email).get();
@@ -214,7 +214,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void findPassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
+    public void findPassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException, NoSuchElementException {
         String email = passwordChangeForm.getUserId();
         memberRepository.findByEmail(email)
                 .ifPresentOrElse((member)-> {

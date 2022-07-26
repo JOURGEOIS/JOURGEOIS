@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/member")
@@ -112,13 +115,15 @@ public class MemberController {
 
     @PutMapping("/auth/profile")
     public ResponseEntity changeProfile(@ModelAttribute ProfileDto profileDto){
-        Map<String, Boolean> data = new HashMap<>();
+
         try {
+//            Map<String, ProfileDto> data = new HashMap<>();
             memberService.changeProfile(profileDto);
-            data.put("success", true);
-            return new ResponseEntity(data, HttpStatus.CREATED);
+//            data.put("userInfo", memberService.findUserInfo(profileDto.getEmail()));
+            return new ResponseEntity(memberService.findUserInfo(profileDto.getEmail()), HttpStatus.CREATED);
         }catch (Exception e) {
             System.out.println(e);
+            Map<String, Boolean> data = new HashMap<>();
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
@@ -171,6 +176,20 @@ public class MemberController {
             data.put("success", true);
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (Exception e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    // 이미지 파일 업로드
+    @PostMapping("/test")
+    public ResponseEntity testest(@RequestBody MultipartFile multipartFile) throws IOException {
+        try{
+            Map<String, String> data = new HashMap<>();
+            data.put("url", "http://localhost:8080/img/"+s3Uploader.localUpload(multipartFile, "test"));
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        }catch (Exception e) {
+            Map<String, Boolean> data = new HashMap<>();
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }

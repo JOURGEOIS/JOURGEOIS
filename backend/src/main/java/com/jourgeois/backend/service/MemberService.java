@@ -75,7 +75,9 @@ public class MemberService {
                                     member.setNickname(data.getNickname());
                                     try{
                                         if(data.getProfileLink()!=null && !data.getProfileLink().isEmpty()){
-                                            s3Util.deleteFile(member.getProfileImg());
+                                            if(!member.getProfileImg().equals("default/1.png")) {
+                                                s3Util.deleteFile(member.getProfileImg());
+                                            }
                                             member.setProfileImg(s3Util.upload(data.getProfileLink(), data.getNickname()));
                                         }
                                     } catch (IOException e){

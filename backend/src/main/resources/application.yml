@@ -1,18 +1,20 @@
 spring:
+  mvc:
+    static-path-pattern: /img/**
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    #    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
-#    username: root
-#    password: 1q2w3e4r!@#
-#    hikari:
-#      auto-commit: false
-#      connection-test-query: SELECT 1
-#      minimum-idle: 10
-#      maximum-pool-size: 50
-#      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
-#      pool-name: pool-backend
+    username: root
+    password: 1q2w3e4r!@#
+    hikari:
+      auto-commit: false
+      connection-test-query: SELECT 1
+      minimum-idle: 10
+      maximum-pool-size: 50
+      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+      pool-name: pool-backend
   jpa:
     hibernate:
       ddl-auto: update
@@ -33,7 +35,7 @@ spring:
 #      auto: false
 jwt:
   secret-key: secret-key-ssafy-daejeon-jourgeois-service-HS512-algorithm
-  token-validity-in-sec: 30
+  token-validity-in-sec: 1
   refresh-token-validity-in-sec: 604800
 server:
   port: 8080

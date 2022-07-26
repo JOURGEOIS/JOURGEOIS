@@ -19,7 +19,7 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
-// 현재 탭
+// 현재 탭 계산
 const index = computed(() => store.getters["account/getSignOutCurrentTab"]);
 const componentArray = [
   defineAsyncComponent(

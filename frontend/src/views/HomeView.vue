@@ -5,7 +5,6 @@
     <router-link to="/user/login">로그인</router-link>
     <router-link to="/user/my-info">유저정보수정</router-link>
     <router-link to="/user/my-info/password">비밀번호 변경</router-link>
-    <router-link to="/user/sign-out">회원 탈퇴</router-link>
   </div>
   <success-pop-up v-if="changePwPopupStatus">
     비밀번호가 변경되었습니다

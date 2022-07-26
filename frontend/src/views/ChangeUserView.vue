@@ -7,7 +7,7 @@
     <section>
       <div class="change-user-info-link">
         <p @click="toggleLogOutModal(true)">로그아웃</p>
-        <p>회원탈퇴</p>
+        <router-link to="/user/sign-out">회원탈퇴</router-link>
       </div>
     </section>
   </div>
@@ -56,11 +56,14 @@ section {
     @include flex-center;
     gap: 20px;
     width: 100%;
-    p {
+    * {
       padding: 8px;
       color: $gray;
       @include font($fs-btn, $fw-medium);
     }
+  }
+  a {
+    text-decoration: none;
   }
 }
 </style>

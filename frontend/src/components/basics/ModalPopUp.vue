@@ -77,6 +77,6 @@ const { modalStyle }: any = selectModalColor(props.modalColor);
 
 .danger-modal {
   color: $white;
-  background-color: crimson;
+  background-color: rgb(255, 67, 67);
 }
 </style>

@@ -14,5 +14,8 @@ public class WebConfig implements WebMvcConfigurer{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
+
+        registry.addResourceHandler("/img/**")
+                .addResourceLocations("file:///C:/Users/stand/git/gitlab/jjua/backend/img/").setCachePeriod(60 * 60 * 24 * 365);
     }
 }

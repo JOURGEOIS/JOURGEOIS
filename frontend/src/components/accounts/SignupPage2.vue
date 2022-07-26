@@ -2,7 +2,7 @@
 	<div class="content-container">
 		<section>
 			<title-block :contents="titleContents" />
-			<form @submit.prevent="submitCheckEmailForm">
+			<form @submit.prevent="postCheckEmail">
 				<input-basic
 					:data="emailInputData"
 					:input-style="emailInputStyle"
@@ -19,7 +19,6 @@
 						class="submit-check-email-button"
 						v-if="!showButtonContainer"
 						:disabled="!isFulfillToSubmit"
-						@click="postCheckEmail"
 					>
 						인증메일 전송
 					</button-basic>
@@ -95,11 +94,6 @@ const emailInputStyle = ref("normal");
 
 // [인증메일 재전송] / [완료] 있는 buttonContainer를 보일지 여부
 let showButtonContainer = ref(false);
-
-// 제출
-const submitCheckEmailForm = () => {
-	showButtonContainer = ref(true);
-};
 
 const submitButtonColor = computed(() => {
 	return isFulfillToSubmit.value ? "primary" : "unchecked";

@@ -9,7 +9,9 @@ import { checkEmailCondition } from "../../modules/checkText";
 export interface SignupState {
 	currentPage: number;
 	totalPage: number;
+	serviceUseModalStatus: boolean;
 	personalInfoUseModalStatus: boolean;
+	profileUseModalStatus: boolean;
 	errorModalStatus: boolean;
 
 	// 유저 개인정보
@@ -28,7 +30,9 @@ export const signup: Module<SignupState, RootState> = {
 	state: {
 		currentPage: 0,
 		totalPage: 3,
+		serviceUseModalStatus: false,
 		personalInfoUseModalStatus: false,
+		profileUseModalStatus: false,
 		errorModalStatus: false,
 
 		// 유저 개인정보
@@ -41,6 +45,7 @@ export const signup: Module<SignupState, RootState> = {
 		signUpNickName: "",
 	},
 	getters: {
+		// * [Page] 회원가입 전체 페이지 및 현재 페이지, 백분율(progress)
 		getCurrentPage: (state) => {
 			return state.currentPage;
 		},
@@ -53,19 +58,29 @@ export const signup: Module<SignupState, RootState> = {
 			return (state.currentPage / (state.totalPage + 1)) * 100;
 		},
 
+		// * [Page1] 서비스 약관 동의 모달 상태 get 함수
+		getServiceUseModalStatus: (state) => {
+			return state.serviceUseModalStatus;
+		},
+
 		getPersonalInfoUseModalStatus: (state) => {
 			return state.personalInfoUseModalStatus;
+		},
+
+		getProfileUseModalStatus: (state) => {
+			return state.profileUseModalStatus;
 		},
 
 		getErrorModalStatus: (state) => {
 			return state.errorModalStatus;
 		},
 
-		// 동의 체크와 관련된 것
+		// * [Page1] 동의 체크와 관련
 		getSignUpAgreeChecked: (state) => {
 			return state.signUpAgreeChecked;
 		},
 
+		// * [Page2] 이메일 정보 및 인증 확인 여부 가져오기
 		getSignUpEmail: (state) => {
 			return state.signUpEmail;
 		},
@@ -115,9 +130,17 @@ export const signup: Module<SignupState, RootState> = {
 			}
 		},
 
-		// * [Page1] 개인정보 이용 동의 모달 toggle
+		// * [Page1] 서비스 이용약관 동의 모달 toggle
+		SET_SERVICE_USE_MODAL: (state) => {
+			state.serviceUseModalStatus = !state.serviceUseModalStatus;
+		},
+
 		SET_PERSONAL_INFO_USE_MODAL: (state) => {
 			state.personalInfoUseModalStatus = !state.personalInfoUseModalStatus;
+		},
+
+		SET_PROFILE_USE_MODAL: (state) => {
+			state.profileUseModalStatus = !state.profileUseModalStatus;
 		},
 
 		// * [Page2] 이메일 인증 임시 저장
@@ -170,9 +193,17 @@ export const signup: Module<SignupState, RootState> = {
 			commit("TOGGLE_AGREE_CHECKED", order);
 		},
 
-		// * [Page1] 개인정보 이용 동의 모달 toggle
+		// * [Page1] 서비스 이용 약관 동의 모달 toggle
+		toggleServiceUseModal: ({ commit }) => {
+			commit("SET_SERVICE_USE_MODAL");
+		},
+
 		togglePersonalInfoUseModal: ({ commit }) => {
 			commit("SET_PERSONAL_INFO_USE_MODAL");
+		},
+
+		toggleprofileUseModal: ({ commit }) => {
+			commit("SET_PROFILE_USE_MODAL");
 		},
 
 		// * [Page2] 중복 이메일 확인

@@ -26,7 +26,13 @@
 import { toRefs } from "vue";
 
 const props = defineProps<{
-	contents: object;
+	contents: {
+		order: number;
+		isChecked: boolean;
+		checkContent: string;
+		isModalBtn: boolean;
+		modalContent: string;
+	};
 }>();
 
 let { order, isChecked, checkContent, isModalBtn, modalContent } = toRefs(

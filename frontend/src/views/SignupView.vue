@@ -15,6 +15,7 @@
 			<signup-page4 v-if="currentPage === 3" />
 		</section>
 	</div>
+	<failure-pop-up v-if="failModalStatus">문제가 발생했습니다.</failure-pop-up>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +28,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import ProgressBar from "@/components/basics/ProgressBar.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 const router = useRouter();
 const store = useStore();
 
@@ -41,6 +43,10 @@ onUnmounted(() => {
 // 현재 페이지 번호 및 페이지 이동
 let progress = computed(() => store.getters["signup/getProgress"]);
 let currentPage = computed(() => store.getters["signup/getCurrentPage"]);
+const failModalStatus = computed(
+	() => store.getters["signup/getFailModalStatus"]
+);
+
 const nextSignupPage = () => {
 	store.dispatch("signup/nextSignupPage");
 };

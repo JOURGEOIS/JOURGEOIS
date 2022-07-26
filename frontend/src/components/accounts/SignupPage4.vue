@@ -77,6 +77,7 @@ import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import ConditionChecker from "@/components/accounts/ConditionChecker.vue";
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { react } from "@babel/types";
@@ -222,6 +223,9 @@ watchEffect(() => {
 });
 
 // * 닉네임 중복 확인 Debounce
+const toggleTimedFailModalStatus = () => {
+	store.dispatch("signup/toggleTimedFailModalStatus");
+};
 let debounce: any;
 watchEffect(() => {
 	// watch 실행용 dummy code
@@ -237,7 +241,7 @@ watchEffect(() => {
 		}
 		// 서버/네트워크 비정상
 		else {
-			alert("문제가 발생했습니다!");
+			toggleTimedFailModalStatus();
 		}
 	}, 200);
 });

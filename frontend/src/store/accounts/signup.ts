@@ -12,7 +12,8 @@ export interface SignupState {
 	serviceUseModalStatus: boolean;
 	personalInfoUseModalStatus: boolean;
 	profileUseModalStatus: boolean;
-	errorModalStatus: boolean;
+	failModalStatus: boolean;
+	emailNonAuthModalStatus: boolean;
 
 	// 유저 개인정보
 	emailAuthentication: boolean;
@@ -33,7 +34,8 @@ export const signup: Module<SignupState, RootState> = {
 		serviceUseModalStatus: false,
 		personalInfoUseModalStatus: false,
 		profileUseModalStatus: false,
-		errorModalStatus: false,
+		failModalStatus: false,
+		emailNonAuthModalStatus: false,
 
 		// 유저 개인정보
 		signUpAgreeChecked: [false, false, false, false, false],
@@ -71,8 +73,13 @@ export const signup: Module<SignupState, RootState> = {
 			return state.profileUseModalStatus;
 		},
 
-		getErrorModalStatus: (state) => {
-			return state.errorModalStatus;
+		// * [Pages] 실패 모달
+		getFailModalStatus: (state) => {
+			return state.failModalStatus;
+		},
+
+		getEmailNonAuthModalStatus: (state) => {
+			return state.emailNonAuthModalStatus;
 		},
 
 		// * [Page1] 동의 체크와 관련
@@ -183,8 +190,12 @@ export const signup: Module<SignupState, RootState> = {
 		},
 
 		// * 에러 모달 toggle 함수
-		TOGGLE_ERROR_MODAL: (state) => {
-			state.errorModalStatus = !state.errorModalStatus;
+		TOGGLE_FAIL_MODAL_STATUS: (state, value) => {
+			state.failModalStatus = value;
+		},
+
+		TOGGLE_EMAIL_NON_AUTH_MODAL_STATUS: (state, value) => {
+			state.emailNonAuthModalStatus = value;
 		},
 	},
 
@@ -265,14 +276,13 @@ export const signup: Module<SignupState, RootState> = {
 					}
 				})
 				.catch((err) => {
-					console.error(err);
 					loadingStatus.value = false;
-					alert("문제가 발생했습니다!");
+					dispatch("toggleFailModalStatus", false);
 				});
 		},
 
 		// * [Page2] 인증용 이메일 전송
-		sendEmailAuthentication: ({ commit }, payload) => {
+		sendEmailAuthentication: ({ commit, dispatch }, payload) => {
 			const { email, showButtonContainer, loadingStatus } = toRefs(payload);
 			axios({
 				url: drf.email.emailCert(),
@@ -290,7 +300,7 @@ export const signup: Module<SignupState, RootState> = {
 						showButtonContainer.value = true;
 					} else {
 						// 인증 이메일 전송 실패
-						alert("인증 메일 전송에 실패했습니다.");
+						dispatch("toggleTimedFailModalStatus");
 					}
 				})
 				.catch((err) => console.error(err));
@@ -302,6 +312,7 @@ export const signup: Module<SignupState, RootState> = {
 			payload
 		) => {
 			const { email } = toRefs(payload);
+			console.log("api 전송 시작");
 			axios({
 				url: drf.email.emailConfirmed(),
 				method: "post",
@@ -310,24 +321,30 @@ export const signup: Module<SignupState, RootState> = {
 				},
 			})
 				.then((res) => {
-					if (res.data.success) {
-						commit("SET_EMAIL_AUTHENTICATION");
+					console.log("api 전송 결과", res.data);
+					if (typeof res.data.success === "boolean") {
+						// 인증 된 경우
+						if (res.data.success) {
+							commit("SET_EMAIL_AUTHENTICATION");
+						}
+						// 인증 안 된 경우
+						else {
+							dispatch("toggleTimedEmailNonAuthModalStatus");
+						}
 					} else {
-						// 인증 안 되거나 문제 있음
-						alert("인증 문제 있다!");
+						// 문제 있음
+						dispatch("toggleTimedFailModalStatus");
 					}
 				})
 				.then((res) => {
 					if (getters.getEmailAuthentication) {
 						dispatch("nextSignupPage");
 					} else {
-						alert("문제 있다 뭐냐 이거");
+						dispatch("toggleTimedFailModalStatus");
 					}
 				})
 				.catch((err) => {
-					console.error(err);
-					console.dir(err);
-					alert("에러 발생!");
+					dispatch("toggleTimedFailModalStatus");
 				});
 		},
 
@@ -366,15 +383,35 @@ export const signup: Module<SignupState, RootState> = {
 					}
 					// 회원가입 실패
 					else {
-						alert("회원가입에 실패하였습니다.");
+						dispatch("toggleTimedFailModalStatus");
 					}
 				})
 				.catch((err) => console.error(err.response));
 		},
 
 		// * 에러 모달 toggle 함수
-		toggleErrorModal: ({ commit }) => {
-			commit("TOGGLE_ERROR_MODAL");
+		toggleFailModalStatus: ({ commit }, value) => {
+			commit("TOGGLE_FAIL_MODAL_STATUS", value);
+		},
+
+		toggleTimedFailModalStatus: ({ dispatch }, time) => {
+			dispatch("toggleFailModalStatus", true);
+			if (typeof time !== "number") {
+				time = 3000;
+			}
+			setTimeout(() => dispatch("toggleFailModalStatus", false), time);
+		},
+
+		toggleEmailNonAuthModalStatus: ({ commit }, value) => {
+			commit("TOGGLE_FAIL_MODAL_STATUS", value);
+		},
+
+		toggleTimedEmailNonAuthModalStatus: ({ dispatch }, time) => {
+			dispatch("toggleEmailNonAuthModalStatus", true);
+			if (typeof time !== "number") {
+				time = 3000;
+			}
+			setTimeout(() => dispatch("toggleEmailNonAuthModalStatus", false), time);
 		},
 	},
 };

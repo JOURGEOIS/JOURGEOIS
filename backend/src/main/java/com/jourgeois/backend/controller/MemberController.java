@@ -139,7 +139,7 @@ public class MemberController {
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             data.put("success", false);
-            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
             data.put("회원 정보 없음", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
@@ -151,7 +151,7 @@ public class MemberController {
         Map<String, Boolean> data = new HashMap<>();
         boolean isPresent = memberService.checkUser(userId, userName);
         data.put("success", isPresent);
-        return isPresent ? new ResponseEntity(data, HttpStatus.ACCEPTED) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        return isPresent ? new ResponseEntity(data, HttpStatus.ACCEPTED) : new ResponseEntity(data, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/auth/password")
@@ -160,7 +160,7 @@ public class MemberController {
         try {
             boolean result = memberService.checkPassword(passwordChangeForm);
             data.put("success", result);
-            return result ? new ResponseEntity(data, HttpStatus.CREATED) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+            return result ? new ResponseEntity(data, HttpStatus.CREATED) : new ResponseEntity(data, HttpStatus.CREATED);
         } catch (Exception e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
@@ -175,7 +175,10 @@ public class MemberController {
             memberService.findPassword(passwordChangeForm);
             data.put("success", true);
             return new ResponseEntity(data, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }

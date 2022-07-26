@@ -1,4 +1,4 @@
-import { ref, toRefs } from "vue";
+import { ref, reactive, toRefs } from "vue";
 import { Module } from "vuex";
 import { RootState } from "../index";
 import drf from "../../api/drf";
@@ -104,6 +104,22 @@ export const signup: Module<SignupState, RootState> = {
 			}
 		},
 
+		// * [Pages] 회원가입View에서 이탈하는 유저 정보 제거
+		REMOVE_SIGNUP_INFO: (state) => {
+			// 동의 상태 해제
+			for (let i = 4; i >= 0; i--) {
+				state.signUpAgreeChecked[i] = false;
+			}
+
+			// 기타 개인정보 제거
+			state.signUpEmail = "";
+			state.emailAuthentication = false;
+			state.signUpName = "";
+			state.signUpPw = "";
+			state.signUpBirth = "";
+			state.signUpNickName = "";
+		},
+
 		// * [Page1] 전체 체크 상태 바꾸기
 		TOGGLE_ALL_AGREE_CHECKED: (state) => {
 			for (let i = 4; i >= 0; i--) {
@@ -183,6 +199,11 @@ export const signup: Module<SignupState, RootState> = {
 			commit("PREV_SIGNUP_PAGE");
 		},
 
+		// * [Pages] 회원가입View에서 이탈하는 유저 정보 제거
+		removeSignUpInfo: ({ commit }) => {
+			commit("REMOVE_SIGNUP_INFO");
+		},
+
 		// * [Page1] 전체 체크 상태 바꾸기
 		toggleAllAgreeChecked: ({ commit }) => {
 			commit("TOGGLE_ALL_AGREE_CHECKED");
@@ -228,11 +249,11 @@ export const signup: Module<SignupState, RootState> = {
 						// state에 이메일 입력 저장
 						commit("SET_SIGNUP_EMAIL", emailInputValue.value);
 						// 이메일 인증 보내는 모듈
-						const payload = {
+						const payload = reactive({
 							email: emailInputValue.value,
 							showButtonContainer,
 							loadingStatus,
-						};
+						});
 						dispatch("sendEmailAuthentication", payload);
 					}
 					// 이메일 중복 있음

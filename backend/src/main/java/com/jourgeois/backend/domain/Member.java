@@ -25,13 +25,12 @@ public class Member {
     private String name;
     private String nickname;
     private String birthday;
-    @ColumnDefault("default/1.png")
-    private String profileImg;
+
+    private String profileImg = "default/1.png";
     private String introduce;
     @CreatedDate
     private java.util.Date creationDate;
-    @ColumnDefault("ROLE_USER")
-    private String roles;
+    private String roles = "ROLE_USER";
 
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {

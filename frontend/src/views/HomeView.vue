@@ -11,7 +11,10 @@
   </success-pop-up>
   <success-pop-up v-if="logOutPopupStatus"> 로그아웃 되었습니다</success-pop-up>
   <failure-pop-up v-if="failModalStatus">잠시 후에 시도해주세요</failure-pop-up>
-  <success-pop-up v-if="signOutPopupStatus">탈퇴되었습니다.</success-pop-up>
+  <failure-pop-up v-if="refreshFailPopupStatus"
+    >다시 로그인 해주세요</failure-pop-up
+  >
+  <success-pop-up v-if="signOutPopupStatus">탈퇴되었습니다</success-pop-up>
 </template>
 
 <script setup lang="ts">
@@ -35,6 +38,10 @@ const failModalStatus = computed(
 
 const signOutPopupStatus = computed(
   () => store.getters["account/getSignOutPopupStatus"]
+);
+
+const refreshFailPopupStatus = computed(
+  () => store.getters["personalInfo/getRefreshFailPopupStatus"]
 );
 
 onMounted(() => {
@@ -62,6 +69,14 @@ onMounted(() => {
   // 탈퇴 팝업 시간제 off
   if (signOutPopupStatus) {
     setTimeout(() => store.dispatch("account/toggleSignOutPopup", false), 3000);
+  }
+
+  // 리프레시 실패 팝업 시간제 off
+  if (refreshFailPopupStatus) {
+    setTimeout(
+      () => store.dispatch("account/toggleRefreshFailPopup", false),
+      3000
+    );
   }
 });
 </script>

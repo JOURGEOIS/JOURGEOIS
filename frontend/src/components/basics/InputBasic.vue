@@ -31,7 +31,7 @@
         class="input-icon"
         :style="{ visibility: buttonVisibility }"
         v-if="!data.isDisabled"
-        @click="emitValue"
+        @click="$emit('update:modelValue', '')"
       >
         <span class="material-icons"> close </span>
       </div>
@@ -77,9 +77,11 @@ const inputColor = computed(() => {
 });
 
 // input.value emit하기
-const emit = defineEmits<{ (e: "update:modelValue", value: string): void }>();
-const emitValue = (e: Event) => {
-  emit("update:modelValue", (e.target as HTMLInputElement).value);
+const emit = defineEmits<{
+  (event: "update:modelValue", value: string): void;
+}>();
+const emitValue = (event: Event) => {
+  emit("update:modelValue", (event.target as HTMLInputElement).value);
 };
 </script>
 

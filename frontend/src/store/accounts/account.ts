@@ -10,6 +10,8 @@ export interface AccountState {
   logOutPopupStatus: boolean;
   failModalStatus: boolean;
   loginErrorStatus: boolean;
+  signOutPopupStatus: boolean;
+  signOutCurrentTab: number;
 }
 
 export const account: Module<AccountState, RootState> = {
@@ -20,6 +22,8 @@ export const account: Module<AccountState, RootState> = {
     logOutPopupStatus: false,
     failModalStatus: false,
     loginErrorStatus: false,
+    signOutPopupStatus: false,
+    signOutCurrentTab: 0,
   },
 
   getters: {
@@ -35,6 +39,12 @@ export const account: Module<AccountState, RootState> = {
     getLoginErrorStatus: (state) => {
       return state.loginErrorStatus;
     },
+    getSignOutPopupStatus: (state) => {
+      return state.signOutPopupStatus;
+    },
+    getSignOutCurrentTab: (state) => {
+      return state.signOutCurrentTab;
+    },
   },
 
   mutations: {
@@ -49,6 +59,12 @@ export const account: Module<AccountState, RootState> = {
     },
     SET_LOGIN_ERROR_MSG: (state, value) => {
       state.loginErrorStatus = value;
+    },
+    SET_SIGN_OUT_POPUP: (state, value) => {
+      state.signOutPopupStatus = value;
+    },
+    SET_SIGN_OUT_TAB: (state, value) => {
+      state.signOutCurrentTab = value;
     },
   },
 
@@ -66,6 +82,12 @@ export const account: Module<AccountState, RootState> = {
 
     toggleLoginError: ({ commit }, value) => {
       commit("SET_LOGIN_ERROR_MSG", value);
+    },
+    toggleSignOutPopup: ({ commit }, value) => {
+      commit("SET_SIGN_OUT_POPUP", value);
+    },
+    changeSignOutCurrentTab: ({ commit }, value) => {
+      commit("SET_SIGN_OUT_TAB", value);
     },
 
     // 로그인
@@ -117,8 +139,30 @@ export const account: Module<AccountState, RootState> = {
         });
     },
 
-    // 탈퇴
-    signOut: ({ rootGetters }) => {
+    // 회원 탈퇴: 본인 인증
+    submitSignOutAuth: ({ rootGetters, commit }, data) => {
+      const { pwInputValue, failStatus } = data;
+      axios({
+        url: drf.accounts.changePassword(),
+        method: "post",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          userId: rootGetters["personalInfo/getUserInfoId"],
+          passwordOld: pwInputValue.value,
+        },
+      })
+        .then(() => {
+          commit("SET_SIGN_OUT_TAB", 1);
+        })
+        .catch((error) => {
+          failStatus.value = true;
+        });
+    },
+
+    // 회원 탈퇴: 탈퇴
+    signOut: ({ commit, dispatch, rootGetters }, failStatus) => {
       axios({
         url: drf.accounts.signOut(),
         method: "delete",
@@ -129,11 +173,15 @@ export const account: Module<AccountState, RootState> = {
           email: rootGetters["personalInfo/getUserInfoId"],
         },
       })
+        // 성공시, 로컬스토리지 정보 삭제후 홈으로 이동후 팝업을 보여준다.
         .then(() => {
-          console.log("탈퇴!");
+          dispatch("personalInfo/resetUserInfo", {}, { root: true });
+          clickHome();
+          commit("SET_SIGN_OUT_POPUP", true);
         })
-        .catch((error) => {
-          console.log("실패!");
+        // 실패 팝업
+        .catch(() => {
+          failStatus.value = true;
         });
     },
   },

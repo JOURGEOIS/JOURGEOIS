@@ -19,7 +19,11 @@
 <script setup lang="ts">
 import { toRefs } from "vue";
 const props = defineProps<{
-	props: object;
+	props: {
+		isChecked: boolean;
+		checkContent: string;
+		isIconTypeDanger: boolean;
+	};
 }>();
 let { isChecked, checkContent, isIconTypeDanger } = toRefs(props.props);
 

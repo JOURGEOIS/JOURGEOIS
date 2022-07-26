@@ -1,6 +1,7 @@
 package com.jourgeois.backend.domain;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -24,11 +25,13 @@ public class Member {
     private String name;
     private String nickname;
     private String birthday;
+    @ColumnDefault("default/1.png")
     private String profileImg;
     private String introduce;
     @CreatedDate
     private java.util.Date creationDate;
-    private String roles = "ROLE_USER";
+    @ColumnDefault("ROLE_USER")
+    private String roles;
 
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {

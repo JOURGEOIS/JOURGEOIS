@@ -48,12 +48,12 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { react } from "@babel/types";
-const store = useStore();
-
 import {
 	checkTripleCombination,
 	checkPasswordLength,
 } from "../../modules/checkText";
+
+const store = useStore();
 
 // 제목 컴포넌트
 const titleContents = reactive({

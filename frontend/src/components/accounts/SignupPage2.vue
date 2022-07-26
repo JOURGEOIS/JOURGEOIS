@@ -57,9 +57,9 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import LoadingBasic from "@/components/basics/LoadingBasic.vue";
 import { reactive, ref, computed, onBeforeMount } from "vue";
 import { useStore } from "vuex";
-const store = useStore();
-
 import { checkEmailCondition } from "../../modules/checkText";
+
+const store = useStore();
 
 // 제목 컴포넌트
 const titleContents = reactive({

@@ -1,17 +1,22 @@
-<!-- 비밀번호 찾기 페이지의 세번째 컴포넌트 
-  이메일 인증까지 완료한 대상이 비밀번호를 수정한다. 
-  1. 비밀번호 기입
-  2. 비밀번호 확인
+<!-- 회원 탈퇴 페이지의 첫번째 컴포넌트 
+  비밀번호 확인을 통해 본인인증을 진행한다. 
+  1. vuex에 저장된 유저 정보를 토대로 이메일 데이터를 가져온다. 
+  2. 비밀번호 기입
+  3. 서버에 위의 두 데이터를 전송하여 본인이 맞는지 확인
   
-  또한, 프론트단에서 진행하는 유효성 검사(92번째 줄)와 에러 메시지가 표시되는 공간이 인풋과 버튼 사이에 존재한다. 
+  또한, 프론트단에서 진행하는 유효성 검사(87번째 줄)와 에러 메시지가 표시되는 공간이 인풋과 버튼 사이에 존재한다. 
 -->
 
 <template>
-  <div class="pw-change-title">
-    <p>인증이 완료되었습니다.&nbsp;</p>
-    <p>새로운 비밀번호를 입력해주세요.</p>
+  <div class="sign-out-auth-title">
+    <p>회원님의 소중한 정보 보호를 위해&nbsp;</p>
+    <p>현재 계정의 비밀번호를 확인해주세요.</p>
   </div>
-  <form class="pw-change-form" @submit.prevent="submitPwChangeForm">
+  <form class="sign-out-auth-form" @submit.prevent="submitChangePwAuthForm">
+    <div class="sign-out-auth-input">
+      <p>{{ emailInputValue }}</p>
+    </div>
+
     <!-- input: 비밀번호 입력 -->
     <input-basic
       :data="pwInputData"
@@ -19,25 +24,24 @@
       v-model="pwInputValue"
     ></input-basic>
 
-    <!-- input: 비밀번호 확인 -->
-    <input-basic
-      :data="pwConfirmInputData"
-      :input-style="pwConfirmInputStyle"
-      v-model="pwConfirmInputValue"
-    ></input-basic>
-
     <!-- 유효성 검사 -->
-    <div class="forgot-pw-error-message" v-if="occurredError">
+    <div class="sign-out-auth-error" v-if="occurredError">
       <p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
     </div>
 
     <!-- catch 메시지-->
-    <p class="forgot-pw-Fail-message" v-if="pwChangeFailStatus">
-      오류가 발생했습니다. 잠시 후에 시도해주세요.
+    <p class="sign-out-Fail-message" v-if="pwChangeFailStatus">
+      비밀번호가 틀렸습니다. 다시 확인해주세요.
     </p>
+
+    <!-- 비밀번호 찾기 창으로 이동 -->
+    <router-link to="/user/help/password"
+      >비밀번호가 기억나지 않으세요?</router-link
+    >
+    <!-- 본인 인증 버튼 -->
     <button-basic
       :button-style="[buttonColor, 'long', 'small']"
-      :disabled="pwInputValue == '' || pwConfirmInputValue == ''"
+      :disabled="!pwInputValue"
     >
       확인
     </button-basic>
@@ -47,21 +51,25 @@
 <script setup lang="ts">
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import {
   checkTripleCombination,
   checkPasswordLength,
-  checkIsEqualPassword,
 } from "../../modules/checkText";
 
 const store = useStore();
 
-// pw Input
+// email input
+const emailInputValue = computed(
+  () => store.getters["personalInfo/getUserInfoId"]
+);
+
+// password input
 const pwInputData: object = reactive({
   button: true,
-  id: "change-pw-input",
-  label: "새 비밀번호",
+  id: "sign-out-input",
+  label: "현재 비밀번호",
   placeholder: "비밀번호 (8 ~ 20자리)",
   maxlength: 20,
   type: "password",
@@ -70,22 +78,9 @@ const pwInputData: object = reactive({
 const pwInputStyle = ref("normal");
 const pwInputValue = ref("");
 
-// pwCheck Input
-const pwConfirmInputData: object = reactive({
-  button: true,
-  id: "change-pw-confirm-input",
-  label: "새 비밀번호 확인",
-  placeholder: "비밀번호 재입력",
-  maxlength: 20,
-  type: "password",
-});
-
-const pwConfirmInputStyle = ref("normal");
-const pwConfirmInputValue = ref("");
-
 // 버튼 색상
 const buttonColor = computed(() => {
-  if (pwInputValue.value !== "" && pwConfirmInputValue.value !== "") {
+  if (pwInputValue.value) {
     return "primary";
   } else {
     return "unchecked";
@@ -99,40 +94,31 @@ const pwConditionAErrorMessage: string =
   "비밀번호는 영어 대문자, 소문자, 숫자, 특수문자 중 3종류 이상이여야 합니다.";
 const pwConditionBErrorMessage: string =
   "비밀번호는 최소 8자 최대 20자로 입력되어야 합니다.";
-const pwConditionCErrorMessage: string =
-  "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
 
 // 에러 메시지
 const pwChangeFailStatus = ref(false);
 
 // 제출
 const submit = (data: object) =>
-  store.dispatch("password/submitChangePwForm", data);
-const email = computed(() => store.getters["password/getForgotPwEmail"]);
-const submitPwChangeForm = () => {
+  store.dispatch("account/submitSignOutAuth", data);
+
+const submitChangePwAuthForm = () => {
   // 리셋
   errorMessage.length = 0;
+  pwChangeFailStatus.value = false;
   pwInputStyle.value = "normal";
-  pwConfirmInputStyle.value = "normal";
 
   // 유효성 검사 결과
   const pwConditionA = checkTripleCombination(pwInputValue.value);
   const pwConditionB = checkPasswordLength(pwInputValue.value);
-  const pwConditionC = checkIsEqualPassword(
-    pwInputValue.value,
-    pwConfirmInputValue.value
-  );
 
-  // 비밀번호 변경시 전달할 데이터
-  const data: object = {
-    userId: email.value,
-    passwordNew: pwInputValue.value,
-    passwordConfirm: pwConfirmInputValue.value,
+  // 제출시 전달할 데이터
+  const data = {
+    pwInputValue,
     failStatus: pwChangeFailStatus,
   };
-
-  // 비밀번호 변경
-  if (pwConditionA && pwConditionB && pwConditionC) {
+  // 인증 제출
+  if (pwConditionA && pwConditionB) {
     submit(data);
   } else {
     if (!pwConditionA) {
@@ -145,18 +131,12 @@ const submitPwChangeForm = () => {
       occurredError.value = true;
       errorMessage.push(pwConditionBErrorMessage);
     }
-    if (!pwConditionC) {
-      pwInputStyle.value = "error";
-      pwConfirmInputStyle.value = "error";
-      occurredError.value = true;
-      errorMessage.push(pwConditionCErrorMessage);
-    }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.pw-change-title {
+.sign-out-auth-title {
   p {
     color: $sub-color;
     @include font($fs-main, $fw-medium);
@@ -166,13 +146,20 @@ const submitPwChangeForm = () => {
     }
   }
 }
-.pw-change-form {
+.sign-out-auth-form {
   @include flex(column);
   gap: 32px;
   width: 100%;
-  margin-top: 32px;
 
-  .forgot-pw-error-message {
+  .sign-out-auth-input {
+    padding-bottom: 16px;
+    border-bottom: 2px solid $white250;
+    p {
+      color: $white400;
+      @include font($fs-md, $fw-bold);
+    }
+  }
+  .sign-out-auth-error {
     margin-top: -25px;
     color: $danger-color;
     @include font($fs-sm, $fw-regular);
@@ -182,7 +169,13 @@ const submitPwChangeForm = () => {
       padding: 0;
     }
   }
-  .forgot-pw-Fail-message {
+
+  a {
+    margin-top: -16px;
+    color: $gray100;
+    @include font($fs-sm, $fw-regular);
+  }
+  .sign-out-Fail-message {
     margin-top: -25px;
     color: $danger-color;
     @include font(13px, $fw-regular);

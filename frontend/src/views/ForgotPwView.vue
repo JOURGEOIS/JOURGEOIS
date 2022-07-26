@@ -19,8 +19,9 @@ import { computed, defineAsyncComponent, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-const index = computed(() => store.getters["password/getForgotPwCurrentTab"]);
 
+// 현재 탭
+const index = computed(() => store.getters["password/getForgotPwCurrentTab"]);
 const componentArray = [
   defineAsyncComponent(
     () => import("@/components/accounts/TheForgotPwForm.vue")
@@ -32,7 +33,6 @@ const componentArray = [
     () => import("@/components/accounts/TheForgotPwChangeForm.vue")
   ),
 ];
-
 const currentComponent = computed(() => {
   return componentArray[index.value];
 });

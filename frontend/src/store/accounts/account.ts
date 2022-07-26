@@ -149,7 +149,7 @@ export const account: Module<AccountState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          userId: rootGetters["personalInfo/getUserInfoId"],
+          email: rootGetters["personalInfo/getUserInfoId"],
           passwordOld: pwInputValue.value,
         },
       })

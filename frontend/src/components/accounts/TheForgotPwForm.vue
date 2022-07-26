@@ -56,11 +56,11 @@ const store = useStore();
 
 // name Input
 const nameInputData: object = reactive({
-	button: true,
-	id: "forgot-pw-name-input",
-	label: "이름",
-	placeholder: "이름을 입력하세요.",
-	type: "text",
+  button: true,
+  id: "forgot-pw-name-input",
+  label: "이름",
+  placeholder: "이름을 입력하세요.",
+  type: "text",
 });
 
 const nameInputStyle = ref("normal");
@@ -68,11 +68,11 @@ const nameInputValue = ref("");
 
 // email Input
 const emailInputData: object = reactive({
-	button: true,
-	id: "forgot-pw-email-input",
-	label: "이메일",
-	placeholder: "이메일을 입력하세요.",
-	type: "text",
+  button: true,
+  id: "forgot-pw-email-input",
+  label: "이메일",
+  placeholder: "이메일을 입력하세요.",
+  type: "text",
 });
 
 const emailInputStyle = ref("normal");
@@ -80,65 +80,65 @@ const emailInputValue = ref("");
 
 // 버튼 색상
 const buttonColor = computed(() => {
-	if (nameInputValue.value !== "" && emailInputValue.value !== "") {
-		return "primary";
-	} else {
-		return "unchecked";
-	}
+  if (nameInputValue.value !== "" && emailInputValue.value !== "") {
+    return "primary";
+  } else {
+    return "unchecked";
+  }
 });
 
 // 유효성 검사
 const errorMessage: string[] = reactive([]);
 const occurredError = ref(false);
 const nameConditionErrorMessage: string =
-	"이름은 한글 또는 영어만 입력이 가능합니다.";
+  "이름은 한글 또는 영어만 입력이 가능합니다.";
 const emailConditionAErrorMessage: string = "올바른 이메일 형식이 아닙니다.";
 
 // 에러 메시지
 const forgotPwErrorMsg = computed(
-	() => store.getters["password/getForgotPwErrorMsgStatus"]
+  () => store.getters["password/getForgotPwErrorMsgStatus"]
 );
 
 const toggleForgotPwErrorMsg = (value: boolean) => {
-	store.dispatch("password/toggleForgotPwErrorMsg", value);
+  store.dispatch("password/toggleForgotPwErrorMsg", value);
 };
 
 // submit
 const submit = (data: object) =>
-	store.dispatch("password/submitForgotPwForm", data);
+  store.dispatch("password/submitForgotPwForm", data);
 
 const submitForgotPwForm = () => {
-	// 리셋
-	toggleForgotPwErrorMsg(false);
-	errorMessage.length = 0;
-	nameInputStyle.value = "normal";
-	emailInputStyle.value = "normal";
+  // 리셋
+  toggleForgotPwErrorMsg(false);
+  errorMessage.length = 0;
+  nameInputStyle.value = "normal";
+  emailInputStyle.value = "normal";
 
-	// 유효성 검사
-	const nameCondition = checkEnKr(nameInputValue.value);
-	const emailCondition = checkEmailCondition(emailInputValue.value);
+  // 유효성 검사
+  const nameCondition = checkEnKr(nameInputValue.value);
+  const emailCondition = checkEmailCondition(emailInputValue.value);
 
-	// 전달 해야 하는 데이터
-	const data: object = {
-		userId: emailInputValue.value,
-		userName: nameInputValue.value,
-	};
+  // 전달 해야 하는 데이터
+  const data: object = {
+    email: emailInputValue.value,
+    userName: nameInputValue.value,
+  };
 
-	if (nameCondition && emailCondition) {
-		submit(data);
-	} else {
-		if (!nameCondition) {
-			nameInputStyle.value = "error";
-			occurredError.value = true;
-			errorMessage.push(nameConditionErrorMessage);
-		}
+  if (nameCondition && emailCondition) {
+    submit(data);
+  } else {
+    if (!nameCondition) {
+      nameInputStyle.value = "error";
+      occurredError.value = true;
+      errorMessage.push(nameConditionErrorMessage);
+    }
 
-		if (!emailCondition) {
-			emailInputStyle.value = "error";
-			occurredError.value = true;
-			errorMessage.push(emailConditionAErrorMessage);
-		}
-	}
+    if (!emailCondition) {
+      emailInputStyle.value = "error";
+      occurredError.value = true;
+      errorMessage.push(emailConditionAErrorMessage);
+    }
+  }
 };
 </script>
 

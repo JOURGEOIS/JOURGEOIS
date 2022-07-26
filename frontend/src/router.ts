@@ -7,50 +7,50 @@ const routes: any[] = [
   // 홈 화면
   {
     path: "/",
-    name: "HomeView",
-    component: () => import("@/views/HomeView.vue"),
+    name: "TheHomeView",
+    component: () => import("@/views/TheHomeView.vue"),
   },
 
   // 회원가입 화면
   {
     path: "/user/signup",
-    name: "SignupView",
-    component: () => import("@/views/SignupView.vue"),
+    name: "TheSignupView",
+    component: () => import("@/views/TheSignupView.vue"),
   },
 
   // 로그인 화면
   {
     path: "/user/login",
-    name: "LoginView",
+    name: "TheLoginView",
     component: () => import("@/views/TheLoginView.vue"),
   },
 
   // 로그아웃 화면
   {
     path: "/user/sign-out",
-    name: "SignOutView",
-    component: () => import("@/views/SignOutView.vue"),
+    name: "TheSignOutView",
+    component: () => import("@/views/TheSignOutView.vue"),
   },
 
   // 유저 정보 수정
   {
     path: "/user/my-info",
-    name: "ChangeUserView",
-    component: () => import("@/views/ChangeUserView.vue"),
+    name: "TheChangeUserView",
+    component: () => import("@/views/TheChangeUserView.vue"),
   },
 
   // 비밀번호 찾기 화면
   {
     path: "/user/help/password",
-    name: "ForgotPwView",
-    component: () => import("@/views/ForgotPwView.vue"),
+    name: "TheForgotPwView",
+    component: () => import("@/views/TheForgotPwView.vue"),
   },
 
   // 비밀번호 변경 화면
   {
     path: "/user/my-info/password",
-    name: "ChangePwView",
-    component: () => import("@/views/ChangePwView.vue"),
+    name: "TheChangePwView",
+    component: () => import("@/views/TheChangePwView.vue"),
   },
 ];
 

@@ -22,6 +22,13 @@ const routes: any[] = [
     component: () => import("@/views/TheLoginView.vue"),
   },
 
+  // 로그아웃 화면
+  {
+    path: "/user/sign-out",
+    name: "SignOut",
+    component: () => import("@/views/SignOutView.vue"),
+  },
+
   // 유저 정보 수정
   {
     path: "/user/my-info",

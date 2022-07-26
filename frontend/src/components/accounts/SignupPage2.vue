@@ -115,12 +115,14 @@ const loadingStatus = ref(false);
 const postCheckEmail = async () => {
 	// 로딩창 켜기
 	loadingStatus.value = true;
-	await checkEmailDuplication({
-		emailInputValue,
-		showButtonContainer,
-		showDuplicateAlert,
-		loadingStatus,
-	});
+	await checkEmailDuplication(
+		reactive({
+			emailInputValue,
+			showButtonContainer,
+			showDuplicateAlert,
+			loadingStatus,
+		})
+	);
 };
 
 // 이메일 input 데이터

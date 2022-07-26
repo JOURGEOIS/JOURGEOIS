@@ -92,19 +92,19 @@ export const password: Module<PasswordState, RootState> = {
     },
 
     // 비밀번호 찾기: 이름, 이메일을 입력하여 1. 서버에 존재하는 이메일과 이름인지 2. 둘이 매치가 되는지 확인한다.
-    submitForgotPwForm: ({ commit }, { userId, userName }) => {
+    submitForgotPwForm: ({ commit }, { email, userName }) => {
       axios({
         url: drf.accounts.forgotPassword(),
         method: "get",
         params: {
-          userId,
+          email,
           userName,
         },
       })
         .then(() => {
           // 다음 페이지로 이동, 이메일 정보 저장
           commit("SET_FORGOT_PW_CURRENT_TAB", 1);
-          commit("SET_FORGOT_PW_EMAIL", userId);
+          commit("SET_FORGOT_PW_EMAIL", email);
         })
         .catch(() => {
           // 에러 메시지 하단에 배치
@@ -155,12 +155,12 @@ export const password: Module<PasswordState, RootState> = {
 
     // 비밀번호 찾기 : 비밀번호 변경
     submitChangePwForm: (context, data) => {
-      const { userId, passwordNew, passwordConfirm, failStatus } = data;
+      const { email, passwordNew, passwordConfirm, failStatus } = data;
       axios({
         url: drf.accounts.forgotPassword(),
         method: "put",
         data: {
-          userId,
+          email,
           passwordNew,
           passwordConfirm,
         },
@@ -185,7 +185,7 @@ export const password: Module<PasswordState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          userId: rootGetters["personalInfo/getUserInfoId"],
+          email: rootGetters["personalInfo/getUserInfoId"],
           passwordOld: pwInputValue.value,
         },
       })
@@ -206,7 +206,7 @@ export const password: Module<PasswordState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          userId: rootGetters["personalInfo/getUserInfoId"],
+          email: rootGetters["personalInfo/getUserInfoId"],
           passwordNew,
           passwordConfirm,
         },

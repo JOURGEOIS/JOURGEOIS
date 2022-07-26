@@ -125,7 +125,7 @@ const submitPwChangeForm = () => {
 
   // 비밀번호 변경시 전달할 데이터
   const data: object = {
-    userId: email.value,
+    email: email.value,
     passwordNew: pwInputValue.value,
     passwordConfirm: pwConfirmInputValue.value,
     failStatus: pwChangeFailStatus,

@@ -38,7 +38,7 @@ export const password: Module<PasswordState, RootState> = {
     getForgotPwCurrentTab: (state) => {
       return state.forgotPwCurrentTab;
     },
-    getForgotPwEmail: (state): string => {
+    getForgotPwEmail: (state) => {
       return state.forgotPwEmail;
     },
     getForgotPwErrorMsgStatus: (state) => {

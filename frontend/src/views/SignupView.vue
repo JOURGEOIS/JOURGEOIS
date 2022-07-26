@@ -22,13 +22,21 @@ import SignupPage1 from "@/components/accounts/SignupPage1.vue";
 import SignupPage2 from "@/components/accounts/SignupPage2.vue";
 import SignupPage3 from "@/components/accounts/SignupPage3.vue";
 import SignupPage4 from "@/components/accounts/SignupPage4.vue";
-import { computed } from "vue";
+import { computed, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import ProgressBar from "@/components/basics/ProgressBar.vue";
 const router = useRouter();
 const store = useStore();
+
+// 회원가입view에서 이탈한 경우
+const removeSignUpInfo = () => {
+	store.dispatch("signup/removeSignUpInfo");
+};
+onUnmounted(() => {
+	removeSignUpInfo();
+});
 
 // 현재 페이지 번호 및 페이지 이동
 let progress = computed(() => store.getters["signup/getProgress"]);

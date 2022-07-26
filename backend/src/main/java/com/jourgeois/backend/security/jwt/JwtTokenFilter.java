@@ -34,7 +34,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             if ( jwt != null && jwtTokenProvider.validateToken(jwt)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                 if(request.getParameter("email") != null && request.getParameter("email").equals(authentication.getName())){
-                    System.out.println("TESTTESTTEST " + authentication.getName() + " " + request.getParameter("email"));
+//                    System.out.println("TESTTESTTEST " + authentication.getName() + " " + request.getParameter("email"));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     log.info("set Authentication to security context for '{}', uri: {}", authentication.getName(), request.getRequestURI());
                 }else {

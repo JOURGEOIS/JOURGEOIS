@@ -186,6 +186,7 @@ public class MemberController {
     public ResponseEntity testest(@RequestBody MultipartFile multipartFile) throws IOException {
         try{
             Map<String, String> data = new HashMap<>();
+            // 이메일로 변경 필요
             data.put("url", "http://localhost:8080/img/"+s3Uploader.localUpload(multipartFile, "test"));
             return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {

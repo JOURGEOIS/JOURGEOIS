@@ -25,12 +25,8 @@ public class Member {
     private String name;
     private String nickname;
     private String birthday;
-<<<<<<< HEAD
     private String profileImg ="default/1.png";
-=======
 
-    private String profileImg = "default/1.png";
->>>>>>> d2ecd5b752fac5958b9aefd1d93ba471e07d9734
     private String introduce;
     @CreatedDate
     private java.util.Date creationDate;

@@ -20,6 +20,7 @@ public class CorsConfig {
         config.addAllowedMethod("*");  // 모든 post, get, put, delete, patch요청을 허용
         source.registerCorsConfiguration("/member/**", config);
         source.registerCorsConfiguration("/email/**", config);
+        source.registerCorsConfiguration("/token", config);
         return new CorsFilter(source);
     }
 }

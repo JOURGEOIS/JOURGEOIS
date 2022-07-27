@@ -68,7 +68,7 @@ public class S3Util {
     // 로컬에 파일 업로드 하기
     private Optional<File> convert(MultipartFile file, String dirName) throws IOException {
 //        File convertFile = new File(System.getProperty("user.dir") + "/src/main/resources/img/" + file.getOriginalFilename());
-        File convertFile = new File(System.getProperty("user.dir") + "/img/" + dirName + "_" +file.getOriginalFilename());
+        File convertFile = new File(System.getProperty("user.dir") + "/img/" + dirName  + "_" + Long.toString(System.nanoTime()) + "_" +file.getOriginalFilename());
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
                 fos.write(file.getBytes());

@@ -14,13 +14,18 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     // 401
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        Exception exception = (Exception) request.getAttribute("exception");
+        String exception = (String) request.getAttribute("exception");
 
-        if(exception != null){
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
+        if(exception.equals("ExpiredJwt")){
+            System.out.println("만료된 인증키");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }else if(exception.equals("Exception")){
+            System.out.println("잘못된 접근");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
         else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+            System.out.println("잘못된 접근");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, authException.getMessage());
         }
     }
 }

@@ -9,9 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/member")
@@ -80,10 +84,11 @@ public class MemberController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-
+    // 선아.... login시에 pswd 문제로 request body로 바꿨엉..
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email,
-                                     @RequestParam String password) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginForm) {
+        String email = loginForm.get("email");
+        String password = loginForm.get("password");
         System.out.println(email + " " + password);
         Map<String, Object> data = new HashMap<>();
         data.put("token", memberService.login(email ,password));
@@ -110,13 +115,15 @@ public class MemberController {
 
     @PutMapping("/auth/profile")
     public ResponseEntity changeProfile(@ModelAttribute ProfileDto profileDto){
-        Map<String, Boolean> data = new HashMap<>();
+
         try {
+//            Map<String, ProfileDto> data = new HashMap<>();
             memberService.changeProfile(profileDto);
-            data.put("success", true);
-            return new ResponseEntity(data, HttpStatus.CREATED);
+//            data.put("userInfo", memberService.findUserInfo(profileDto.getEmail()));
+            return new ResponseEntity(memberService.findUserInfo(profileDto.getEmail()), HttpStatus.CREATED);
         }catch (Exception e) {
             System.out.println(e);
+            Map<String, Boolean> data = new HashMap<>();
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
@@ -130,6 +137,30 @@ public class MemberController {
             memberService.changePassword(passwordChangeForm);
             data.put("success", true);
             return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
+            data.put("회원 정보 없음", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/password")
+    public ResponseEntity checkUser(@RequestParam String userId, String userName) {
+        Map<String, Boolean> data = new HashMap<>();
+        boolean isPresent = memberService.checkUser(userId, userName);
+        data.put("success", isPresent);
+        return isPresent ? new ResponseEntity(data, HttpStatus.ACCEPTED) : new ResponseEntity(data, HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/auth/password")
+    public ResponseEntity checkPassword(@RequestBody PasswordChangeForm passwordChangeForm) {
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            boolean result = memberService.checkPassword(passwordChangeForm);
+            data.put("success", result);
+            return result ? new ResponseEntity(data, HttpStatus.CREATED) : new ResponseEntity(data, HttpStatus.CREATED);
         } catch (Exception e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
@@ -144,7 +175,25 @@ public class MemberController {
             memberService.findPassword(passwordChangeForm);
             data.put("success", true);
             return new ResponseEntity(data, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    // 이미지 파일 업로드
+    @PostMapping("/test")
+    public ResponseEntity testest(@RequestBody MultipartFile multipartFile) throws IOException {
+        try{
+            Map<String, String> data = new HashMap<>();
+            // 이메일로 변경 필요
+            data.put("url", "http://localhost:8080/img/"+s3Uploader.localUpload(multipartFile, "test"));
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        }catch (Exception e) {
+            Map<String, Boolean> data = new HashMap<>();
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }

@@ -15,6 +15,10 @@
 			<signup-page4 v-if="currentPage === 3" />
 		</section>
 	</div>
+	<failure-pop-up v-if="failModalStatus">문제가 발생했습니다.</failure-pop-up>
+	<success-pop-up v-if="getCompleteSignUpModalStatus"
+		>회원가입이 완료되었습니다.</success-pop-up
+	>
 </template>
 
 <script setup lang="ts">
@@ -22,25 +26,50 @@ import SignupPage1 from "@/components/accounts/SignupPage1.vue";
 import SignupPage2 from "@/components/accounts/SignupPage2.vue";
 import SignupPage3 from "@/components/accounts/SignupPage3.vue";
 import SignupPage4 from "@/components/accounts/SignupPage4.vue";
-import { computed } from "vue";
+import { computed, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import ProgressBar from "@/components/basics/ProgressBar.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
+import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 const router = useRouter();
 const store = useStore();
+
+// 회원가입view에서 이탈한 경우
+const removeSignUpInfo = () => {
+	store.dispatch("signup/removeSignUpInfo");
+};
+onUnmounted(() => {
+	// 임시 회원정보 전부 삭제
+	removeSignUpInfo();
+});
 
 // 현재 페이지 번호 및 페이지 이동
 let progress = computed(() => store.getters["signup/getProgress"]);
 let currentPage = computed(() => store.getters["signup/getCurrentPage"]);
+
+// 오류 및 실패 모달
+const failModalStatus = computed(
+	() => store.getters["signup/getFailModalStatus"]
+);
+
+// 회원가입 성공 모달
+const getCompleteSignUpModalStatus = computed(
+	() => store.getters["signup/getCompleteSignUpModalStatus"]
+);
+
+// 다음 페이지 이동 actions
 const nextSignupPage = () => {
 	store.dispatch("signup/nextSignupPage");
 };
 
+// 이전 페이지 이동 actions
 const prevSignupPage = () => {
 	store.dispatch("signup/prevSignupPage");
 };
 
+// 이전 페이지 버튼 클릭 이벤트 함수
 const clickPrevIconSignupPage = () => {
 	if (progress.value === 0) {
 		router.go(-1);

@@ -31,7 +31,7 @@
 
     <!-- catch 메시지-->
     <p class="change-pw-Fail-message" v-if="pwChangeFailStatus">
-      오류가 발생했습니다. 잠시 후에 시도해주세요.
+      비밀번호가 틀렸습니다. 다시 확인해주세요.
     </p>
 
     <!-- 비밀번호 찾기 창으로 이동 -->
@@ -71,6 +71,7 @@ const pwInputData: object = reactive({
   id: "change-pw-input",
   label: "현재 비밀번호",
   placeholder: "비밀번호 (8 ~ 20자리)",
+  maxlength: 20,
   type: "password",
 });
 

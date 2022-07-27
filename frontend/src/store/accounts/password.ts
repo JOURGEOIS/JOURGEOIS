@@ -176,8 +176,8 @@ export const password: Module<PasswordState, RootState> = {
     },
 
     // 비밀번호 변경: 본인 인증
-    submitChangePwAuthForm: ({ rootGetters, commit, dispatch }, data) => {
-      const { pwInputValue, failStatus } = data;
+    submitChangePwAuthForm: ({ rootGetters, commit, dispatch }, params) => {
+      const { pwInputValue, failStatus } = params;
       axios({
         url: drf.accounts.changePassword(),
         method: "post",
@@ -200,18 +200,15 @@ export const password: Module<PasswordState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "password/submitChangePwAuthForm",
-              params: {
-                pwInputValue,
-                failStatus,
-              },
+              params
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
         });
     },
     // 비밀번호 변경: 비밀번호 변경
-    submitPwForm: ({ rootGetters, commit, dispatch }, data) => {
-      const { passwordNew, passwordConfirm, failStatus } = data;
+    submitPwForm: ({ rootGetters, commit, dispatch }, params) => {
+      const { passwordNew, passwordConfirm, failStatus } = params;
       axios({
         url: drf.accounts.changePassword(),
         method: "put",
@@ -232,8 +229,12 @@ export const password: Module<PasswordState, RootState> = {
           if (error.response.status !== 401) {
             failStatus.value = true;
           } else {
-            console.log("토큰 발급받았다 아이가~");
-            dispatch("personalInfo/requestRefreshToken", {}, { root: true });
+            // refreshToken 재발급
+            const obj = {
+              func: "password/submitPwForm",
+              params
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
         });
     },

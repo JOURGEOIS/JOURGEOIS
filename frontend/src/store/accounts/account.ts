@@ -140,8 +140,8 @@ export const account: Module<AccountState, RootState> = {
     },
 
     // 회원 탈퇴: 본인 인증
-    submitSignOutAuth: ({ rootGetters, commit }, data) => {
-      const { pwInputValue, failStatus } = data;
+    submitSignOutAuth: ({ rootGetters, commit, dispatch }, params) => {
+      const { pwInputValue, failStatus } = params;
       axios({
         url: drf.accounts.changePassword(),
         method: "post",
@@ -157,7 +157,16 @@ export const account: Module<AccountState, RootState> = {
           commit("SET_SIGN_OUT_TAB", 1);
         })
         .catch((error) => {
-          failStatus.value = true;
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "password/submitPwForm",
+              params
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
 
@@ -180,8 +189,17 @@ export const account: Module<AccountState, RootState> = {
           commit("SET_SIGN_OUT_POPUP", true);
         })
         // 실패 팝업
-        .catch(() => {
-          failStatus.value = true;
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "password/submitPwForm",
+              params: failStatus
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
   },

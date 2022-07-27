@@ -92,7 +92,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     },
     requestRefreshToken: ({ getters, dispatch, commit }, obj) => {
       const { func, params } = obj;
-      console.log(`보내는 정보 =>  ${func} ,  ${params}`);
       axios({
         url: drf.token.token(),
         method: "post",
@@ -102,7 +101,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       })
         .then((response) => {
           const data = response.data;
-          console.log(`토큰 정보 ${data}`);
           const token = {
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,

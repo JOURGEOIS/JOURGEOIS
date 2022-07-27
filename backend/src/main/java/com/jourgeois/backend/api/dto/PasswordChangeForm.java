@@ -3,7 +3,7 @@ package com.jourgeois.backend.api.dto;
 public class PasswordChangeForm {
     private String userName;
 
-    private String userId;
+    private String email;
     private String passwordOld;
     private String passwordNew;
     private String passwordConfirm;
@@ -14,12 +14,12 @@ public class PasswordChangeForm {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    public String getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPasswordOld() {

@@ -191,7 +191,7 @@ public class MemberService {
 
     @Transactional
     public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException, NoSuchElementException {
-        String email = passwordChangeForm.getUserId();
+        String email = passwordChangeForm.getEmail();
         memberRepository.findByEmail(email)
                 .ifPresentOrElse((member)-> {
                             if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
@@ -206,7 +206,7 @@ public class MemberService {
 
     @Transactional
     public boolean checkPassword(PasswordChangeForm passwordChangeForm) throws NoSuchElementException {
-        String email = passwordChangeForm.getUserId();
+        String email = passwordChangeForm.getEmail();
 
         Member member = memberRepository.findByEmail(email).get();
 
@@ -215,7 +215,7 @@ public class MemberService {
 
     @Transactional
     public void findPassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException, NoSuchElementException {
-        String email = passwordChangeForm.getUserId();
+        String email = passwordChangeForm.getEmail();
         memberRepository.findByEmail(email)
                 .ifPresentOrElse((member)-> {
                             if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
@@ -229,7 +229,7 @@ public class MemberService {
                 );
     }
 
-    public boolean checkUser(String userId, String userName) {
-        return memberRepository.findByEmailAndName(userId, userName).isPresent();
+    public boolean checkUser(String email, String userName) {
+        return memberRepository.findByEmailAndName(email, userName).isPresent();
     }
 }

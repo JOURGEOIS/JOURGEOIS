@@ -67,12 +67,7 @@ router.beforeEach((to: any, from, next) => {
   const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
   // 로그인이 필요한 페이지
-  const authPages = [
-    "TheSignOutView",
-    "TheChangeUserView",
-    "TheForgotPwView",
-    "TheChangePwView",
-  ];
+  const authPages = ["TheSignOutView", "TheChangeUserView", "TheChangePwView"];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지
   const notAuthPages = ["TheSignupView", "TheLoginView"];

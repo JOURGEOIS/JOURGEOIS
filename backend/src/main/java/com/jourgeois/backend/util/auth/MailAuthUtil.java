@@ -14,7 +14,7 @@ import java.util.Random;
 @Component
 public class MailAuthUtil {
 
-    private static final String EMAIL_AUTH_PAGE = "http://localhost:8080/auth/email";
+    private static final String EMAIL_AUTH_PAGE = "http://13.209.206.237/api/email/cert/verified";
 
     private static final int TOKEN_LENGTH = 31;
 

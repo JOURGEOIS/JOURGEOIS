@@ -30,18 +30,23 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request, AUTHORIZATION_HEADER);
-
         try{
             if ( jwt != null && jwtTokenProvider.validateToken(jwt)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("set Authentication to security context for '{}', uri: {}", authentication.getName(), request.getRequestURI());
+                if(request.getParameter("email") != null && request.getParameter("email").equals(authentication.getName())){
+//                    System.out.println("TESTTESTTEST " + authentication.getName() + " " + request.getParameter("email"));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.info("set Authentication to security context for '{}', uri: {}", authentication.getName(), request.getRequestURI());
+                }else {
+                    System.out.println("토큰과 이메일이 같지 않음");
+                    request.setAttribute("exception", "Exception");
+                }
             }
         } catch(ExpiredJwtException e){
-            request.setAttribute("exception", e);
+            request.setAttribute("exception", "ExpiredJwt");
             log.info("ExpiredJwtException {}", e.getMessage());
         } catch(JwtException | IllegalArgumentException e){
-            request.setAttribute("exception", e);
+            request.setAttribute("exception", "Exception");
             log.info("jwtException {}", e.getMessage());
         }
 

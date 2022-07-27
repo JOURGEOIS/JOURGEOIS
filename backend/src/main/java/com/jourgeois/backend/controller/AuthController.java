@@ -4,9 +4,9 @@ import com.jourgeois.backend.api.dto.TokenResponseDto;
 import com.jourgeois.backend.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -18,9 +18,9 @@ public class AuthController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping("/auth/token")
-    public TokenResponseDto reissueAccessToken(@RequestHeader String refreshToken){
-        System.out.println("token: " + refreshToken);
-        return tokenService.reissueAccessToken(refreshToken);
+    @PostMapping("/token")
+    public TokenResponseDto reissueAccessToken(@RequestBody Map<String, String> token){
+        System.out.println("token: " + token.get("token"));
+        return tokenService.reissueAccessToken(token.get("token"));
     }
 }

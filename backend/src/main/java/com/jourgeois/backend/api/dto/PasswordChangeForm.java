@@ -1,17 +1,25 @@
 package com.jourgeois.backend.api.dto;
 
 public class PasswordChangeForm {
-    private String userId;
+    private String userName;
+
+    private String email;
     private String passwordOld;
     private String passwordNew;
     private String passwordConfirm;
-
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPasswordOld() {

@@ -1,4 +1,6 @@
 spring:
+  mvc:
+    static-path-pattern: /img/**
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -37,3 +39,15 @@ jwt:
   refresh-token-validity-in-sec: 604800
 server:
   port: 8080
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
+cloud:
+  aws:
+    stack:
+      auto: false

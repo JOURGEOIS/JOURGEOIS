@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -74,7 +75,9 @@ public class MemberService {
                                     member.setNickname(data.getNickname());
                                     try{
                                         if(data.getProfileLink()!=null && !data.getProfileLink().isEmpty()){
-                                            s3Util.deleteFile(member.getProfileImg());
+                                            if(!member.getProfileImg().equals("default/1.png")) {
+                                                s3Util.deleteFile(member.getProfileImg());
+                                            }
                                             member.setProfileImg(s3Util.upload(data.getProfileLink(), data.getNickname()));
                                         }
                                     } catch (IOException e){
@@ -172,7 +175,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void signOut(String email) throws Exception{
+    public void signOut(String email) throws NoSuchElementException{
         Optional<Member> member = memberRepository.findByEmail(email);
         member.ifPresentOrElse(selectMember -> {
             refreshTokenRepository.deleteByEmail(selectMember.getEmail());
@@ -181,29 +184,14 @@ public class MemberService {
                 s3Util.deleteFile(userProfile);
             memberRepository.delete(selectMember);
         }, () -> {
-            throw new IllegalArgumentException("가입된 회원이 아닙니다.");
+            throw new NoSuchElementException("가입된 회원이 아닙니다.");
         });
         System.out.println("회원 탈퇴 완료");
     }
 
     @Transactional
-    public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
-        String email = passwordChangeForm.getUserId();
-        memberRepository.findByEmail(email)
-                .ifPresentOrElse((member)-> {
-                            if(passwordEncoder.matches(passwordChangeForm.getPasswordOld(), member.getPassword())) {
-                                member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
-                                memberRepository.save(member);
-                            } else {
-                                throw new IllegalArgumentException("기존 비밀번호와 일치하지 않습니다.");
-                            }
-                        },
-                        () -> {throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");});
-    }
-
-    @Transactional
-    public void findPassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException {
-        String email = passwordChangeForm.getUserId();
+    public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException, NoSuchElementException {
+        String email = passwordChangeForm.getEmail();
         memberRepository.findByEmail(email)
                 .ifPresentOrElse((member)-> {
                             if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
@@ -213,8 +201,35 @@ public class MemberService {
                                 throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
                             }
                         },
-                        () -> {throw new IllegalArgumentException("가입 정보가 없습니다.");}
+                        () -> {throw new NoSuchElementException("존재하지 않는 회원 입니다.");});
+    }
+
+    @Transactional
+    public boolean checkPassword(PasswordChangeForm passwordChangeForm) throws NoSuchElementException {
+        String email = passwordChangeForm.getEmail();
+
+        Member member = memberRepository.findByEmail(email).get();
+
+        return passwordEncoder.matches(passwordChangeForm.getPasswordOld(), member.getPassword());
+    }
+
+    @Transactional
+    public void findPassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException, NoSuchElementException {
+        String email = passwordChangeForm.getEmail();
+        memberRepository.findByEmail(email)
+                .ifPresentOrElse((member)-> {
+                            if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
+                                member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
+                                memberRepository.save(member);
+                            } else {
+                                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+                            }
+                        },
+                        () -> {throw new NoSuchElementException("가입 정보가 없습니다.");}
                 );
     }
 
+    public boolean checkUser(String email, String userName) {
+        return memberRepository.findByEmailAndName(email, userName).isPresent();
+    }
 }

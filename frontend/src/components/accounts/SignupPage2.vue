@@ -62,7 +62,7 @@ import LoadingBasic from "@/components/basics/LoadingBasic.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
-import { checkEmailCondition } from "../../modules/checkText";
+import { checkEmailCondition } from "../../functions/checkText";
 import { watch } from "fs";
 
 // 이메일 인증 없이 다음 누른 경우 시간제 모달

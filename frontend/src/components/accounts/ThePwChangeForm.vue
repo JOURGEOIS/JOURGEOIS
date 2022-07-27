@@ -7,41 +7,41 @@
 -->
 
 <template>
-  <div class="change-pw-title">
-    <p>인증이 완료되었습니다.&nbsp;</p>
-    <p>새로운 비밀번호를 입력해주세요.</p>
-  </div>
-  <form class="change-pw-form" @submit.prevent="submitPwChangeForm">
-    <!-- input: 비밀번호 입력 -->
-    <input-basic
-      :data="pwInputData"
-      :input-style="pwInputStyle"
-      v-model="pwInputValue"
-    ></input-basic>
+	<div class="change-pw-title">
+		<p>인증이 완료되었습니다.&nbsp;</p>
+		<p>새로운 비밀번호를 입력해주세요.</p>
+	</div>
+	<form class="change-pw-form" @submit.prevent="submitPwChangeForm">
+		<!-- input: 비밀번호 입력 -->
+		<input-basic
+			:data="pwInputData"
+			:input-style="pwInputStyle"
+			v-model="pwInputValue"
+		></input-basic>
 
-    <!-- input: 비밀번호 확인 -->
-    <input-basic
-      :data="pwConfirmInputData"
-      :input-style="pwConfirmInputStyle"
-      v-model="pwConfirmInputValue"
-    ></input-basic>
+		<!-- input: 비밀번호 확인 -->
+		<input-basic
+			:data="pwConfirmInputData"
+			:input-style="pwConfirmInputStyle"
+			v-model="pwConfirmInputValue"
+		></input-basic>
 
-    <!-- 유효성 검사 -->
-    <div class="change-pw-error-message" v-if="occurredError">
-      <p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
-    </div>
+		<!-- 유효성 검사 -->
+		<div class="change-pw-error-message" v-if="occurredError">
+			<p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
+		</div>
 
-    <!-- catch 메시지-->
-    <p class="change-pw-Fail-message" v-if="pwChangeFailStatus">
-      오류가 발생했습니다. 잠시 후에 시도해주세요.
-    </p>
-    <button-basic
-      :button-style="[buttonColor, 'long', 'small']"
-      :disabled="pwInputValue == '' || pwConfirmInputValue == ''"
-    >
-      확인
-    </button-basic>
-  </form>
+		<!-- catch 메시지-->
+		<p class="change-pw-Fail-message" v-if="pwChangeFailStatus">
+			오류가 발생했습니다. 잠시 후에 시도해주세요.
+		</p>
+		<button-basic
+			:button-style="[buttonColor, 'long', 'small']"
+			:disabled="pwInputValue == '' || pwConfirmInputValue == ''"
+		>
+			확인
+		</button-basic>
+	</form>
 </template>
 
 <script setup lang="ts">
@@ -50,21 +50,21 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 import {
-  checkTripleCombination,
-  checkPasswordLength,
-  checkIsEqualPassword,
-} from "../../modules/checkText";
+	checkTripleCombination,
+	checkPasswordLength,
+	checkIsEqualPassword,
+} from "../../functions/checkText";
 
 const store = useStore();
 
 // pw Input
 const pwInputData: object = reactive({
-  button: true,
-  id: "change-pw-input",
-  label: "새 비밀번호",
-  placeholder: "비밀번호 (8 ~ 20자리)",
-  maxlength: 20,
-  type: "password",
+	button: true,
+	id: "change-pw-input",
+	label: "새 비밀번호",
+	placeholder: "비밀번호 (8 ~ 20자리)",
+	maxlength: 20,
+	type: "password",
 });
 
 const pwInputStyle = ref("normal");
@@ -72,12 +72,12 @@ const pwInputValue = ref("");
 
 // pwCheck Input
 const pwConfirmInputData: object = reactive({
-  button: true,
-  id: "change-pw-confirm-input",
-  label: "새 비밀번호 확인",
-  placeholder: "비밀번호 재입력",
-  maxlength: 20,
-  type: "password",
+	button: true,
+	id: "change-pw-confirm-input",
+	label: "새 비밀번호 확인",
+	placeholder: "비밀번호 재입력",
+	maxlength: 20,
+	type: "password",
 });
 
 const pwConfirmInputStyle = ref("normal");
@@ -85,22 +85,22 @@ const pwConfirmInputValue = ref("");
 
 // 버튼 색상
 const buttonColor = computed(() => {
-  if (pwInputValue.value !== "" && pwConfirmInputValue.value !== "") {
-    return "primary";
-  } else {
-    return "unchecked";
-  }
+	if (pwInputValue.value !== "" && pwConfirmInputValue.value !== "") {
+		return "primary";
+	} else {
+		return "unchecked";
+	}
 });
 
 // 유효성 검사
 const errorMessage: string[] = reactive([]);
 const occurredError = ref(false);
 const pwConditionAErrorMessage: string =
-  "비밀번호는 영어 대문자, 소문자, 숫자, 특수문자 중 3종류 이상이여야 합니다.";
+	"비밀번호는 영어 대문자, 소문자, 숫자, 특수문자 중 3종류 이상이여야 합니다.";
 const pwConditionBErrorMessage: string =
-  "비밀번호는 최소 8자 최대 20자로 입력되어야 합니다.";
+	"비밀번호는 최소 8자 최대 20자로 입력되어야 합니다.";
 const pwConditionCErrorMessage: string =
-  "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
+	"비밀번호와 비밀번호 확인이 일치하지 않습니다.";
 
 // 에러 메시지
 const pwChangeFailStatus = ref(false);
@@ -108,82 +108,82 @@ const pwChangeFailStatus = ref(false);
 // 제출
 const submit = (data: object) => store.dispatch("password/submitPwForm", data);
 const submitPwChangeForm = () => {
-  // 리셋
-  errorMessage.length = 0;
-  pwChangeFailStatus.value = false;
-  pwInputStyle.value = "normal";
-  pwConfirmInputStyle.value = "normal";
+	// 리셋
+	errorMessage.length = 0;
+	pwChangeFailStatus.value = false;
+	pwInputStyle.value = "normal";
+	pwConfirmInputStyle.value = "normal";
 
-  // 유효성 검사 결과
-  const pwConditionA = checkTripleCombination(pwInputValue.value);
-  const pwConditionB = checkPasswordLength(pwInputValue.value);
-  const pwConditionC = checkIsEqualPassword(
-    pwInputValue.value,
-    pwConfirmInputValue.value
-  );
+	// 유효성 검사 결과
+	const pwConditionA = checkTripleCombination(pwInputValue.value);
+	const pwConditionB = checkPasswordLength(pwInputValue.value);
+	const pwConditionC = checkIsEqualPassword(
+		pwInputValue.value,
+		pwConfirmInputValue.value
+	);
 
-  // 비밀번호 변경시 전달할 데이터
-  const data: object = {
-    passwordNew: pwInputValue.value,
-    passwordConfirm: pwConfirmInputValue.value,
-    failStatus: pwChangeFailStatus,
-  };
+	// 비밀번호 변경시 전달할 데이터
+	const data: object = {
+		passwordNew: pwInputValue.value,
+		passwordConfirm: pwConfirmInputValue.value,
+		failStatus: pwChangeFailStatus,
+	};
 
-  // 비밀번호 변경
-  if (pwConditionA && pwConditionB && pwConditionC) {
-    submit(data);
-  } else {
-    if (!pwConditionA) {
-      pwInputStyle.value = "error";
-      occurredError.value = true;
-      errorMessage.push(pwConditionAErrorMessage);
-    }
-    if (!pwConditionB) {
-      pwInputStyle.value = "error";
-      occurredError.value = true;
-      errorMessage.push(pwConditionBErrorMessage);
-    }
-    if (!pwConditionC) {
-      pwInputStyle.value = "error";
-      pwConfirmInputStyle.value = "error";
-      occurredError.value = true;
-      errorMessage.push(pwConditionCErrorMessage);
-    }
-  }
+	// 비밀번호 변경
+	if (pwConditionA && pwConditionB && pwConditionC) {
+		submit(data);
+	} else {
+		if (!pwConditionA) {
+			pwInputStyle.value = "error";
+			occurredError.value = true;
+			errorMessage.push(pwConditionAErrorMessage);
+		}
+		if (!pwConditionB) {
+			pwInputStyle.value = "error";
+			occurredError.value = true;
+			errorMessage.push(pwConditionBErrorMessage);
+		}
+		if (!pwConditionC) {
+			pwInputStyle.value = "error";
+			pwConfirmInputStyle.value = "error";
+			occurredError.value = true;
+			errorMessage.push(pwConditionCErrorMessage);
+		}
+	}
 };
 </script>
 
 <style scoped lang="scss">
 .change-pw-title {
-  p {
-    color: $sub-color;
-    @include font($fs-main, $fw-medium);
+	p {
+		color: $sub-color;
+		@include font($fs-main, $fw-medium);
 
-    @media #{$tablet} {
-      display: inline;
-    }
-  }
+		@media #{$tablet} {
+			display: inline;
+		}
+	}
 }
 .change-pw-form {
-  @include flex(column);
-  gap: 32px;
-  width: 100%;
-  margin-top: 32px;
+	@include flex(column);
+	gap: 32px;
+	width: 100%;
+	margin-top: 32px;
 
-  .change-pw-error-message {
-    margin-top: -25px;
-    color: $danger-color;
-    @include font($fs-sm, $fw-regular);
+	.change-pw-error-message {
+		margin-top: -25px;
+		color: $danger-color;
+		@include font($fs-sm, $fw-regular);
 
-    p {
-      margin: 0;
-      padding: 0;
-    }
-  }
-  .change-pw-Fail-message {
-    margin-top: -25px;
-    color: $danger-color;
-    @include font(13px, $fw-regular);
-  }
+		p {
+			margin: 0;
+			padding: 0;
+		}
+	}
+	.change-pw-Fail-message {
+		margin-top: -25px;
+		color: $danger-color;
+		@include font(13px, $fw-regular);
+	}
 }
 </style>

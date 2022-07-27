@@ -2,9 +2,10 @@
   <div class="change-user-info-view">
     <!-- 헤더 -->
     <header-basic :prev="true" :success="true" @prevClicked="$router.go(-1)">
-      개인정보 수정
+      회원 정보 수정
     </header-basic>
     <section>
+      <the-user-info-change-form></the-user-info-change-form>
       <div class="change-user-info-link">
         <p @click="toggleLogOutModal(true)">로그아웃</p>
         <router-link to="/user/sign-out">회원탈퇴</router-link>
@@ -16,6 +17,7 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import TheUserInfoChangeForm from "@/components/accounts/TheUserInfoChangeForm.vue";
 import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
 import { useStore } from "vuex";
 import { computed } from "vue";
@@ -53,12 +55,13 @@ section {
   }
 
   .change-user-info-link {
-    @include flex-center;
-    gap: 20px;
+    @include flex-xy(flex-end, center);
+    gap: 8px;
     width: 100%;
+    margin-top: 16px;
     * {
       padding: 8px;
-      color: $gray;
+      color: $white400;
       @include font($fs-btn, $fw-medium);
     }
   }

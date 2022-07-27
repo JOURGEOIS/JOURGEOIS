@@ -74,7 +74,7 @@ onMounted(() => {
   // 리프레시 실패 팝업 시간제 off
   if (refreshFailPopupStatus) {
     setTimeout(
-      () => store.dispatch("account/toggleRefreshFailPopup", false),
+      () => store.dispatch("personalInfo/toggleRefreshFailPopup", false),
       3000
     );
   }

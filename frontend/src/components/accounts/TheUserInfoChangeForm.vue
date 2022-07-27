@@ -1,0 +1,105 @@
+<template>
+  <form class="user-info-change-form">
+    <div class="user-info-change-image">
+      <the-profile-image :profile-image="profileImage"></the-profile-image>
+      <label for="my-profile-image">프로필 사진 변경</label>
+      <input type="file" id="my-profile-image" />
+    </div>
+    <input-basic
+      :input-style="nameInputStyle"
+      :data="nameInputData"
+      v-model="nameInputValue"
+    ></input-basic>
+    <input-basic
+      :input-style="nickNameInputStyle"
+      :data="nickNameInputData"
+      v-model="nickNameInputValue"
+    ></input-basic>
+    <input-basic
+      :input-style="introduceInputStyle"
+      :data="introduceInputData"
+      v-model="introduceInputValue"
+    ></input-basic>
+  </form>
+</template>
+
+<script setup lang="ts">
+import TheProfileImage from "@/components/basics/TheProfileImage.vue";
+import InputBasic from "@/components/basics/InputBasic.vue";
+import { computed, reactive, ref } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const personalInfo = computed(() => store.getters["personalInfo/getUserInfo"]);
+const name: string = personalInfo.value.name;
+const nickName: string = personalInfo.value.nickname;
+const image: string = personalInfo.value.profileImg;
+const introduce: string = personalInfo.value.introduce;
+
+// 프로필 이미지
+const profileImage = {
+  // image,
+  width: "112px",
+};
+
+// input: name
+const nameInputData: object = reactive({
+  button: true,
+  id: "my-change-name-input",
+  label: "이름",
+  type: "text",
+});
+
+const nameInputValue = ref(name);
+const nameInputStyle = ref("normal");
+
+// input: nickname
+const nickNameInputData: object = reactive({
+  button: true,
+  id: "my-change-nickname-input",
+  label: "닉네임",
+  type: "text",
+  maxlength: 12,
+});
+const nickNameInputValue = ref(nickName);
+const nickNameInputStyle = ref("normal");
+
+// input: introduceInput
+const introduceInputData: object = reactive({
+  button: true,
+  id: "my-change-introduce-input",
+  label: "소개",
+  type: "text",
+  maxlength: 100,
+});
+const introduceInputValue = introduce ? ref(introduce) : "";
+const introduceInputStyle = ref("normal");
+</script>
+
+<style scoped lang="scss">
+.user-info-change-form {
+  @include flex(column);
+  gap: 48px;
+  width: 100%;
+
+  .user-info-change-image {
+    @include flex(column);
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+
+    label {
+      @include font($fs-md, $fw-medium);
+      color: $primary-color;
+    }
+    input {
+      display: none;
+    }
+  }
+
+  input {
+    width: 100%;
+  }
+}
+</style>

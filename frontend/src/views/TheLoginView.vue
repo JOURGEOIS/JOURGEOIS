@@ -72,6 +72,7 @@ section > *:first-child {
     cursor: pointer;
   }
   a {
+    color: $sub-color;
     text-decoration: none;
   }
 }

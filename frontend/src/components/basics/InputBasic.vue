@@ -23,7 +23,7 @@
         :value="modelValue"
         :placeholder="data.placeholder"
         :maxlength="data.maxlength"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @input="emitValue"
         autocapitalize="off"
         autocomplete="off"
       />
@@ -75,6 +75,14 @@ const inputColor = computed(() => {
     return "error-input";
   }
 });
+
+// input.value emit하기
+const emit = defineEmits<{
+  (event: "update:modelValue", value: string): void;
+}>();
+const emitValue = (event: Event) => {
+  emit("update:modelValue", (event.target as HTMLInputElement).value);
+};
 </script>
 
 <style scoped lang="scss">

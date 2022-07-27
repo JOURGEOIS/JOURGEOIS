@@ -1,4 +1,7 @@
+import axios from "axios";
 import { Module } from "vuex";
+import drf from "../../api/drf";
+import { clickHome } from "../../modules/clickEvent";
 import { RootState } from "../index";
 
 export interface userInfo {
@@ -9,6 +12,7 @@ export interface PersonalInfoState {
   accessToken: string;
   refreshToken: string;
   userInfo: userInfo;
+  refreshFailPopupStatus: boolean;
 }
 
 export const personalInfo: Module<PersonalInfoState, RootState> = {
@@ -18,9 +22,13 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     accessToken: localStorage.getItem("accessToken") || "",
     refreshToken: localStorage.getItem("refreshToken") || "",
     userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}") || {},
+    refreshFailPopupStatus: false,
   },
 
   getters: {
+    isLoggedIn: (state) => {
+      !!state.accessToken;
+    },
     getAccessToken: (state) => {
       return state.accessToken;
     },
@@ -33,6 +41,9 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     getUserInfoId: (state) => {
       return state.userInfo.email;
     },
+    getRefreshFailPopupStatus: (state) => {
+      return state.refreshFailPopupStatus;
+    },
   },
 
   mutations: {
@@ -44,6 +55,9 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     },
     SET_USER_INFO: (state, data) => {
       state.userInfo = data;
+    },
+    SET_REFRESH_FAIL: (state, value) => {
+      state.refreshFailPopupStatus = value;
     },
   },
 
@@ -60,7 +74,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       commit("SET_ACCESS_TOKEN", "");
       commit("SET_REFRESH_TOKEN", "");
     },
-    saveUserInfo: ({ commit }, data) => {
+    saveUserInfo: ({ commit }, data: object) => {
       const jsonUserInfo = JSON.stringify(data);
       localStorage.setItem("userInfo", jsonUserInfo);
       commit("SET_USER_INFO", data);
@@ -69,9 +83,34 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       localStorage.setItem("userInfo", "");
       commit("SET_USER_INFO", {});
     },
-    resetUserInfo: ({ commit, dispatch }) => {
+    resetUserInfo: ({ dispatch }) => {
       dispatch("removeToken");
       dispatch("removeUserInfo");
+    },
+    toggleRefreshFailPopup: ({ commit }, value) => {
+      commit("SET_REFRESH_FAIL", value);
+    },
+    requestRefreshToken: ({ getters, dispatch }) => {
+      axios({
+        url: drf.token.token(),
+        method: "post",
+        data: {
+          token: getters.getRefreshToken,
+        },
+      })
+        .then((response) => {
+          const data = response.data;
+          console.log(data);
+          const token = {
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+          };
+          dispatch("saveToken", token);
+        })
+        .catch(() => {
+          getters("account/logout", {}, { root: true });
+          clickHome();
+        });
     },
   },
 };

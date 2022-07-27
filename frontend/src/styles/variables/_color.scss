@@ -1,100 +1,93 @@
 /* [접근 금지] 컬러 파레트 */
 // blue
-$blue300: #90EAFC;
-$blue400: #60DEF7;
-$blue500: #11CDF2;
-$blue600: #00B8E5;
-$blue700: #0093C4;
-$blue800: #066A91;
-$blue900: #084F6B;
-$blue600p: #268CAD;
-$blue500p: #3FAFC9;
-$blue400p: #7FC6D6;
-$blue300p: #C5D6E3;
-
+$blue300: #90eafc;
+$blue400: #60def7;
+$blue500: #11cdf2;
+$blue600: #00b8e5;
+$blue700: #0093c4;
+$blue800: #066a91;
+$blue900: #084f6b;
+$blue600p: #268cad;
+$blue500p: #3fafc9;
+$blue400p: #7fc6d6;
+$blue300p: #c5d6e3;
 
 // red
-$red300: #FFCFBF;
-$red400: #FFA182;
-$red500: #FF875C;
-$red600: #FF6F36;
-$red700: #FF5E1F;
-$red800: #F24500;
-$red900: #C43100;
-$red600p: #E35F42;
-$red500p: #F5765D;
-$red400p: #FA9E7F;
-$red300p: #FAD3C5;
-
+$red300: #ffcfbf;
+$red400: #ffa182;
+$red500: #ff875c;
+$red600: #ff6f36;
+$red700: #ff5e1f;
+$red800: #f24500;
+$red900: #c43100;
+$red600p: #e35f42;
+$red500p: #f5765d;
+$red400p: #fa9e7f;
+$red300p: #fad3c5;
 
 // primary
-$primary300: #CACAFC;
-$primary400: #A2A2FC;
-$primary500: #7979F7;
-$primary600: #5F5FED;
-$primary700: #4545D1;
-$primary800: #3D389C;
+$primary300: #cacafc;
+$primary400: #a2a2fc;
+$primary500: #7979f7;
+$primary600: #5f5fed;
+$primary700: #4545d1;
+$primary800: #3d389c;
 $primary900: #383878;
-$primary600p: #5F5FBA;
-$primary500p: #7979D9;
-$primary400p: #A6A6ED;
-$primary300p: #CFCFE5;
-
+$primary600p: #5f5fba;
+$primary500p: #7979d9;
+$primary400p: #a6a6ed;
+$primary300p: #cfcfe5;
 
 // emerald
-$emerald300: #8CEDED;
-$emerald400: #5BE3DE;
-$emerald500: #26D1D1;
-$emerald600: #1CB8B8;
-$emerald700: #10A1A1;
+$emerald300: #8ceded;
+$emerald400: #5be3de;
+$emerald500: #26d1d1;
+$emerald600: #1cb8b8;
+$emerald700: #10a1a1;
 $emerald800: #107575;
-$emerald900: #155C5C;
-$emerald600p: #1F9399;
-$emerald500p: #41B6B9;
-$emerald400p: #7DCDCF;
-$emerald300p: #BDD9D9;
-
+$emerald900: #155c5c;
+$emerald600p: #1f9399;
+$emerald500p: #41b6b9;
+$emerald400p: #7dcdcf;
+$emerald300p: #bdd9d9;
 
 // navy
-$navy400: #C8CFDC;
-$navy500: #98A0B3;
+$navy400: #c8cfdc;
+$navy500: #98a0b3;
 $navy600: #707991;
-$navy700: #464F69;
-$navy800: #323B54;
-$navy850: #262F4A;
-$navy900: #262F4A;
-
+$navy700: #464f69;
+$navy800: #323b54;
+$navy850: #262f4a;
+$navy900: #262f4a;
 
 // black
-$black100: #1A1A1A;
+$black100: #1a1a1a;
 $black200: #111111;
-
 
 //gray
 $gray: #949494;
 $gray100: #777777;
 $gray150: #616161;
 $gray200: #555555;
-$gray250: #3F3F3F;
+$gray250: #3f3f3f;
 $gray300: #323232;
-$gray350: #2A2A2A;
-$gray400: #1F1F1F;
-
+$gray350: #2a2a2a;
+$gray400: #1f1f1f;
 
 //white
-$white: #FFFFFF;
-$white100: #FCFCFC;
-$white150: #F5F5F5;
-$white200: #EFEFEF;
-$white250: #E8E8E8;
-$white300: #DFDFDF;
-$white350: #C8C8C8;
-$white400: #B7B7B7;
-
+$white: #ffffff;
+$white100: #fcfcfc;
+$white150: #f5f5f5;
+$white200: #efefef;
+$white250: #e8e8e8;
+$white300: #dfdfdf;
+$white350: #c8c8c8;
+$white400: #b7b7b7;
 
 /* 자주 쓰는 색 */
 $primary-color: $primary500;
 $danger-color: $red800;
+$fail-color: rgb(255, 67, 67);
 $main-color: $gray350;
 $sub-color: $gray100;
 $unchecked-color: $white300;
@@ -108,8 +101,8 @@ $label-color: $sub-color;
 $placeholder-color: $unchecked-color;
 
 // link
+$link-color: $main-color;
 $link-focus-color: $main-color;
 $link-visited-color: $main-color;
 $link-hover-color: $main-color;
-$link-active-color: $main-color;
 $link-active-color: $main-color;

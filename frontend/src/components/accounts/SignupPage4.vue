@@ -80,16 +80,15 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { react } from "@babel/types";
-const store = useStore();
-
 import {
 	checkBadWord,
 	checkAsterisk,
 	checkEnKr,
 	checkBirthFormat,
 } from "../../modules/checkText";
-
 import { checkNicknameDuplication } from "../../modules/checkUserInfo";
+
+const store = useStore();
 
 // 제목 컴포넌트
 const nameTitleContents = reactive({
@@ -136,6 +135,7 @@ const nicknameInputData: object = reactive({
 	// label: "닉네임",
 	placeholder: "닉네임 (2 ~ 12글자)",
 	type: "text",
+	maxlength: 12,
 });
 
 const nameInputStyle = ref("normal");
@@ -223,6 +223,9 @@ watchEffect(() => {
 });
 
 // * 닉네임 중복 확인 Debounce
+const toggleTimedFailModalStatus = () => {
+	store.dispatch("signup/toggleTimedFailModalStatus");
+};
 let debounce: any;
 watchEffect(() => {
 	// watch 실행용 dummy code
@@ -232,7 +235,14 @@ watchEffect(() => {
 	}
 	debounce = setTimeout(async () => {
 		const a = await checkNicknameDuplication(nicknameInputValue.value);
-		duplicatedNicknameCheckerProps.isChecked = a.available;
+		// 서버/네트워크 정상
+		if (typeof a === "boolean") {
+			duplicatedNicknameCheckerProps.isChecked = a;
+		}
+		// 서버/네트워크 비정상
+		else {
+			toggleTimedFailModalStatus();
+		}
 	}, 200);
 });
 

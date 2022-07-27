@@ -11,21 +11,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/member")
 //@RequiredArgsConstructor
 public class MemberController {
-
+    public static final String AUTHORIZATION_HEADER = "Authorization";
     private final MemberService memberService;
     private final S3Util s3Uploader;
     private JwtTokenProvider jwtTokenProvider;
@@ -59,7 +56,6 @@ public class MemberController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-
     //이메일 중복 체크 메소드
     @GetMapping(value = "/signup/checkEmail")
     public @ResponseBody ResponseEntity<?> checkEmail(@RequestParam String email){
@@ -90,7 +86,6 @@ public class MemberController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    // 선아.... login시에 pswd 문제로 request body로 바꿨엉..
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginForm) {
         String email = loginForm.get("email");
@@ -111,7 +106,7 @@ public class MemberController {
     @DeleteMapping("/auth/signOut")
     public ResponseEntity signOut(HttpServletRequest request, @RequestBody Map<String, String> user) {
         try {
-            String jwt = jwtTokenProvider.resolveToken((HttpServletRequest)request, "Authorization");
+            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             if(authentication.getName().equals(user.get("email"))) {
                 System.out.println("같은 회원!");
@@ -131,7 +126,7 @@ public class MemberController {
     public ResponseEntity changeProfile(HttpServletRequest request, @ModelAttribute ProfileDto profileDto){
         Map<String, Boolean> data = new HashMap<>();
         try {
-            String jwt = jwtTokenProvider.resolveToken((HttpServletRequest)request, "Authorization");
+            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             if(authentication.getName().equals(profileDto.getEmail())) {
                 System.out.println("같은 회원!");
@@ -149,12 +144,36 @@ public class MemberController {
         }
     }
 
+    // 이미지 파일 업로드
+    @PostMapping("/auth/profile")
+    public ResponseEntity profileImageTempStorage(HttpServletRequest request, @ModelAttribute ProfileDto profileDto){
+        try{
+            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
+            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+            if(authentication.getName().equals(profileDto.getEmail())) {
+                System.out.println("같은 회원!");
+                Map<String, String> data = new HashMap<>();
+                data.put("url", "http://localhost:8080/img/" + memberService.ProfileImageLocalUpload(profileDto));
+                return new ResponseEntity(data, HttpStatus.CREATED);
+            }else {
+                System.out.println("다른 회원!");
+                Map<String, Boolean> data = new HashMap<>();
+                data.put("success", false);
+                return new ResponseEntity(data, HttpStatus.FORBIDDEN);
+            }
+        }catch (Exception e) {
+            Map<String, Boolean> data = new HashMap<>();
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
     // 비밀번호 변경
     @PutMapping("/auth/password")
     public ResponseEntity changePassword(HttpServletRequest request, @RequestBody PasswordChangeForm passwordChangeForm) {
         Map<String, Boolean> data = new HashMap<>();
         try {
-            String jwt = jwtTokenProvider.resolveToken((HttpServletRequest)request, "Authorization");
+            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             if(authentication.getName().equals(passwordChangeForm.getEmail())) {
                 System.out.println("같은 회원!");
@@ -187,7 +206,7 @@ public class MemberController {
     public ResponseEntity checkPassword(HttpServletRequest request, @RequestBody PasswordChangeForm passwordChangeForm) {
         Map<String, Boolean> data = new HashMap<>();
         try {
-            String jwt = jwtTokenProvider.resolveToken((HttpServletRequest)request, "Authorization");
+            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             if(authentication.getName().equals(passwordChangeForm.getEmail())) {
                 System.out.println("같은 회원!");
@@ -217,21 +236,6 @@ public class MemberController {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
-            data.put("success", false);
-            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
-        }
-    }
-
-    // 이미지 파일 업로드
-    @PostMapping("/test")
-    public ResponseEntity testest(@RequestBody MultipartFile multipartFile) throws IOException {
-        try{
-            Map<String, String> data = new HashMap<>();
-            // 이메일로 변경 필요
-            data.put("url", "http://localhost:8080/img/"+s3Uploader.localUpload(multipartFile, "test"));
-            return new ResponseEntity(data, HttpStatus.CREATED);
-        }catch (Exception e) {
-            Map<String, Boolean> data = new HashMap<>();
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }

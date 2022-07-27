@@ -63,6 +63,7 @@ const pwInputData: object = reactive({
   id: "change-pw-input",
   label: "새 비밀번호",
   placeholder: "비밀번호 (8 ~ 20자리)",
+  maxlength: 20,
   type: "password",
 });
 
@@ -75,6 +76,7 @@ const pwConfirmInputData: object = reactive({
   id: "change-pw-confirm-input",
   label: "새 비밀번호 확인",
   placeholder: "비밀번호 재입력",
+  maxlength: 20,
   type: "password",
 });
 
@@ -123,7 +125,7 @@ const submitPwChangeForm = () => {
 
   // 비밀번호 변경시 전달할 데이터
   const data: object = {
-    userId: email.value,
+    email: email.value,
     passwordNew: pwInputValue.value,
     passwordConfirm: pwConfirmInputValue.value,
     failStatus: pwChangeFailStatus,

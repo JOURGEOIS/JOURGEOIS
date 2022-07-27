@@ -135,6 +135,7 @@ const nicknameInputData: object = reactive({
 	// label: "닉네임",
 	placeholder: "닉네임 (2 ~ 12글자)",
 	type: "text",
+	maxlength: 12,
 });
 
 const nameInputStyle = ref("normal");
@@ -222,6 +223,9 @@ watchEffect(() => {
 });
 
 // * 닉네임 중복 확인 Debounce
+const toggleTimedFailModalStatus = () => {
+	store.dispatch("signup/toggleTimedFailModalStatus");
+};
 let debounce: any;
 watchEffect(() => {
 	// watch 실행용 dummy code
@@ -237,7 +241,7 @@ watchEffect(() => {
 		}
 		// 서버/네트워크 비정상
 		else {
-			alert("문제가 발생했습니다!");
+			toggleTimedFailModalStatus();
 		}
 	}, 200);
 });

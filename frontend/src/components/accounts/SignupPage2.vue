@@ -2,7 +2,7 @@
 	<div class="content-container">
 		<section>
 			<title-block :contents="titleContents" />
-			<form @submit.prevent="submitCheckEmailForm">
+			<form @submit.prevent="postCheckEmail">
 				<input-basic
 					:data="emailInputData"
 					:input-style="emailInputStyle"
@@ -19,7 +19,6 @@
 						class="submit-check-email-button"
 						v-if="!showButtonContainer"
 						:disabled="!isFulfillToSubmit"
-						@click="postCheckEmail"
 					>
 						인증메일 전송
 					</button-basic>
@@ -47,6 +46,11 @@
 	</div>
 	<!-- 이메일 전송 중에 나오는 로딩창 -->
 	<loading-basic v-if="loadingStatus"></loading-basic>
+
+	<!-- 이메일 인증 없이 다음 누를 때의 popup -->
+	<failure-pop-up v-if="getEmailNonAuthModalStatus"
+		>이메일이 인증되지 않았습니다.</failure-pop-up
+	>
 </template>
 
 <script setup lang="ts">
@@ -55,9 +59,20 @@ import TitleBlock from "@/components/accounts/TitleBlock.vue";
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import LoadingBasic from "@/components/basics/LoadingBasic.vue";
-import { reactive, ref, computed, onBeforeMount } from "vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
+import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { checkEmailCondition } from "../../modules/checkText";
+import { watch } from "fs";
+
+// 이메일 인증 없이 다음 누른 경우 시간제 모달
+const getEmailNonAuthModalStatus = computed(
+	() => store.getters["signup/getEmailNonAuthModalStatus"]
+);
+
+const toggleTimedEmailNonAuthModalStatus = () => {
+	store.dispatch("signup/toggleTimedEmailNonAuthModalStatus");
+};
 
 const store = useStore();
 
@@ -96,11 +111,6 @@ const emailInputStyle = ref("normal");
 // [인증메일 재전송] / [완료] 있는 buttonContainer를 보일지 여부
 let showButtonContainer = ref(false);
 
-// 제출
-const submitCheckEmailForm = () => {
-	showButtonContainer = ref(true);
-};
-
 const submitButtonColor = computed(() => {
 	return isFulfillToSubmit.value ? "primary" : "unchecked";
 });
@@ -138,6 +148,12 @@ const emailInputData: object = reactive({
 
 // 중복된 이메일인 경우 경고 표시
 const showDuplicateAlert = ref(false);
+
+watchEffect(() => {
+	if (showButtonContainer.value) {
+		showDuplicateAlert.value = false;
+	}
+});
 
 // 이메일 인증이 완료되어 다음 페이지로 넘어가도 될 때 true 반환
 const isFulfillToNext = computed(() => {

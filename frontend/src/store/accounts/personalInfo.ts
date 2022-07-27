@@ -27,7 +27,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
 
   getters: {
     isLoggedIn: (state) => {
-      !!state.accessToken;
+      return !!state.accessToken;
     },
     getAccessToken: (state) => {
       return state.accessToken;

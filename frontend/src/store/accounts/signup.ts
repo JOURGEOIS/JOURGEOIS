@@ -145,17 +145,11 @@ export const signup: Module<SignupState, RootState> = {
 			state.signUpAgreeChecked[order] = !state.signUpAgreeChecked[order];
 			// 일부 상태가 전체 체크/미체크인치 확인
 			let cnt = 0;
-			for (let i = 1; i < 5; i++) {
+			for (let i = 1; i < 4; i++) {
 				if (state.signUpAgreeChecked[i]) cnt++;
 			}
-			// 전체 미체크라면
-			if (cnt === 0) {
-				state.signUpAgreeChecked[0] = false;
-			}
 			// 전체 체크라면
-			else if (cnt === 4) {
-				state.signUpAgreeChecked[0] = true;
-			}
+			state.signUpAgreeChecked[0] = cnt === 3 ? true : false;
 		},
 
 		// * [Page1] 서비스 이용약관 동의 모달 toggle

@@ -3,15 +3,15 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import drf from "../../api/drf";
 import axios from "axios";
-import { clickHome } from "../../modules/clickEvent";
+import { clickHome } from "../../functions/clickEvent";
 
 // Signup의 State 타입을 설정한다.
 export interface PasswordState {
-  forgotPwCurrentTab: number;
-  forgotPwEmail: string;
-  forgotPwErrorMsgStatus: boolean;
-  changePwCurrentTab: number;
-  changePwPopupStatus: boolean;
+	forgotPwCurrentTab: number;
+	forgotPwEmail: string;
+	forgotPwErrorMsgStatus: boolean;
+	changePwCurrentTab: number;
+	changePwPopupStatus: boolean;
 }
 
 export const password: Module<PasswordState, RootState> = {

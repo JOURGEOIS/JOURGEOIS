@@ -1,65 +1,65 @@
 import axios from "axios";
 import { Module } from "vuex";
 import drf from "../../api/drf";
-import { clickHome } from "../../modules/clickEvent";
+import { clickHome } from "../../functions/clickEvent";
 import { RootState } from "../index";
 
 export interface userInfo {
-  [props: string]: string;
+	[props: string]: string;
 }
 
 export interface PersonalInfoState {
-  accessToken: string;
-  refreshToken: string;
-  userInfo: userInfo;
-  refreshFailPopupStatus: boolean;
+	accessToken: string;
+	refreshToken: string;
+	userInfo: userInfo;
+	refreshFailPopupStatus: boolean;
 }
 
 export const personalInfo: Module<PersonalInfoState, RootState> = {
-  namespaced: true,
+	namespaced: true,
 
-  state: {
-    accessToken: localStorage.getItem("accessToken") || "",
-    refreshToken: localStorage.getItem("refreshToken") || "",
-    userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}") || {},
-    refreshFailPopupStatus: false,
-  },
+	state: {
+		accessToken: localStorage.getItem("accessToken") || "",
+		refreshToken: localStorage.getItem("refreshToken") || "",
+		userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}") || {},
+		refreshFailPopupStatus: false,
+	},
 
-  getters: {
-    isLoggedIn: (state) => {
-      return !!state.accessToken;
-    },
-    getAccessToken: (state) => {
-      return state.accessToken;
-    },
-    getRefreshToken: (state) => {
-      return state.refreshToken;
-    },
-    getUserInfo: (state) => {
-      return state.userInfo;
-    },
-    getUserInfoId: (state) => {
-      return state.userInfo.email;
-    },
-    getRefreshFailPopupStatus: (state) => {
-      return state.refreshFailPopupStatus;
-    },
-  },
+	getters: {
+		isLoggedIn: (state) => {
+			return !!state.accessToken;
+		},
+		getAccessToken: (state) => {
+			return state.accessToken;
+		},
+		getRefreshToken: (state) => {
+			return state.refreshToken;
+		},
+		getUserInfo: (state) => {
+			return state.userInfo;
+		},
+		getUserInfoId: (state) => {
+			return state.userInfo.email;
+		},
+		getRefreshFailPopupStatus: (state) => {
+			return state.refreshFailPopupStatus;
+		},
+	},
 
-  mutations: {
-    SET_ACCESS_TOKEN: (state, token) => {
-      state.accessToken = token;
-    },
-    SET_REFRESH_TOKEN: (state, token) => {
-      state.refreshToken = token;
-    },
-    SET_USER_INFO: (state, data) => {
-      state.userInfo = data;
-    },
-    SET_REFRESH_FAIL: (state, value) => {
-      state.refreshFailPopupStatus = value;
-    },
-  },
+	mutations: {
+		SET_ACCESS_TOKEN: (state, token) => {
+			state.accessToken = token;
+		},
+		SET_REFRESH_TOKEN: (state, token) => {
+			state.refreshToken = token;
+		},
+		SET_USER_INFO: (state, data) => {
+			state.userInfo = data;
+		},
+		SET_REFRESH_FAIL: (state, value) => {
+			state.refreshFailPopupStatus = value;
+		},
+	},
 
   actions: {
     saveToken: ({ commit }, { accessToken, refreshToken }) => {

@@ -85,8 +85,8 @@ import {
 	checkAsterisk,
 	checkEnKr,
 	checkBirthFormat,
-} from "../../modules/checkText";
-import { checkNicknameDuplication } from "../../modules/checkUserInfo";
+} from "../../functions/checkText";
+import { checkNicknameDuplication } from "../../functions/checkUserInfo";
 
 const store = useStore();
 
@@ -273,11 +273,26 @@ const nextButtonColor = computed(() => {
 	return isFulfillToNext.value ? "primary" : "disabled";
 });
 
-// 로그인 함수
-const login = (userData: object) => store.dispatch("account/login", userData);
-
 // 회원가입 함수
-const submitSignUp = () => store.dispatch("signup/submitSignUp");
+const submitSignUp = (userInfo: any) =>
+	store.dispatch("signup/submitSignUp", userInfo);
+
+// 회원가입 개인정보
+const email = computed(() => {
+	return store.getters["signup/getSignUpEmail"];
+});
+const password = computed(() => {
+	return store.getters["signup/getSignUpPw"];
+});
+const name = computed(() => {
+	return store.getters["signup/getSignUpName"];
+});
+const nickname = computed(() => {
+	return store.getters["signup/getSignUpNickName"];
+});
+const birthday = computed(() => {
+	return store.getters["signup/getSignUpBirth"];
+});
 
 // 회원가입 완료 후 로그인 연결
 const completeSignupPage = async () => {
@@ -287,11 +302,15 @@ const completeSignupPage = async () => {
 		birth: birthInputValue.value,
 	};
 	await store.dispatch("signup/saveSignupUserInfo", userInfo);
-	await store.dispatch("signup/nextSignupPage");
-	setTimeout(() => {
-		// 회원가입 신청
-		submitSignUp();
-	}, 500);
+
+	const userInfoFinal = {
+		email: email.value,
+		password: password.value,
+		name: name.value,
+		nickname: nickname.value,
+		birthday: birthday.value,
+	};
+	submitSignUp(userInfoFinal);
 };
 </script>
 

@@ -61,60 +61,58 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
 		},
 	},
 
-	actions: {
-		saveToken: ({ commit }, { accessToken, refreshToken }) => {
-			localStorage.setItem("accessToken", accessToken);
-			localStorage.setItem("refreshToken", refreshToken);
-			commit("SET_ACCESS_TOKEN", accessToken);
-			commit("SET_REFRESH_TOKEN", refreshToken);
-		},
-		removeToken: ({ commit }) => {
-			localStorage.setItem("accessToken", "");
-			localStorage.setItem("refreshToken", "");
-			commit("SET_ACCESS_TOKEN", "");
-			commit("SET_REFRESH_TOKEN", "");
-		},
-		saveUserInfo: ({ commit }, data: object) => {
-			const jsonUserInfo = JSON.stringify(data);
-			localStorage.setItem("userInfo", jsonUserInfo);
-			commit("SET_USER_INFO", data);
-		},
-		removeUserInfo: ({ commit }) => {
-			localStorage.setItem("userInfo", "");
-			commit("SET_USER_INFO", {});
-		},
-		resetUserInfo: ({ dispatch }) => {
-			dispatch("removeToken");
-			dispatch("removeUserInfo");
-		},
-		toggleRefreshFailPopup: ({ commit }, value) => {
-			commit("SET_REFRESH_FAIL", value);
-		},
-		requestRefreshToken: ({ getters, dispatch, commit }, obj) => {
-			const { func, params } = obj;
-			console.log(`보내는 정보 =>  ${func} ,  ${params}`);
-			axios({
-				url: drf.token.token(),
-				method: "post",
-				data: {
-					token: getters.getRefreshToken,
-				},
-			})
-				.then((response) => {
-					const data = response.data;
-					console.log(`토큰 정보 ${data}`);
-					const token = {
-						accessToken: data.accessToken,
-						refreshToken: data.refreshToken,
-					};
-					dispatch("saveToken", token);
-					dispatch(func, params, { root: true });
-				})
-				.catch(() => {
-					dispatch("resetUserInfo");
-					clickHome();
-					commit("SET_REFRESH_FAIL", true);
-				});
-		},
-	},
+  actions: {
+    saveToken: ({ commit }, { accessToken, refreshToken }) => {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      commit("SET_ACCESS_TOKEN", accessToken);
+      commit("SET_REFRESH_TOKEN", refreshToken);
+    },
+    removeToken: ({ commit }) => {
+      localStorage.setItem("accessToken", "");
+      localStorage.setItem("refreshToken", "");
+      commit("SET_ACCESS_TOKEN", "");
+      commit("SET_REFRESH_TOKEN", "");
+    },
+    saveUserInfo: ({ commit }, data: object) => {
+      const jsonUserInfo = JSON.stringify(data);
+      localStorage.setItem("userInfo", jsonUserInfo);
+      commit("SET_USER_INFO", data);
+    },
+    removeUserInfo: ({ commit }) => {
+      localStorage.setItem("userInfo", "");
+      commit("SET_USER_INFO", {});
+    },
+    resetUserInfo: ({ dispatch }) => {
+      dispatch("removeToken");
+      dispatch("removeUserInfo");
+    },
+    toggleRefreshFailPopup: ({ commit }, value) => {
+      commit("SET_REFRESH_FAIL", value);
+    },
+    requestRefreshToken: ({ getters, dispatch, commit }, obj) => {
+      const { func, params } = obj;
+      axios({
+        url: drf.token.token(),
+        method: "post",
+        data: {
+          token: getters.getRefreshToken,
+        },
+      })
+        .then((response) => {
+          const data = response.data;
+          const token = {
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+          };
+          dispatch("saveToken", token);
+          dispatch(func, params, { root: true });
+        })
+        .catch(() => {
+          dispatch("resetUserInfo");
+          clickHome();
+          commit("SET_REFRESH_FAIL", true);
+        });
+    },
+  },
 };

@@ -139,50 +139,68 @@ export const account: Module<AccountState, RootState> = {
 				});
 		},
 
-		// 회원 탈퇴: 본인 인증
-		submitSignOutAuth: ({ rootGetters, commit }, data) => {
-			const { pwInputValue, failStatus } = data;
-			axios({
-				url: drf.accounts.changePassword(),
-				method: "post",
-				headers: {
-					Authorization: rootGetters["personalInfo/getAccessToken"],
-				},
-				data: {
-					email: rootGetters["personalInfo/getUserInfoId"],
-					passwordOld: pwInputValue.value,
-				},
-			})
-				.then(() => {
-					commit("SET_SIGN_OUT_TAB", 1);
-				})
-				.catch((error) => {
-					failStatus.value = true;
-				});
-		},
+    // 회원 탈퇴: 본인 인증
+    submitSignOutAuth: ({ rootGetters, commit, dispatch }, params) => {
+      const { pwInputValue, failStatus } = params;
+      axios({
+        url: drf.accounts.changePassword(),
+        method: "post",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          email: rootGetters["personalInfo/getUserInfoId"],
+          passwordOld: pwInputValue.value,
+        },
+      })
+        .then(() => {
+          commit("SET_SIGN_OUT_TAB", 1);
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "password/submitPwForm",
+              params
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
 
-		// 회원 탈퇴: 탈퇴
-		signOut: ({ commit, dispatch, rootGetters }, failStatus) => {
-			axios({
-				url: drf.accounts.signOut(),
-				method: "delete",
-				headers: {
-					Authorization: rootGetters["personalInfo/getAccessToken"],
-				},
-				data: {
-					email: rootGetters["personalInfo/getUserInfoId"],
-				},
-			})
-				// 성공시, 로컬스토리지 정보 삭제후 홈으로 이동후 팝업을 보여준다.
-				.then(() => {
-					dispatch("personalInfo/resetUserInfo", {}, { root: true });
-					clickHome();
-					commit("SET_SIGN_OUT_POPUP", true);
-				})
-				// 실패 팝업
-				.catch(() => {
-					failStatus.value = true;
-				});
-		},
-	},
+    // 회원 탈퇴: 탈퇴
+    signOut: ({ commit, dispatch, rootGetters }, failStatus) => {
+      axios({
+        url: drf.accounts.signOut(),
+        method: "delete",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          email: rootGetters["personalInfo/getUserInfoId"],
+        },
+      })
+        // 성공시, 로컬스토리지 정보 삭제후 홈으로 이동후 팝업을 보여준다.
+        .then(() => {
+          dispatch("personalInfo/resetUserInfo", {}, { root: true });
+          clickHome();
+          commit("SET_SIGN_OUT_POPUP", true);
+        })
+        // 실패 팝업
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "password/submitPwForm",
+              params: failStatus
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+  },
 };

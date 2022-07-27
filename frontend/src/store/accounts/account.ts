@@ -141,6 +141,7 @@ export const account: Module<AccountState, RootState> = {
 
     // 회원 탈퇴: 본인 인증
     submitSignOutAuth: ({ rootGetters, commit, dispatch }, params) => {
+      console.log("몇번 시도?")
       const { pwInputValue, failStatus } = params;
       axios({
         url: drf.accounts.changePassword(),
@@ -172,6 +173,7 @@ export const account: Module<AccountState, RootState> = {
 
     // 회원 탈퇴: 탈퇴
     signOut: ({ commit, dispatch, rootGetters }, failStatus) => {
+      console.log("몇번 시도?")
       axios({
         url: drf.accounts.signOut(),
         method: "delete",

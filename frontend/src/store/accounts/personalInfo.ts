@@ -90,7 +90,9 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     toggleRefreshFailPopup: ({ commit }, value) => {
       commit("SET_REFRESH_FAIL", value);
     },
-    requestRefreshToken: ({ getters, dispatch }) => {
+    requestRefreshToken: ({ getters, dispatch, commit }, obj) => {
+      const { func, params } = obj;
+      console.log(`보내는 정보 =>  ${func} ,  ${params}`);
       axios({
         url: drf.token.token(),
         method: "post",
@@ -100,16 +102,18 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       })
         .then((response) => {
           const data = response.data;
-          console.log(data);
+          console.log(`토큰 정보 ${data}`);
           const token = {
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,
           };
           dispatch("saveToken", token);
+          dispatch(func, params, { root: true });
         })
         .catch(() => {
-          getters("account/logout", {}, { root: true });
+          dispatch("resetUserInfo");
           clickHome();
+          commit("SET_REFRESH_FAIL", true);
         });
     },
   },

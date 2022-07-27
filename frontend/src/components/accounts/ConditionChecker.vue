@@ -27,7 +27,7 @@ const props = defineProps<{
 }>();
 let { isChecked, checkContent, isIconTypeDanger } = toRefs(props.props);
 
-const iconType = isIconTypeDanger.value ? "block" : "check_circle_outline";
+const iconType = isIconTypeDanger.value ? "block" : "check_circle";
 </script>
 
 <style scoped lang="scss">
@@ -50,7 +50,7 @@ const iconType = isIconTypeDanger.value ? "block" : "check_circle_outline";
 
 	// 체크 아이콘
 	.checker-icon {
-		font-size: 12px;
+		@include font(13px, $fw-regular);
 		user-select: none;
 	}
 

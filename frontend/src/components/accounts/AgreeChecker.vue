@@ -6,7 +6,7 @@
 				:class="{ checked: isChecked, unchecked: !isChecked }"
 				@click="clickCheckIconInner"
 			>
-				check_circle_outline
+				check_circle
 			</span>
 			<span class="checker-content">{{ checkContent }}</span>
 		</span>

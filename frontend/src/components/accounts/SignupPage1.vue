@@ -1,5 +1,6 @@
 <template>
 	<the-personal-info-use-modal></the-personal-info-use-modal>
+	<the-service-use-modal></the-service-use-modal>
 	<div class="content-container">
 		<section>
 			<title-block :contents="titleContents" />
@@ -22,16 +23,17 @@
 			<agree-checker
 				:contents="agreeContents[1]"
 				@clickCheckIcon="switchIsChecked"
+				@clickModalIcon="toggleServiceUseModal"
 			/>
 			<agree-checker
 				:contents="agreeContents[2]"
 				@clickCheckIcon="switchIsChecked"
 				@clickModalIcon="togglePersonalInfoUseModal"
 			/>
-			<agree-checker
+			<!-- <agree-checker
 				:contents="agreeContents[3]"
 				@clickCheckIcon="switchIsChecked"
-			/>
+			/> -->
 		</section>
 		<button-basic
 			:button-style="[buttonColor, 'long', 'small']"
@@ -117,6 +119,11 @@ const switchAllIsChecked = () => {
 // 조건별 체크표시 toggle
 const switchIsChecked = (order: number) => {
 	store.dispatch("signup/toggleAgreeChecked", order);
+};
+
+// 서비스 이용 약관 동의
+const toggleServiceUseModal = () => {
+	store.dispatch("signup/toggleServiceUseModal");
 };
 
 // 개인정보 이용

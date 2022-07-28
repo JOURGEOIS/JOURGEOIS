@@ -49,6 +49,12 @@ export const account: Module<AccountState, RootState> = {
     getSignOutCurrentTab: (state) => {
       return state.signOutCurrentTab;
     },
+    getUserInfoChangeError: (state) => {
+      return state.userInfoChangeError;
+    },
+    getUserInfoChangeSuccess: (state) => {
+      return state.userInfoChangeSuccess;
+    },
   },
 
   mutations: {
@@ -70,28 +76,40 @@ export const account: Module<AccountState, RootState> = {
     SET_SIGN_OUT_TAB: (state, value) => {
       state.signOutCurrentTab = value;
     },
+    SET_USER_INFO_ERROR: (state, value) => {
+      state.userInfoChangeError = value;
+    },
+    SET_USER_INFO_SUCCESS: (state, value) => {
+      state.userInfoChangeSuccess = value;
+    },
   },
 
   actions: {
-    toggleLogOutModal: ({ commit }, value) => {
+    toggleLogOutModal: ({ commit }, value: boolean) => {
       commit("SET_LOGOUT_MODAL", value);
     },
-    toggleLogOutPopup: ({ commit }, value) => {
+    toggleLogOutPopup: ({ commit }, value: boolean) => {
       commit("SET_LOGOUT_POPUP", value);
     },
 
-    toggleFailModalStatus: ({ commit }, value) => {
+    toggleFailModalStatus: ({ commit }, value: boolean) => {
       commit("SET_FAIL_MODAL", value);
     },
 
-    toggleLoginError: ({ commit }, value) => {
+    toggleLoginError: ({ commit }, value: boolean) => {
       commit("SET_LOGIN_ERROR_MSG", value);
     },
-    toggleSignOutPopup: ({ commit }, value) => {
+    toggleSignOutPopup: ({ commit }, value: boolean) => {
       commit("SET_SIGN_OUT_POPUP", value);
     },
-    changeSignOutCurrentTab: ({ commit }, value) => {
+    changeSignOutCurrentTab: ({ commit }, value: number) => {
       commit("SET_SIGN_OUT_TAB", value);
+    },
+    toggleUserInfoChangeError: ({ commit }, value: boolean) => {
+      commit("SET_USER_INFO_ERROR", value);
+    },
+    toggleUserInfoChangeSuccess: ({ commit }, value: boolean) => {
+      commit("SET_USER_INFO_SUCCESS", value);
     },
 
     // 로그인
@@ -202,7 +220,7 @@ export const account: Module<AccountState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "account/submitPwForm",
+              func: "account/signOut",
               params: failStatus,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });

@@ -13,21 +13,70 @@
     </section>
   </div>
   <the-log-out-modal v-if="logOutModalStatus"></the-log-out-modal>
+  <success-pop-up v-if="successPopUpStatus">
+    성공적으로 저장되었습니다
+  </success-pop-up>
+  <failure-pop-up v-if="failModalStatus">
+    잠시 후에 다시 시도해주세요
+  </failure-pop-up>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheUserInfoChangeForm from "@/components/accounts/TheUserInfoChangeForm.vue";
 import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
+import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, onMounted, watch } from "vue";
 
 const store = useStore();
+
+// 개인 정보 수정 성공 팝업
+const successPopUpStatus = computed(
+  () => store.getters["account/getUserInfoChangeSuccess"]
+);
+const toggleSuccessPopUp = (value: boolean) =>
+  store.dispatch("account/toggleUserInfoChangeSuccess", value);
+
+// 개인 정보 수정 실패 팝업
+const failModalStatus = computed(
+  () => store.getters["account/getUserInfoChangeError"]
+);
+
+const toggleFailPopUp = (value: boolean) => {
+  store.dispatch("account/toggleUserInfoChangeError", value);
+};
+
+// 로그아웃 모달
 const logOutModalStatus = computed(
   () => store.getters["account/getLogOutModalStatus"]
 );
 const toggleLogOutModal = (value: boolean) =>
   store.dispatch("account/toggleLogOutModal", value);
+
+// 시간제 모달
+watch(failModalStatus, () => {
+  if (failModalStatus.value) {
+    setTimeout(() => {
+      toggleFailPopUp(false);
+    }, 3000);
+  }
+});
+
+watch(successPopUpStatus, () => {
+  if (successPopUpStatus.value) {
+    setTimeout(() => {
+      toggleSuccessPopUp(false);
+    }, 3000);
+  }
+});
+
+// 리셋
+onMounted(() => {
+  toggleSuccessPopUp(false);
+  toggleFailPopUp(false);
+});
 </script>
 
 <style scoped lang="scss">

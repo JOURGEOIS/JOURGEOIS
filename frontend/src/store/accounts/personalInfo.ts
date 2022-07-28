@@ -130,12 +130,12 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data.url);
           profileImage.image = response.data.url;
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.log(error);
+            // 실패 팝업
+            dispatch("account/toggleUserInfoChangeError", true, { root: true });
           } else {
             // refreshToken 재발급
             const obj = {
@@ -146,7 +146,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           }
         });
     },
-    submitChangeUserInfoForm: ({ commit, dispatch, getters }, params) => {
+    submitChangeUserInfoForm: ({ dispatch, getters }, params) => {
       const { name, nickname, profileLink, introduce } = params;
       axios({
         url: drf.accounts.profile(),
@@ -166,11 +166,14 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
         .then((response) => {
           // localStorage에 저장,vuex에 저장
           dispatch("saveUserInfo", response.data);
+
+          //성공 팝업
+          dispatch("account/toggleUserInfoChangeSuccess", true, { root: true });
         })
         .catch((error) => {
-          console.log(error.response);
           if (error.response.status !== 401) {
-            console.log(error);
+            // 실패 팝업
+            dispatch("account/toggleUserInfoChangeError", true, { root: true });
           } else {
             // refreshToken 재발급
             const obj = {

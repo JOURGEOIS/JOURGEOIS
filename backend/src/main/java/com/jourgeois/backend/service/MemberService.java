@@ -78,12 +78,14 @@ public class MemberService {
                                             if(!member.getProfileImg().equals("default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), data.getNickname()));
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid()));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
                                     } finally {
+                                        System.out.println("before finally");
                                         memberRepository.save(member);
+                                        System.out.println("after finally");
                                     }
                                 })
                 );
@@ -231,5 +233,12 @@ public class MemberService {
 
     public boolean checkUser(String email, String userName) {
         return memberRepository.findByEmailAndName(email, userName).isPresent();
+    }
+
+    @Transactional
+    public String ProfileImageLocalUpload(ProfileDto profileDto) throws IOException {
+        Member member = memberRepository.findByEmail(profileDto.getEmail()).get();
+        String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid());
+        return member.getUid() + "/" + url;
     }
 }

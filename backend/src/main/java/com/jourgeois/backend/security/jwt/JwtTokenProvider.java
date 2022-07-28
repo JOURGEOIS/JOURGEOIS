@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -101,4 +102,11 @@ public class JwtTokenProvider implements InitializingBean {
                 .compact();
     }
 
+    public String resolveToken(HttpServletRequest request, String header) {
+        String bearerToken = request.getHeader(header);
+        if (bearerToken != null && bearerToken.startsWith("Bearer-")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 }

@@ -10,65 +10,65 @@
 -->
 
 <template>
-	<teleport to="body">
-		<div class="modal-container" @click.self="offModal">
-			<div class="modal-basic" :class="modalStyle">
-				<slot></slot>
-			</div>
-		</div>
-	</teleport>
+  <teleport to="body">
+    <div class="modal-container" @click.self="offModal">
+      <div class="modal-basic" :class="modalStyle">
+        <slot></slot>
+      </div>
+    </div>
+  </teleport>
 </template>
 
 <script setup lang="ts">
 import { selectModalColor } from "../../functions/modalEvent";
 
 const props = defineProps<{
-	modalColor: string;
+  modalColor: string;
 }>();
 
 const { modalStyle }: any = selectModalColor(props.modalColor);
 
 const emit = defineEmits<{ (event: "offModal"): void }>();
 const offModal = () => {
-	emit("offModal");
+  emit("offModal");
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/styles/style.scss";
 .modal-container {
-	@include flex-xy(center, center);
-	position: fixed;
-	top: 0;
-	height: 100vh;
-	width: 100vw;
-	background-color: rgba(0, 0, 0, 0.7);
+  @include flex-xy(center, center);
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .modal-basic {
-	@include modal;
-	@include font($fs-md, $fw-regular);
-	@include hide-scroll;
-	overflow-y: scroll;
-	max-height: 60vh;
+  @include modal;
+  @include font($fs-md, $fw-regular);
+  @include hide-scroll;
+  overflow-y: scroll;
+  max-height: 60vh;
 
-	@media #{$tablet} {
-		max-width: 600px;
-		font-size: $fs-main;
-	}
+  @media #{$tablet} {
+    max-width: 600px;
+    font-size: $fs-main;
+  }
 
-	@media #{$pc} {
-		max-width: 800px;
-	}
+  @media #{$pc} {
+    max-width: 800px;
+  }
 }
 
 .primary-modal {
-	color: $white;
-	background-color: $primary-color;
+  color: $white;
+  background-color: $primary-color;
 }
 
 .white-modal {
-	color: $main-color;
-	background-color: $white;
+  color: $main-color;
+  background-color: $white;
 }
 </style>

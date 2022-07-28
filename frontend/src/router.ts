@@ -54,6 +54,13 @@ const routes: any[] = [
     name: "TheChangePwView",
     component: () => import("@/views/TheChangePwView.vue"),
   },
+
+  // 칵테일 상세 페이지
+  {
+    path: "/cocktail/:cocktailId",
+    name: "TheCocktailDescView",
+    component: () => import("@/views/TheCocktailDescView.vue"),
+  },
 ];
 
 const router = createRouter({

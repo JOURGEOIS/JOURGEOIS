@@ -83,7 +83,9 @@ public class MemberService {
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
                                     } finally {
+                                        System.out.println("before finally");
                                         memberRepository.save(member);
+                                        System.out.println("after finally");
                                     }
                                 })
                 );

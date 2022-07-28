@@ -153,7 +153,7 @@ public class MemberController {
             if(authentication.getName().equals(profileDto.getEmail())) {
                 System.out.println("같은 회원!");
                 Map<String, String> data = new HashMap<>();
-                data.put("url", "http://localhost:8080/img/" + memberService.ProfileImageLocalUpload(profileDto));
+                data.put("url", "http://13.209.206.237/img/" + memberService.ProfileImageLocalUpload(profileDto));
                 return new ResponseEntity(data, HttpStatus.CREATED);
             }else {
                 System.out.println("다른 회원!");

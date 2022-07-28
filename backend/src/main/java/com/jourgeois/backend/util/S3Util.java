@@ -9,11 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,6 +28,8 @@ import java.util.stream.Stream;
 @Component
 public class S3Util {
     private final AmazonS3Client amazonS3Client;
+
+    private final String PROFILE_TMP = "/app/DATA/tmp/profile";
 
     @Autowired
     S3Util(AmazonS3Client amazonS3Client){ this.amazonS3Client = amazonS3Client;}
@@ -50,7 +54,12 @@ public class S3Util {
     private void upload(File uploadFile, Long dirName) {
         String fileName = uploadFile.getName();   // S3에 저장된 파일 이름
         putS3(uploadFile, fileName); // s3로 업로드
-        removeFiles(new File(System.getProperty("user.dir") + "/img/" + dirName)); // 파일 삭제
+        try {
+            File tmp_img = new File(PROFILE_TMP + "/" + dirName);
+            removeFiles(tmp_img);
+        } catch (NullPointerException e) {
+            System.out.println("삭제할 파일 없음");
+        }
     }
 
     // S3로 업로드
@@ -71,12 +80,19 @@ public class S3Util {
 
     // 로컬에 파일 업로드 하기
     public Optional<File> convert(MultipartFile file, Long dirName) throws IOException {
-        String folderPath = System.getProperty("user.dir") + "/img/" + dirName;
+        String folderPath = PROFILE_TMP + "/" + dirName + "/";
+        System.out.println(folderPath);
         File makeFolder = new File(folderPath);
         if(!makeFolder.exists()){
-            makeFolder.mkdir();
+            System.out.println("폴더 생기니?");
+            makeFolder.mkdirs();
+            System.out.println("폴더 만들었음");
         }
-        File convertFile = new File(folderPath + "/" + Long.toString(System.nanoTime()) + "_" +file.getOriginalFilename());
+
+        File convertFile = new File(folderPath + Long.toString(System.nanoTime()) + "_" +file.getOriginalFilename());
+        System.out.println(convertFile.getAbsolutePath());
+        URL url = ResourceUtils.getURL(folderPath);
+        System.out.println("url임" + url);
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
                 fos.write(file.getBytes());

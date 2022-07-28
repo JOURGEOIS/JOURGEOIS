@@ -42,9 +42,9 @@ const imageWidth = ref(props.profileImage.width);
   height: 87px;
   border: 0;
   border-radius: 50%;
-  background-position: center;
   background-repeat: no-repeat;
   background-color: $white200;
-  background-size: 110%;
+  background-position: center;
+  background-size: cover;
 }
 </style>

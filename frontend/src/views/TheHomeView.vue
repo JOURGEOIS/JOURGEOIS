@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, getCurrentInstance, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -87,6 +87,10 @@ onMounted(() => {
 		);
 	}
 });
+const { proxy }: any = getCurrentInstance();
+const testFunc = (value: any) =>
+	proxy.$store.dispatch("signup/testFunc", value);
+testFunc("kekeke");
 </script>
 
 <style scoped lang="scss">

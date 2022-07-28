@@ -1,7 +1,7 @@
 import { ref, reactive, toRefs } from "vue";
 import { Module } from "vuex";
 import { RootState } from "../index";
-import drf from "../../api/drf";
+import api from "../../api/api";
 import axios from "axios";
 import { checkEmailCondition } from "../../functions/checkText";
 
@@ -268,7 +268,7 @@ export const signup: Module<SignupState, RootState> = {
 				loadingStatus,
 			} = toRefs(payload);
 			axios({
-				url: drf.accounts.signUpCheckEmail(),
+				url: api.accounts.signUpCheckEmail(),
 				method: "GET",
 				params: {
 					email: emailInputValue.value,
@@ -306,7 +306,7 @@ export const signup: Module<SignupState, RootState> = {
 		sendEmailAuthentication: ({ commit, dispatch }, payload) => {
 			const { email, showButtonContainer, loadingStatus } = toRefs(payload);
 			axios({
-				url: drf.email.emailCert(),
+				url: api.email.emailCert(),
 				method: "post",
 				data: {
 					email: email.value,
@@ -334,7 +334,7 @@ export const signup: Module<SignupState, RootState> = {
 		) => {
 			const { email } = toRefs(payload);
 			axios({
-				url: drf.email.emailConfirmed(),
+				url: api.email.emailConfirmed(),
 				method: "post",
 				data: {
 					email: state.signUpEmail,
@@ -382,7 +382,7 @@ export const signup: Module<SignupState, RootState> = {
 			const { email, password, name, nickname, birthday } = userInfo;
 			axios({
 				method: "POST",
-				url: drf.accounts.signUp(),
+				url: api.accounts.signUp(),
 				data: {
 					email,
 					password,

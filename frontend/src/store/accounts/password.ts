@@ -1,9 +1,9 @@
 import { toRefs } from "vue";
 import { Module } from "vuex";
 import { RootState } from "../index";
-import drf from "../../api/drf";
+import api from "../../api/api";
 import axios from "axios";
-import { clickHome } from "../../modules/clickEvent";
+import { clickHome } from "../../functions/clickEvent";
 
 // Signup의 State 타입을 설정한다.
 export interface PasswordState {
@@ -94,7 +94,7 @@ export const password: Module<PasswordState, RootState> = {
     // 비밀번호 찾기: 이름, 이메일을 입력하여 1. 서버에 존재하는 이메일과 이름인지 2. 둘이 매치가 되는지 확인한다.
     submitForgotPwForm: ({ commit }, { email, userName }) => {
       axios({
-        url: drf.accounts.forgotPassword(),
+        url: api.accounts.forgotPassword(),
         method: "get",
         params: {
           email,
@@ -116,7 +116,7 @@ export const password: Module<PasswordState, RootState> = {
     submitForgotPwAuthForm: ({ getters }, payload) => {
       const { btnStatus, loadingStatus, authFailError } = payload;
       axios({
-        url: drf.email.emailCert(),
+        url: api.email.emailCert(),
         method: "post",
         data: {
           email: getters.getForgotPwEmail,
@@ -137,7 +137,7 @@ export const password: Module<PasswordState, RootState> = {
     // 비밀번호 찾기: 이메일 인증이 되었는지 확인한다.
     confirmAuthEmail: ({ commit, getters }, errorStatus) => {
       axios({
-        url: drf.email.emailConfirmed(),
+        url: api.email.emailConfirmed(),
         method: "post",
         data: {
           email: getters.getForgotPwEmail,
@@ -157,7 +157,7 @@ export const password: Module<PasswordState, RootState> = {
     submitChangePwForm: (context, data) => {
       const { email, passwordNew, passwordConfirm, failStatus } = data;
       axios({
-        url: drf.accounts.forgotPassword(),
+        url: api.accounts.forgotPassword(),
         method: "put",
         data: {
           email,
@@ -176,10 +176,10 @@ export const password: Module<PasswordState, RootState> = {
     },
 
     // 비밀번호 변경: 본인 인증
-    submitChangePwAuthForm: ({ rootGetters, commit }, data) => {
-      const { pwInputValue, failStatus } = data;
+    submitChangePwAuthForm: ({ rootGetters, commit, dispatch }, params) => {
+      const { pwInputValue, failStatus } = params;
       axios({
-        url: drf.accounts.changePassword(),
+        url: api.accounts.changePassword(),
         method: "post",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
@@ -193,14 +193,24 @@ export const password: Module<PasswordState, RootState> = {
           commit("SET_CHANGE_PW_CURRENT_TAB", 1);
         })
         .catch((error) => {
-          failStatus.value = true;
+          console.log(error.response.status);
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "password/submitChangePwAuthForm",
+              params,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
     // 비밀번호 변경: 비밀번호 변경
-    submitPwForm: ({ rootGetters, commit }, data) => {
-      const { passwordNew, passwordConfirm, failStatus } = data;
+    submitPwForm: ({ rootGetters, commit, dispatch }, params) => {
+      const { passwordNew, passwordConfirm, failStatus } = params;
       axios({
-        url: drf.accounts.changePassword(),
+        url: api.accounts.changePassword(),
         method: "put",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
@@ -215,9 +225,17 @@ export const password: Module<PasswordState, RootState> = {
           clickHome();
           commit("SET_CHANGE_PW_POPUP", true);
         })
-        .catch((err) => {
-          console.log(err.data);
-          failStatus.value = true;
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "password/submitPwForm",
+              params,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
   },

@@ -31,7 +31,6 @@
 
 <script setup lang="ts">
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import ProfileImage from "@/components/basics/ProfileImage.vue";
 import { reactive } from "vue";
 </script>
 

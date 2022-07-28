@@ -51,7 +51,7 @@ import { react } from "@babel/types";
 import {
   checkTripleCombination,
   checkPasswordLength,
-} from "../../modules/checkText";
+} from "../../functions/checkText";
 
 const store = useStore();
 

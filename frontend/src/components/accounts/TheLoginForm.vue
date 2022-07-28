@@ -35,7 +35,7 @@ import {
   checkTripleCombination,
   checkPasswordLength,
   checkEmailCondition,
-} from "../../modules/checkText";
+} from "../../functions/checkText";
 
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";

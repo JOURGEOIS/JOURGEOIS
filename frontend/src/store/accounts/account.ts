@@ -1,7 +1,7 @@
 import { Module } from "vuex";
 import { RootState } from "../index";
-import { clickHome } from "../../modules/clickEvent";
-import drf from "../../api/drf";
+import { clickHome } from "../../functions/clickEvent";
+import api from "../../api/api";
 import axios from "axios";
 
 // Signup의 State 타입을 설정한다.
@@ -12,6 +12,8 @@ export interface AccountState {
   loginErrorStatus: boolean;
   signOutPopupStatus: boolean;
   signOutCurrentTab: number;
+  userInfoChangeError: boolean;
+  userInfoChangeSuccess: boolean;
 }
 
 export const account: Module<AccountState, RootState> = {
@@ -24,6 +26,8 @@ export const account: Module<AccountState, RootState> = {
     loginErrorStatus: false,
     signOutPopupStatus: false,
     signOutCurrentTab: 0,
+    userInfoChangeError: false,
+    userInfoChangeSuccess: false,
   },
 
   getters: {
@@ -44,6 +48,12 @@ export const account: Module<AccountState, RootState> = {
     },
     getSignOutCurrentTab: (state) => {
       return state.signOutCurrentTab;
+    },
+    getUserInfoChangeError: (state) => {
+      return state.userInfoChangeError;
+    },
+    getUserInfoChangeSuccess: (state) => {
+      return state.userInfoChangeSuccess;
     },
   },
 
@@ -66,34 +76,46 @@ export const account: Module<AccountState, RootState> = {
     SET_SIGN_OUT_TAB: (state, value) => {
       state.signOutCurrentTab = value;
     },
+    SET_USER_INFO_ERROR: (state, value) => {
+      state.userInfoChangeError = value;
+    },
+    SET_USER_INFO_SUCCESS: (state, value) => {
+      state.userInfoChangeSuccess = value;
+    },
   },
 
   actions: {
-    toggleLogOutModal: ({ commit }, value) => {
+    toggleLogOutModal: ({ commit }, value: boolean) => {
       commit("SET_LOGOUT_MODAL", value);
     },
-    toggleLogOutPopup: ({ commit }, value) => {
+    toggleLogOutPopup: ({ commit }, value: boolean) => {
       commit("SET_LOGOUT_POPUP", value);
     },
 
-    toggleFailModalStatus: ({ commit }, value) => {
+    toggleFailModalStatus: ({ commit }, value: boolean) => {
       commit("SET_FAIL_MODAL", value);
     },
 
-    toggleLoginError: ({ commit }, value) => {
+    toggleLoginError: ({ commit }, value: boolean) => {
       commit("SET_LOGIN_ERROR_MSG", value);
     },
-    toggleSignOutPopup: ({ commit }, value) => {
+    toggleSignOutPopup: ({ commit }, value: boolean) => {
       commit("SET_SIGN_OUT_POPUP", value);
     },
-    changeSignOutCurrentTab: ({ commit }, value) => {
+    changeSignOutCurrentTab: ({ commit }, value: number) => {
       commit("SET_SIGN_OUT_TAB", value);
+    },
+    toggleUserInfoChangeError: ({ commit }, value: boolean) => {
+      commit("SET_USER_INFO_ERROR", value);
+    },
+    toggleUserInfoChangeSuccess: ({ commit }, value: boolean) => {
+      commit("SET_USER_INFO_SUCCESS", value);
     },
 
     // 로그인
     login: ({ commit, dispatch }, { email, password }) => {
       axios({
-        url: drf.accounts.login(),
+        url: api.accounts.login(),
         method: "post",
         data: {
           email,
@@ -101,6 +123,7 @@ export const account: Module<AccountState, RootState> = {
         },
       })
         .then((response) => {
+          console.log(response.data);
           const { userInfo, token } = response.data;
           const { accessToken, refreshToken } = token;
           dispatch("personalInfo/saveUserInfo", userInfo, { root: true });
@@ -119,7 +142,7 @@ export const account: Module<AccountState, RootState> = {
     // 로그아웃
     logout: ({ commit, dispatch, rootGetters }) => {
       axios({
-        url: drf.accounts.logout(),
+        url: api.accounts.logout(),
         method: "get",
         params: {
           email: rootGetters["personalInfo/getUserInfoId"],
@@ -140,10 +163,11 @@ export const account: Module<AccountState, RootState> = {
     },
 
     // 회원 탈퇴: 본인 인증
-    submitSignOutAuth: ({ rootGetters, commit }, data) => {
-      const { pwInputValue, failStatus } = data;
+    submitSignOutAuth: ({ rootGetters, commit, dispatch }, params) => {
+      console.log("몇번 시도?");
+      const { pwInputValue, failStatus } = params;
       axios({
-        url: drf.accounts.changePassword(),
+        url: api.accounts.changePassword(),
         method: "post",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
@@ -157,14 +181,24 @@ export const account: Module<AccountState, RootState> = {
           commit("SET_SIGN_OUT_TAB", 1);
         })
         .catch((error) => {
-          failStatus.value = true;
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "account/submitSignOutAuth",
+              params,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
 
     // 회원 탈퇴: 탈퇴
     signOut: ({ commit, dispatch, rootGetters }, failStatus) => {
+      console.log("몇번 시도?");
       axios({
-        url: drf.accounts.signOut(),
+        url: api.accounts.signOut(),
         method: "delete",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
@@ -180,8 +214,17 @@ export const account: Module<AccountState, RootState> = {
           commit("SET_SIGN_OUT_POPUP", true);
         })
         // 실패 팝업
-        .catch(() => {
-          failStatus.value = true;
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            failStatus.value = true;
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "account/signOut",
+              params: failStatus,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
   },

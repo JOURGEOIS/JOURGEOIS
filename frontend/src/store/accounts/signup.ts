@@ -1,9 +1,9 @@
 import { ref, reactive, toRefs } from "vue";
 import { Module } from "vuex";
 import { RootState } from "../index";
-import drf from "../../api/drf";
+import api from "../../api/api";
 import axios from "axios";
-import { checkEmailCondition } from "../../modules/checkText";
+import { checkEmailCondition } from "../../functions/checkText";
 
 // Signup의 State 타입을 설정한다.
 export interface SignupState {
@@ -100,6 +100,23 @@ export const signup: Module<SignupState, RootState> = {
 		getEmailAuthentication: (state) => {
 			return state.emailAuthentication;
 		},
+
+		// * [Page Final] 회원가입 정보 가져오기
+		getSignUpPw: (state) => {
+			return state.signUpPw;
+		},
+
+		getSignUpBirth: (state) => {
+			return state.signUpBirth;
+		},
+
+		getSignUpNickName: (state) => {
+			return state.signUpNickName;
+		},
+
+		getSignUpName: (state) => {
+			return state.signUpName;
+		},
 	},
 	mutations: {
 		// * 회원가입 다음 페이지 이동
@@ -145,17 +162,11 @@ export const signup: Module<SignupState, RootState> = {
 			state.signUpAgreeChecked[order] = !state.signUpAgreeChecked[order];
 			// 일부 상태가 전체 체크/미체크인치 확인
 			let cnt = 0;
-			for (let i = 1; i < 5; i++) {
+			for (let i = 1; i < 4; i++) {
 				if (state.signUpAgreeChecked[i]) cnt++;
 			}
-			// 전체 미체크라면
-			if (cnt === 0) {
-				state.signUpAgreeChecked[0] = false;
-			}
 			// 전체 체크라면
-			else if (cnt === 4) {
-				state.signUpAgreeChecked[0] = true;
-			}
+			state.signUpAgreeChecked[0] = cnt === 3 ? true : false;
 		},
 
 		// * [Page1] 서비스 이용약관 동의 모달 toggle
@@ -205,7 +216,6 @@ export const signup: Module<SignupState, RootState> = {
 
 		// * 회원가입 성공 toggle 함수
 		TOGGLE_COMPLETE_SIGNUP_MODAL_STATUS: (state, value) => {
-			console.log("회원가입 성공 mutations", value);
 			state.completeSignUpModalStatus = value;
 		},
 	},
@@ -245,7 +255,7 @@ export const signup: Module<SignupState, RootState> = {
 			commit("SET_PERSONAL_INFO_USE_MODAL");
 		},
 
-		toggleprofileUseModal: ({ commit }) => {
+		toggleProfileUseModal: ({ commit }) => {
 			commit("SET_PROFILE_USE_MODAL");
 		},
 
@@ -258,7 +268,7 @@ export const signup: Module<SignupState, RootState> = {
 				loadingStatus,
 			} = toRefs(payload);
 			axios({
-				url: drf.accounts.signUpCheckEmail(),
+				url: api.accounts.signUpCheckEmail(),
 				method: "GET",
 				params: {
 					email: emailInputValue.value,
@@ -296,7 +306,7 @@ export const signup: Module<SignupState, RootState> = {
 		sendEmailAuthentication: ({ commit, dispatch }, payload) => {
 			const { email, showButtonContainer, loadingStatus } = toRefs(payload);
 			axios({
-				url: drf.email.emailCert(),
+				url: api.email.emailCert(),
 				method: "post",
 				data: {
 					email: email.value,
@@ -323,16 +333,14 @@ export const signup: Module<SignupState, RootState> = {
 			payload
 		) => {
 			const { email } = toRefs(payload);
-			console.log("api 전송 시작");
 			axios({
-				url: drf.email.emailConfirmed(),
+				url: api.email.emailConfirmed(),
 				method: "post",
 				data: {
 					email: state.signUpEmail,
 				},
 			})
 				.then((res) => {
-					console.log("api 전송 결과", res.data);
 					if (typeof res.data.success === "boolean") {
 						// 인증 된 경우
 						if (res.data.success) {
@@ -370,36 +378,41 @@ export const signup: Module<SignupState, RootState> = {
 		},
 
 		// * [Page Final] 회원가입 완료 접수
-		submitSignUp: ({ state, dispatch }) => {
+		submitSignUp: ({ state, dispatch }, userInfo) => {
+			const { email, password, name, nickname, birthday } = userInfo;
 			axios({
 				method: "POST",
-				url: drf.accounts.signUp(),
+				url: api.accounts.signUp(),
 				data: {
-					email: state.signUpEmail,
-					password: state.signUpPw,
-					name: state.signUpName,
-					nickname: state.signUpNickName,
-					birthday: state.signUpBirth,
+					email,
+					password,
+					name,
+					nickname,
+					birthday,
 				},
 			})
 				.then((res) => {
 					// 회원가입 성공
 					if (res.data.success) {
-						dispatch("toggleTimedCompleteSignUpModalStatus");
 						const loginUserInfo = {
 							email: state.signUpEmail,
 							password: state.signUpPw,
 						};
+						dispatch("nextSignupPage");
 						setTimeout(() => {
+							dispatch("toggleTimedCompleteSignUpModalStatus");
 							dispatch("account/login", loginUserInfo, { root: true });
-						}, 3000);
+						}, 500);
 					}
 					// 회원가입 실패
 					else {
 						dispatch("toggleTimedFailModalStatus");
 					}
 				})
-				.catch((err) => console.error(err.response));
+				.catch((err) => {
+					console.error(err.response);
+					dispatch("toggleTimedFailModalStatus");
+				});
 		},
 
 		// * 에러 모달 toggle 함수
@@ -429,7 +442,6 @@ export const signup: Module<SignupState, RootState> = {
 
 		// * 회원가입 성공 모달 toggle 함수
 		toggleCompleteSignUpModalStatus: ({ commit }, value) => {
-			console.log("회원가입 성공 모달 actions", value);
 			commit("TOGGLE_COMPLETE_SIGNUP_MODAL_STATUS", value);
 		},
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Module } from "vuex";
-import drf from "../../api/drf";
-import { clickHome } from "../../modules/clickEvent";
+import api from "../../api/api";
+import { clickHome } from "../../functions/clickEvent";
 import { RootState } from "../index";
 
 export interface userInfo {
@@ -27,7 +27,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
 
   getters: {
     isLoggedIn: (state) => {
-      !!state.accessToken;
+      return !!state.accessToken;
     },
     getAccessToken: (state) => {
       return state.accessToken;
@@ -90,26 +90,98 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     toggleRefreshFailPopup: ({ commit }, value) => {
       commit("SET_REFRESH_FAIL", value);
     },
-    requestRefreshToken: ({ getters, dispatch }) => {
+    requestRefreshToken: ({ getters, dispatch, commit }, obj) => {
+      const { func, params } = obj;
       axios({
-        url: drf.token.token(),
+        url: api.token.token(),
         method: "post",
         data: {
           token: getters.getRefreshToken,
         },
       })
         .then((response) => {
+          console.log("토큰 성공");
           const data = response.data;
-          console.log(data);
           const token = {
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,
           };
           dispatch("saveToken", token);
+          dispatch(func, params, { root: true });
         })
         .catch(() => {
-          getters("account/logout", {}, { root: true });
+          dispatch("resetUserInfo");
           clickHome();
+          commit("SET_REFRESH_FAIL", true);
+        });
+    },
+    changeProfileImage: ({ getters, dispatch }, params) => {
+      const { imageFile, profileImage } = params;
+      axios({
+        url: api.accounts.profile(),
+        method: "post",
+        headers: {
+          Authorization: getters.getAccessToken,
+          "Content-Type": "multipart/form-data",
+        },
+        data: {
+          email: getters.getUserInfoId,
+          profileLink: imageFile,
+        },
+      })
+        .then((response) => {
+          profileImage.image = response.data.url;
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            // 실패 팝업
+            dispatch("account/toggleUserInfoChangeError", true, { root: true });
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "personalInfo/changeProfileImage",
+              params,
+            };
+            dispatch("requestRefreshToken", obj);
+          }
+        });
+    },
+    submitChangeUserInfoForm: ({ dispatch, getters }, params) => {
+      const { name, nickname, profileLink, introduce } = params;
+      axios({
+        url: api.accounts.profile(),
+        method: "put",
+        headers: {
+          Authorization: getters.getAccessToken,
+          "Content-Type": "multipart/form-data",
+        },
+        data: {
+          email: getters.getUserInfoId,
+          name,
+          nickname,
+          profileLink,
+          introduce,
+        },
+      })
+        .then((response) => {
+          // localStorage에 저장,vuex에 저장
+          dispatch("saveUserInfo", response.data);
+
+          //성공 팝업
+          dispatch("account/toggleUserInfoChangeSuccess", true, { root: true });
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            // 실패 팝업
+            dispatch("account/toggleUserInfoChangeError", true, { root: true });
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "personalInfo/submitChangeUserInfoForm",
+              params,
+            };
+            dispatch("requestRefreshToken", obj);
+          }
         });
     },
   },

@@ -56,7 +56,7 @@ import { useStore } from "vuex";
 import {
   checkTripleCombination,
   checkPasswordLength,
-} from "../../modules/checkText";
+} from "../../functions/checkText";
 
 const store = useStore();
 

@@ -4,7 +4,7 @@ import router from "../router";
 function clickHome() {
   router.push({
     path: "/",
-    name: "Home",
+    name: "TheHomeView",
   });
 }
 

@@ -10,7 +10,7 @@
         type="file"
         id="my-profile-image"
         @change="changeProfileImage"
-        ref="file"
+        accept="image/*"
       />
     </div>
     <input-basic

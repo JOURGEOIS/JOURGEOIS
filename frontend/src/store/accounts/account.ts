@@ -123,7 +123,6 @@ export const account: Module<AccountState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           const { userInfo, token } = response.data;
           const { accessToken, refreshToken } = token;
           dispatch("personalInfo/saveUserInfo", userInfo, { root: true });
@@ -164,7 +163,6 @@ export const account: Module<AccountState, RootState> = {
 
     // 회원 탈퇴: 본인 인증
     submitSignOutAuth: ({ rootGetters, commit, dispatch }, params) => {
-      console.log("몇번 시도?");
       const { pwInputValue, failStatus } = params;
       axios({
         url: api.accounts.changePassword(),
@@ -196,7 +194,6 @@ export const account: Module<AccountState, RootState> = {
 
     // 회원 탈퇴: 탈퇴
     signOut: ({ commit, dispatch, rootGetters }, failStatus) => {
-      console.log("몇번 시도?");
       axios({
         url: api.accounts.signOut(),
         method: "delete",

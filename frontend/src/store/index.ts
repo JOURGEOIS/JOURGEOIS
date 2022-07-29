@@ -12,6 +12,11 @@ import {
   CocktailDescState,
 } from "../store/cocktails/cocktailDesc";
 
+import {
+  cocktailSearch,
+  CocktailSearchState,
+} from "../store/cocktails/cocktailSearch";
+
 // 모듈의 state를 공유한다.
 export interface RootState {
   account: AccountState;
@@ -23,5 +28,12 @@ export interface RootState {
 
 // store를 생성한다.
 export default createStore({
-  modules: { account, signup, personalInfo, password, cocktailDesc },
+  modules: {
+    account,
+    signup,
+    personalInfo,
+    password,
+    cocktailDesc,
+    cocktailSearch,
+  },
 });

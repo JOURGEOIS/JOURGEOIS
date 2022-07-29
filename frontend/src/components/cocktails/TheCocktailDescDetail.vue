@@ -1,8 +1,8 @@
 <template>
   <div class="cocktail-desc-detail">
     <div class="cocktail-desc-detail-title">
-      <p>마가리타마가리타</p>
-      <p>Magarita</p>
+      <p>롱 아일랜드 아이스 티</p>
+      <p>Long Island Iced Tea</p>
     </div>
     <round-image :round-image="cocktailImage"></round-image>
     <div class="cocktail-desc-tag">
@@ -39,11 +39,12 @@ import TagBasic from "@/components/basics/TagBasic.vue";
 import RoundImage from "@/components/basics/RoundImage.vue";
 
 const cocktailImage = {
-  // image:
+  image:
+    "https://www.thecocktaildb.com/images/media/drink/wx7hsg1504370510.jpg",
   width: "120px",
 };
 
-const tags = ["Alcoholic", "IBA", "OrdinaryDrink", "Dairy"];
+const tags = ["IBA", "ContemporaryClassic", "Strong", "Ordinary Drink"];
 </script>
 
 <style scoped lang="scss">

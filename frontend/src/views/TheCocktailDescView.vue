@@ -74,6 +74,7 @@ onBeforeMount(() => {
   justify-content: flex-start;
   align-items: center;
   @include accountLayOut;
+  margin-bottom: 48px;
 
   section {
     @include flex(column);
@@ -81,7 +82,7 @@ onBeforeMount(() => {
     align-items: center;
     gap: 24px;
     width: 100%;
-    margin-top: 48px;
+    margin-top: 24px;
 
     .cocktail-desc-hr {
       width: 100%;

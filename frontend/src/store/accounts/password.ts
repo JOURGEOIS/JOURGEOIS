@@ -193,7 +193,7 @@ export const password: Module<PasswordState, RootState> = {
           commit("SET_CHANGE_PW_CURRENT_TAB", 1);
         })
         .catch((error) => {
-          console.log(error.response.status);
+          console.error(error.response.status);
           if (error.response.status !== 401) {
             failStatus.value = true;
           } else {

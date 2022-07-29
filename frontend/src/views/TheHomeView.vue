@@ -87,10 +87,6 @@ onMounted(() => {
     );
   }
 });
-const { proxy }: any = getCurrentInstance();
-const testFunc = (value: any) =>
-  proxy.$store.dispatch("signup/testFunc", value);
-testFunc("kekeke");
 </script>
 
 <style scoped lang="scss">

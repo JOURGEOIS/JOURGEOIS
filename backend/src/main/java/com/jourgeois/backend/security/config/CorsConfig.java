@@ -21,6 +21,7 @@ public class CorsConfig {
         source.registerCorsConfiguration("/email/**", config);
         source.registerCorsConfiguration("/token", config);
         source.registerCorsConfiguration("/cocktail/**", config);
+        source.registerCorsConfiguration("/lookup/**", config);
         return new CorsFilter(source);
     }
 }

@@ -1,10 +1,19 @@
 <template>
   <div class="cocktail-desc-detail">
     <div class="cocktail-desc-detail-title">
-      <p>마가리타</p>
+      <p>마가리타마가리타</p>
       <p>Magarita</p>
     </div>
     <round-image :round-image="cocktailImage"></round-image>
+    <div class="cocktail-desc-tag">
+      <tag-basic
+        :tagStyle="['light-primary', '12px', '5px']"
+        v-for="(tag, index) in tags"
+        :key="index"
+      >
+        {{ tag }}
+      </tag-basic>
+    </div>
     <div class="cocktail-desc-detail-content">
       <div>
         <span class="material-icons-outlined"> bookmarks </span>
@@ -26,11 +35,15 @@
 </template>
 
 <script setup lang="ts">
+import TagBasic from "@/components/basics/TagBasic.vue";
 import RoundImage from "@/components/basics/RoundImage.vue";
+
 const cocktailImage = {
   // image:
   width: "120px",
 };
+
+const tags = ["Alcoholic", "IBA", "OrdinaryDrink", "Dairy"];
 </script>
 
 <style scoped lang="scss">
@@ -39,10 +52,12 @@ const cocktailImage = {
   align-items: center;
   justify-content: center;
   gap: 24px;
+  width: 100%;
   .cocktail-desc-detail-title {
     @include flex(column);
     align-items: center;
     justify-content: center;
+    gap: 8px;
     p {
       &:first-child {
         @include font($fs-xl, $fw-medium);
@@ -51,6 +66,11 @@ const cocktailImage = {
         @include font($fs-md, $fw-medium);
       }
     }
+  }
+  .cocktail-desc-tag {
+    @include flex-center;
+    gap: 6px;
+    margin-bottom: 16px;
   }
 
   .cocktail-desc-detail-content {

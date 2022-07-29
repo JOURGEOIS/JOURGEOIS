@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { selectModalColor } from "../../modules/modalEvent";
+import { selectModalColor } from "../../functions/modalEvent";
 
 const props = defineProps<{
   modalColor: string;

@@ -7,15 +7,21 @@ import {
   PersonalInfoState,
 } from "../store/accounts/personalInfo";
 
+import {
+  cocktailDesc,
+  CocktailDescState,
+} from "../store/cocktails/cocktailDesc";
+
 // 모듈의 state를 공유한다.
 export interface RootState {
   account: AccountState;
   signup: SignupState;
   personalInfo: PersonalInfoState;
   password: PasswordState;
+  cocktailDesc: CocktailDescState;
 }
 
 // store를 생성한다.
 export default createStore({
-  modules: { account, signup, personalInfo, password },
+  modules: { account, signup, personalInfo, password, cocktailDesc },
 });

@@ -15,10 +15,13 @@
     >다시 로그인 해주세요</failure-pop-up
   >
   <success-pop-up v-if="signOutPopupStatus">탈퇴되었습니다</success-pop-up>
+  <success-pop-up v-if="completeSignUpModalStatus"
+    >회원가입이 완료되었습니다.</success-pop-up
+  >
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, getCurrentInstance, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -42,6 +45,11 @@ const signOutPopupStatus = computed(
 
 const refreshFailPopupStatus = computed(
   () => store.getters["personalInfo/getRefreshFailPopupStatus"]
+);
+
+// 회원가입 성공 모달
+const completeSignUpModalStatus = computed(
+  () => store.getters["signup/getCompleteSignUpModalStatus"]
 );
 
 onMounted(() => {
@@ -74,7 +82,7 @@ onMounted(() => {
   // 리프레시 실패 팝업 시간제 off
   if (refreshFailPopupStatus) {
     setTimeout(
-      () => store.dispatch("account/toggleRefreshFailPopup", false),
+      () => store.dispatch("personalInfo/toggleRefreshFailPopup", false),
       3000
     );
   }

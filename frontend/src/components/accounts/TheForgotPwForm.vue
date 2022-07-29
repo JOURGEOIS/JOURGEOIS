@@ -50,7 +50,7 @@
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { reactive, ref, computed, onBeforeMount } from "vue";
-import { checkEnKr, checkEmailCondition } from "../../modules/checkText";
+import { checkEnKr, checkEmailCondition } from "../../functions/checkText";
 import { useStore } from "vuex";
 const store = useStore();
 

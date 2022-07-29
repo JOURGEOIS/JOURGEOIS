@@ -53,7 +53,7 @@ import {
   checkTripleCombination,
   checkPasswordLength,
   checkIsEqualPassword,
-} from "../../modules/checkText";
+} from "../../functions/checkText";
 
 const store = useStore();
 

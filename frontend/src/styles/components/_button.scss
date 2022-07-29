@@ -29,27 +29,29 @@ $colors: (
   "navy": $navy-color,
   "main": $main-color,
   "sub": $sub-color,
+  "white": $white400,
+  "light-primary": $primary400,
 );
 
 @each $key, $value in $colors {
-  .#{$key}-button {
+  .#{$key}-bg {
     background-color: if($key == "sub", $white150, $value);
     color: if($key == "sub", $value, $white);
   }
 
-  .#{$key}-outline-button {
+  .#{$key}-outline-bg {
     border: 1px solid $value;
     color: $value;
     background-color: $white;
   }
 
-  .#{$key}-blank-button {
+  .#{$key}-blank-bg {
     color: $value;
     background-color: $white;
   }
 }
 
-.unchecked-button {
+.unchecked-bg {
   color: $sub-color;
   background-color: $unchecked-color;
 }

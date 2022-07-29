@@ -1,8 +1,8 @@
 <!-- 
   부모에서 보내는 props=> :button-style="[컬러, 길이, 폰트 크기]"
   --------------------------------------------------------------
-  1. 컬러: 색깔과 버튼 스타일을 선택할 수 있다. (총 21가지의 선택지)
-  색은 primary, red, emerald, blue, navy, main, sub가 있다. 
+  1. 컬러: 색깔과 버튼 스타일을 선택할 수 있다. (총 27가지의 선택지)
+  색은 primary, red, emerald, blue, navy, main, sub, white, light-primary가 있다. 
   스타일은 기본, outline, blank가 있다. 
   ex1) 'primary'
   ex2) 'primary-outline'
@@ -40,7 +40,7 @@ const props = defineProps<{
 
 // 버튼 색상 선택 (scss로 세팅한 클래스명을 부여해서 설정한다. -> 총 21가지의 선택지)
 const buttonColor = computed((): string => {
-  return `${props.buttonStyle[0]}-button`;
+  return `${props.buttonStyle[0]}-bg`;
 });
 
 // 버튼 너비 선택 (long or 특정 값 입력  )

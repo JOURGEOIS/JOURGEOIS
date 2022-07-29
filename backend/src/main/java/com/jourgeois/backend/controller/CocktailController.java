@@ -13,18 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/cocktail")
 public class CocktailController {
-    public final CocktailService cocktailService;
 
-    CocktailController(CocktailService cocktailService){
-        this.cocktailService = cocktailService;
-    }
 
-    @GetMapping(value = "/search")
-    public ResponseEntity keywordList(HttpServletRequest request, @RequestParam String keyword){
-        System.out.println(keyword);
-        if(keyword.isEmpty()){
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-        return new ResponseEntity(cocktailService.searchKeywords(keyword), HttpStatus.CREATED);
-    }
 }

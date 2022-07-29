@@ -4,6 +4,7 @@ import jdk.jfr.Unsigned;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,7 +18,9 @@ public class SearchHistory {
     private String keyword;
 
     @CreatedDate
-    private java.util.Date creationDate;
+    private LocalDateTime creationDate;
+
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -35,11 +38,18 @@ public class SearchHistory {
         this.keyword = keyword;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

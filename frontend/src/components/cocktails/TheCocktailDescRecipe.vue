@@ -1,5 +1,5 @@
 <template>
-  <h1>레시피</h1>
+  <div></div>
 </template>
 
 <script setup lang="ts"></script>

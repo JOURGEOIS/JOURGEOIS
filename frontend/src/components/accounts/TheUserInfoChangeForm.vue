@@ -4,7 +4,7 @@
     @submit.prevent="submitChangeUserInfoForm"
   >
     <div class="user-info-change-image">
-      <the-profile-image :profile-image="profileImage"></the-profile-image>
+      <round-image :round-image="profileImage"></round-image>
       <label for="my-profile-image">프로필 사진 변경</label>
       <input
         type="file"
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import TheProfileImage from "@/components/basics/TheProfileImage.vue";
+import RoundImage from "@/components/basics/RoundImage.vue";
 import InputBasic from "@/components/basics/InputBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { checkNicknameDuplication } from "../../functions/checkUserInfo";

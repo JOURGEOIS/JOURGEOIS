@@ -43,7 +43,7 @@ public class EmailController {
         try {
             success = emailService.verifyEmail(authForm);
             data.put("success", success);
-            return success ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+            return success ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.OK);
         } catch (Exception e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
@@ -60,7 +60,7 @@ public class EmailController {
         try {
             success = emailService.verifyEmail(authForm);
             data.put("success", success);
-            return success ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+            return success ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.OK);
         } catch (Exception e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
@@ -74,7 +74,7 @@ public class EmailController {
         try {
             verified = emailService.checkVerified(emailAuthForm);
             data.put("success", verified);
-            return verified ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+            return verified ? new ResponseEntity(data, HttpStatus.OK) : new ResponseEntity(data, HttpStatus.OK);
         } catch (Exception e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);

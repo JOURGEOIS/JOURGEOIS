@@ -22,27 +22,26 @@ public class MailAuthUtil {
 
     public static EmailToken createEmailToken(EmailAuthForm emailAuthForm) {
         EmailToken emailToken = new EmailToken();
-        emailToken.setId(emailAuthForm.getEmail());
-        emailToken.setExpirationDate(LocalDateTime.now().plusMinutes(EMAIL_TOKEN_EXPIRATION_TIME_VALUE));
+        emailToken.setEmail(emailAuthForm.getEmail());
+//        emailToken.setExpirationDate(LocalDateTime.now().plusMinutes(EMAIL_TOKEN_EXPIRATION_TIME_VALUE));
         emailToken.setToken(createKey(TOKEN_LENGTH));
-        emailToken.setExpired(false);
         emailToken.setVerified(false);
-//        emailToken.setMemberId(emailAuthForm.getUserId());
+        emailToken.setMemberId(emailAuthForm.getUserId());
 
         return emailToken;
     }
 
-    public static void setTokenToExpired(EmailToken emailToken) {
-        emailToken.setExpired(true);
+    public static boolean isValidToken(String token, EmailToken emailToken) {
+        System.out.println(token);
+        System.out.println(emailToken.getToken());
+        return !emailToken.isVerified() && token.equals(emailToken.getToken());
     }
-
-    public static void setTokenToVerified(EmailToken emailToken) { emailToken.setVerified(true);}
 
     public MimeMessage createMessage(EmailToken emailToken)throws Exception{
         JavaMailSender javaMailSender = new JavaMailSenderImpl();
         MimeMessage  message = javaMailSender.createMimeMessage();
 
-        message.addRecipients(MimeMessage.RecipientType.TO, emailToken.getId()); //보내는 대상
+        message.addRecipients(MimeMessage.RecipientType.TO, emailToken.getEmail()); //보내는 대상
         message.setSubject("주류쥬아 이메일 인증"); //제목
 
         StringBuffer msg = new StringBuffer();
@@ -57,9 +56,9 @@ public class MailAuthUtil {
         msg.append("<br>");
         msg.append("<div style=\"width: 350px; line-height: 48px; text-align: center; border-radius: 3px; background-color: #7979F7; cursor: pointer; margin-bottom: 20px;\">");
         msg.append("<a href=\"").append(EMAIL_AUTH_PAGE)
-                .append("?token=").append(emailToken.getToken()).append("&email=").append(emailToken.getId())/*.append("&id=").append(emailToken.getMemberId())*/.append("\" style=\"padding-left: 30px; padding-right: 30px; text-decoration: none;\" target=\"_blank\" rel=\"noreferrer noopener\">");
+                .append("?token=").append(emailToken.getToken()).append("&email=").append(emailToken.getEmail())/*.append("&id=").append(emailToken.getMemberId())*/.append("\" style=\"padding-left: 30px; padding-right: 30px; text-decoration: none;\" target=\"_blank\" rel=\"noreferrer noopener\">");
         msg.append("<span style=\"font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 500; color: #ffffff; cursor: pointer;\">");
-        msg.append("이메일 인증하고 주류주아 시작하기");
+        msg.append("이메일 인증하기");
         msg.append("</span>");
         msg.append("</a>");
         msg.append("</div>");

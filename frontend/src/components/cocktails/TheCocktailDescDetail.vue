@@ -6,13 +6,13 @@
     </div>
     <round-image :round-image="cocktailImage"></round-image>
     <div class="cocktail-desc-tag">
-      <filled-tag
+      <tag-basic
         :tagStyle="['light-primary', '12px', '5px']"
         v-for="(tag, index) in tags"
         :key="index"
       >
         {{ tag }}
-      </filled-tag>
+      </tag-basic>
     </div>
     <div class="cocktail-desc-detail-content">
       <div>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import FilledTag from "@/components/basics/FilledTag.vue";
+import TagBasic from "@/components/basics/TagBasic.vue";
 import RoundImage from "@/components/basics/RoundImage.vue";
 
 const cocktailImage = {

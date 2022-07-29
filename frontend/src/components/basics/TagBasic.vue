@@ -20,7 +20,7 @@
 
 <template>
   <div
-    class="filledTag"
+    class="tag-basic"
     :class="tagColor"
     :style="{
       fontSize: tagStyle[1],
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{ tagStyle: string[] }>();
 
@@ -41,7 +41,7 @@ const tagColor = computed((): string => {
 });
 </script>
 <style scoped lang="scss">
-.filledTag {
+.tag-basic {
   padding: 0.3em 0.6em;
 }
 </style>

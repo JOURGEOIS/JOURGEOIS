@@ -54,6 +54,7 @@ const clickCloseIcon = () => {
   @include flex-xy(flex-start, center);
   gap: 10px;
   margin: 10px 0;
+  margin-bottom: 30px;
 
   .back-icon {
     @include flex;

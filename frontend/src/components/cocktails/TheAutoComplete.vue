@@ -87,9 +87,9 @@ interface autoCompleteWord {
   type: string;
 }
 
+// 칵테일 자동완성 클릭 시
 const clickCocktail = (item: autoCompleteWord) => {
-  alert(item.nameKr);
-  // router.push({ name: "TheHomeView", params: {  } });
+  router.push({ name: "TheCocktailDescView", params: { cocktailId: item.id } });
 };
 
 const clickIngredient = (item: autoCompleteWord) => {

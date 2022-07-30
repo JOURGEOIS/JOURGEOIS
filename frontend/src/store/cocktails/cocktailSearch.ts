@@ -3,6 +3,7 @@ import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
 
+// 자동완성 단어 interface
 export interface autoCompleteWord {
   id: number;
   name: string;
@@ -10,15 +11,26 @@ export interface autoCompleteWord {
   type: string;
 }
 
+// 자동완성 5개 리스트 interface
 export interface autoCompleteWords {
   cocktails: autoCompleteWord[];
   ingredients: autoCompleteWord[];
   users: autoCompleteWord[];
 }
 
+// 인기 검색어 interface
+export interface popularSearchWords {
+  from: string;
+  to: string;
+  keywords: string[];
+  delta: number[];
+}
+
+// ! 기본 State Interface
 export interface CocktailSearchState {
   searchInputValue: string;
   recentSearchWords: string[];
+  popularSearchWords: popularSearchWords;
   autoCompleteSearchWords: autoCompleteWords;
   filterStatus: boolean;
 }
@@ -31,6 +43,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     searchInputValue: "",
     recentSearchWords:
       JSON.parse(localStorage.getItem("recentSearchWords") || "[]") || [],
+    popularSearchWords: { from: "", to: "", keywords: [""], delta: [0] },
     autoCompleteSearchWords: { cocktails: [], ingredients: [], users: [] },
     filterStatus: false,
   },
@@ -41,6 +54,9 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
 
     // * 최근 검색어 string[]
     getRecentSearchWords: (state) => state.recentSearchWords,
+
+    // * 인기 검색어 string[]
+    getPopularSearchWords: (state) => state.popularSearchWords,
 
     // * 검색 자동완성 autoCompleteWord[]
     getAutoCompleteSearchWords: (state) => state.autoCompleteSearchWords,
@@ -58,6 +74,11 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // * 최근 검색어 state 저장
     SET_RECENT_SEARCH_WORDS: (state, words) => {
       state.recentSearchWords = words;
+    },
+
+    // * 인기 검색어 state 저장
+    SET_POPULAR_SEARCH_WORDS: (state, words) => {
+      state.popularSearchWords = words;
     },
 
     // * 검색 자동완성 state 저장
@@ -85,9 +106,13 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // * 최근 검색어 5개 로컬스토리지, state 저장
     setRecentSearchWords: ({ state, commit, getters }) => {
       const newWord = getters.getSearchInputValue;
+      // 새로 입력된 검색어가 비어있다면 return
       if (!newWord) return;
+      // 새로 입력된 검색어가 최근 5개 중에 있다면 return
       const words = state.recentSearchWords;
+      if (words.includes(newWord)) return;
       words.push(newWord);
+      // 최근 검색어가 6개라면 가장 오래된 거 하나 뺌
       if (words.length > 5) {
         words.shift();
       }
@@ -99,6 +124,20 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     removeRecentSearchWords: ({ commit }) => {
       localStorage.removeItem("recentSearchWords");
       commit("REMOVE_RECENT_SEARCH_WORDS");
+    },
+
+    // * 인기 검색어 불러오기
+    setPopularSearchWords: ({ commit }) => {
+      axios({
+        url: api.lookups.hotKeyword(),
+        method: "GET",
+      })
+        .then((res) => {
+          commit("SET_POPULAR_SEARCH_WORDS", res.data);
+        })
+        .catch((err) => {
+          console.error(err.response);
+        });
     },
 
     // * 검색 자동완성 list 모두 state 저장

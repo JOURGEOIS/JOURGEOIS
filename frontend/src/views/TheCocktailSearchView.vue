@@ -17,6 +17,7 @@
       </div>
     </form>
   </div>
+  <the-cocktail-search-filter v-if="filterStatus"></the-cocktail-search-filter>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +25,8 @@ import TheCocktailSearchHeader from "@/components/cocktails/TheCocktailSearchHea
 import TheCocktailSearchInit from "@/components/cocktails/TheCocktailSearchInit.vue";
 import TheAutoComplete from "@/components/cocktails/TheAutoComplete.vue";
 import TheCocktailSearchButtonSection from "@/components/cocktails/TheCocktailSearchButtonSection.vue";
-import { computed, onUnmounted } from "vue";
+import TheCocktailSearchFilter from "@/components/cocktails/TheCocktailSearchFilter.vue";
+import { computed, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -35,6 +37,10 @@ const searchInputValue = computed(() => {
 const searchComplete = () => {
   store.dispatch("cocktailSearch/setRecentSearchWords");
 };
+
+const filterStatus = computed(
+  () => store.getters["cocktailSearch/getFilterStatus"]
+);
 </script>
 
 <style scoped lang="scss">

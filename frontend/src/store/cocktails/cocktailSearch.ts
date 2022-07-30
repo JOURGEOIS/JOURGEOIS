@@ -13,6 +13,7 @@ export interface CocktailSearchState {
   searchInputValue: string;
   recentSearchWords: string[];
   autoCompleteSearchWords: autoCompleteWord[];
+  filterStatus: boolean;
 }
 
 export const cocktailSearch: Module<CocktailSearchState, RootState> = {
@@ -24,6 +25,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     recentSearchWords:
       JSON.parse(localStorage.getItem("recentSearchWords") || "[]") || [],
     autoCompleteSearchWords: [],
+    filterStatus: false,
   },
 
   getters: {
@@ -35,6 +37,9 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
 
     // * 검색 자동완성 autoCompleteWord[]
     getAutoCompleteSearchWords: (state) => state.autoCompleteSearchWords,
+
+    // 필터 status
+    getFilterStatus: (state) => state.filterStatus,
   },
 
   mutations: {
@@ -56,6 +61,11 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // * 최근 검색어 state 삭제
     REMOVE_RECENT_SEARCH_WORDS: (state) => {
       state.recentSearchWords = [];
+    },
+
+    // 필터 토글
+    SET_FILTER_STATUS: (state, value: boolean) => {
+      state.filterStatus = value;
     },
   },
 
@@ -111,6 +121,11 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       })
         .then((res) => console.log(res.data))
         .catch((err) => console.error(err.response));
+    },
+
+    // 필터 토글
+    toggleFilter: ({ commit }, value: boolean) => {
+      commit("SET_FILTER_STATUS", value);
     },
   },
 };

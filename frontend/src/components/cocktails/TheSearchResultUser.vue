@@ -1,7 +1,22 @@
-<template>
-  <div>hhi</div>
+<template class="the-search-result-user">
+  <the-list-item-user
+    v-for="(item, idx) in searchUsers"
+    :key="idx"
+    :data="item"
+  ></the-list-item-user>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TheListItemUser from "@/components/cocktails/TheListItemUser.vue";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+const route = useRoute();
+const store = useStore();
+
+const searchUsers = computed(() => {
+  return store.getters["searchResult/getSearchUsers"];
+});
+</script>
 
 <style scoped lang="scss"></style>

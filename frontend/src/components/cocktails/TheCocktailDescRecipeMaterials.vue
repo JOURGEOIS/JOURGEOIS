@@ -1,9 +1,14 @@
+<!-- 칵테일 상세 페이지: 레시피 탭 (재료) -->
 <template>
   <div class="cocktail-desc-materials">
+    <!-- 칵테일 재료 title -->
     <div class="cocktail-desc-materials-title">
       <p>재료</p>
+      <!-- 더보기를 누를 시, 칵테일 재료를 모두 볼 수 있다. -->
       <p v-if="showMore">더보기</p>
     </div>
+
+    <!-- 칵테일 재료 나열 -->
     <div class="cocktail-desc-materials-main">
       <div
         class="cocktail-desc-materials-item"
@@ -22,8 +27,11 @@
 <script setup lang="ts">
 import RoundImage from "@/components/basics/RoundImage.vue";
 import { ref, reactive } from "vue";
+
+// 더보기 상태
 const showMore = ref(true);
 
+// 재료
 const materials = reactive([
   {
     image:
@@ -50,6 +58,8 @@ const materials = reactive([
 
 <style scoped lang="scss">
 .cocktail-desc-materials {
+  @include flex(column);
+  gap: 16px;
   width: 90%;
   .cocktail-desc-materials-title {
     @include flex-xy(space-between, center);
@@ -79,6 +89,13 @@ const materials = reactive([
       text-align: center;
       @include font($fs-sm, $fw-regular);
       color: $main-color;
+    }
+
+    @media #{$tablet} {
+      grid-template-columns: repeat(auto-fill, minmax(25%, auto));
+    }
+    @media #{$pc} {
+      grid-template-columns: repeat(auto-fill, minmax(20%, auto));
     }
   }
 }

@@ -1,3 +1,4 @@
+<!-- 칵테일 상세 페이지: 레시피 탭 -->
 <template>
   <the-cocktail-desc-recipe-materials></the-cocktail-desc-recipe-materials>
   <the-cocktail-desc-recipe-steps></the-cocktail-desc-recipe-steps>

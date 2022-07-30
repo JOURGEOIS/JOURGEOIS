@@ -68,6 +68,13 @@ const routes: any[] = [
     name: "TheCocktailDescView",
     component: () => import("@/views/TheCocktailDescView.vue"),
   },
+
+  // 칵테일 상세 페이지 북마크
+  {
+    path: "/cocktail/:cocktailId/bookmark",
+    name: "TheCocktailDescBookmarkView",
+    component: () => import("@/views/TheCocktailDescBookmarkView.vue"),
+  },
 ];
 
 const router = createRouter({

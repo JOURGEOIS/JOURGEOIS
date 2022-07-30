@@ -42,6 +42,6 @@ const tagColor = computed((): string => {
 </script>
 <style scoped lang="scss">
 .tag-basic {
-  padding: 0.3em 0.6em;
+  padding: 0.3em 0.8em;
 }
 </style>

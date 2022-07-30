@@ -34,6 +34,7 @@ public class SearchController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         try {
+            // id로 바껴서 로직 하나 추가했습니다..
             String keyword = searchService.searchMaterialName(id);
             if (!email.equals("null") && !email.isEmpty()) {
                 this.redisService.setRecentKeyword(email, keyword);

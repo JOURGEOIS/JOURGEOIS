@@ -1,43 +1,45 @@
 <template>
-  <!-- slider value -->
-  <div class="filter-slider-value">
-    <div class="filter-slider-left-value" :style="leftThumbStyle">
-      {{ sliderLeft }}
+  <div class="cocktail-search-filter-slider-container">
+    <!-- slider value -->
+    <div class="cocktail-search-filter-slider-value">
+      <div class="filter-slider-left-value" :style="leftThumbStyle">
+        {{ sliderLeft }}
+      </div>
+      <div class="filter-slider-right-value" :style="rightThumbStyle">
+        {{ sliderRight }}
+      </div>
     </div>
-    <div class="filter-slider-right-value" :style="rightThumbStyle">
-      {{ sliderRight }}
-    </div>
-  </div>
-  <div class="cocktail-search-filter-slider">
-    <!-- 진짜 슬라이더 -->
-    <input
-      type="range"
-      id="slider-left"
-      max="30"
-      min="0"
-      v-model.number="sliderLeftValue"
-    />
-    <input
-      type="range"
-      id="slider-right"
-      max="30"
-      min="0"
-      v-model.number="sliderRightValue"
-    />
+    <div class="cocktail-search-filter-slider-input">
+      <!-- 진짜 슬라이더 -->
+      <input
+        type="range"
+        id="slider-left"
+        max="30"
+        min="0"
+        v-model.number="sliderLeftValue"
+      />
+      <input
+        type="range"
+        id="slider-right"
+        max="30"
+        min="0"
+        v-model.number="sliderRightValue"
+      />
 
-    <!-- 보이는 슬라이더 -->
-    <div class="filter-slider">
-      <div class="filter-slider-line"></div>
-      <div class="filter-slider-range" :style="rangeStyle"></div>
-      <div class="filter-slider-left" :style="leftThumbStyle"></div>
-      <div class="filter-slider-right" :style="rightThumbStyle"></div>
+      <!-- 보이는 슬라이더 -->
+      <div class="filter-slider">
+        <div class="filter-slider-line"></div>
+        <div class="filter-slider-range" :style="rangeStyle"></div>
+        <div class="filter-slider-left" :style="leftThumbStyle"></div>
+        <div class="filter-slider-right" :style="rightThumbStyle"></div>
+      </div>
     </div>
-  </div>
 
-  <!--슬라이더 범위  -->
-  <div class="cocktail-search-filter-slider-desc">
-    <p>0도</p>
-    <p>30도</p>
+    <!--슬라이더 범위  -->
+    <div class="cocktail-search-filter-slider-desc">
+      <p>0도</p>
+      <p>30도</p>
+    </div>
   </div>
 </template>
 
@@ -114,88 +116,96 @@ watch(sliderRightValue, () => {
 </script>
 
 <style scoped lang="scss">
-.cocktail-search-filter-slider {
+.cocktail-search-filter-slider-container {
   @include flex(column);
-  position: relative;
-  width: 95%;
-  input {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 8px;
-    background-color: black;
-    opacity: 0;
-    appearance: none;
-    pointer-events: none;
-
-    // 크롬
-    &::-webkit-slider-thumb {
-      z-index: 10;
-      width: 32px;
-      height: 32px;
-      background-color: black;
-      cursor: pointer;
-      appearance: none;
-      pointer-events: all;
-    }
-
-    // 파이어폭스
-    &::-moz-range-thumb {
-      z-index: 10;
-      width: 32px;
-      height: 32px;
-      background-color: black;
-      cursor: pointer;
-      appearance: none;
-      pointer-events: all;
-    }
-  }
-
-  .filter-slider {
-    position: absolute;
-    width: 100%;
-
-    .filter-slider-line {
+  gap: 32px;
+  align-items: center;
+  width: 100%;
+  .cocktail-search-filter-slider-input {
+    @include flex(column);
+    position: relative;
+    width: 95%;
+    input {
       position: absolute;
+      z-index: 1;
       width: 100%;
       height: 8px;
-      border-radius: 20px;
-      background-color: $white250;
+      background-color: black;
+      opacity: 0;
+      appearance: none;
+      pointer-events: none;
+
+      // 크롬
+      &::-webkit-slider-thumb {
+        z-index: 10;
+        width: 32px;
+        height: 32px;
+        background-color: black;
+        cursor: pointer;
+        appearance: none;
+        pointer-events: all;
+      }
+
+      // 파이어폭스
+      &::-moz-range-thumb {
+        z-index: 10;
+        width: 32px;
+        height: 32px;
+        background-color: black;
+        cursor: pointer;
+        appearance: none;
+        pointer-events: all;
+      }
     }
 
-    .filter-slider-range {
+    .filter-slider {
       position: absolute;
-      height: 8px;
-      background-color: $primary300;
-    }
+      width: 100%;
 
-    .filter-slider-left,
-    .filter-slider-right {
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      margin-top: -4px;
-      border-radius: 50%;
-      background-color: $primary-color;
+      .filter-slider-line {
+        position: absolute;
+        width: 100%;
+        height: 8px;
+        border-radius: 20px;
+        background-color: $white250;
+      }
+
+      .filter-slider-range {
+        position: absolute;
+        height: 8px;
+        background-color: $primary300;
+      }
+
+      .filter-slider-left,
+      .filter-slider-right {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        margin-top: -4px;
+        border-radius: 50%;
+        background-color: $primary-color;
+      }
     }
   }
-}
 
-.filter-slider-value {
-  position: relative;
-  width: 95.5%;
-  margin-bottom: 10px;
-  @include font($fs-md, $fw-medium);
+  // 깂
+  .cocktail-search-filter-slider-value {
+    position: relative;
+    width: 95.5%;
+    @include font($fs-md, $fw-medium);
 
-  div {
-    position: absolute;
+    div {
+      position: absolute;
+    }
   }
-}
 
-.cocktail-search-filter-slider-desc {
-  @include flex-xy(space-between, center);
-  width: 100%;
-  @include font($fs-md, $fw-medium);
-  color: $sub-color;
+  // 범위
+  .cocktail-search-filter-slider-desc {
+    @include flex-xy(space-between, center);
+    width: 100%;
+    margin-top: -16px;
+    @include font($fs-md, $fw-medium);
+    color: $sub-color;
+  }
 }
 </style>

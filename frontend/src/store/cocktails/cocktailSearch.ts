@@ -20,6 +20,7 @@ export interface CocktailSearchState {
   searchInputValue: string;
   recentSearchWords: string[];
   autoCompleteSearchWords: autoCompleteWords;
+  filterStatus: boolean;
 }
 
 export const cocktailSearch: Module<CocktailSearchState, RootState> = {
@@ -31,6 +32,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     recentSearchWords:
       JSON.parse(localStorage.getItem("recentSearchWords") || "[]") || [],
     autoCompleteSearchWords: { cocktails: [], ingredients: [], users: [] },
+    filterStatus: false,
   },
 
   getters: {

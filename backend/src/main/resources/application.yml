@@ -8,6 +8,9 @@ spring:
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
 #    username: root
 #    password: nh0455k8613!
+
+    username: root
+    password: 1q2w3e4r!@#
     hikari:
       auto-commit: false
       connection-test-query: SELECT 1

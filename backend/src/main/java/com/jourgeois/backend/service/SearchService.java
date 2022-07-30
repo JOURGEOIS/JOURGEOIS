@@ -48,11 +48,17 @@ public class SearchService {
 
     public List<SearchKeywordDto> searchKeywords(String name){
         List<SearchKeywordDto> list = new ArrayList<>();
-        searchKeywordRepository.findByNameKrContainingOrderByNameKr(name).forEach(data ->
+        searchKeywordRepository.findTop5ByNameKrContainingOrderByNameKr(name).forEach(data ->
                 list.add(SearchKeywordDto.builder()
+                        .id(data.getId())
                         .name(data.getName())
                         .nameKr(data.getNameKr())
                         .type(data.getType()).build()));
+        memberRepository.findTop10ByNicknameContainingOrderByNickname(name).forEach(data ->
+                list.add(SearchKeywordDto.builder()
+                        .id(data.getUid())
+                        .nameKr(data.getNickname())
+                        .type("계정").build()));
         return list;
     }
 }

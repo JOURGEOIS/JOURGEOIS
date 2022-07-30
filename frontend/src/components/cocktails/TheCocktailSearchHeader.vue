@@ -73,4 +73,8 @@ const clickCloseIcon = () => {
     @include font($fs-xl);
   }
 }
+
+.material-icons {
+  cursor: pointer;
+}
 </style>

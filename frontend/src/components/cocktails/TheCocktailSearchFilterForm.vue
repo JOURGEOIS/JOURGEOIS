@@ -2,6 +2,7 @@
   <form>
     <div>
       <div class="cocktail-search-filter-radio">
+        <!-- 알코올, 논 알코올 여부 -->
         <label for="filter-alcohol">
           알코올
           <div>
@@ -33,7 +34,10 @@
     <div v-show="statusAlcohol">
       <p>도수</p>
       <!-- 멀티 레인지 슬라이더 -->
-      <the-cocktail-search-filter-slider></the-cocktail-search-filter-slider>
+      <the-cocktail-search-filter-slider
+        v-model:left-value="leftValue"
+        v-model:right-value="rightValue"
+      ></the-cocktail-search-filter-slider>
       <div class="class-search-filter-alcohol-info">
         <div>
           <p>
@@ -47,19 +51,66 @@
         </div>
       </div>
     </div>
-    <div>
-      <p class="cocktail-search-filter-materials">재료</p>
+    <!-- 재료 선택 -->
+    <div class="cocktail-search-filter-ingredients">
+      <p>재료</p>
+      <div class="cocktail-search-filter-category">
+        <div v-for="(image, index) in images" :key="`-${index}`">
+          <round-image
+            :round-image="{ image: image.image, width: image.width }"
+          ></round-image>
+          <p>{{ image.name }}</p>
+        </div>
+      </div>
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
 import TheCocktailSearchFilterSlider from "@/components/cocktails/TheCocktailSearchFilterSlider.vue";
+import RoundImage from "@/components/basics/RoundImage.vue";
 import { ref } from "vue";
+import { ingredients } from "../../assets/filter";
 
+// 알코올 / 논 알코올 value
 const statusAlcohol = ref(true);
 const trueValue = ref(true);
 const falseValue = ref(false);
+
+// 멀티 레인지 슬라이더 value
+const leftValue = ref(6);
+const rightValue = ref(15);
+
+// 재료 선택
+interface ingredients {
+  image: string;
+  width: string;
+  name: string;
+}
+
+const images: ingredients[] = [
+  {
+    image: "https://www.thecocktaildb.com/images/ingredients/Gin-Small.png",
+    width: "96px",
+    name: "술",
+  },
+  {
+    image: "https://www.thecocktaildb.com/images/ingredients/Kahlua-Small.png",
+    width: "96px",
+    name: "리큐르",
+  },
+  {
+    image:
+      "https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png",
+    width: "96px",
+    name: "음료수",
+  },
+  {
+    image: "https://www.thecocktaildb.com/images/ingredients/lemon-Small.png",
+    width: "96px",
+    name: "추가 재료",
+  },
+];
 </script>
 
 <style scoped lang="scss">
@@ -70,7 +121,7 @@ form {
 
   > div {
     @include flex(column);
-    gap: 16px;
+    gap: 24px;
     width: 100%;
 
     input[type="radio"] {
@@ -120,6 +171,17 @@ form {
             font-size: 16px;
           }
         }
+      }
+    }
+    .cocktail-search-filter-category {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(50%, auto));
+      row-gap: 32px;
+
+      div {
+        @include flex(column);
+        align-items: center;
+        @include font($fs-main, $fw-medium);
       }
     }
   }

@@ -15,6 +15,9 @@ public class Material {
     @Id
     @Column(name = "m_id")
     private Long id;
+
+    @Column(name = "m_abv")
+    private int abv;
     @Column(name = "m_name")
     private String name;
     @Column(name = "m_name_kr")
@@ -23,6 +26,8 @@ public class Material {
     private String category;
     @Column(name = "m_img")
     private String img;
+    @Column(name = "m_type")
+    private String type;
 
     @OneToMany(mappedBy = "material")
     private List<CocktailToMaterial> cocktailToMaterials = new ArrayList<>();

@@ -53,15 +53,16 @@ public class SearchStatistics {
             searchTrend.setKeywords(cur_hot);
             searchTrend.setDelta(new ArrayList());
             System.out.println("현재 로그 조회 성공");
-                    SearchTrendDto prev = this.redisService.getHotKeywords("cur");
 //            System.out.println(prev.getFrom());
+            SearchTrendDto prev = redisService.getHotKeywords("cur");
+
             System.out.println("이전 로그 조회 성공");
             if (prev == null) {
                 System.out.println("통계가 없음");
                 for (int i = 0; i < cur_hot.size(); i++)
                     searchTrend.getDelta().add(Integer.valueOf(-1));
-                this.redisService.setHotKeywords("prev", searchTrend);
-                this.redisService.setHotKeywords("cur", searchTrend);
+                redisService.setHotKeywords("prev", searchTrend);
+                redisService.setHotKeywords("cur", searchTrend);
             } else {
                 this.redisService.setHotKeywords("prev", prev);
                 List<SearchHistoryVO> prev_hot = prev.getKeywords();
@@ -78,7 +79,7 @@ public class SearchStatistics {
                     }
                 }
                 System.out.println(searchTrend.getFrom());
-                this.redisService.setHotKeywords("cur", searchTrend);
+                redisService.setHotKeywords("cur", searchTrend);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

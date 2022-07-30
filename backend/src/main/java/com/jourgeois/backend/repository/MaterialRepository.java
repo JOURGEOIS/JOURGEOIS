@@ -1,7 +1,11 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.domain.Cocktail;
+import com.jourgeois.backend.domain.Material;
 import org.springframework.data.jpa.repository.JpaRepository;
-public interface MaterialRepository extends JpaRepository<Cocktail, String> {
+
+import java.util.Optional;
+
+public interface MaterialRepository extends JpaRepository<Material, String> {
+    Optional<Material> findById(Long id);
 
 }

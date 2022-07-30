@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CocktailRepository extends JpaRepository<Cocktail, String> {
-    List<Cocktail> findByNameKRContainingOrderByNameKR(String name, Pageable pageable);
+
     Optional<Cocktail> findById(Long id);
     Optional<Cocktail> deleteById(Long id);
 
@@ -23,11 +23,14 @@ public interface CocktailRepository extends JpaRepository<Cocktail, String> {
     @Query("SELECT m.name, m.img FROM Cocktail c JOIN CocktailToMaterial cm ON c.id = cm.cocktail.id JOIN Material m ON cm.material.id = m.id WHERE c.id = :id")
     Optional<ArrayList<String>> findAllMaterialsByCocktailId(@Param("id") Long id);
 
-    @Query(nativeQuery = true, value="select * from cocktail where c_name_kr LIKE CONCAT('%',:name,'%') union select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id in (select m_id from material where m_name_kr LIKE CONCAT('%',:username,'%')))")
-    List<Cocktail> findCocktailBySearch(@Param("name") String name);
+    @Query(nativeQuery = true, value="select * from cocktail where c_name_kr LIKE CONCAT('%',:name,'%') union " +
+            "select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id in " +
+            "(select m_id from material where m_name_kr LIKE CONCAT('%',:name,'%'))) order by c_name_kr limit 10 offset :page")
+    List<Cocktail> findCocktailBySearch(@Param("name") String name, @Param("page") int page);
 
-//    @Query("SELECT u.username FROM User u WHERE u.username LIKE CONCAT('%',:username,'%')")
-//    List<String> findUsersWithPartOfName(@Param("username") String username);
+    @Query(nativeQuery = true, value = "select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id=:id)" +
+            " order by c_name_kr limit 10 offset :page")
+    List<Cocktail> findByMaterialContaining(@Param("id") Long id, @Param("page") int page);
 
 //    @Query("UPDATE Cocktail c SET c.name = :name, c.nameKR = :nameKR, c.alcohol = :alcohol, c.cupId = :cupId," +
 //            " c.tag = :tag, c.baseLiquor = :baseLiquor, c.category = :category, c.recipe = :recipe WHERE c.id = :id")

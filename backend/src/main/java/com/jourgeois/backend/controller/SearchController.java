@@ -17,9 +17,7 @@ public class SearchController {
 
     public final CocktailService cocktailService;
     public final SearchService searchService;
-
     private final RedisService redisService;
-
     private final SearchHistoryService searchHistoryService;
 
     SearchController(CocktailService cocktailService, SearchService searchService, RedisService redisService, SearchHistoryService searchHistoryService){
@@ -30,22 +28,42 @@ public class SearchController {
     }
 
     @GetMapping(value="/cocktail")
-    public ResponseEntity searchByKeyword(@RequestHeader(value = "email") String email, @RequestParam(value = "keyword") String keyword,
-                                          @PageableDefault(size=10, sort="name", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity searchByKeyword(@RequestHeader(value = "email") String email, @RequestParam(value = "id") Long id,
+                                          @RequestParam(value="page") int page) {
+        if (id==0) {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+        try {
+            String keyword = searchService.searchMaterialName(id);
+            if (!email.equals("null") && !email.isEmpty()) {
+                this.redisService.setRecentKeyword(email, keyword);
+            }
+            this.searchHistoryService.writeSearchHistory(keyword);
+        } catch (Exception e) {
+            System.out.println("검색 로그 기록 실패");
+        }
+        return new ResponseEntity<>(searchService.searchByCocktail(id, page), HttpStatus.CREATED);
+    }
+
+    @GetMapping(value="/cocktailall")
+    public ResponseEntity searchByKeywordAll(@RequestHeader(value = "email") String email, @RequestParam(value = "keyword") String keyword,
+                                             @RequestParam(value = "page") int page) {
         System.out.println(keyword);
         if (keyword.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         try {
-            this.redisService.setRecentKeyword(email, keyword);
+            if (!email.equals("null") && !email.isEmpty()) {
+                this.redisService.setRecentKeyword(email, keyword);
+            }
             this.searchHistoryService.writeSearchHistory(keyword);
         } catch (Exception e) {
             System.out.println("검색 로그 기록 실패");
         }
-        return new ResponseEntity<>(searchService.searchByCocktail(keyword, pageable), HttpStatus.CREATED);
+        return new ResponseEntity<>(searchService.searchByCocktailAll(keyword, page), HttpStatus.CREATED);
     }
 
-    @GetMapping(value="/users")
+    @GetMapping(value="/user")
     public ResponseEntity searchByUsers(@RequestParam(value = "keyword") String keyword,
                               @PageableDefault(size=10, sort="name", direction = Sort.Direction.ASC) Pageable pageable){
         System.out.println(keyword);

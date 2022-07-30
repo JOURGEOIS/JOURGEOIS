@@ -17,6 +17,10 @@ public class Material {
     private Long id;
     @Column(name = "m_name")
     private String name;
+    @Column(name = "m_name_kr")
+    private String nameKR;
+    @Column(name = "m_category")
+    private String category;
     @Column(name = "m_img")
     private String img;
 

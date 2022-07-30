@@ -31,6 +31,8 @@ public class Cocktail {
     private String category;
     @Column(name = "c_recipe")
     private String recipe;
+    @Column(name = "c_img")
+    private String img;
     @OneToMany(mappedBy = "cocktail")
     private List<CocktailToMaterial> cocktailToMaterials = new ArrayList<>();
 

@@ -3,9 +3,16 @@ import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
 
+interface autoCompleteWord {
+  name: string;
+  nameKr: string;
+  type: string;
+}
+
 export interface CocktailSearchState {
   searchInputValue: string;
   recentSearchWords: string[];
+  autoCompleteSearchWords: autoCompleteWord[];
 }
 
 export const cocktailSearch: Module<CocktailSearchState, RootState> = {
@@ -16,6 +23,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     searchInputValue: "",
     recentSearchWords:
       JSON.parse(localStorage.getItem("recentSearchWords") || "[]") || [],
+    autoCompleteSearchWords: [],
   },
 
   getters: {
@@ -24,6 +32,9 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
 
     // * 최근 검색어 string[]
     getRecentSearchWords: (state) => state.recentSearchWords,
+
+    // * 검색 자동완성 autoCompleteWord[]
+    getAutoCompleteSearchWords: (state) => state.autoCompleteSearchWords,
   },
 
   mutations: {
@@ -35,6 +46,11 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // * 최근 검색어 state 저장
     SET_RECENT_SEARCH_WORDS: (state, words) => {
       state.recentSearchWords = words;
+    },
+
+    // * 검색 자동완성 state 저장
+    SET_AUTO_COMPLETE_SEARCH_WORDS: (state, words) => {
+      state.autoCompleteSearchWords = words;
     },
 
     // * 최근 검색어 state 삭제
@@ -66,6 +82,23 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     removeRecentSearchWords: ({ commit }) => {
       localStorage.removeItem("recentSearchWords");
       commit("REMOVE_RECENT_SEARCH_WORDS");
+    },
+
+    // * 검색 자동완성 list 모두 state 저장
+    // 해당 단어를 포함하는 칵테일, 재료, 유저 목록 호출
+    setAutoCompleteSearchWords: ({ commit }, keyword: string) => {
+      axios({
+        method: "get",
+        url: api.lookups.autoComplete(),
+        params: {
+          keyword,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          commit("SET_AUTO_COMPLETE_SEARCH_WORDS", res.data);
+        })
+        .catch((err) => console.error(err.response));
     },
 
     // * [검색 결과] 칵테일

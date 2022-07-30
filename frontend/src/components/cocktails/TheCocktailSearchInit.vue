@@ -76,7 +76,6 @@ const clickTag = (keyword: string) => {
 <style scoped lang="scss">
 .initial-search-section {
   .search-article {
-    padding: 20px 0;
     .search-header {
       @include flex-xy(space-between, center);
     }

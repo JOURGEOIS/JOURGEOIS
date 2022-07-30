@@ -29,5 +29,6 @@ export default {
   lookups: {
     cocktail: () => HOST + LOOKUP + "cocktail",
     users: () => HOST + LOOKUP + "users",
+    autoComplete: () => HOST + LOOKUP + "search",
   },
 };

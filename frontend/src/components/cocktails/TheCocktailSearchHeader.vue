@@ -40,7 +40,7 @@ const searchInputData: object = reactive({
 // 검색 창 섹션
 // filter 아이콘 클릭
 const clickFilterIcon = () => {
-  alert("필터창 올리기");
+  store.dispatch("cocktailSearch/toggleFilter", true);
 };
 
 // x 버튼 클릭

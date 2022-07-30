@@ -17,12 +17,12 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     },
   },
   mutations: {
-    SET_CURRENT_TAB: (state, value) => {
+    SET_CURRENT_TAB: (state, value: number) => {
       state.currentTab = value;
     },
   },
   actions: {
-    changeCurrentTab: ({ commit }, value) => {
+    changeCurrentTab: ({ commit }, value: number) => {
       commit("SET_CURRENT_TAB", value);
     },
   },

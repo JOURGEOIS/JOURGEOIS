@@ -5,12 +5,13 @@
       칵테일 상세 정보
     </header-basic>
 
-    <!-- 칵테일 디테일 -->
+    <!-- 칵테일 상세 페이지: 상단부분 -->
     <the-cocktail-desc-detail></the-cocktail-desc-detail>
 
-    <!-- 칵테일 동적 컴포넌트 -->
+    <!-- 칵테일 상세 페이지: 탭-->
     <section class="cocktail-desc-section">
       <hr class="cocktail-desc-hr" />
+      <!-- 탭: 탭을 선택하면 해당 탭으로 컴포넌트를 바꾼다.  -->
       <div class="cocktail-desc-tab">
         <div class="cocktail-desc-tab-recipe" :class="`index-${index}`">
           <p @click="clickRecipeTab">레시피</p>
@@ -24,6 +25,7 @@
           <span>99+</span>
         </div>
       </div>
+      <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
       <keep-alive>
         <component :is="currentComponent"></component>
       </keep-alive>
@@ -34,7 +36,7 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCocktailDescDetail from "@/components/cocktails/TheCocktailDescDetail.vue";
-import { ref, onBeforeMount, defineAsyncComponent, computed } from "vue";
+import { onBeforeMount, defineAsyncComponent, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
@@ -84,6 +86,10 @@ onBeforeMount(() => {
     width: 100%;
     margin-top: 24px;
 
+    @media #{$tablet} {
+      gap: 40px;
+    }
+
     .cocktail-desc-hr {
       width: 100%;
       height: 1px;
@@ -98,6 +104,14 @@ onBeforeMount(() => {
         position: relative;
         width: 72px;
         border-bottom: 2px solid $white400;
+
+        @media #{$tablet} {
+          width: 96px;
+        }
+
+        @media #{$pc} {
+          width: 120px;
+        }
 
         p {
           color: $white400;
@@ -145,5 +159,8 @@ onBeforeMount(() => {
       }
     }
   }
+}
+.cocktail-desc-bookmark-use {
+  cursor: pointer;
 }
 </style>

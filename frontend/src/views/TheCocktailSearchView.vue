@@ -27,7 +27,10 @@ import TheAutoComplete from "@/components/cocktails/TheAutoComplete.vue";
 import TheCocktailSearchButtonSection from "@/components/cocktails/TheCocktailSearchButtonSection.vue";
 import TheCocktailSearchFilter from "@/components/cocktails/TheCocktailSearchFilter.vue";
 import { computed, onUnmounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import TheSearchResultCocktailVue from "../components/cocktails/TheSearchResultCocktail.vue";
+const router = useRouter();
 const store = useStore();
 
 const searchInputValue = computed(() => {
@@ -36,6 +39,11 @@ const searchInputValue = computed(() => {
 
 const searchComplete = () => {
   store.dispatch("cocktailSearch/setRecentSearchWords");
+  // 검색 결과 view로 이동
+  router.push({
+    name: "TheSearchResultView",
+    params: { searchValue: searchInputValue.value },
+  });
 };
 
 const filterStatus = computed(

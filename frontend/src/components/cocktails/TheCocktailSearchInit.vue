@@ -29,10 +29,10 @@
     <!-- 인기 검색어 -->
     <article class="search-article">
       <h1 class="title1">인기 검색어</h1>
-      <div class="word-container">
+      <div class="word-list">
         <tag-basic-event
           :tagStyle="['sub', '12px']"
-          v-for="(word, idx) in popularSearchWords"
+          v-for="(word, idx) in popularSearchWords.keywords"
           :key="idx"
           >{{ word }}</tag-basic-event
         >
@@ -43,8 +43,10 @@
 
 <script setup lang="ts">
 import TagBasicEvent from "@/components/basics/TagBasicEvent.vue";
-import { computed, toRefs, reactive } from "vue";
+import { computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+const router = useRouter();
 const store = useStore();
 
 // 최근 검색어
@@ -64,18 +66,21 @@ const clickDeleteIcon = () => {
 
 // 태그 눌렀을 때 이동
 const clickTag = (keyword: string) => {
-  const data: object = {
-    keyword,
-    page: 0,
-  };
-  // 키워드로 칵테일 검색 0번 페이지
-  store.dispatch("cocktailSearch/searchKeywordCocktail", data);
+  router.push({
+    name: "TheSearchResultView",
+    params: { searchValue: keyword },
+  });
 };
+
+onMounted(() => {
+  store.dispatch("cocktailSearch/setPopularSearchWords");
+});
 </script>
 
 <style scoped lang="scss">
 .initial-search-section {
   .search-article {
+    padding-bottom: 50px;
     .search-header {
       @include flex-xy(space-between, center);
     }

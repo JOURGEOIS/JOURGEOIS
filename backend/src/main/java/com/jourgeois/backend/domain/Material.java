@@ -12,7 +12,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 public class Material {
-    @Id @GeneratedValue
+    @Id
     @Column(name = "m_id")
     private Long id;
 

@@ -12,18 +12,18 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 public class Cocktail {
-    @Id @GeneratedValue
-    @Column(name = "c_id")
+    @Id
+    @Column(name = "c_id", unique = true)
     private Long id;
     @Column(name = "c_name")
     private String name;
+
+    @Column(name = "c_name_kr")
+    private String nameKR;
     @Column(name = "c_alcohol")
     private double alcohol;
     @Column(name = "c_cup_id")
     private int cupId;
-
-    @Column(name = "c_name_kr")
-    private String nameKr;
     @Column(name = "c_tag")
     private String tag;
     @Column(name = "c_base_liquor")

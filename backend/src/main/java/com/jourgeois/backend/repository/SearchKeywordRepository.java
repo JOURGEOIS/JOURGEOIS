@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SearchKeywordRepository extends JpaRepository<SearchKeyword, String> {
-    List<SearchKeyword> findByNameKrContainingOrderByNameKr(String name);
+    List<SearchKeyword> findTop5ByNameKrContainingOrderByNameKr(String name);
 }

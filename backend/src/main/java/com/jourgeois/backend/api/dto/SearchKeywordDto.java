@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SearchKeywordDto {
+    private Long id;
     private String name;
     private String nameKr;
     private String type;

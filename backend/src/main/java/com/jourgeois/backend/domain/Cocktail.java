@@ -17,6 +17,7 @@ public class Cocktail {
     private Long id;
     @Column(name = "c_name")
     private String name;
+
     @Column(name = "c_name_kr")
     private String nameKR;
     @Column(name = "c_alcohol")
@@ -29,8 +30,15 @@ public class Cocktail {
     private String baseLiquor;
     @Column(name = "c_category")
     private String category;
-    @Column(name = "c_recipe")
+    @Column(name = "c_recipe", length = 500)
     private String recipe;
+
+    @Column(name = "c_type")
+    private String type;
+
+    @Column(name = "c_img")
+    private String img;
+
     @OneToMany(mappedBy = "cocktail")
     private List<CocktailToMaterial> cocktailToMaterials = new ArrayList<>();
 

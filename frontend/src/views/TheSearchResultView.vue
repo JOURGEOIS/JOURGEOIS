@@ -41,6 +41,9 @@ onMounted(() => {
   // vuex의 state에 router params 저장
   store.dispatch("cocktailSearch/setSearchInputValue", keyword);
 
+  // keyword로 최초 칵테일정보 불러오기
+  store.dispatch("searchResult/setSearchCocktail", keyword);
+
   // keyword로 최초 유저정보 불러오기
   store.dispatch("searchResult/setSearchUser", keyword);
 });

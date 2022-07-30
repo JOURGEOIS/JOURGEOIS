@@ -12,12 +12,23 @@ export interface User {
   introduce: string | null;
 }
 
+export interface Cocktail {
+  id: number;
+  name: string;
+  cocktailImg: string | null;
+  alcohol: number | null;
+  baseLiquor: string;
+}
+
+// ! main State
 export interface SearchResultState {
   currentTab: number;
 
   // * 검색 결과
   searchUsers: User[];
   searchUserPage: number;
+  searchCocktails: Cocktail[];
+  searchCocktailPage: number;
 }
 
 export const searchResult: Module<SearchResultState, RootState> = {
@@ -29,6 +40,8 @@ export const searchResult: Module<SearchResultState, RootState> = {
     // * 검색 결과
     searchUsers: [],
     searchUserPage: 0,
+    searchCocktails: [],
+    searchCocktailPage: 0,
   },
 
   getters: {
@@ -38,6 +51,9 @@ export const searchResult: Module<SearchResultState, RootState> = {
     // * 검색어 유저 정보
     getSearchUsers: (state) => state.searchUsers,
     getSearchUserPage: (state) => state.searchUserPage,
+    // * 검색어 칵테일 정보
+    getSearchCocktails: (state) => state.searchCocktails,
+    getSearchCocktailPage: (state) => state.searchCocktailPage,
   },
 
   mutations: {
@@ -54,6 +70,16 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
     SET_SEARCH_USER_PAGE: (state, value) => {
       state.searchUserPage = value;
+    },
+
+    // * 검색어 칵테일 정보 저장
+    SET_SEARCH_COCKTAILS: (state, searchCocktails: Cocktail[]) => {
+      searchCocktails.forEach((user) => {
+        state.searchCocktails.push(user);
+      });
+    },
+    SET_SEARCH_COCKTAIL_PAGE: (state, value) => {
+      state.searchCocktailPage = value;
     },
   },
 
@@ -77,6 +103,27 @@ export const searchResult: Module<SearchResultState, RootState> = {
           commit("SET_SEARCH_USER_PAGE", state.searchUserPage + 1);
           // 최대 10개 유저 정보 리스트에 추가
           commit("SET_SEARCH_USERS", res.data);
+        })
+        .catch((err) => {
+          console.error(err.response);
+        });
+    },
+
+    // * 검색어 Cocktail 검색결과
+    setSearchCocktail: ({ commit, state }, keyword: string) => {
+      axios({
+        url: api.lookups.cocktailall(),
+        method: "GET",
+        params: {
+          keyword,
+          page: state.searchCocktailPage,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          commit("SET_SEARCH_COCKTAIL_PAGE", state.searchCocktailPage + 1);
+          // 최대 10개 칵테일 정보 리스트에 추가
+          commit("SET_SEARCH_COCKTAILS", res.data);
         })
         .catch((err) => {
           console.error(err.response);

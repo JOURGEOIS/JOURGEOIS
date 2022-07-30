@@ -32,10 +32,8 @@ public class Cocktail {
     private String category;
     @Column(name = "c_recipe", length = 500)
     private String recipe;
-
     @Column(name = "c_type")
     private String type;
-
     @Column(name = "c_img")
     private String img;
 

@@ -18,7 +18,6 @@ public class Cup {
     private Long id;
     @Column(name = "c_name")
     private String name;
-
     @Column(name = "c_name_kr")
-    private String nameKr;
+    private String nameKR;
 }

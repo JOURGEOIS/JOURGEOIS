@@ -85,6 +85,6 @@ public class SearchService {
 
     public String searchMaterialName(Long id){
         Material material = materialRepository.findById(id).orElseThrow(() -> new NoSuchElementException("찾는 재료가 없음"));
-        return material.getNameKr();
+        return material.getNameKR();
     }
 }

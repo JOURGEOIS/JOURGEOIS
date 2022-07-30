@@ -1,15 +1,12 @@
 <template>
   <section class="auto-complete-section">
     <h1 class="title1">이걸 찾으시나요?</h1>
-    <article class="no-content" v-if="!setAutoCompleteSearchWords.length">
+    <article class="no-content" v-if="!autoCompleteSearchWords.length">
       검색 결과가 없습니다.
     </article>
-    <article
-      class="auto-complete-list"
-      v-if="setAutoCompleteSearchWords.length"
-    >
+    <article class="auto-complete-list" v-if="autoCompleteSearchWords.length">
       <the-auto-complete-item
-        v-for="(item, idx) in setAutoCompleteSearchWords"
+        v-for="(item, idx) in autoCompleteSearchWords"
         :key="idx"
         :data="item"
       ></the-auto-complete-item>
@@ -21,7 +18,6 @@
 import TheAutoCompleteItem from "@/components/cocktails/TheAutoCompleteItem.vue";
 import { reactive, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
-import { searchAutoComplete } from "../../repositories/lookup";
 const store = useStore();
 
 const searchInputValue = computed(() => {
@@ -29,9 +25,14 @@ const searchInputValue = computed(() => {
 });
 
 // * 검색 자동완성 리스트
-const setAutoCompleteSearchWords = computed(() => {
-  return store.getters["cocktails/setAutoCompleteSearchWords"];
+const autoCompleteSearchWords = computed(() => {
+  return store.getters["cocktails/getAutoCompleteSearchWords"];
 });
+
+// * 검색 자동완성 리스트 추가
+const setAutoCompleteSearchWords = (keyword: string) => {
+  store.dispatch("cocktailSearch/setAutoCompleteSearchWords", keyword);
+};
 
 // * 검색 자동완성 Debounce
 let debounce: any;
@@ -42,8 +43,7 @@ watchEffect(() => {
     clearTimeout(debounce);
   }
   debounce = setTimeout(async () => {
-    const resList = await searchAutoComplete(searchInputValue.value);
-    console.log(resList);
+    setAutoCompleteSearchWords(searchInputValue.value);
   }, 200);
 });
 </script>

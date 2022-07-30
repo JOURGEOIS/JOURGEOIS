@@ -5,10 +5,12 @@
         <!-- 검색 창 섹션 -->
         <the-cocktail-search-header></the-cocktail-search-header>
         <!-- 처음 보이는 공간 -->
-        <the-cocktail-search-init></the-cocktail-search-init>
+        <the-cocktail-search-init
+          v-if="!searchInputValue"
+        ></the-cocktail-search-init>
 
         <!-- 자동완성 -->
-        <section class="auto-complete-section"></section>
+        <the-auto-complete v-if="searchInputValue"></the-auto-complete>
 
         <!-- 검색 버튼 구역 -->
         <the-cocktail-search-button-section></the-cocktail-search-button-section>
@@ -20,10 +22,15 @@
 <script setup lang="ts">
 import TheCocktailSearchHeader from "@/components/cocktails/TheCocktailSearchHeader.vue";
 import TheCocktailSearchInit from "@/components/cocktails/TheCocktailSearchInit.vue";
+import TheAutoComplete from "@/components/cocktails/TheAutoComplete.vue";
 import TheCocktailSearchButtonSection from "@/components/cocktails/TheCocktailSearchButtonSection.vue";
 import { computed, onUnmounted } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
+
+const searchInputValue = computed(() => {
+  return store.getters["cocktailSearch/getSearchInputValue"];
+});
 
 const searchComplete = () => {
   store.dispatch("cocktailSearch/setRecentSearchWords");

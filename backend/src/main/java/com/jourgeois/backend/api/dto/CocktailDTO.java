@@ -8,7 +8,6 @@ import java.util.ArrayList;
 @Builder
 @ToString
 public class CocktailDTO {
-
     private String id;
     private String name;
     private String nameKR;

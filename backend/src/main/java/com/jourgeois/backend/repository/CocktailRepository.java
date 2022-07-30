@@ -18,9 +18,9 @@ public interface CocktailRepository extends JpaRepository<Cocktail, String> {
     @Query("SELECT c.id, c.name, c.nameKR, c.alcohol, c.cupId, c.tag, c.baseLiquor, c.category, c.recipe FROM Cocktail c WHERE c.id = :id")
     Optional<String> findCocktailById(@Param("id") Long id);
 
-    @Query("SELECT cp.nameKr FROM Cocktail c JOIN Cup cp ON c.cupId = cp.id")
+    @Query("SELECT cp.nameKR FROM Cocktail c JOIN Cup cp ON c.cupId = cp.id WHERE c.id = :id")
     Optional<String> findCocktailCupById(@Param("id") Long id);
-    @Query("SELECT m.name, m.img FROM Cocktail c JOIN CocktailToMaterial cm ON c.id = cm.cocktail.id JOIN Material m ON cm.material.id = m.id WHERE c.id = :id")
+    @Query("SELECT m.nameKR, m.img FROM Cocktail c JOIN CocktailToMaterial cm ON c.id = cm.cocktail.id JOIN Material m ON cm.material.id = m.id WHERE c.id = :id")
     Optional<ArrayList<String>> findAllMaterialsByCocktailId(@Param("id") Long id);
 
 //    @Query("UPDATE Cocktail c SET c.name = :name, c.nameKR = :nameKR, c.alcohol = :alcohol, c.cupId = :cupId," +

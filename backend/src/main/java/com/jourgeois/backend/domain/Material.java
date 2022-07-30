@@ -20,15 +20,12 @@ public class Material {
     private int abv;
     @Column(name = "m_name")
     private String name;
-
     @Column(name = "m_name_kr")
-    private String nameKr;
-    @Column(name = "m_img")
-    private String img;
-
+    private String nameKR;
     @Column(name = "m_category")
     private String category;
-
+    @Column(name = "m_img")
+    private String img;
     @Column(name = "m_type")
     private String type;
 

@@ -20,17 +20,17 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import TheLoginForm from "@/components/accounts/TheLoginForm.vue";
-import TheSocialLogin from "@/components/accounts/TheSocialLogin.vue";
-import FailurePopUp from "@/components/modals/FailurePopUp.vue";
-import { useStore } from "vuex";
-import { computed } from "vue";
-const store = useStore();
+import HeaderBasic from '@/components/basics/HeaderBasic.vue'
+import TheLoginForm from '@/components/accounts/TheLoginForm.vue'
+import TheSocialLogin from '@/components/accounts/TheSocialLogin.vue'
+import FailurePopUp from '@/components/modals/FailurePopUp.vue'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+const store = useStore()
 
 const loginFailModalStatus = computed(
-  () => store.getters["account/getLoginFailModalStatus"]
-);
+  () => store.getters['account/getLoginFailModalStatus'],
+)
 </script>
 
 <style scoped lang="scss">

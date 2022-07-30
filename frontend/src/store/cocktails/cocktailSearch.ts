@@ -3,17 +3,23 @@ import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
 
-interface autoCompleteWord {
+export interface autoCompleteWord {
+  id: number;
   name: string;
   nameKr: string;
   type: string;
 }
 
+export interface autoCompleteWords {
+  cocktails: autoCompleteWord[];
+  ingredients: autoCompleteWord[];
+  users: autoCompleteWord[];
+}
+
 export interface CocktailSearchState {
   searchInputValue: string;
   recentSearchWords: string[];
-  autoCompleteSearchWords: autoCompleteWord[];
-  filterStatus: boolean;
+  autoCompleteSearchWords: autoCompleteWords;
 }
 
 export const cocktailSearch: Module<CocktailSearchState, RootState> = {
@@ -24,8 +30,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     searchInputValue: "",
     recentSearchWords:
       JSON.parse(localStorage.getItem("recentSearchWords") || "[]") || [],
-    autoCompleteSearchWords: [],
-    filterStatus: false,
+    autoCompleteSearchWords: { cocktails: [], ingredients: [], users: [] },
   },
 
   getters: {
@@ -96,7 +101,8 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
 
     // * 검색 자동완성 list 모두 state 저장
     // 해당 단어를 포함하는 칵테일, 재료, 유저 목록 호출
-    setAutoCompleteSearchWords: ({ commit }, keyword: string) => {
+    setAutoCompleteSearchWords: ({ commit }, keyword: string): void => {
+      if (!keyword) return;
       axios({
         method: "get",
         url: api.lookups.autoComplete(),
@@ -105,8 +111,25 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
-          commit("SET_AUTO_COMPLETE_SEARCH_WORDS", res.data);
+          const cocktails: autoCompleteWord[] = [];
+          const ingredients: autoCompleteWord[] = [];
+          const users: autoCompleteWord[] = [];
+          const autoCompleteWords = {
+            cocktails,
+            ingredients,
+            users,
+          };
+          // 타입별로 구분
+          res.data.forEach((word: autoCompleteWord) => {
+            if (word.type === "칵테일") {
+              autoCompleteWords.cocktails.push(word);
+            } else if (word.type === "재료") {
+              autoCompleteWords.ingredients.push(word);
+            } else if (word.type === "계정") {
+              autoCompleteWords.users.push(word);
+            }
+          });
+          commit("SET_AUTO_COMPLETE_SEARCH_WORDS", autoCompleteWords);
         })
         .catch((err) => console.error(err.response));
     },

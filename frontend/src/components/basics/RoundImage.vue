@@ -18,22 +18,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue'
 
 export interface roundImage {
-  image: string;
-  width: string;
+  image: string
+  width: string
 }
 
 const props = defineProps<{
-  roundImage: roundImage;
-}>();
+  roundImage: roundImage
+}>()
 
 const imageUrl = computed(() => {
-  return `url(${props.roundImage.image})`;
-});
+  return `url(${props.roundImage.image})`
+})
 
-const imageWidth = ref(props.roundImage.width);
+const imageWidth = ref(props.roundImage.width)
 </script>
 
 <style scoped lang="scss">

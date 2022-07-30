@@ -1,7 +1,7 @@
 <template>
   <div class="change-user-info-view">
     <!-- 헤더 -->
-    <header-basic :prev="true" :success="true" @prevClicked="$router.go(-1)">
+    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       회원 정보 수정
     </header-basic>
     <section>

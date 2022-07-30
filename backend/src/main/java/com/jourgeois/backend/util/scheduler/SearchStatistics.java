@@ -54,7 +54,7 @@ public class SearchStatistics {
             searchTrend.setDelta(new ArrayList());
             System.out.println("현재 로그 조회 성공");
                     SearchTrendDto prev = this.redisService.getHotKeywords("cur");
-            System.out.println(prev.getFrom());
+//            System.out.println(prev.getFrom());
             System.out.println("이전 로그 조회 성공");
             if (prev == null) {
                 System.out.println("통계가 없음");

@@ -25,12 +25,13 @@ public class SearchService {
     }
 
     public List<SearchCocktailDto> searchByCocktail(String name, Pageable pageable){
+        System.out.println("name" + name);
         List<SearchCocktailDto> list = new ArrayList<>();
-        cocktailRepository.findByNameContainingOrderByName(name, pageable).forEach(data ->
+        cocktailRepository.findByNameKRContainingOrderByNameKR(name, pageable).forEach(data ->
                 list.add(SearchCocktailDto.builder()
                 .id(data.getId())
-                .name(data.getName())
-                .alcohol(data.getAlcohol())
+                .name(data.getNameKR())
+//                .alcohol(data.getAlcohol())
                 .baseLiquor(data.getBaseLiquor()).build()));
         return list;
     }

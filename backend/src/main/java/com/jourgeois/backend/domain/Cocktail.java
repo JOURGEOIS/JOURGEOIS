@@ -17,13 +17,14 @@ public class Cocktail {
     private Long id;
     @Column(name = "c_name")
     private String name;
-
     @Column(name = "c_name_kr")
     private String nameKR;
     @Column(name = "c_alcohol")
     private double alcohol;
-    @Column(name = "c_cup_id")
-    private int cupId;
+//    @Column(name = "c_cup_id")
+    @ManyToOne
+    private Cup cupId;
+//    private int cupId;
     @Column(name = "c_tag")
     private String tag;
     @Column(name = "c_base_liquor")
@@ -40,14 +41,4 @@ public class Cocktail {
     @OneToMany(mappedBy = "cocktail")
     private List<CocktailToMaterial> cocktailToMaterials = new ArrayList<>();
 
-    public Cocktail(Long id, String name, double alcohol, int cupId, String tag, String baseLiquor, String category, String recipe) {
-        this.id = id;
-        this.name = name;
-        this.alcohol = alcohol;
-        this.cupId = cupId;
-        this.tag = tag;
-        this.baseLiquor = baseLiquor;
-        this.category = category;
-        this.recipe = recipe;
-    }
 }

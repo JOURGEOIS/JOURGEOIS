@@ -36,11 +36,13 @@ const searchInputValue = computed(() => {
 });
 
 onMounted(() => {
-  console.log(route.params.searchValue);
-  store.dispatch(
-    "cocktailSearch/setSearchInputValue",
-    route.params.searchValue
-  );
+  // router의 params를 keyword로 지정
+  const keyword = route.params.searchValue;
+  // vuex의 state에 router params 저장
+  store.dispatch("cocktailSearch/setSearchInputValue", keyword);
+
+  // keyword로 최초 유저정보 불러오기
+  store.dispatch("searchResult/setSearchUser", keyword);
 });
 
 // 탭 클릭

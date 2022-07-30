@@ -46,7 +46,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     getAutoCompleteSearchWords: (state) => state.autoCompleteSearchWords,
 
     // 필터 status
-    getFilterStatus: (state) => state.filterStatus,
+    // getFilterStatus: (state) => state.filterStatus,
   },
 
   mutations: {
@@ -72,7 +72,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
 
     // 필터 토글
     SET_FILTER_STATUS: (state, value: boolean) => {
-      state.filterStatus = value;
+      // state.filterStatus = value;
     },
   },
 

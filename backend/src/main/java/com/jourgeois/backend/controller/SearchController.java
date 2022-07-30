@@ -37,7 +37,9 @@ public class SearchController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         try {
-            this.redisService.setRecentKeyword(email, keyword);
+            if (!email.equals("null") && !email.isEmpty()) {
+                this.redisService.setRecentKeyword(email, keyword);
+            }
             this.searchHistoryService.writeSearchHistory(keyword);
         } catch (Exception e) {
             System.out.println("검색 로그 기록 실패");

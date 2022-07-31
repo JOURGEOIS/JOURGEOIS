@@ -1,13 +1,17 @@
+<!-- filter: container -->
 <template>
   <teleport to="body">
     <div class="cocktail-search-filter">
       <div class="cocktail-search-filter-container" :class="animation">
+        <!-- filter: header -->
         <div class="cocktail-search-filter-header">
           <p>재 설정</p>
           <p>필터</p>
           <span class="material-icons" @click="clickXIcon"> close </span>
         </div>
         <hr />
+
+        <!-- filter:form  -->
         <the-cocktail-search-filter-form></the-cocktail-search-filter-form>
       </div>
     </div>
@@ -16,7 +20,7 @@
 
 <script setup lang="ts">
 import TheCocktailSearchFilterForm from "@/components/cocktails/TheCocktailSearchFilterForm.vue";
-import { computed, ref } from "vue";
+import { computed, ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 

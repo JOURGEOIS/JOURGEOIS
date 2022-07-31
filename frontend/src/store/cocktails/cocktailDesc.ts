@@ -29,6 +29,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     getCurrentCocktailDataIngredients: (state) => {
       return state.currentCocktailData.materials;
     },
+
   },
   mutations: {
     SET_CURRENT_TAB: (state, value: number) => {
@@ -37,6 +38,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     SET_CURRENT_COCKTAIL_DATA: (state, value: cocktailData) => {
       state.currentCocktailData = value;
     },
+
   },
   actions: {
     changeCurrentTab: ({ commit }, value: number) => {

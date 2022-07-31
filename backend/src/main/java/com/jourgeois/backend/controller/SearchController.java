@@ -1,5 +1,6 @@
 package com.jourgeois.backend.controller;
 
+import com.jourgeois.backend.api.dto.SearchFilterDto;
 import com.jourgeois.backend.service.CocktailService;
 import com.jourgeois.backend.service.RedisService;
 import com.jourgeois.backend.service.SearchHistoryService;
@@ -87,6 +88,11 @@ public class SearchController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         return new ResponseEntity(searchService.searchKeywords(keyword), HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/filter")
+    public void filterCount(@RequestBody SearchFilterDto searchFilterDto){
+        System.out.println(searchFilterDto.toString());
     }
 
     @GetMapping({"recentkeyword"})

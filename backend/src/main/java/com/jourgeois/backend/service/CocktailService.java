@@ -1,5 +1,6 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.CocktailVO;
 import com.jourgeois.backend.api.dto.CocktailDTO;
 import com.jourgeois.backend.domain.Cocktail;
 import com.jourgeois.backend.domain.Material;
@@ -8,9 +9,7 @@ import com.jourgeois.backend.repository.MaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
@@ -35,16 +34,20 @@ public class CocktailService {
         }
 
     }
-    public CocktailDTO readCocktail(Long id) throws Exception {
-        String cocktailInfo = cocktailRepository.findCocktailById(id).orElseThrow(() -> new Exception("CocktailService.readCocktail.cInfo"));
-        String cupInfo = cocktailRepository.findCocktailCupById(id).orElseThrow(() -> new Exception("CocktailService.readCocktail.cupInfo"));
+    public CocktailVO readCocktail(Long id) throws Exception {
+        CocktailDTO cocktailInfo = cocktailRepository.findCocktailById(id).orElseThrow(() -> new Exception("CocktailService.readCocktail.cInfo"));
+        String cupInfo = cocktailRepository.findCocktailCupById(id).orElse("adassd");
         ArrayList<String> materialsInfo = cocktailRepository.findAllMaterialsByCocktailId(id).orElseThrow(() -> new Exception("CocktailService.readCocktail.materialsInfo"));
 
-        String[] parse = cocktailInfo.split(",");
+        System.out.println(cocktailInfo.getId());
+        System.out.println(cocktailInfo.getName());
+        System.out.println(cocktailInfo.getRecipe());
+        System.out.println(cocktailInfo.getTag());
 
-        CocktailDTO cocktailDTO = CocktailDTO.builder().id(parse[0]).name(parse[1]).nameKR(parse[2]).alcohol(parse[3])
-                .cupName(cupInfo).tag(parse[5]).baseLiquor(parse[6]).category(parse[7]).recipe(parse[8])
-                .materials(materialsInfo).build();
+        CocktailVO cocktailDTO = CocktailVO.builder().id(cocktailInfo.getId()).name(cocktailInfo.getName()).nameKR(cocktailInfo.getNameKR())
+                .alcohol(cocktailInfo.getAlcohol()).cupName(cupInfo).tag(cocktailInfo.getTag()).baseLiquor(cocktailInfo.getBaseLiquor())
+                .category(cocktailInfo.getCategory()).recipe(cocktailInfo.getRecipe()).img(cocktailInfo.getImg()).materials(materialsInfo).build();
+
         return cocktailDTO;
     }
 

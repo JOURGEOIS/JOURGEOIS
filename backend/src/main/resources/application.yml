@@ -26,7 +26,7 @@ spring:
         format_sql: true
         show_sql: true
   redis:
-    host: localhost
+    host: redis
     port: 6379
     password: 1q2w3e4r!@#
 #cloud:

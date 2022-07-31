@@ -41,7 +41,7 @@ public class SearchController {
                 this.redisService.setRecentKeyword(email, keyword);
             }
             System.out.println("keyword:"+keyword);
-            if(keyword.isEmpty()) {
+            if(!keyword.isEmpty() || keyword != null) {
                 this.searchHistoryService.writeSearchHistory(keyword);
             }
         } catch (Exception e) {

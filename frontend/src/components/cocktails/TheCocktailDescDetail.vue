@@ -6,7 +6,10 @@
       <p>{{ cocktailData.nameKR }}</p>
       <p>{{ cocktailData.name }}</p>
     </div>
-    <div class="image" :style="{backgroundImage: `url(${cocktailData.img})`}"></div>
+    <div
+      class="image"
+      :style="{ backgroundImage: `url(${cocktailData.img})` }"
+    ></div>
 
     <!-- 칵테일 태그 -->
     <div class="cocktail-desc-tag">
@@ -47,13 +50,15 @@
       <div>
         <span class="material-icons-outlined"> local_bar </span>
         <p>베이스 술</p>
-        <p> {{cocktailData.baseLiquor }}</p>
+        <p>
+          {{ cocktailData.baseLiquor ? cocktailData.baseLiquor : "무알콜" }}
+        </p>
       </div>
       <!-- 3. 도수 -->
       <div>
         <span class="material-icons-outlined"> bubble_chart </span>
         <p>도수</p>
-        <p> {{ cocktailData.alcohol ? cocktailData.alcohol : "무알코올"  }}</p>
+        <p>{{ cocktailData.alcohol ? cocktailData.alcohol : "0도" }}</p>
       </div>
     </div>
   </div>
@@ -77,23 +82,25 @@ const clickBookMark = () => {
 };
 
 // 칵테일 id
-const cocktailId = computed(()=> cocktailData.value.id)
-
+const cocktailId = computed(() => cocktailData.value.id);
 
 // 칵테일 태그
-const tags = computed ( ()=> cocktailData?.value?.tag?.split(','))
-const category = computed( ()=> cocktailData?.value?.category) 
+const tags = computed(() => cocktailData?.value?.tag?.split(","));
+const category = computed(() => cocktailData?.value?.category);
 
-let cocktailTags = computed(()=> {
-  if(tags?.value?.length < 4 ) {
-    const result = tags?.value?.concat(Array(category.value))
-    return result
+let cocktailTags = computed(() => {
+  if (tags?.value?.length < 4) {
+    if (!tags.value[0]) {
+      return Array(category.value);
+    } else {
+      const result = tags?.value?.concat(Array(category.value));
+      return result;
+    }
   } else {
-    const result = tags?.value?.slice(0, 3)?.concat(Array(category.value))
-    return result
+    const result = tags?.value?.slice(0, 3)?.concat(Array(category.value));
+    return result;
   }
-})
-
+});
 </script>
 
 <style scoped lang="scss">

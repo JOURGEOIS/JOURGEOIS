@@ -9,19 +9,20 @@
     </div>
 
     <!-- 칵테일 재료 나열 -->
-    <div class="cocktail-desc-materials-main" v-if="showMore">
+    <div class="cocktail-desc-materials-main" v-show="showMore">
       <div
         class="cocktail-desc-materials-item"
         v-for="(ingredient, index) in cocktailIngredientsPreview"
         :key="`main-${index}`"
       >
-        <round-image
-          :round-image="{ image: ingredient[1], width: '90px' }"
-        ></round-image>
+        <div
+          class="image"
+          :style="{ backgroundImage: `url(${ingredient[1]})` }"
+        ></div>
         <p>{{ ingredient[0] }}</p>
       </div>
     </div>
-    <div class="cocktail-desc-materials-main" v-if="!showMore">
+    <div class="cocktail-desc-materials-main" v-show="!showMore">
       <div
         class="cocktail-desc-materials-item"
         v-for="(ingredient, index) in cocktailIngredients"
@@ -48,34 +49,38 @@ const cocktailData = computed(
 );
 
 // 칵테일 재료 (더보기를 누른 경우, 모든 재료를 보여준다.)
-const cocktailIngredients: string[] = cocktailData?.value?.map((item: string) => {
-  return item?.split(",");
-});
+const cocktailIngredients = computed(() =>
+  cocktailData?.value?.map((item: string) => {
+    return item?.split(",");
+  })
+);
 
 // 더보기를 안눌렀을 경우, 화면 크기에 따라 보여주는 개수가 다르다.
 const cocktailIngredientsPreview = computed(() => {
   if (window.innerWidth < 768) {
-    return cocktailIngredients?.slice(0, 3);
+    return cocktailIngredients?.value?.slice(0, 3);
   } else {
-    return cocktailIngredients?.slice(0, 5);
+    return cocktailIngredients?.value?.slice(0, 5);
   }
 });
 
+// // 더보기 상태
+// interface showMore {
+//   value: boolean;
+// }
+// let showMore: showMore;
 
+const showMoreStatus = computed(() => {
+  if (window.innerWidth < 768 && cocktailData?.value?.length <= 3) {
+    return false;
+  } else if (window.innerWidth >= 768 && cocktailData?.value?.length <= 5) {
+    return false;
+  } else {
+    return true;
+  }
+});
 
-// 더보기 상태
-interface showMore {
-  value: boolean
-}
-let showMore: showMore; 
-
-if (window.innerWidth < 768 && cocktailData?.value?.length <=3) {
-  showMore =  ref(false)
-} else if ( window.innerWidth >=768 &&  cocktailData?.value?.length <=5){
-  showMore = ref(false)
-} else {
-  showMore = ref(true)
-}
+const showMore = ref(showMoreStatus.value);
 
 // 더보기 클릭
 const clickShowMore = () => {
@@ -126,5 +131,16 @@ const clickShowMore = () => {
       grid-template-columns: repeat(auto-fill, minmax(20%, auto));
     }
   }
+}
+
+.image {
+  width: 90px;
+  height: 90px;
+  border: 0;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-color: $white200;
+  background-position: center;
+  background-size: cover;
 }
 </style>

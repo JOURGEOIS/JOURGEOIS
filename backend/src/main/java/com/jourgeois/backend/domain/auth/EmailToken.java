@@ -1,34 +1,32 @@
 package com.jourgeois.backend.domain.auth;
 
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
-public class EmailToken {
-    @Id
-    private String id;
+@ToString
+public class EmailToken implements Serializable {
+
+    private String email;
 
     private String token;
-
-    private LocalDateTime expirationDate;
-
-    private boolean expired;
 
     private boolean verified;
 
     private Long memberId;
 
-    public String getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setId(String email) {
-        this.id = email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getToken() {
@@ -37,22 +35,6 @@ public class EmailToken {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public boolean isExpired() {
-        return expired;
-    }
-
-    public void setExpired(boolean expired) {
-        this.expired = expired;
     }
 
     public boolean isVerified() {

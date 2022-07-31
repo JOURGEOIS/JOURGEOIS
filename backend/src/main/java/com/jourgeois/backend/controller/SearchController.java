@@ -100,4 +100,13 @@ public class SearchController {
             return new ResponseEntity("데이터를 불러오는데 실패함", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping({"weeklyhotkeyword"})
+    public ResponseEntity weeklyHotKeywordList() {
+        try {
+            return new ResponseEntity(this.redisService.getWeeklyHotKeywords("cur"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("데이터를 불러오는데 실패함", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

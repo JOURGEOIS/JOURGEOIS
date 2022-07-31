@@ -25,4 +25,8 @@ public class SearchHistoryService {
     public List<SearchHistoryDto> getHotKeyword() {
         return this.searchHistoryRepository.getHotKeyword();
     }
+
+    public List<SearchHistoryDto> getWeeklyHotKeyword() {
+        return this.searchHistoryRepository.getWeeklyHotKeyword();
+    }
 }

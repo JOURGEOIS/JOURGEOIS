@@ -66,7 +66,6 @@ const personalInfo = computed(() => store.getters["personalInfo/getUserInfo"]);
 const name: string = personalInfo.value.name;
 const nickName: string = personalInfo.value.nickname;
 const image: string = personalInfo.value.profileImg;
-console.log(image);
 const introduce: string = personalInfo.value.introduce;
 
 // input: 이미지

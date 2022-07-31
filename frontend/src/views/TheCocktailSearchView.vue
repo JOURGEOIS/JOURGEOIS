@@ -26,15 +26,24 @@ import TheCocktailSearchInit from "@/components/cocktails/TheCocktailSearchInit.
 import TheAutoComplete from "@/components/cocktails/TheAutoComplete.vue";
 import TheCocktailSearchButtonSection from "@/components/cocktails/TheCocktailSearchButtonSection.vue";
 import TheCocktailSearchFilter from "@/components/cocktails/TheCocktailSearchFilter.vue";
-import { computed, onUnmounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import TheSearchResultCocktailVue from "../components/cocktails/TheSearchResultCocktail.vue";
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];
+});
+
+onMounted(() => {
+  if (route.params.searchValue) {
+    store.dispatch(
+      "cocktailSearch/setSearchInputValue",
+      route.params.searchValue
+    );
+  }
 });
 
 const searchComplete = () => {

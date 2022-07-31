@@ -2,7 +2,9 @@
   <div class="search-result-view">
     <div class="cocktail-search-container">
       <!-- 상단 입력창 및 필터 아이콘 섹션 -->
-      <the-cocktail-search-header></the-cocktail-search-header>
+      <the-cocktail-search-header
+        @click="clickSearchInput"
+      ></the-cocktail-search-header>
       <!-- 탭 섹션 -->
       <section class="tab-section">
         <div class="tab-cocktail" :class="`index-${index}`">
@@ -24,9 +26,10 @@
 
 <script setup lang="ts">
 import TheCocktailSearchHeader from "@/components/cocktails/TheCocktailSearchHeader.vue";
-import { computed, onMounted, defineAsyncComponent } from "vue";
-import { useRoute } from "vue-router";
+import { computed, onMounted, onUnmounted, defineAsyncComponent } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
@@ -38,6 +41,7 @@ const searchInputValue = computed(() => {
 onMounted(() => {
   // router의 params를 keyword로 지정
   const keyword = route.params.searchValue;
+
   // vuex의 state에 router params 저장
   store.dispatch("cocktailSearch/setSearchInputValue", keyword);
 
@@ -47,6 +51,19 @@ onMounted(() => {
   // keyword로 최초 유저정보 불러오기
   store.dispatch("searchResult/setSearchUser", keyword);
 });
+
+onUnmounted(() => {
+  // 유저 검색 정보 및 칵테일 검색 정보 제거
+  store.dispatch("searchResult/removeSearchResult");
+});
+
+// 입력창 클릭
+const clickSearchInput = () => {
+  router.push({
+    name: "TheCocktailSearchView",
+    params: { searchValue: searchInputValue.value },
+  });
+};
 
 // 탭 클릭
 const clickCocktailTab = () => store.dispatch("searchResult/setCurrentTab", 0);

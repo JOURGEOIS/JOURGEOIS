@@ -14,7 +14,7 @@ import RoundImage from "@/components/basics/RoundImage.vue";
 interface Cocktail {
   id: number;
   name: string;
-  cocktailImg: string | null;
+  img: string | null;
   alcohol: number | null;
   baseLiquor: string;
 }
@@ -23,11 +23,9 @@ const props = defineProps<{
   data: Cocktail;
 }>();
 
-console.log(props.data);
-
 // 유저 이미지
 const cocktailImage = {
-  image: props.data.cocktailImg,
+  image: props.data.img,
   width: "50px",
 };
 </script>

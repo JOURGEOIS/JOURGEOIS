@@ -20,6 +20,7 @@
         :placeholder="data.placeholder"
         :maxlength="data.maxlength"
         @input="emitValue"
+        @click="clickSearchInput"
         autocapitalize="off"
         autocomplete="off"
       />
@@ -36,9 +37,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
 
 // props.data의 타입을 정의한 인터페이스
-export interface dataObject {
+interface dataObject {
   button: boolean;
   id: string;
   placeholder: string;
@@ -70,6 +73,15 @@ const emit = defineEmits<{
 // 값이 변할 때 emit
 const emitValue = (event: Event) => {
   emit("update:modelValue", (event.target as HTMLInputElement).value);
+};
+
+const searchInputValue = computed(() => {
+  return store.getters["cocktailSearch/getSearchInputValue"];
+});
+
+// input click
+const clickSearchInput = () => {
+  console.log(searchInputValue.value);
 };
 
 // 닫기 버튼 누르면 emit

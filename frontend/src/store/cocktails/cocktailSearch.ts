@@ -129,7 +129,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // * 인기 검색어 불러오기
     setPopularSearchWords: ({ commit }) => {
       axios({
-        url: api.lookups.hotKeyword(),
+        url: api.lookups.weeklyHotKeyword(),
         method: "GET",
       })
         .then((res) => {
@@ -177,7 +177,6 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
 
     // * [검색 결과] 칵테일
     searchKeywordCocktail: ({ commit }, data) => {
-      console.log(data);
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",

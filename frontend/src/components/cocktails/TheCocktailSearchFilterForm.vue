@@ -1,3 +1,4 @@
+<!-- filter: form -->
 <template>
   <form>
     <div>
@@ -55,7 +56,11 @@
     <div class="cocktail-search-filter-ingredients">
       <p>재료</p>
       <div class="cocktail-search-filter-category">
-        <div v-for="(image, index) in images" :key="`image-${index}`">
+        <div
+          v-for="(image, index) in images"
+          :key="`image-${index}`"
+          @click="clickIngredient(image.id)"
+        >
           <div
             class="category-image"
             :style="{ backgroundImage: image.image }"
@@ -76,8 +81,9 @@
 <script setup lang="ts">
 import TheCocktailSearchFilterSlider from "@/components/cocktails/TheCocktailSearchFilterSlider.vue";
 import ButtonBasicRound from "@/components/basics/ButtonBasicRound.vue";
-import { ref, onUnmounted } from "vue";
-import { ingredients } from "../../assets/filter";
+import { ref } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
 
 // 알코올 / 논 알코올 value
 const statusAlcohol = ref(true);
@@ -90,6 +96,7 @@ const rightValue = ref(15);
 
 // 재료 선택
 interface ingredients {
+  id: number;
   image: string;
   name: string;
 }
@@ -97,26 +104,34 @@ interface ingredients {
 // 이미지
 const images: ingredients[] = [
   {
+    id: 0,
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/Gin-Small.png)",
     name: "술",
   },
   {
+    id: 1,
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/Kahlua-Small.png)",
     name: "리큐르",
   },
   {
+    id: 2,
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png)",
     name: "음료수",
   },
   {
+    id: 3,
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/lemon-Small.png)",
     name: "추가 재료",
   },
 ];
+
+// 카테고리 클릭
+const clickIngredient = (index: number) => {
+};
 </script>
 
 <style scoped lang="scss">

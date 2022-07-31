@@ -1,8 +1,8 @@
 package com.jourgeois.backend.util.scheduler;
 
-import com.jourgeois.backend.api.dto.SearchHistoryDto;
+import com.jourgeois.backend.api.dto.SearchHistoryDTO;
 import com.jourgeois.backend.api.dto.SearchHistoryVO;
-import com.jourgeois.backend.api.dto.SearchTrendDto;
+import com.jourgeois.backend.api.dto.SearchTrendDTO;
 import com.jourgeois.backend.service.RedisService;
 import com.jourgeois.backend.service.SearchHistoryService;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -39,22 +39,22 @@ public class SearchStatistics {
         String toFormatted = to.format(DATE_TIME_FORMATTER);
         String fromFormatted = from.format(DATE_TIME_FORMATTER);
         try {
-            List<SearchHistoryDto> jpa_cur_hot = this.searchHistoryService.getHotKeyword();
+            List<SearchHistoryDTO> jpa_cur_hot = this.searchHistoryService.getHotKeyword();
             List<SearchHistoryVO> cur_hot = new ArrayList<>();
-            for (SearchHistoryDto s : jpa_cur_hot) {
+            for (SearchHistoryDTO s : jpa_cur_hot) {
                 SearchHistoryVO searchHistoryVO = new SearchHistoryVO();
                 searchHistoryVO.setKeyword(s.getKeyword());
                 searchHistoryVO.setHits(s.getHits());
                 cur_hot.add(searchHistoryVO);
             }
-            SearchTrendDto searchTrend = new SearchTrendDto();
+            SearchTrendDTO searchTrend = new SearchTrendDTO();
             searchTrend.setFrom(fromFormatted);
             searchTrend.setTo(toFormatted);
             searchTrend.setKeywords(cur_hot);
             searchTrend.setDelta(new ArrayList());
             System.out.println("현재 로그 조회 성공");
 //            System.out.println(prev.getFrom());
-            SearchTrendDto prev = redisService.getHotKeywords("cur");
+            SearchTrendDTO prev = redisService.getHotKeywords("cur");
 
             System.out.println("이전 로그 조회 성공");
             if (prev == null) {
@@ -93,22 +93,22 @@ public class SearchStatistics {
         String toFormatted = to.format(DATE_TIME_FORMATTER);
         String fromFormatted = from.format(DATE_TIME_FORMATTER);
         try {
-            List<SearchHistoryDto> jpa_cur_hot = this.searchHistoryService.getWeeklyHotKeyword();
+            List<SearchHistoryDTO> jpa_cur_hot = this.searchHistoryService.getWeeklyHotKeyword();
             List<SearchHistoryVO> cur_hot = new ArrayList<>();
-            for (SearchHistoryDto s : jpa_cur_hot) {
+            for (SearchHistoryDTO s : jpa_cur_hot) {
                 SearchHistoryVO searchHistoryVO = new SearchHistoryVO();
                 searchHistoryVO.setKeyword(s.getKeyword());
                 searchHistoryVO.setHits(s.getHits());
                 cur_hot.add(searchHistoryVO);
             }
-            SearchTrendDto searchTrend = new SearchTrendDto();
+            SearchTrendDTO searchTrend = new SearchTrendDTO();
             searchTrend.setFrom(fromFormatted);
             searchTrend.setTo(toFormatted);
             searchTrend.setKeywords(cur_hot);
             searchTrend.setDelta(new ArrayList());
             System.out.println("현재 로그 조회 성공");
 //            System.out.println(prev.getFrom());
-            SearchTrendDto prev = redisService.getWeeklyHotKeywords("cur");
+            SearchTrendDTO prev = redisService.getWeeklyHotKeywords("cur");
 
             System.out.println("이전 로그 조회 성공");
             if (prev == null) {

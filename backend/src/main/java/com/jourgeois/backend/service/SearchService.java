@@ -1,9 +1,9 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.ProfileDto;
-import com.jourgeois.backend.api.dto.SearchCocktailDto;
-import com.jourgeois.backend.api.dto.SearchFilterDto;
-import com.jourgeois.backend.api.dto.SearchKeywordDto;
+import com.jourgeois.backend.api.dto.ProfileDTO;
+import com.jourgeois.backend.api.dto.SearchCocktailDTO;
+import com.jourgeois.backend.api.dto.SearchFilterDTO;
+import com.jourgeois.backend.api.dto.SearchKeywordDTO;
 import com.jourgeois.backend.domain.Material;
 import com.jourgeois.backend.repository.CocktailRepository;
 import com.jourgeois.backend.repository.MaterialRepository;
@@ -34,10 +34,10 @@ public class SearchService {
         this.s3Url = s3Url;
     }
 
-    public List<SearchCocktailDto> searchByCocktailAll(String name, int page){
-        List<SearchCocktailDto> list = new ArrayList<>();
+    public List<SearchCocktailDTO> searchByCocktailAll(String name, int page){
+        List<SearchCocktailDTO> list = new ArrayList<>();
         cocktailRepository.findCocktailBySearch(name, page*10).forEach(data ->
-                list.add(SearchCocktailDto.builder()
+                list.add(SearchCocktailDTO.builder()
                         .id(data.getId())
                         .img(data.getImg())
                         .name(data.getNameKR())
@@ -45,10 +45,10 @@ public class SearchService {
                         .baseLiquor(data.getBaseLiquor()).build()));
         return list;
     }
-    public List<SearchCocktailDto> searchByCocktail(Long name, int page){
-        List<SearchCocktailDto> list = new ArrayList<>();
+    public List<SearchCocktailDTO> searchByCocktail(Long name, int page){
+        List<SearchCocktailDTO> list = new ArrayList<>();
         cocktailRepository.findByMaterialContaining(name, page*10).forEach(data ->
-                list.add(SearchCocktailDto.builder()
+                list.add(SearchCocktailDTO.builder()
                         .id(data.getId())
                         .img(data.getImg())
                         .name(data.getNameKR())
@@ -57,11 +57,11 @@ public class SearchService {
         return list;
     }
 
-    public List<ProfileDto> searchByMember(String name, Pageable pageable){
-        List<ProfileDto> list = new ArrayList<>();
+    public List<ProfileDTO> searchByMember(String name, Pageable pageable){
+        List<ProfileDTO> list = new ArrayList<>();
         memberRepository.findByNicknameContainingOrderByNickname(name, pageable)
                 .forEach(data ->
-                        list.add(ProfileDto.builder()
+                        list.add(ProfileDTO.builder()
                                 .id(data.getUid())
                                 .email(data.getEmail())
                                 .nickname(data.getNickname())
@@ -70,26 +70,26 @@ public class SearchService {
         return list;
     }
 
-    public List<SearchKeywordDto> searchKeywords(String name){
-        List<SearchKeywordDto> list = new ArrayList<>();
+    public List<SearchKeywordDTO> searchKeywords(String name){
+        List<SearchKeywordDTO> list = new ArrayList<>();
         searchKeywordRepository.findTop5ByNameKrContainingOrderByNameKr(name).forEach(data ->
-                list.add(SearchKeywordDto.builder()
+                list.add(SearchKeywordDTO.builder()
                         .id(data.getId())
                         .name(data.getName())
                         .nameKr(data.getNameKr())
                         .type(data.getType()).build()));
         memberRepository.findTop10ByNicknameContainingOrderByNickname(name).forEach(data ->
-                list.add(SearchKeywordDto.builder()
+                list.add(SearchKeywordDTO.builder()
                         .id(data.getUid())
                         .nameKr(data.getNickname())
                         .type("계정").build()));
         return list;
     }
 
-    public List<SearchCocktailDto> CocktailList(Pageable pageable){
-        List<SearchCocktailDto> list = new ArrayList<>();
+    public List<SearchCocktailDTO> CocktailList(Pageable pageable){
+        List<SearchCocktailDTO> list = new ArrayList<>();
         cocktailRepository.findAllByOrderById(pageable).forEach(data ->
-                list.add(SearchCocktailDto.builder()
+                list.add(SearchCocktailDTO.builder()
                         .id(data.getId())
                         .img(data.getImg())
                         .name(data.getNameKR())
@@ -98,18 +98,18 @@ public class SearchService {
         return list;
     }
 
-    public int filterCount(SearchFilterDto searchFilterDto){
+    public int filterCount(SearchFilterDTO searchFilterDto){
         String type = searchFilterDto.getType()==1 ? "Alcoholic" : "Non alcoholic";
         return cocktailRepository.findByFilter(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
                 searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size());
     }
 
-    public List<SearchCocktailDto> filterList(SearchFilterDto searchFilterDto){
+    public List<SearchCocktailDTO> filterList(SearchFilterDTO searchFilterDto){
         String type = searchFilterDto.getType()==1 ?  "Alcoholic" : "Non alcoholic";
-        List<SearchCocktailDto> list = new ArrayList<>();
+        List<SearchCocktailDTO> list = new ArrayList<>();
         cocktailRepository.findByFilterInfo(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
                         searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size()).forEach(data ->
-                list.add(SearchCocktailDto.builder()
+                list.add(SearchCocktailDTO.builder()
                         .id(data.getId())
                         .img(data.getImg())
                         .name(data.getNameKR())

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class SearchKeywordDto {
+public class SearchKeywordDTO {
     private Long id;
     private String name;
     private String nameKr;

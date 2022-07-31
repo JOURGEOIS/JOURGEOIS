@@ -1,6 +1,6 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.TokenResponseDto;
+import com.jourgeois.backend.api.dto.TokenResponseDTO;
 import com.jourgeois.backend.domain.auth.RefreshToken;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
@@ -24,7 +24,7 @@ public class TokenService {
     }
 
     @Transactional
-    public TokenResponseDto reissueAccessToken(String token) {
+    public TokenResponseDTO reissueAccessToken(String token) {
         String resolveToken = resolveToken(token);
 
         //토큰 검증 메서드
@@ -46,7 +46,7 @@ public class TokenService {
         findTokenEntity.changeToken(newToken);
 
         // accessToken과 refreshToken 모두 재발행
-        return TokenResponseDto.builder()
+        return TokenResponseDTO.builder()
                 .accessToken("Bearer-"+jwtTokenProvider.createAccessToken(authentication))
                 .refreshToken("Bearer-"+newToken)
                 .build();

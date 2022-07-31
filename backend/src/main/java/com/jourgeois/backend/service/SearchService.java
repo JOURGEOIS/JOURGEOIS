@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
@@ -58,8 +59,8 @@ public class SearchService {
     }
 
     public List<ProfileDTO> searchByMember(String name, Pageable pageable){
-        List<ProfileDTO> list = new ArrayList<>();
-        memberRepository.findByNicknameContainingOrderByNickname(name, pageable)
+            List<ProfileDTO> list = new ArrayList<>();
+            memberRepository.findByNicknameContainingIgnoreCaseOrderByNickname(name, pageable)
                 .forEach(data ->
                         list.add(ProfileDTO.builder()
                                 .id(data.getUid())
@@ -72,13 +73,13 @@ public class SearchService {
 
     public List<SearchKeywordDTO> searchKeywords(String name){
         List<SearchKeywordDTO> list = new ArrayList<>();
-        searchKeywordRepository.findTop5ByNameKrContainingOrderByNameKr(name).forEach(data ->
+        searchKeywordRepository.findTop10ByKeywordContainingOrderByNameKr(name).forEach(data ->
                 list.add(SearchKeywordDTO.builder()
                         .id(data.getId())
                         .name(data.getName())
                         .nameKr(data.getNameKr())
                         .type(data.getType()).build()));
-        memberRepository.findTop10ByNicknameContainingOrderByNickname(name).forEach(data ->
+        memberRepository.findTop10ByNicknameContainingIgnoreCaseOrderByNickname(name).forEach(data ->
                 list.add(SearchKeywordDTO.builder()
                         .id(data.getUid())
                         .nameKr(data.getNickname())

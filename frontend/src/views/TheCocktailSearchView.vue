@@ -40,7 +40,6 @@ const searchInputValue = computed(() => {
 });
 
 onMounted(() => {
-  console.log(route.params);
   if (route.params.searchValue) {
     store.dispatch(
       "cocktailSearch/setSearchInputValue",

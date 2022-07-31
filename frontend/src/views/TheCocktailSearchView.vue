@@ -51,16 +51,19 @@ onMounted(() => {
 
 const searchComplete = () => {
   if (!searchInputValue.value) {
+    // 전체 칵테일 view로 이동
     router.push({
       name: "TheWholeCocktailView",
     });
+  } else {
+    // 검색어 저장
+    store.dispatch("cocktailSearch/setRecentSearchWords");
+    // 검색 결과 view로 이동
+    router.push({
+      name: "TheSearchResultView",
+      params: { searchValue: searchInputValue.value },
+    });
   }
-  store.dispatch("cocktailSearch/setRecentSearchWords");
-  // 검색 결과 view로 이동
-  router.push({
-    name: "TheSearchResultView",
-    params: { searchValue: searchInputValue.value },
-  });
 };
 
 const filterStatus = computed(

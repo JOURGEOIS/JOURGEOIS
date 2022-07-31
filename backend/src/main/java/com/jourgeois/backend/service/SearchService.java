@@ -2,6 +2,7 @@ package com.jourgeois.backend.service;
 
 import com.jourgeois.backend.api.dto.ProfileDto;
 import com.jourgeois.backend.api.dto.SearchCocktailDto;
+import com.jourgeois.backend.api.dto.SearchFilterDto;
 import com.jourgeois.backend.api.dto.SearchKeywordDto;
 import com.jourgeois.backend.domain.Material;
 import com.jourgeois.backend.repository.CocktailRepository;
@@ -85,6 +86,25 @@ public class SearchService {
         return list;
     }
 
+    public int filterCount(SearchFilterDto searchFilterDto){
+        String type = searchFilterDto.getType()==1 ? "Alcoholic" : "Non alcoholic";
+        return cocktailRepository.findByFilter(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
+                searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size());
+    }
+
+    public List<SearchCocktailDto> filterList(SearchFilterDto searchFilterDto){
+        String type = searchFilterDto.getType()==1 ?  "Alcoholic" : "Non alcoholic";
+        List<SearchCocktailDto> list = new ArrayList<>();
+        cocktailRepository.findByFilterInfo(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
+                        searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size()).forEach(data ->
+                list.add(SearchCocktailDto.builder()
+                        .id(data.getId())
+                        .img(data.getImg())
+                        .name(data.getNameKR())
+                        .alcohol(data.getAlcohol())
+                        .baseLiquor(data.getBaseLiquor()).build()));
+        return list;
+    }
     public String searchMaterialName(Long id){
         Material material = materialRepository.findById(id).orElseThrow(() -> new NoSuchElementException("찾는 재료가 없음"));
         return material.getNameKR();

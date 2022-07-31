@@ -1,5 +1,5 @@
 cd ./backend
-sudo gradle build
+gradle build
 
 cd ../
 

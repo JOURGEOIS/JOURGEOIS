@@ -17,15 +17,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from "vue";
-import { useStore} from "vuex";
+import { reactive, computed, watch, watchEffect } from "vue";
+import { useStore } from "vuex";
 const store = useStore();
 
 const cocktailData = computed(
   () => store.getters["cocktailDesc/getCurrentCocktailDataRecipe"]
 );
-
-const steps = cocktailData?.value?.split('<>')
+const steps = computed(() => cocktailData?.value?.split("<>"));
 </script>
 
 <style scoped lang="scss">

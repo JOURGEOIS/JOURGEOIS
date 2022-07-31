@@ -65,12 +65,12 @@ const clickReviewTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 1);
 const clickCustomTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 2);
 
 // params가 변경될 때
-// watch(
-//   () => route.params.cocktail,
-//   () => {
-//     store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
-//   }
-// );
+watch(
+  () => route.params.cocktail,
+  () => {
+    store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
+  }
+);
 
 // 동적 라우팅
 onMounted(() => {

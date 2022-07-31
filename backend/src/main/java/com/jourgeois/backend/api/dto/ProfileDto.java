@@ -6,12 +6,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 public class ProfileDto {
+    private Long id;
     private String email;
     private String name;
     private String nickname;
     private String profileImg;
     private MultipartFile profileLink;
     private String introduce;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public MultipartFile getProfileLink() {
         return profileLink;
@@ -61,15 +70,4 @@ public class ProfileDto {
         this.introduce = introduce;
     }
 
-    @Override
-    public String toString() {
-        return "ProfileDto{" +
-                "email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", profileImg='" + profileImg + '\'' +
-                ", profileLink=" + profileLink +
-                ", introduce='" + introduce + '\'' +
-                '}';
-    }
 }

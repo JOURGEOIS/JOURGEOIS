@@ -17,6 +17,7 @@
         max="30"
         min="0"
         v-model.number="sliderLeftValue"
+        @input="$emit('update:leftValue', sliderLeftValue)"
       />
       <input
         type="range"
@@ -24,6 +25,7 @@
         max="30"
         min="0"
         v-model.number="sliderRightValue"
+        @input="$emit('update:rightValue', sliderRightValue)"
       />
 
       <!-- 보이는 슬라이더 -->
@@ -45,6 +47,12 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from "vue";
+
+// props
+const props = defineProps<{
+  leftValue: number;
+  rightValue: number;
+}>();
 
 // slider Value
 const sliderLeftValue = ref(6);

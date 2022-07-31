@@ -5,20 +5,32 @@
     <div class="cocktail-desc-materials-title">
       <p>재료</p>
       <!-- 더보기를 누를 시, 칵테일 재료를 모두 볼 수 있다. -->
-      <p v-if="showMore">더보기</p>
+      <p v-if="showMore" @click="clickShowMore">더보기</p>
     </div>
 
     <!-- 칵테일 재료 나열 -->
-    <div class="cocktail-desc-materials-main">
+    <div class="cocktail-desc-materials-main" v-if="showMore">
       <div
         class="cocktail-desc-materials-item"
-        v-for="(material, index) in materials"
+        v-for="(ingredient, index) in cocktailIngredientsPreview"
         :key="`main-${index}`"
       >
         <round-image
-          :round-image="{ image: material.image, width: '90px' }"
+          :round-image="{ image: ingredient[1], width: '90px' }"
         ></round-image>
-        <p>{{ material.name }}</p>
+        <p>{{ ingredient[0] }}</p>
+      </div>
+    </div>
+    <div class="cocktail-desc-materials-main" v-if="!showMore">
+      <div
+        class="cocktail-desc-materials-item"
+        v-for="(ingredient, index) in cocktailIngredients"
+        :key="`main-${index}`"
+      >
+        <round-image
+          :round-image="{ image: ingredient[1], width: '90px' }"
+        ></round-image>
+        <p>{{ ingredient[0] }}</p>
       </div>
     </div>
   </div>
@@ -26,34 +38,36 @@
 
 <script setup lang="ts">
 import RoundImage from "@/components/basics/RoundImage.vue";
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
+
+// 칵테일 데이터
+const cocktailData = computed(
+  () => store.getters["cocktailDesc/getCurrentCocktailDataIngredients"]
+);
+
+// 칵테일 재료 (더보기를 누른 경우, 모든 재료를 보여준다.)
+const cocktailIngredients: string[] = cocktailData.value.map((item: string) => {
+  return item.split(",");
+});
+
+// 더보기를 안눌렀을 경우, 화면 크기에 따라 보여주는 개수가 다르다.
+const cocktailIngredientsPreview = computed(() => {
+  if (window.innerWidth < 768) {
+    return cocktailIngredients.slice(0, 3);
+  } else {
+    return cocktailIngredients.slice(0, 5);
+  }
+});
 
 // 더보기 상태
 const showMore = ref(true);
 
-// 재료
-const materials = reactive([
-  {
-    image:
-      "https://p.turbosquid.com/ts-thumb/X2/ai5JUA/Yz/247baileys_irish_cream_whiskey0001/jpg/1640734371/600x600/fit_q87/bb55ec9121ee3f934bda4f4058e35bcfedd71ef9/247baileys_irish_cream_whiskey0001.jpg",
-    name: "베일리스 아이리쉬 크림",
-  },
-  {
-    image:
-      "https://p.turbosquid.com/ts-thumb/X2/ai5JUA/Yz/247baileys_irish_cream_whiskey0001/jpg/1640734371/600x600/fit_q87/bb55ec9121ee3f934bda4f4058e35bcfedd71ef9/247baileys_irish_cream_whiskey0001.jpg",
-    name: "베일리스 아이리쉬 크림",
-  },
-  {
-    image:
-      "https://p.turbosquid.com/ts-thumb/X2/ai5JUA/Yz/247baileys_irish_cream_whiskey0001/jpg/1640734371/600x600/fit_q87/bb55ec9121ee3f934bda4f4058e35bcfedd71ef9/247baileys_irish_cream_whiskey0001.jpg",
-    name: "베일리스 아이리쉬 크림",
-  },
-  {
-    image:
-      "https://p.turbosquid.com/ts-thumb/X2/ai5JUA/Yz/247baileys_irish_cream_whiskey0001/jpg/1640734371/600x600/fit_q87/bb55ec9121ee3f934bda4f4058e35bcfedd71ef9/247baileys_irish_cream_whiskey0001.jpg",
-    name: "베일리스 아이리쉬 크림",
-  },
-]);
+// 더보기 클릭
+const clickShowMore = () => {
+  showMore.value = false;
+};
 </script>
 
 <style scoped lang="scss">
@@ -72,6 +86,7 @@ const materials = reactive([
       &:nth-child(2) {
         @include font($fs-md, $fw-medium);
         color: $white400;
+        cursor: pointer;
       }
     }
   }
@@ -81,7 +96,7 @@ const materials = reactive([
     grid-template-columns: repeat(auto-fill, minmax(33.33333%, auto));
     justify-items: center;
     justify-content: center;
-    row-gap: 16px;
+    row-gap: 32px;
     width: 100%;
 
     p {

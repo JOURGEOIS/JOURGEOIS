@@ -3,8 +3,8 @@
   <div class="cocktail-desc-detail">
     <!-- 칵테일 제목 -->
     <div class="cocktail-desc-detail-title">
-      <p>롱 아일랜드 아이스 티</p>
-      <p>Long Island Iced Tea</p>
+      <p>{{ cocktailData.nameKR }}</p>
+      <p>{{ cocktailData.name }}</p>
     </div>
     <round-image :round-image="cocktailImage"></round-image>
 
@@ -62,7 +62,13 @@
 <script setup lang="ts">
 import TagBasic from "@/components/basics/TagBasic.vue";
 import RoundImage from "@/components/basics/RoundImage.vue";
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
+
+const cocktailData = computed(
+  () => store.getters["cocktailDesc/getCurrentCocktailData"]
+);
 
 // 칵테일 이미지
 const cocktailImage = {
@@ -90,13 +96,13 @@ const cocktailId = ref(3);
   @include flex(column);
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 16px;
   width: 100%;
   .cocktail-desc-detail-title {
     @include flex(column);
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 4px;
     p {
       &:first-child {
         @include font($fs-xl, $fw-bold);

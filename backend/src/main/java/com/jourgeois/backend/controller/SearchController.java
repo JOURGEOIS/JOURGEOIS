@@ -65,11 +65,19 @@ public class SearchController {
     }
 
     @GetMapping(value="/user")
-    public ResponseEntity searchByUsers(@RequestParam(value = "keyword") String keyword,
+    public ResponseEntity searchByUsers(@RequestHeader(value = "email") String email, @RequestParam(value = "keyword") String keyword,
                               @PageableDefault(size=10, sort="name", direction = Sort.Direction.ASC) Pageable pageable){
         System.out.println(keyword);
         if (keyword.isEmpty())
             return ResponseEntity.status(HttpStatus.OK).body(null);
+        try {
+            if (!email.equals("null") && !email.isEmpty()) {
+                this.redisService.setRecentKeyword(email, keyword);
+            }
+            this.searchHistoryService.writeSearchHistory(keyword);
+        } catch (Exception e) {
+            System.out.println("검색 로그 기록 실패");
+        }
         return new ResponseEntity(searchService.searchByMember(keyword, pageable), HttpStatus.CREATED);
     }
 

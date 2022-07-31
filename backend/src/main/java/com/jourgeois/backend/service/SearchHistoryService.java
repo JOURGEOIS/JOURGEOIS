@@ -1,6 +1,6 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.SearchHistoryDto;
+import com.jourgeois.backend.api.dto.SearchHistoryDTO;
 import com.jourgeois.backend.domain.SearchHistory;
 import com.jourgeois.backend.repository.SearchHistoryRepository;
 import org.springframework.scheduling.annotation.Async;
@@ -22,11 +22,11 @@ public class SearchHistoryService {
         this.searchHistoryRepository.save(searchHistory);
     }
 
-    public List<SearchHistoryDto> getHotKeyword() {
+    public List<SearchHistoryDTO> getHotKeyword() {
         return this.searchHistoryRepository.getHotKeyword();
     }
 
-    public List<SearchHistoryDto> getWeeklyHotKeyword() {
+    public List<SearchHistoryDTO> getWeeklyHotKeyword() {
         return this.searchHistoryRepository.getWeeklyHotKeyword();
     }
 }

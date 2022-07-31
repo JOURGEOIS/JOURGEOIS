@@ -1,6 +1,6 @@
 package com.jourgeois.backend.controller;
 
-import com.jourgeois.backend.api.dto.ProfileDto;
+import com.jourgeois.backend.api.dto.ProfileDTO;
 import com.jourgeois.backend.api.dto.PasswordChangeForm;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -123,7 +122,7 @@ public class MemberController {
     }
 
     @PutMapping("/auth/profile")
-    public ResponseEntity changeProfile(HttpServletRequest request, @ModelAttribute ProfileDto profileDto){
+    public ResponseEntity changeProfile(HttpServletRequest request, @ModelAttribute ProfileDTO profileDto){
         Map<String, Boolean> data = new HashMap<>();
         try {
             String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
@@ -146,7 +145,7 @@ public class MemberController {
 
     // 이미지 파일 업로드
     @PostMapping("/auth/profile")
-    public ResponseEntity profileImageTempStorage(HttpServletRequest request, @ModelAttribute ProfileDto profileDto){
+    public ResponseEntity profileImageTempStorage(HttpServletRequest request, @ModelAttribute ProfileDTO profileDto){
         try{
             String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);

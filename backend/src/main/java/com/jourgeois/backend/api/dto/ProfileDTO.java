@@ -5,7 +5,7 @@ import lombok.Builder;
 import org.springframework.web.multipart.MultipartFile;
 
 @Builder
-public class ProfileDto {
+public class ProfileDTO {
     private Long id;
     private String email;
     private String name;

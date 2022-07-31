@@ -1,10 +1,9 @@
 package com.jourgeois.backend.api.dto;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchFilterDto {
+public class SearchFilterDTO {
     private int type;
     private int[] abv;
     private List<Integer> materials;

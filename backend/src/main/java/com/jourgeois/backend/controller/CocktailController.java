@@ -1,6 +1,6 @@
 package com.jourgeois.backend.controller;
 
-import com.jourgeois.backend.api.dto.CocktailVO;
+import com.jourgeois.backend.api.dto.CocktailDTO;
 import com.jourgeois.backend.domain.Cocktail;
 import com.jourgeois.backend.domain.Material;
 import com.jourgeois.backend.service.CocktailService;
@@ -27,7 +27,7 @@ public class CocktailController {
     public ResponseEntity readCocktail(@RequestParam(value = "id") Long id) {
         try {
             System.out.println(id+" 을 조회하셨습니다.");
-            CocktailVO cocktail = cocktailService.readCocktail(id);
+            CocktailDTO cocktail = cocktailService.readCocktail(id);
 
             return ResponseEntity.ok().body(cocktail);
         } catch (Exception e) {

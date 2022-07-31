@@ -3,6 +3,7 @@ const HOST: string = "http://13.209.206.237/api/";
 const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";
 const AUTH = "auth/";
+const LOOKUP = "lookup/";
 
 export default {
   token: {
@@ -23,5 +24,12 @@ export default {
     emailCert: () => HOST + "email/cert",
     emailVerified: () => HOST + EMAIL + "verified",
     emailConfirmed: () => HOST + EMAIL + "confirmed",
+  },
+
+  lookups: {
+    cocktailall: () => HOST + LOOKUP + "cocktailall",
+    user: () => HOST + LOOKUP + "users",
+    autoComplete: () => HOST + LOOKUP + "search",
+    hotKeyword: () => HOST + LOOKUP + "hotkeyword",
   },
 };

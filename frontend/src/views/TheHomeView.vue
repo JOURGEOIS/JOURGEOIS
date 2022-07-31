@@ -1,11 +1,21 @@
 <template>
   <div class="tmp-container">
-    <router-link to="/">Home</router-link> <br />
-    <router-link to="/user/signup">회원가입</router-link> <br />
-    <router-link to="/user/login">로그인</router-link>
-    <router-link to="/user/my-info">유저정보수정</router-link>
-    <router-link to="/user/my-info/password">비밀번호 변경</router-link>
+    <div class="category-container">
+      <router-link to="/">Home</router-link>
+    </div>
+
+    <div class="category-container">
+      <router-link to="/user/signup">회원가입</router-link>
+      <router-link to="/user/login">로그인</router-link>
+      <router-link to="/user/my-info">유저정보수정</router-link>
+      <router-link to="/user/my-info/password">비밀번호 변경</router-link>
+    </div>
+
+    <div class="category-container">
+      <router-link to="/cocktail/search">칵테일 검색</router-link>
+    </div>
   </div>
+
   <success-pop-up v-if="changePwPopupStatus">
     비밀번호가 변경되었습니다
   </success-pop-up>
@@ -95,5 +105,11 @@ onMounted(() => {
   align-items: center;
   padding: 30px;
   @include font(20px, $fw-bold);
+
+  .category-container {
+    @include flex(column);
+    align-items: center;
+    padding: 30px;
+  }
 }
 </style>

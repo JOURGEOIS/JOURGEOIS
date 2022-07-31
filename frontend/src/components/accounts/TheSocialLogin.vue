@@ -71,21 +71,21 @@ img {
   left: -40px;
 }
 
-.google-login-button {
+.google-login-bg {
   border: 1px solid $unchecked-color;
   background-color: $white;
 }
 
-.google-login-button img {
+.google-login-bg img {
   width: 20px;
   left: -35px;
 }
 
-.kakao-login-button {
+.kakao-login-bg {
   background-color: rgb(253, 220, 63);
 }
 
-.naver-login-button {
+.naver-login-bg {
   background-color: rgb(3, 199, 90);
 }
 </style>

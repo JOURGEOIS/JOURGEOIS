@@ -7,7 +7,7 @@ services:
                         - nginx
                         - springboot
                         - db
-		        - redis
+                        - redis
                 ports:
                         - "80:80"
                 restart: always
@@ -46,4 +46,3 @@ services:
                 depends_on:
                         - db
                         - redis
-

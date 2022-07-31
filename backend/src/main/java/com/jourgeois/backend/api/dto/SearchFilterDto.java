@@ -2,11 +2,12 @@ package com.jourgeois.backend.api.dto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SearchFilterDto {
     private int type;
     private int[] abv;
-    private ArrayList<Integer> materials;
+    private List<Integer> materials;
 
     public int getType() {
         return type;
@@ -24,11 +25,11 @@ public class SearchFilterDto {
         this.abv = abv;
     }
 
-    public ArrayList<Integer> getMaterials() {
+    public List<Integer> getMaterials() {
         return materials;
     }
 
-    public void setMaterials(ArrayList<Integer> materials) {
+    public void setMaterials(List<Integer> materials) {
         this.materials = materials;
     }
 

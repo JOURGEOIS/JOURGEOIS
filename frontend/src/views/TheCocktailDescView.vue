@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCocktailDescDetail from "@/components/cocktails/TheCocktailDescDetail.vue";
-import { onBeforeMount, defineAsyncComponent, computed, watch } from "vue";
+import { onMounted, defineAsyncComponent, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
@@ -65,15 +65,15 @@ const clickReviewTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 1);
 const clickCustomTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 2);
 
 // params가 변경될 때
-watch(
-  () => route.params.cocktail,
-  () => {
-    store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
-  }
-);
+// watch(
+//   () => route.params.cocktail,
+//   () => {
+//     store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
+//   }
+// );
 
 // 동적 라우팅
-onBeforeMount(() => {
+onMounted(() => {
   store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
 });
 </script>

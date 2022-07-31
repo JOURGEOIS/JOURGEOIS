@@ -38,6 +38,7 @@ public class SearchService {
         cocktailRepository.findCocktailBySearch(name, page*10).forEach(data ->
                 list.add(SearchCocktailDto.builder()
                         .id(data.getId())
+                        .img(data.getImg())
                         .name(data.getNameKR())
                         .alcohol(data.getAlcohol())
                         .baseLiquor(data.getBaseLiquor()).build()));
@@ -48,6 +49,7 @@ public class SearchService {
         cocktailRepository.findByMaterialContaining(name, page*10).forEach(data ->
                 list.add(SearchCocktailDto.builder()
                         .id(data.getId())
+                        .img(data.getImg())
                         .name(data.getNameKR())
                         .alcohol(data.getAlcohol())
                         .baseLiquor(data.getBaseLiquor()).build()));

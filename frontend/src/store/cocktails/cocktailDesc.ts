@@ -51,11 +51,10 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           commit("SET_CURRENT_COCKTAIL_DATA", response.data);
         })
         .catch((error) => {
-          console.log(error.response);
+          console.error(error.response);
         });
     },
   },

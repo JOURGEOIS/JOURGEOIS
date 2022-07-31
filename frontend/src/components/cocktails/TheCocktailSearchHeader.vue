@@ -24,9 +24,10 @@ import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
-// 입력값 바뀔 때마다 vuex에 저장
-const a = store.getters["cocktailSearch/getSearchInputValue"];
-const searchInputValue = ref(a);
+// vuex의 저장 입력값 초기에 넣어주기
+const searchInputValue = ref(
+  store.getters["cocktailSearch/getSearchInputValue"]
+);
 
 watchEffect(() => {
   store.dispatch("cocktailSearch/setSearchInputValue", searchInputValue.value);

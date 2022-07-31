@@ -13,7 +13,9 @@
         <the-auto-complete v-if="searchInputValue"></the-auto-complete>
 
         <!-- 검색 버튼 구역 -->
-        <the-cocktail-search-button-section></the-cocktail-search-button-section>
+        <the-cocktail-search-button-section
+          v-if="!searchInputValue"
+        ></the-cocktail-search-button-section>
       </div>
     </form>
   </div>
@@ -38,6 +40,7 @@ const searchInputValue = computed(() => {
 });
 
 onMounted(() => {
+  console.log(route.params);
   if (route.params.searchValue) {
     store.dispatch(
       "cocktailSearch/setSearchInputValue",
@@ -47,6 +50,11 @@ onMounted(() => {
 });
 
 const searchComplete = () => {
+  if (!searchInputValue.value) {
+    router.push({
+      name: "TheWholeCocktailView",
+    });
+  }
   store.dispatch("cocktailSearch/setRecentSearchWords");
   // 검색 결과 view로 이동
   router.push({
@@ -63,13 +71,15 @@ const filterStatus = computed(
 <style scoped lang="scss">
 .cocktail-search-view {
   @include accountLayOut;
-
   form {
     @include flex-center;
     width: 100%;
   }
   .cocktail-search-container {
+    @include flex(column);
+    justify-content: space-between;
     width: 100%;
+
     margin-top: 1rem;
 
     @media #{$tablet} {

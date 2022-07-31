@@ -1,3 +1,4 @@
+<!-- filter: form - slider -->
 <template>
   <div class="cocktail-search-filter-slider-container">
     <!-- slider value -->

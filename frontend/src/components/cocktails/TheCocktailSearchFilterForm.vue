@@ -55,21 +55,28 @@
     <div class="cocktail-search-filter-ingredients">
       <p>재료</p>
       <div class="cocktail-search-filter-category">
-        <div v-for="(image, index) in images" :key="`-${index}`">
-          <round-image
-            :round-image="{ image: image.image, width: image.width }"
-          ></round-image>
+        <div v-for="(image, index) in images" :key="`image-${index}`">
+          <div
+            class="category-image"
+            :style="{ backgroundImage: image.image }"
+          ></div>
           <p>{{ image.name }}</p>
         </div>
       </div>
     </div>
+    <button-basic-round
+      class="cocktail-search-filter-button"
+      :button-style="['unchecked', 'long', '']"
+    >
+      0개의 검색 결과
+    </button-basic-round>
   </form>
 </template>
 
 <script setup lang="ts">
 import TheCocktailSearchFilterSlider from "@/components/cocktails/TheCocktailSearchFilterSlider.vue";
-import RoundImage from "@/components/basics/RoundImage.vue";
-import { ref } from "vue";
+import ButtonBasicRound from "@/components/basics/ButtonBasicRound.vue";
+import { ref, onUnmounted } from "vue";
 import { ingredients } from "../../assets/filter";
 
 // 알코올 / 논 알코올 value
@@ -84,30 +91,29 @@ const rightValue = ref(15);
 // 재료 선택
 interface ingredients {
   image: string;
-  width: string;
   name: string;
 }
 
+// 이미지
 const images: ingredients[] = [
   {
-    image: "https://www.thecocktaildb.com/images/ingredients/Gin-Small.png",
-    width: "96px",
+    image:
+      "url(https://www.thecocktaildb.com/images/ingredients/Gin-Small.png)",
     name: "술",
   },
   {
-    image: "https://www.thecocktaildb.com/images/ingredients/Kahlua-Small.png",
-    width: "96px",
+    image:
+      "url(https://www.thecocktaildb.com/images/ingredients/Kahlua-Small.png)",
     name: "리큐르",
   },
   {
     image:
-      "https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png",
-    width: "96px",
+      "url(https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png)",
     name: "음료수",
   },
   {
-    image: "https://www.thecocktaildb.com/images/ingredients/lemon-Small.png",
-    width: "96px",
+    image:
+      "url(https://www.thecocktaildb.com/images/ingredients/lemon-Small.png)",
     name: "추가 재료",
   },
 ];
@@ -117,7 +123,7 @@ const images: ingredients[] = [
 form {
   @include flex(column);
   align-items: center;
-  gap: 40px;
+  gap: 32px;
 
   > div {
     @include flex(column);
@@ -128,8 +134,12 @@ form {
       display: none;
     }
     > p {
-      @include font($fs-main, $fw-medium);
+      @include font($fs-md, $fw-medium);
       color: $main-color;
+
+      @media (min-height: 750px) {
+        @include font($fs-main, $fw-medium);
+      }
     }
     .cocktail-search-filter-radio {
       @include flex;
@@ -138,7 +148,11 @@ form {
       label {
         @include flex;
         gap: 16px;
-        @include font($fs-main, $fw-medium);
+        @include font($fs-md, $fw-medium);
+
+        @media (min-height: 750px) {
+          @include font($fs-main, $fw-medium);
+        }
 
         div {
           @include shadow-modal-2;
@@ -175,15 +189,52 @@ form {
     }
     .cocktail-search-filter-category {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(50%, auto));
-      row-gap: 32px;
+      grid-template-columns: repeat(auto-fill, minmax(25%, auto));
+      row-gap: 24px;
 
-      div {
+      > div {
         @include flex(column);
         align-items: center;
-        @include font($fs-main, $fw-medium);
+        @include font($fs-md, $fw-medium);
+        color: $gray200;
+
+        @media (min-height: 750px) {
+          @include font(16px, $fw-medium);
+        }
+
+        .category-image {
+          width: 72px;
+          height: 72px;
+          border: 0;
+          border-radius: 50%;
+          background-color: $white200;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+
+          @media (min-height: 750px) {
+            width: 80px;
+            height: 80px;
+          }
+          @media #{$tablet} {
+            width: 102px;
+            height: 102px;
+          }
+        }
       }
     }
+  }
+}
+
+.cocktail-search-filter-button {
+  border-radius: 1000em;
+  padding: 8px;
+  @include font(13px, $fw-bold);
+
+  @media (min-height: 750px) {
+    margin-top: 16px;
+    padding: 12px;
+    @include font($fs-md, $fw-bold);
   }
 }
 </style>

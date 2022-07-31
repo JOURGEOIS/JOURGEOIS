@@ -2,7 +2,7 @@ const HOST: string = "http://13.209.206.237/api/";
 
 const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";
-const AUTH = "auth/";
+const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
 
 export default {
@@ -24,6 +24,9 @@ export default {
     emailCert: () => HOST + "email/cert",
     emailVerified: () => HOST + EMAIL + "verified",
     emailConfirmed: () => HOST + EMAIL + "confirmed",
+  },
+  cocktail: {
+    getCocktailData: () => HOST + COCKTAIL + "cocktail",
   },
 
   lookups: {

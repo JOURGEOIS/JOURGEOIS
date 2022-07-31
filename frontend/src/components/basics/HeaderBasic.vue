@@ -59,7 +59,11 @@ const successVisibility = computed(() => {
 header {
   @include flex-xy(space-between, center);
   width: 100%;
-  padding-top: 1rem;
+  margin-top: 10px;
+
+  @media #{$tablet} {
+    margin-top: 16px;
+  }
 }
 
 .material-icons {
@@ -107,5 +111,10 @@ header {
 hr {
   @include hr;
   width: 100vw;
+  margin: 10px 0;
+
+  @media #{$tablet} {
+    margin: 16px 0;
+  }
 }
 </style>

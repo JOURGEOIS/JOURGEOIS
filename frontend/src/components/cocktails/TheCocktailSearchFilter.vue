@@ -62,7 +62,7 @@ const clickXIcon = () => {
     position: absolute;
     bottom: 0px;
     width: 100%;
-    height: 90%;
+    height: 98%;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding: 0 16px;
@@ -76,6 +76,10 @@ const clickXIcon = () => {
     @media #{$pc} {
       width: 42%;
       max-width: 1000px;
+    }
+
+    @media (min-height: 750px) {
+      height: 90%;
     }
 
     .cocktail-search-filter-header {

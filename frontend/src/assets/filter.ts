@@ -3,7 +3,7 @@ const baseAlcohol: object[] = [
     id: 179,
     name: "Dark Rum",
     nameKr: "다크럼",
-    img: "https://www.thecocktaildb.com/images/ingredients/Dark Rum-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Dark%20Rum-Small.png",
   },
   {
     id: 4,
@@ -15,7 +15,7 @@ const baseAlcohol: object[] = [
     id: 305,
     name: "Light Rum",
     nameKr: "라이트 럼",
-    img: "https://www.thecocktaildb.com/images/ingredients/Light Rum-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Light%20Rum-Small.png",
   },
   {
     id: 3,

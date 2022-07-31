@@ -31,8 +31,9 @@ export default {
 
   lookups: {
     cocktailall: () => HOST + LOOKUP + "cocktailall",
-    user: () => HOST + LOOKUP + "users",
+    user: () => HOST + LOOKUP + "user",
     autoComplete: () => HOST + LOOKUP + "search",
+    weeklyHotKeyword: () => HOST + LOOKUP + "weeklyhotkeyword",
     hotKeyword: () => HOST + LOOKUP + "hotkeyword",
   },
 };

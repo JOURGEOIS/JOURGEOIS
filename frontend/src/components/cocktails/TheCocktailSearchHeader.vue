@@ -25,7 +25,9 @@ import { useStore } from "vuex";
 const store = useStore();
 
 // 입력값 바뀔 때마다 vuex에 저장
-const searchInputValue = ref("");
+const a = store.getters["cocktailSearch/getSearchInputValue"];
+const searchInputValue = ref(a);
+
 watchEffect(() => {
   store.dispatch("cocktailSearch/setSearchInputValue", searchInputValue.value);
 });

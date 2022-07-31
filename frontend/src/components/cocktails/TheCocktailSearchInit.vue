@@ -34,7 +34,7 @@
           :tagStyle="['sub', '12px']"
           v-for="(word, idx) in popularSearchWords.keywords"
           :key="idx"
-          >{{ word }}</tag-basic-event
+          >{{ word.keyword }}</tag-basic-event
         >
       </div>
     </article>

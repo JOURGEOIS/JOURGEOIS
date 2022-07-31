@@ -81,6 +81,12 @@ export const searchResult: Module<SearchResultState, RootState> = {
     SET_SEARCH_COCKTAIL_PAGE: (state, value) => {
       state.searchCocktailPage = value;
     },
+
+    // * 검색어 결과 삭제
+    REMOVE_SEARCH_RESULT: (state) => {
+      state.searchUsers = [];
+      state.searchCocktails = [];
+    },
   },
 
   actions: {
@@ -94,6 +100,9 @@ export const searchResult: Module<SearchResultState, RootState> = {
       axios({
         url: api.lookups.user(),
         method: "GET",
+        headers: {
+          email: "tmdgns1126@naver.com",
+        },
         params: {
           keyword,
           page: state.searchUserPage,
@@ -114,13 +123,13 @@ export const searchResult: Module<SearchResultState, RootState> = {
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
+        headers: { email: "tmdgns1126@naver.com" },
         params: {
           keyword,
           page: state.searchCocktailPage,
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_SEARCH_COCKTAIL_PAGE", state.searchCocktailPage + 1);
           // 최대 10개 칵테일 정보 리스트에 추가
           commit("SET_SEARCH_COCKTAILS", res.data);
@@ -128,6 +137,17 @@ export const searchResult: Module<SearchResultState, RootState> = {
         .catch((err) => {
           console.error(err.response);
         });
+    },
+
+    // * 검색 결과 제거
+    removeSearchResult: ({ commit }) => {
+      commit("REMOVE_SEARCH_RESULT");
+      // 칵테일 탭으로 설정
+      commit("SET_CURRENT_TAB", 0);
+
+      // 페이지 번호 0으로 초기화
+      commit("SET_SEARCH_USER_PAGE", 0);
+      commit("SET_SEARCH_COCKTAIL_PAGE", 0);
     },
   },
 };

@@ -25,8 +25,6 @@ const props = defineProps<{
   data: User;
 }>();
 
-console.log(props.data);
-
 // 유저 이미지
 const userImage = {
   image: props.data.profileImg,

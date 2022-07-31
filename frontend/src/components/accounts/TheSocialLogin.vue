@@ -64,6 +64,7 @@ img {
   @include flex-center();
   @include font($fs-md, $fw-regular);
   letter-spacing: $ls-main;
+  color: $main-color;
 }
 
 .button-content > img {

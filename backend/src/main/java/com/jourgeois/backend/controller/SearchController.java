@@ -77,6 +77,11 @@ public class SearchController {
         return new ResponseEntity(searchService.searchByMember(keyword, pageable), HttpStatus.CREATED);
     }
 
+    @GetMapping(value="/cocktailwhole")
+    public ResponseEntity searchByCocktailWhole(@PageableDefault(size=10) Pageable pageable){
+        return new ResponseEntity(searchService.CocktailList(pageable), HttpStatus.CREATED);
+    }
+
     @GetMapping(value = "/search")
     public ResponseEntity keywordList(@RequestParam(value = "keyword") String keyword) {
         if (keyword.isEmpty()) {

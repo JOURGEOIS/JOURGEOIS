@@ -86,6 +86,18 @@ public class SearchService {
         return list;
     }
 
+    public List<SearchCocktailDto> CocktailList(Pageable pageable){
+        List<SearchCocktailDto> list = new ArrayList<>();
+        cocktailRepository.findAllByOrderById(pageable).forEach(data ->
+                list.add(SearchCocktailDto.builder()
+                        .id(data.getId())
+                        .img(data.getImg())
+                        .name(data.getNameKR())
+                        .alcohol(data.getAlcohol())
+                        .baseLiquor(data.getBaseLiquor()).build()));
+        return list;
+    }
+
     public int filterCount(SearchFilterDto searchFilterDto){
         String type = searchFilterDto.getType()==1 ? "Alcoholic" : "Non alcoholic";
         return cocktailRepository.findByFilter(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],

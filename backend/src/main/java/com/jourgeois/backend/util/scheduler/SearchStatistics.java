@@ -2,7 +2,7 @@ package com.jourgeois.backend.util.scheduler;
 
 import com.jourgeois.backend.api.dto.SearchHistoryDTO;
 import com.jourgeois.backend.api.dto.SearchHistoryVO;
-import com.jourgeois.backend.api.dto.SearchTrendDTO;
+import com.jourgeois.backend.api.dto.SearchTrendDto;
 import com.jourgeois.backend.service.RedisService;
 import com.jourgeois.backend.service.SearchHistoryService;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -47,14 +47,14 @@ public class SearchStatistics {
                 searchHistoryVO.setHits(s.getHits());
                 cur_hot.add(searchHistoryVO);
             }
-            SearchTrendDTO searchTrend = new SearchTrendDTO();
+            SearchTrendDto searchTrend = new SearchTrendDto();
             searchTrend.setFrom(fromFormatted);
             searchTrend.setTo(toFormatted);
             searchTrend.setKeywords(cur_hot);
             searchTrend.setDelta(new ArrayList());
             System.out.println("현재 로그 조회 성공");
 //            System.out.println(prev.getFrom());
-            SearchTrendDTO prev = redisService.getHotKeywords("cur");
+            SearchTrendDto prev = redisService.getHotKeywords("cur");
 
             System.out.println("이전 로그 조회 성공");
             if (prev == null) {
@@ -101,14 +101,14 @@ public class SearchStatistics {
                 searchHistoryVO.setHits(s.getHits());
                 cur_hot.add(searchHistoryVO);
             }
-            SearchTrendDTO searchTrend = new SearchTrendDTO();
+            SearchTrendDto searchTrend = new SearchTrendDto();
             searchTrend.setFrom(fromFormatted);
             searchTrend.setTo(toFormatted);
             searchTrend.setKeywords(cur_hot);
             searchTrend.setDelta(new ArrayList());
             System.out.println("현재 로그 조회 성공");
 //            System.out.println(prev.getFrom());
-            SearchTrendDTO prev = redisService.getWeeklyHotKeywords("cur");
+            SearchTrendDto prev = redisService.getWeeklyHotKeywords("cur");
 
             System.out.println("이전 로그 조회 성공");
             if (prev == null) {

@@ -27,10 +27,12 @@ export default {
   },
   cocktail: {
     getCocktailData: () => HOST + COCKTAIL + "cocktail",
+    cocktailList: () => HOST + COCKTAIL + "list",
   },
 
   lookups: {
     cocktailall: () => HOST + LOOKUP + "cocktailall",
+    wholeCocktail: () => HOST + LOOKUP + "cocktailwhole",
     user: () => HOST + LOOKUP + "user",
     autoComplete: () => HOST + LOOKUP + "search",
     weeklyHotKeyword: () => HOST + LOOKUP + "weeklyhotkeyword",

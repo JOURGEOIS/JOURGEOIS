@@ -96,12 +96,13 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 User 검색결과
-    setSearchUser: ({ commit, state }, keyword: string) => {
+    setSearchUser: ({ commit, state, rootGetters }, keyword: string) => {
+      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.user(),
         method: "GET",
         headers: {
-          email: "tmdgns1126@naver.com",
+          email,
         },
         params: {
           keyword,
@@ -119,11 +120,12 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 Cocktail 검색결과
-    setSearchCocktail: ({ commit, state }, keyword: string) => {
+    setSearchCocktail: ({ commit, state, rootGetters }, keyword: string) => {
+      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
-        headers: { email: "tmdgns1126@naver.com" },
+        headers: { email },
         params: {
           keyword,
           page: state.searchCocktailPage,

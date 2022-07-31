@@ -20,7 +20,6 @@
         :placeholder="data.placeholder"
         :maxlength="data.maxlength"
         @input="emitValue"
-        @click="clickSearchInput"
         autocapitalize="off"
         autocomplete="off"
       />
@@ -78,11 +77,6 @@ const emitValue = (event: Event) => {
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];
 });
-
-// input click
-const clickSearchInput = () => {
-  console.log(searchInputValue.value);
-};
 
 // 닫기 버튼 누르면 emit
 const clickCloseIconInner = (event: Event) => {

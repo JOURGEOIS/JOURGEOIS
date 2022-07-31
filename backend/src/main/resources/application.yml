@@ -9,8 +9,8 @@ spring:
 #    username: root
 #    password: nh0455k8613!
 
-    username: root
-    password: 1q2w3e4r!@#
+#    username: root
+#    password: 1q2w3e4r!@#
     hikari:
       auto-commit: false
       connection-test-query: SELECT 1
@@ -29,7 +29,7 @@ spring:
     host: redis
 #    host: localhost
     port: 6379
-    password: 1q2w3e4r!@#
+#    password: 1q2w3e4r!@#
 #cloud:
 #  aws:
 #    s3:

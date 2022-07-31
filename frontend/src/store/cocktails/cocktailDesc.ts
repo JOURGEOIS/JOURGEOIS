@@ -29,6 +29,9 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     getCurrentCocktailDataIngredients: (state) => {
       return state.currentCocktailData.materials;
     },
+    getCurrentCocktailDataRecipe: (state) => {
+      return state.currentCocktailData.recipe
+    }
 
   },
   mutations: {

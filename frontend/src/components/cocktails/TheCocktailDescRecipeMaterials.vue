@@ -48,21 +48,34 @@ const cocktailData = computed(
 );
 
 // 칵테일 재료 (더보기를 누른 경우, 모든 재료를 보여준다.)
-const cocktailIngredients: string[] = cocktailData.value.map((item: string) => {
-  return item.split(",");
+const cocktailIngredients: string[] = cocktailData?.value?.map((item: string) => {
+  return item?.split(",");
 });
 
 // 더보기를 안눌렀을 경우, 화면 크기에 따라 보여주는 개수가 다르다.
 const cocktailIngredientsPreview = computed(() => {
   if (window.innerWidth < 768) {
-    return cocktailIngredients.slice(0, 3);
+    return cocktailIngredients?.slice(0, 3);
   } else {
-    return cocktailIngredients.slice(0, 5);
+    return cocktailIngredients?.slice(0, 5);
   }
 });
 
+
+
 // 더보기 상태
-const showMore = ref(true);
+interface showMore {
+  value: boolean
+}
+let showMore: showMore; 
+
+if (window.innerWidth < 768 && cocktailData?.value?.length <=3) {
+  showMore =  ref(false)
+} else if ( window.innerWidth >=768 &&  cocktailData?.value?.length <=5){
+  showMore = ref(false)
+} else {
+  showMore = ref(true)
+}
 
 // 더보기 클릭
 const clickShowMore = () => {

@@ -1,12 +1,31 @@
 <template>
   <div class="cocktail-desc-view">
-    <the-cocktail-desc></the-cocktail-desc>
+    <!-- 헤더 -->
+    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+      칵테일 상세 정보
+    </header-basic>
+
+    <!-- 칵테일 상세 페이지: 상단부분 -->
+    <the-cocktail-desc-detail></the-cocktail-desc-detail>
+
+    <!-- 칵테일 상세 페이지: 탭-->
     <section class="cocktail-desc-section">
+      <hr class="cocktail-desc-hr" />
+      <!-- 탭: 탭을 선택하면 해당 탭으로 컴포넌트를 바꾼다.  -->
       <div class="cocktail-desc-tab">
-        <p @click="clickRecipeTab">레시피</p>
-        <p @click="clickReviewTab">후기</p>
-        <p @click="clickCustomTab">커스텀</p>
+        <div class="cocktail-desc-tab-recipe" :class="`index-${index}`">
+          <p @click="clickRecipeTab">레시피</p>
+        </div>
+        <div class="cocktail-desc-tab-review" :class="`index-${index}`">
+          <p @click="clickReviewTab">후기</p>
+          <span>99+</span>
+        </div>
+        <div class="cocktail-desc-tab-custom" :class="`index-${index}`">
+          <p @click="clickCustomTab">커스텀</p>
+          <span>99+</span>
+        </div>
       </div>
+      <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
       <keep-alive>
         <component :is="currentComponent"></component>
       </keep-alive>
@@ -15,10 +34,11 @@
 </template>
 
 <script setup lang="ts">
+import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import TheCocktailDescDetail from "@/components/cocktails/TheCocktailDescDetail.vue";
 import { onBeforeMount, defineAsyncComponent, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import TheCocktailDesc from "@/components/cocktails/TheCocktailDesc.vue";
 const store = useStore();
 const route = useRoute();
 
@@ -36,7 +56,6 @@ const componentArray = [
 ];
 
 const index = computed(() => store.getters["cocktailDesc/getCurrentTab"]);
-
 const currentComponent = computed(() => {
   return componentArray[index.value];
 });
@@ -53,16 +72,95 @@ onBeforeMount(() => {
 
 <style scoped lang="scss">
 .cocktail-desc-view {
+  @include flex(column);
+  justify-content: flex-start;
+  align-items: center;
   @include accountLayOut;
+  margin-bottom: 48px;
 
   section {
     @include flex(column);
     justify-content: center;
     align-items: center;
+    gap: 24px;
+    width: 100%;
+    margin-top: 24px;
+
+    @media #{$tablet} {
+      gap: 40px;
+    }
+
+    .cocktail-desc-hr {
+      width: 100%;
+      height: 1px;
+      border: 0;
+      background-color: $unchecked-color;
+    }
     .cocktail-desc-tab {
       @include flex-xy(space-between, center);
-      width: 100%;
+      width: 80%;
+      div {
+        @include flex-center;
+        position: relative;
+        width: 72px;
+        border-bottom: 2px solid $white400;
+
+        @media #{$tablet} {
+          width: 96px;
+        }
+
+        @media #{$pc} {
+          width: 120px;
+        }
+
+        p {
+          color: $white400;
+          @include font($fs-main, $fw-medium);
+          padding-bottom: 6px;
+          cursor: pointer;
+        }
+
+        span {
+          position: absolute;
+          right: -8px;
+          top: -2px;
+          @include font($fs-sm, $fw-regular);
+          color: $white300;
+        }
+      }
+
+      // 탭 활성화 색상 변경
+      .cocktail-desc-tab-recipe.index-0 {
+        border-bottom: 2px solid $primary-color;
+        p {
+          color: $main-color;
+        }
+      }
+
+      .cocktail-desc-tab-review.index-1 {
+        border-bottom: 2px solid $primary-color;
+        p {
+          color: $main-color;
+        }
+
+        span {
+          color: $white400;
+        }
+      }
+
+      .cocktail-desc-tab-custom.index-2 {
+        border-bottom: 2px solid $primary-color;
+        p {
+          color: $main-color;
+        }
+        span {
+          color: $white400;
+        }
+      }
     }
   }
+}
+.cocktail-desc-bookmark-use {
+  cursor: pointer;
 }
 </style>

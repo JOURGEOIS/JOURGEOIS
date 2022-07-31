@@ -1,14 +1,14 @@
 <!-- 
   부모에서 보내는 props => profile-image
   -----------------------------------------------------
-  profile-image: 프로필 이미지에 대한 정보를 담은 객체
+  round-image: 프로필 이미지에 대한 정보를 담은 객체
   - image (string): 이미지 url
   - width (string): 원형 프로필 이미지 크기
 -->
 
 <template>
   <div
-    class="profile-image"
+    class="round-image"
     :style="{
       backgroundImage: imageUrl,
       width: imageWidth,
@@ -18,26 +18,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue'
 
-export interface profileImage {
-  image: string;
-  width: string;
+export interface roundImage {
+  image: string
+  width: string
 }
 
 const props = defineProps<{
-  profileImage: profileImage;
-}>();
+  roundImage: roundImage
+}>()
 
 const imageUrl = computed(() => {
-  return `url(${props.profileImage.image})`;
-});
+  return `url(${props.roundImage.image})`
+})
 
-const imageWidth = ref(props.profileImage.width);
+const imageWidth = ref(props.roundImage.width)
 </script>
 
 <style scoped lang="scss">
-.profile-image {
+.round-image {
   width: 87px;
   height: 87px;
   border: 0;

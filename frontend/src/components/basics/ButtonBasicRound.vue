@@ -64,4 +64,9 @@ const buttonFontSize = computed(() => {
   }
 });
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+button {
+  @include p-component("sm");
+  border-radius: 1000em;
+}
+</style>

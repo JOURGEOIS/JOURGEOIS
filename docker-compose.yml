@@ -29,7 +29,7 @@ services:
                         - ./db/data/mysql:/var/lib/mysql
                         - ./db/cnf:/etc/mysql/conf.d
                 ports:
-                        - "3306:3306"
+                        - "3306"
         redis:
                 image: redis:alpine
                 volumes:

@@ -32,13 +32,15 @@ public class SearchStatistics {
 
     private final RedisService redisService;
 
-    @Scheduled(cron = "0 */1 * * * *")
-    public void getHotKeywordEveryTemMinutes() {
+    @Scheduled(cron = "0 */10 * * * *")
+    public void getHotKeywordEveryTenMinutes() {
+        // 현재 시간 마지막 집계 시간 기록
         LocalDateTime to = LocalDateTime.now();
-        LocalDateTime from = LocalDateTime.now().minusMinutes(5L);
+        LocalDateTime from = LocalDateTime.now().minusMinutes(10L);
         String toFormatted = to.format(DATE_TIME_FORMATTER);
         String fromFormatted = from.format(DATE_TIME_FORMATTER);
         try {
+            // 집계 가져옴
             List<SearchHistoryDTO> jpa_cur_hot = this.searchHistoryService.getHotKeyword();
             List<SearchHistoryVO> cur_hot = new ArrayList<>();
             for (SearchHistoryDTO s : jpa_cur_hot) {
@@ -54,9 +56,13 @@ public class SearchStatistics {
             searchTrend.setDelta(new ArrayList());
             System.out.println("현재 로그 조회 성공");
 //            System.out.println(prev.getFrom());
+
+            // 이전 기록 가져옴
             SearchTrendDto prev = redisService.getHotKeywords("cur");
 
             System.out.println("이전 로그 조회 성공");
+
+            // 이전 기록이 없으면 현재 기록을 이전 기록과 현재 기록에 등록
             if (prev == null) {
                 System.out.println("통계가 없음");
                 for (int i = 0; i < cur_hot.size(); i++)

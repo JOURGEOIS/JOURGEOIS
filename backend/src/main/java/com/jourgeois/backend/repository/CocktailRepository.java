@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 
     List<Cocktail> findAllByOrderById(Pageable pageable);
@@ -22,6 +23,13 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
     Optional<String> findCocktailCupById(@Param("id") Long id);
     @Query("SELECT m.nameKR, m.img FROM Cocktail c JOIN CocktailToMaterial cm ON c.id = cm.cocktail.id JOIN Material m ON cm.material.id = m.id WHERE c.id = :id")
     Optional<ArrayList<String>> findAllMaterialsByCocktailId(@Param("id") Long id);
+
+
+    @Query(value = "INSERT INTO cocktail_reviews (cr_review) VALUES ('taltaltal')", nativeQuery = true)
+    Boolean insertCocktailComment();
+
+    @Query(value = "INSERT INTO cocktail_reviews (cr_review) VALUE ('taltaltal')", nativeQuery = true)
+    Boolean insertCocktailgogoComment();
 
     @Query(nativeQuery = true, value="select * from cocktail where c_name_kr LIKE CONCAT('%',:name,'%') union " +
             "select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id in " +

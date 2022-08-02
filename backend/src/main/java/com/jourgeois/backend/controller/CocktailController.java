@@ -1,9 +1,12 @@
 package com.jourgeois.backend.controller;
 
+
+import com.jourgeois.backend.api.dto.CocktailCommentDTO;
+
 import com.jourgeois.backend.api.dto.CocktailBookmarkDTO;
+
 import com.jourgeois.backend.api.dto.CocktailDTO;
 import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.CocktailBookmark;
 import com.jourgeois.backend.domain.Material;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.service.CocktailService;
@@ -14,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -61,7 +66,9 @@ public class CocktailController {
     }
 
     @PutMapping(value = "/cocktail")
-    public ResponseEntity<?> updateCocktail(@RequestBody Cocktail cocktail) {
+    public ResponseEntity<?> updateCocktail(@RequestParam(value = "id") Long id) {
+            Cocktail cocktail = null;
+//            (@RequestBody Cocktail cocktail) {
         Map<String, Boolean> data = new HashMap<>();
         try {
             System.out.println();
@@ -106,6 +113,31 @@ public class CocktailController {
         }
     }
 
+    @PostMapping(value = "/comment")
+    public ResponseEntity insertReview(@RequestBody CocktailCommentDTO cocktailCommentDTO) {
+        // uId, cocktailId, review  정보 받음
+        System.out.println(cocktailCommentDTO.toString());
+        try {
+            boolean res = cocktailService.createComment(cocktailCommentDTO);
+            return ResponseEntity.ok().body(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("result", "false"));
+        }
+    }
+
+    @GetMapping(value = "/comment")
+    public ResponseEntity selectReview(@RequestParam(value = "cocktailId") Long cocktailId) {
+        // review, cocktailId, reviewId 정보 받음
+        try {
+            List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId);
+            return ResponseEntity.ok().body(cc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("result", "false"));
+        }
+    }
+
     // 원본 칵테일 북마크 (token 필요) => uid로 전체 바꿀 때 바꾼 후 적용 필요
     @PostMapping(value = "/bookmark")
     public ResponseEntity pushCocktailBookmark(@RequestBody Map<String, Long> bookmark){
@@ -124,6 +156,7 @@ public class CocktailController {
         }else{
             return new ResponseEntity<>("fail", HttpStatus.NOT_ACCEPTABLE);
         }
+
 
     }
 }

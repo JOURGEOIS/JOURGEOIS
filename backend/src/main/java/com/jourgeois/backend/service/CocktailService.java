@@ -1,14 +1,18 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.CocktailBookmarkDTO;
 import com.jourgeois.backend.api.dto.CocktailDTO;
 import com.jourgeois.backend.api.dto.CocktailVO;
 import com.jourgeois.backend.domain.Cocktail;
+import com.jourgeois.backend.domain.CocktailBookmark;
 import com.jourgeois.backend.domain.Material;
+import com.jourgeois.backend.repository.CocktailBookmarkRepository;
 import com.jourgeois.backend.repository.CocktailRepository;
 import com.jourgeois.backend.repository.MaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 
@@ -16,11 +20,15 @@ import java.util.ArrayList;
 public class CocktailService {
     private final CocktailRepository cocktailRepository;
     private final MaterialRepository materialRepository;
+    private final CocktailBookmarkRepository cocktailBookmarkRepository;
 
     @Autowired
-    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository){
+    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository
+                    ,CocktailBookmarkRepository cocktailBookmarkRepository
+    ){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
+        this.cocktailBookmarkRepository = cocktailBookmarkRepository;
     }
 
     // 칵테일 저장 메소드
@@ -79,5 +87,25 @@ public class CocktailService {
 
     }
 
+    @Transactional
+    public boolean pushBookmark(CocktailBookmarkDTO cocktailBookmark){
+        cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
+                cocktailBookmark.getCocktail()).ifPresentOrElse(data -> {
+                    cocktailBookmarkRepository.deleteById(data.getId());},
+            ()->{cocktailBookmarkRepository.save(new CocktailBookmark(cocktailBookmark.getMember(), cocktailBookmark.getCocktail()));});
+        return checkUserBookmark(cocktailBookmark);
+    }
 
+    public boolean checkUserBookmark(CocktailBookmarkDTO cocktailBookmark){
+        return cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
+                cocktailBookmark.getCocktail()).isPresent();
+    }
+
+    public boolean checkCocktailUid(Long uid){
+        return cocktailRepository.findById(uid).isPresent();
+    }
+
+    public Long countCocktailBookmark(Cocktail cocktail_id){
+        return cocktailBookmarkRepository.countByCocktail(cocktail_id);
+    }
 }

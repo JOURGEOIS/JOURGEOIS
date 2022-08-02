@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
+//    Optional<Member> findByUid(Long uid);
     Member findByNickname(String nickname);
     List<Member> findByNicknameContainingIgnoreCaseOrderByNickname(String nickname, Pageable pageable);
     List<Member> findTop10ByNicknameContainingIgnoreCaseOrderByNickname(String nickname);

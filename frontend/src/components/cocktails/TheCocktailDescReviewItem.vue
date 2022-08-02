@@ -4,10 +4,12 @@
     v-for="(review, id) in reviews"
     :key="`main-${id}`"
   >
-    <div class="cocktail-desc-review-profile">
-      <round-image
-        :round-image="{ image: review.image, width: '45px' }"
-      ></round-image>
+    <div class="cocktail-desc-review-profile-content">
+      <div class="cocktail-desc-review-profile">
+        <round-image
+          :round-image="{ image: review.image, width: '45px', height: '45px' }"
+        ></round-image>
+      </div>
       <div class="cocktail-desc-review-content">
         <div class="cocktail-decs-review-front">
           <div class="cocktail-desc-review-name-time">
@@ -19,14 +21,14 @@
             class="cocktail-desc-review-button"
           >
             <button-basic
-              :button-style="[buttonColor, '50px', 'small']"
+              :button-style="[buttonColor, '40px']"
               :disabled="!reviewEditValue"
               class="buttonstyle"
             >
               수정
             </button-basic>
             <button-basic
-              :button-style="[buttonColor, '50px', 'small']"
+              :button-style="[buttonColor, '40px']"
               :disabled="!reviewEditValue"
               class="buttonstyle"
             >
@@ -52,11 +54,14 @@ import ButtonBasic from '@/components/basics/ButtonBasic.vue'
 const store = useStore()
 const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
 
+const img: string = userInfo.value.profileImg
+const name: string = userInfo.value.nickname
+
 // profile image
 const reviews = ref([
   {
-    image: userInfo.value.profileImg,
-    name: userInfo.value.nickname,
+    image: img,
+    name: name,
     time: '방금 전',
     content:
       '첫 맛에 인위적이지 않은 라임맛이 강하게 느껴진다. 가볍고 상큼하기만 하다. 진하지가 않다. 맛있다 맛있다 맛있다',
@@ -77,44 +82,46 @@ const reviewEditValue = ref('')
 const buttonColor = computed(() => {
   return 'sub-blank'
 })
-
 </script>
 
 <style scoped lang="scss">
-.cocktail-desc-review-profile {
+.cocktail-desc-review {
   @include flex-center;
-  width: 100%;
-  gap: 12px;
-  .cocktail-desc-review-content {
+  .cocktail-desc-review-profile-content {
     @include flex;
-    @include font($fs-md, $fw-regular);
-    flex-direction: column;
-    width: 100%;
-
-    .cocktail-decs-review-front {
+    gap: 12px;
+    .cocktail-desc-review-profile {
       @include flex;
+      align-items: center;
+    }
+    .cocktail-desc-review-content {
+      @include flex;
+      @include font($fs-md, $fw-regular);
+      flex-direction: column;
       width: 100%;
-      flex-direction: row;
-      justify-content: space-between;
-      padding: 0px;
-      gap: 159px;
-      .cocktail-desc-review-name-time {
-        @include flex;
-        flex-direction: row;
-        align-items: flex-end;
-        padding: 0px;
-        gap: 8px;
-        .cocktail-desc-review-time {
-          @include font($fs-md, $fw-regular);
-          @include font-size-unchecked($fs-md);
-        }
-      }
-      .cocktail-desc-review-button {
-        @include flex;
 
-        .buttonstyle {
-          @include font-size-unchecked($fs-md);
+      .cocktail-decs-review-front {
+        @include flex;
+        justify-content: space-between;
+        padding: 0px;
+        .cocktail-desc-review-name-time {
+          @include flex-center;
+
           padding: 0px;
+          gap: 8px;
+          .cocktail-desc-review-time {
+            @include flex;
+            @include font($fs-sm, $fw-regular);
+            @include font-size-unchecked($fs-md);
+          }
+        }
+        .cocktail-desc-review-button {
+          @include flex;
+
+          .buttonstyle {
+            @include font-size-unchecked($fs-sm);
+            padding: 0px;
+          }
         }
       }
     }

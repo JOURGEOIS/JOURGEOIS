@@ -3,7 +3,11 @@
     <form @submit.prevent="searchComplete">
       <div class="cocktail-search-container">
         <!-- 검색 창 섹션 -->
-        <the-cocktail-search-header></the-cocktail-search-header>
+        <the-cocktail-search-header
+          @clickBackIcon="clickBackIcon"
+          @clickCloseIcon="clickCloseIcon"
+        >
+        </the-cocktail-search-header>
         <!-- 처음 보이는 공간 -->
         <the-cocktail-search-init
           v-if="!searchInputValue"
@@ -51,7 +55,7 @@ onMounted(() => {
 const searchComplete = () => {
   if (!searchInputValue.value) {
     // 전체 칵테일 view로 이동
-    router.push({
+    router.replace({
       name: "TheWholeCocktailView",
     });
   } else {
@@ -68,6 +72,16 @@ const searchComplete = () => {
 const filterStatus = computed(
   () => store.getters["cocktailSearch/getFilterStatus"]
 );
+
+// 뒤로가기 아이콘 누르기
+const clickBackIcon = () => {
+  router.push({ name: "TheHomeView" });
+};
+
+// 삭제 아이콘 누르기
+const clickCloseIcon = () => {
+  store.dispatch("cocktailSearch/setSearchInputValue", "");
+};
 </script>
 
 <style scoped lang="scss">

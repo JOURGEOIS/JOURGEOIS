@@ -148,9 +148,10 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       const newWord = getters.getSearchInputValue;
       // 새로 입력된 검색어가 비어있다면 return
       if (!newWord) return;
-      // 새로 입력된 검색어가 최근 5개 중에 있다면 return
-      const words = state.recentSearchWords;
-      if (words.includes(newWord)) return;
+      // 새로 입력된 검색어가 최근 5개 중에 있다면 삭제
+      let words = state.recentSearchWords;
+      words = words.filter((word) => word !== newWord);
+      // words에 newWord 추가
       words.push(newWord);
       // 최근 검색어가 6개라면 가장 오래된 거 하나 뺌
       if (words.length > 5) {

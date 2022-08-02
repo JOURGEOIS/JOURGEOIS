@@ -38,6 +38,7 @@ const userImage = {
   padding: 10px;
   gap: 10px;
   border-bottom: 1px solid $seperate-color;
+  @include list-hover;
 
   .user-info-text {
     @include flex(column);

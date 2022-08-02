@@ -29,7 +29,8 @@ import java.util.stream.Stream;
 public class S3Util {
     private final AmazonS3Client amazonS3Client;
 
-    private final String PROFILE_TMP = "/app/DATA/tmp/profile";
+    private final String IMG_TMP = "/app/DATA/tmp";
+//    private final String IMG_TMP = "C:///app/DATA/tmp/";
 
     @Autowired
     S3Util(AmazonS3Client amazonS3Client){ this.amazonS3Client = amazonS3Client;}
@@ -37,25 +38,28 @@ public class S3Util {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
 
-    public String upload(MultipartFile multipartFile, Long dirName) throws IOException {
-        File uploadFile = convert(multipartFile, dirName)  // 파일 변환할 수 없으면 에러
+    public String upload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
+        File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        upload(uploadFile, dirName);
-        return uploadFile.getName();
+        upload(uploadFile, dirName, imgType);
+        System.out.println(uploadFile.getName());
+        return imgType.getValue() + "/" + dirName + "/" + uploadFile.getName();
     }
 
-    public String localUpload(MultipartFile multipartFile, Long dirName) throws IOException {
-        File uploadFile = convert(multipartFile, dirName)  // 파일 변환할 수 없으면 에러
+    public String localUpload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
+        File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         return uploadFile.getName();
     }
 
     // S3로 파일 업로드하기
-    private void upload(File uploadFile, Long dirName) {
-        String fileName = uploadFile.getName();   // S3에 저장된 파일 이름
+    private void upload(File uploadFile, Long dirName, ImgType imgType) {
+
+        String fileName = imgType.getValue() + "/" + dirName + "/" + uploadFile.getName();   // S3에 저장된 파일 이름
         putS3(uploadFile, fileName); // s3로 업로드
         try {
-            File tmp_img = new File(PROFILE_TMP + "/" + dirName);
+            File tmp_img = new File(IMG_TMP + "/" + imgType.getValue() + "/" + dirName);
+            System.out.println(tmp_img.getPath());
             removeFiles(tmp_img);
         } catch (NullPointerException e) {
             System.out.println("삭제할 파일 없음");
@@ -79,8 +83,8 @@ public class S3Util {
     }
 
     // 로컬에 파일 업로드 하기
-    public Optional<File> convert(MultipartFile file, Long dirName) throws IOException {
-        String folderPath = PROFILE_TMP + "/" + dirName + "/";
+    public Optional<File> convert(MultipartFile file, Long dirName, ImgType imgType) throws IOException {
+        String folderPath = IMG_TMP + "/" + imgType.getValue() + "/" + dirName + "/";
         System.out.println(folderPath);
         File makeFolder = new File(folderPath);
         if(!makeFolder.exists()){

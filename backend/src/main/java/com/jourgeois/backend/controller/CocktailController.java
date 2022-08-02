@@ -30,11 +30,16 @@ public class CocktailController {
     }
 
     @GetMapping(value = "/cocktail")
-    public ResponseEntity readCocktail(@RequestParam(value = "id") Long id) {
+    public ResponseEntity readCocktail(@RequestHeader(value = "uid", defaultValue = "0") Long uid, @RequestParam(value = "id") Long id) {
         try {
-            System.out.println(id+" 을 조회하셨습니다.");
             CocktailDTO cocktail = cocktailService.readCocktail(id);
-
+            if (uid != 0) {
+                CocktailBookmarkDTO df = CocktailBookmarkDTO.builder()
+                        .member(new Member(uid))
+                        .cocktail(new Cocktail(id)).build();
+                cocktail.setCount(cocktailService.countCocktailBookmark(new Cocktail(id)));
+                cocktail.setStatus(cocktailService.checkUserBookmark(df) ? 1L : 0L);
+            }
             return ResponseEntity.ok().body(cocktail);
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,9 +109,9 @@ public class CocktailController {
     // 원본 칵테일 북마크 (token 필요) => uid로 전체 바꿀 때 바꾼 후 적용 필요
     @PostMapping(value = "/bookmark")
     public ResponseEntity pushCocktailBookmark(@RequestBody Map<String, Long> bookmark){
-        if(memberService.checkUserUid(bookmark.get("m_id")) && cocktailService.checkCocktailUid(bookmark.get("c_id"))){
+        if(memberService.checkUserUid(bookmark.get("uid")) && cocktailService.checkCocktailUid(bookmark.get("c_id"))){
             CocktailBookmarkDTO df = CocktailBookmarkDTO.builder()
-                    .member(new Member(bookmark.get("m_id")))
+                    .member(new Member(bookmark.get("uid")))
                     .cocktail(new Cocktail(bookmark.get("c_id"))).build();
             Map<String, Long> data = new HashMap<>();
             if(cocktailService.pushBookmark(df)){

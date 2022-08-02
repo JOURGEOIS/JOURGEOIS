@@ -1,4 +1,11 @@
-const baseAlcohol: object[] = [
+interface ingredientsDesc {
+  id: number;
+  name: string;
+  nameKr: string;
+  img: string;
+}
+
+const baseAlcohol: ingredientsDesc[] = [
   {
     id: 179,
     name: "Dark Rum",
@@ -91,7 +98,7 @@ const baseAlcohol: object[] = [
   },
 ];
 
-const liqueur: object[] = [
+const liqueur: ingredientsDesc[] = [
   {
     id: 223,
     name: "Galliano",
@@ -226,7 +233,7 @@ const liqueur: object[] = [
   },
 ];
 
-const drinks: object[] = [
+const drinks: ingredientsDesc[] = [
   {
     id: 308,
     name: "Lime Juice",
@@ -337,7 +344,7 @@ const drinks: object[] = [
   },
 ];
 
-const ingredients: object[] = [
+const ingredients: ingredientsDesc[] = [
   {
     id: 122,
     name: "Cinnamon",

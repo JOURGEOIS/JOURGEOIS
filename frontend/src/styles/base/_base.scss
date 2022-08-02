@@ -90,3 +90,12 @@ input {
 .material-icons-outlined {
   user-select:none
 }
+
+.image {
+  border: 0;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-color: $white200;
+  background-position: center;
+  background-size: cover;
+}

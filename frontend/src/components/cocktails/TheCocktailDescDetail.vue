@@ -31,14 +31,14 @@
           v-if="!isBookmarked"
           @click="clickBookMark"
         >
-          bookmarks
+          bookmark_border
         </span>
         <span
           class="material-icons bookmark"
           v-if="isBookmarked"
           @click="clickBookMark"
         >
-          bookmarks
+          bookmark
         </span>
         <p>북마크</p>
         <!-- 북마크 수: 클릭 시 팔로우한 유저들을 보여주는 목록으로 이동 -->
@@ -48,7 +48,7 @@
       </div>
       <!-- 2. 베이스 술 -->
       <div>
-        <span class="material-icons-outlined"> local_bar </span>
+        <span class="material-icons"> local_bar </span>
         <p>베이스 술</p>
         <p>
           {{ cocktailData.baseLiquor ? cocktailData.baseLiquor : "무알콜" }}
@@ -168,6 +168,10 @@ let cocktailTags = computed(() => {
 }
 .bookmark {
   cursor: pointer;
+}
+
+.material-icons-outlined {
+  font-weight: 500;
 }
 
 a {

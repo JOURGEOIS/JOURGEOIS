@@ -35,9 +35,8 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
       return state.failPopupStatus
     },
     getCurrentCocktailDataRecipe: (state) => {
-      return state.currentCocktailData.recipe
-    }
-
+      return state.currentCocktailData.recipe;
+    },
   },
   mutations: {
     SET_CURRENT_TAB: (state, value: number) => {

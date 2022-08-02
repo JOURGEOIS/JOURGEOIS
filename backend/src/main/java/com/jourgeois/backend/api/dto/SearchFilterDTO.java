@@ -7,6 +7,15 @@ public class SearchFilterDTO {
     private int type;
     private int[] abv;
     private List<Integer> materials;
+    private int page;
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
 
     public int getType() {
         return type;

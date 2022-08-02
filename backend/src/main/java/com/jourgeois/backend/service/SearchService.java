@@ -11,6 +11,7 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.SearchKeywordRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -101,21 +102,38 @@ public class SearchService {
 
     public int filterCount(SearchFilterDTO searchFilterDto){
         String type = searchFilterDto.getType()==1 ? "Alcoholic" : "Non alcoholic";
-        return cocktailRepository.findByFilter(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
-                searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size());
+        if(searchFilterDto.getMaterials().size()==0){
+            return cocktailRepository.countByTypeAndAlcoholBetween(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1]);
+        }else {
+            return cocktailRepository.findByFilter(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
+                    searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size());
+        }
     }
 
     public List<SearchCocktailDTO> filterList(SearchFilterDTO searchFilterDto){
         String type = searchFilterDto.getType()==1 ?  "Alcoholic" : "Non alcoholic";
         List<SearchCocktailDTO> list = new ArrayList<>();
-        cocktailRepository.findByFilterInfo(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
-                        searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size()).forEach(data ->
-                list.add(SearchCocktailDTO.builder()
-                        .id(data.getId())
-                        .img(data.getImg())
-                        .name(data.getNameKR())
-                        .alcohol(data.getAlcohol())
-                        .baseLiquor(data.getBaseLiquor()).build()));
+        if(searchFilterDto.getMaterials().size()==0){
+            cocktailRepository.findByTypeAndAlcoholBetween(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1]
+                    ,searchFilterDto.getPage()*10, 10)
+                    .forEach(data ->
+                            list.add(SearchCocktailDTO.builder()
+                                    .id(data.getId())
+                                    .img(data.getImg())
+                                    .name(data.getNameKR())
+                                    .alcohol(data.getAlcohol())
+                                    .baseLiquor(data.getBaseLiquor()).build()));
+        }else{
+            cocktailRepository.findByFilterInfo(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
+                    searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size(),searchFilterDto.getPage()*10).forEach(data ->
+                    list.add(SearchCocktailDTO.builder()
+                            .id(data.getId())
+                            .img(data.getImg())
+                            .name(data.getNameKR())
+                            .alcohol(data.getAlcohol())
+                            .baseLiquor(data.getBaseLiquor()).build()));
+        }
+
         return list;
     }
     public String searchMaterialName(Long id){

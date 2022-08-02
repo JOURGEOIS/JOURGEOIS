@@ -65,14 +65,14 @@ const completeSignUpModalStatus = computed(
 onMounted(() => {
   // 로그아웃 팝업 시간제 off
   if (logOutPopupStatus) {
-    setTimeout(() => store.dispatch("account/toggleLogOutPopup", false), 3000);
+    setTimeout(() => store.dispatch("account/toggleLogOutPopup", false), 2000);
   }
 
   // 비밀번호 변경 팝업 시간제 off
   if (changePwPopupStatus) {
     setTimeout(
       () => store.dispatch("password/toggleChangePwPopup", false),
-      3000
+      2000
     );
   }
 
@@ -80,20 +80,20 @@ onMounted(() => {
   if (failModalStatus) {
     setTimeout(
       () => store.dispatch("account/toggleFailModalStatus", false),
-      3000
+      2000
     );
   }
 
   // 탈퇴 팝업 시간제 off
   if (signOutPopupStatus) {
-    setTimeout(() => store.dispatch("account/toggleSignOutPopup", false), 3000);
+    setTimeout(() => store.dispatch("account/toggleSignOutPopup", false), 2000);
   }
 
   // 리프레시 실패 팝업 시간제 off
   if (refreshFailPopupStatus) {
     setTimeout(
       () => store.dispatch("personalInfo/toggleRefreshFailPopup", false),
-      3000
+      2000
     );
   }
 });

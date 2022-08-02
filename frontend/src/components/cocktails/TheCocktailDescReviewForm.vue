@@ -1,11 +1,12 @@
 <template>
-  <!-- {{ profile }} -->
-  <form class="cocktail-desc-review-profile-input" @submit.prevent="">
+  <form
+    class="cocktail-desc-review-profile-input"
+    @submit.prevent="submitCreateReviewForm"
+  >
     <div class="cocktail-desc-review-profile">
       <round-image
-        :round-image="{ image: profile.image, width: '45px' }"
+        :round-image="{ image: profileInfo.image, width: '45px' }"
       ></round-image>
-      <p>{{ profile.name }}</p>
     </div>
     <div class="cocktail-desc-review-input-notice">
       <div class="cocktail-desc-review-input">
@@ -14,69 +15,56 @@
           :textarea-style="reviewInputStyle"
           v-model="reviewInputValue"
         ></textarea-basic>
-
-        <!-- 유효성 검사 -->
-        <div class="review-auth-error" v-if="occurredError">
-          <p v-for="(msg, index) in errorMessage" :key="index">{{ msg }}</p>
-        </div>
-        <!-- catch 메시지-->
-        <p class="review-Fail-message" v-if="reviewFailStatus">
-          비밀번호가 틀렸습니다. 다시 확인해주세요.
-        </p>
+        <failure-pop-up v-if="failModalStatus">
+          {{ reviewConditionErrorMessage }}
+        </failure-pop-up>
         <button-basic
-          :button-style="[buttonColor, '66px', 'small']"
+          :button-style="[buttonColor, '30px']"
           :disabled="!reviewInputValue"
           class="buttonstyle"
         >
           등록
         </button-basic>
       </div>
-      <p>
-        광고 및 욕설, 비속어나 타인을 비방하는 문구를 사용하면 비공개 될 수
-        있습니다.
-      </p>
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import TextareaBasic from '@/components/basics/TextareaBasic.vue'
 import RoundImage from '@/components/basics/RoundImage.vue'
 import ButtonBasic from '@/components/basics/ButtonBasic.vue'
+import FailurePopUp from '@/components/modals/FailurePopUp.vue'
 import { checkBadWord } from '../../functions/checkText'
 
+// 유저 정보 불러오기
+const store = useStore()
+const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
+
 const text = ref('')
+
 // profile image
-const profile = reactive({
-  image:
-    'https://mblogthumb-phinf.pstatic.net/MjAxNzA4MjJfMjcw/MDAxNTAzMzU1NTI5Mjg0.OBV0OZkJQHRZzIWAtVDM60JLl9wq5WwiwnRTwgYqDq4g.II9maLicfuatQ8bxN7F6uUt1ZVa_95hP2OVB0Ig4uf8g.JPEG.doghter4our/IMG_0907.jpg?type=w800',
-  name: '홍길동',
+const profileImg = userInfo.value.profileImg
+const nickname = userInfo.value.nickname
+const profileInfo = reactive({
+  image: profileImg,
+  name: nickname,
 })
 
-// textarea-form
-const reviewInputValue = ref('')
-// console.log(reviewInputValue)
-
+// textarea 데이터
 const reviewInputData: object = reactive({
   button: false,
-  placeholder: '후기를 남겨주세요.',
+  placeholder:
+    '광고 및 욕설, 비속어나 타인을 비방하는 문구를 사용하면 비공개 될 수 있습니다.',
   type: 'text',
   maxlength: 100,
 })
 
+// textarea value
+const reviewInputValue = ref('')
 const reviewInputStyle = ref('normal')
-
-// 유효성 검사
-const reviewCondition = checkBadWord(reviewInputValue.value)
-
-const errorMessage: string[] = reactive([])
-const occurredError = ref(false)
-const reviewConditionErrorMessage: string =
-  '리뷰에는 욕설을 포함할 수 없습니다.'
-
-// 에러 메시지
-const reviewFailStatus = ref(false)
 
 // button color
 const buttonColor = computed(() => {
@@ -86,6 +74,59 @@ const buttonColor = computed(() => {
     return 'unchecked-blank'
   }
 })
+
+// 에러 처리
+const reviewConditionErrorMessage: string =
+  '후기에 비속어나 타인을 비방하는 표현은 사용할 수 없습니다.'
+const errorMessage: string[] = reactive([])
+const occurredError = ref(false)
+
+// 리뷰 등록 실패 팝업
+const failModalStatus = computed(
+  () => store.getters['cocktailDesc/getFailPopupStatus'],
+)
+
+const toggleFailPopUp = (value: boolean) => {
+  store.dispatch('cocktailDesc/toggleFailPopup', value)
+}
+
+watch(failModalStatus, () => {
+  if (failModalStatus.value) {
+    setTimeout(() => {
+      toggleFailPopUp(false)
+    }, 2000)
+  }
+})
+
+// 리셋
+onMounted(() => {
+  toggleFailPopUp(false)
+})
+
+// 제출
+const submitCreateReviewForm = () => {
+  // 리셋
+  errorMessage.length = 0
+  reviewInputStyle.value = 'normal'
+  occurredError.value = false
+
+  // 유효성 검사
+  const reviewCondition = checkBadWord(reviewInputValue.value)
+
+  // 전달할 데이터
+  const data = {
+    name: profileInfo.name,
+    profileLink: profileInfo.image,
+    content: reviewInputValue.value,
+  }
+
+  // 제출
+  if (reviewCondition) {
+    reviewInputStyle.value = 'error'
+    occurredError.value = true
+    toggleFailPopUp(true)
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -120,7 +161,9 @@ const buttonColor = computed(() => {
       padding: 0px;
       gap: 12px;
       .buttonstyle {
-        padding: 15px;
+        @include font($fs-xs, $fw-regular);
+        padding: 37px 0px;
+        background-color: white;
       }
     }
   }

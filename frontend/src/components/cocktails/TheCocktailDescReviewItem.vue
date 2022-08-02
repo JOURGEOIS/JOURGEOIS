@@ -55,9 +55,8 @@ const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
 // profile image
 const reviews = ref([
   {
-    image:
-      'https://mblogthumb-phinf.pstatic.net/MjAxNzA4MjJfMjcw/MDAxNTAzMzU1NTI5Mjg0.OBV0OZkJQHRZzIWAtVDM60JLl9wq5WwiwnRTwgYqDq4g.II9maLicfuatQ8bxN7F6uUt1ZVa_95hP2OVB0Ig4uf8g.JPEG.doghter4our/IMG_0907.jpg?type=w800',
-    name: '홍길동',
+    image: userInfo.value.profileImg,
+    name: userInfo.value.nickname,
     time: '방금 전',
     content:
       '첫 맛에 인위적이지 않은 라임맛이 강하게 느껴진다. 가볍고 상큼하기만 하다. 진하지가 않다. 맛있다 맛있다 맛있다',
@@ -79,14 +78,6 @@ const buttonColor = computed(() => {
   return 'sub-blank'
 })
 
-// // 리뷰 삭제
-// const deleteReview = (deleteReviewId) => {
-//   const deleteReviewIndex = reviews.value.findIndex(
-//     (review) => review.id == deleteReviewId,
-//   )
-
-//   reviews.value.splice(deleteReviewIndex, 1)
-// }
 </script>
 
 <style scoped lang="scss">

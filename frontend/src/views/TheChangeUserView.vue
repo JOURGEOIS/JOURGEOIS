@@ -60,7 +60,7 @@ watch(failModalStatus, () => {
   if (failModalStatus.value) {
     setTimeout(() => {
       toggleFailPopUp(false);
-    }, 3000);
+    }, 2000);
   }
 });
 
@@ -68,7 +68,7 @@ watch(successPopUpStatus, () => {
   if (successPopUpStatus.value) {
     setTimeout(() => {
       toggleSuccessPopUp(false);
-    }, 3000);
+    }, 2000);
   }
 });
 

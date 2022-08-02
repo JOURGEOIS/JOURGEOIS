@@ -36,6 +36,7 @@ const cocktailImage = {
   padding: 10px;
   gap: 10px;
   border-bottom: 1px solid $seperate-color;
+  @include list-hover;
 
   .cocktail-info-text {
     @include flex(column);

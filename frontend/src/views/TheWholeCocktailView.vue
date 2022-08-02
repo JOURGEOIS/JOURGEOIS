@@ -5,7 +5,7 @@
     >
     <div class="the-item-container">
       <the-list-item-cocktail
-        v-for="(item, idx) in wholeCocktailList"
+        v-for="(item, idx) in wholeCocktails"
         :key="idx"
         :data="item"
         @click="clickCocktail(item)"
@@ -21,7 +21,7 @@ import axios from "axios";
 import api from "../api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { reactive, ref, onMounted } from "vue";
+import { computed, onBeforeMount } from "vue";
 const router = useRouter();
 const store = useStore();
 
@@ -35,37 +35,34 @@ interface Cocktail {
 }
 
 // 전체 칵테일 리스트
-const wholeCocktailList: Cocktail[] = reactive([]);
-const wholeCocktailListPage = ref(0);
+const wholeCocktails = computed(
+  () => store.getters["searchResult/getWholeCocktails"]
+);
 
 // 칵테일 누른 경우 칵테일 상세 페이지로 이동
 const clickCocktail = (item: Cocktail) => {
   router.push({ name: "TheCocktailDescView", params: { cocktailId: item.id } });
 };
 
-// * View 입장과 함께 처음 api 불러오기
-const addWholeCocktailList = () => {
-  axios({
-    url: api.lookups.wholeCocktail(),
-    method: "GET",
-    headers: {
-      email: "tmdgns1126@naver.com",
-    },
-    params: {
-      page: wholeCocktailListPage.value,
-    },
-  })
-    .then((res) => {
-      res.data.forEach((cocktail: Cocktail) => {
-        wholeCocktailList.push(cocktail);
-      });
-      wholeCocktailListPage.value++;
-    })
-    .catch((err) => console.error(err));
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    action: "searchResult/setWholeCocktail",
+  };
+  store.dispatch("scroll/handleScroll", data);
 };
 
-onMounted(() => {
-  addWholeCocktailList();
+// 전체 칵테일 추가 함수
+const setWholeCocktail = () => {
+  store.dispatch("searchResult/setWholeCocktail");
+};
+
+onBeforeMount(() => {
+  window.addEventListener("scroll", handleScroll);
+  setWholeCocktail();
+  setTimeout(() => {
+    setWholeCocktail();
+  }, 100);
 });
 </script>
 

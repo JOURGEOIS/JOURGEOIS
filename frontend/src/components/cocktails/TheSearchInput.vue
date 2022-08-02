@@ -20,6 +20,7 @@
         :placeholder="data.placeholder"
         :maxlength="data.maxlength"
         @input="emitValue"
+        @click="clickInputInner"
         autocapitalize="off"
         autocomplete="off"
       />
@@ -67,6 +68,7 @@ const buttonVisibility = computed(() => {
 const emit = defineEmits<{
   (event: "update:modelValue", value: string): void;
   (event: "clickCloseIcon"): void;
+  (event: "clickInput"): void;
 }>();
 
 // 값이 변할 때 emit
@@ -77,6 +79,11 @@ const emitValue = (event: Event) => {
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];
 });
+
+// input 버튼 누르면 emit
+const clickInputInner = () => {
+  emit("clickInput");
+};
 
 // 닫기 버튼 누르면 emit
 const clickCloseIconInner = (event: Event) => {

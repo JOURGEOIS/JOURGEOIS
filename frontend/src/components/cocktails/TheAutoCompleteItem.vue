@@ -28,6 +28,7 @@ const isUser = computed(() => {
   @include flex-xy(space-between, center);
   padding: 10px 0;
   border-bottom: 1px solid $seperate-color;
+  @include list-hover;
   @include font(15px);
 
   .item-type {

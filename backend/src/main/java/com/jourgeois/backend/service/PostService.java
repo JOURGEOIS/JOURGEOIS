@@ -1,5 +1,7 @@
 package com.jourgeois.backend.service;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.jourgeois.backend.api.dto.PostDTO;
 import com.jourgeois.backend.api.dto.ProfileDTO;
 import com.jourgeois.backend.domain.Member;
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -38,7 +42,7 @@ public class PostService {
 
     @Transactional
     public void postPost(PostDTO postDTO) throws IOException, NoSuchElementException {
-        Long writerId = postDTO.getWriter();
+        Long writerId = postDTO.getUid();
 
         Member member = memberRepository.findById(writerId)
                             .orElseThrow(()->new NoSuchElementException("유저를 찾을 수 없습니다."));
@@ -55,7 +59,7 @@ public class PostService {
     }
 
     public String postImageLocalUpload(PostDTO postDTO) throws IOException {
-        Long uid = postDTO.getWriter();
+        Long uid = postDTO.getUid();
         String url = s3Util.localUpload(postDTO.getImg(), uid, ImgType.POST);
         return url;
     }
@@ -64,15 +68,26 @@ public class PostService {
     public void editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
         Long postId = postDTO.getPostId();
 
-        Member member = memberRepository.findById(postDTO.getWriter()).orElseThrow(() -> new NoSuchElementException("게시글을 찾을 수 없습니다."));
-        Post targetPost = postRepository.findByIdAndMember(postId, member).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
+        Post targetPost = postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
 
         targetPost.setDescription(postDTO.getDescription());
         // post 이미지 업로드
-        String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getWriter(), ImgType.POST);
+        String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
         targetPost.setImg(uploadURL);
         s3Util.deleteFile(targetPost.getImg());
         // post 저장
         postRepository.save(targetPost);
+    }
+
+    @Transactional
+    public void deletePost(Map<String, Long> postDeleteReq) throws NoSuchElementException, SdkClientException {
+        postRepository.findById(postDeleteReq.get("p_id"))
+                .ifPresentOrElse((targetPost) -> {
+                            System.out.println(targetPost.getImg());
+                    s3Util.deleteFile(targetPost.getImg());
+                    postRepository.delete(targetPost);
+                },
+                () -> {throw new NoSuchElementException("게시글을 찾을 수 없습니다.");}
+        );
     }
 }

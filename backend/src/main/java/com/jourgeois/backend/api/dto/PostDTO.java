@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostDTO {
     // 게시글 공통
     private Long postId;
-    private Long writer;
+    private Long uid;
     private MultipartFile img;
     private String imgLink;
     private String title;
@@ -28,12 +28,12 @@ public class PostDTO {
         this.postId = postId;
     }
 
-    public Long getWriter() {
-        return writer;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setWriter(Long writer) {
-        this.writer = writer;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
     public MultipartFile getImg() {

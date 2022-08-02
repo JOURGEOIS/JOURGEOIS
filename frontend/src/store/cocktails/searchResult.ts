@@ -29,6 +29,10 @@ export interface SearchResultState {
   searchUserPage: number;
   searchCocktails: Cocktail[];
   searchCocktailPage: number;
+
+  // * 전체 검색 결과
+  wholeCocktails: Cocktail[];
+  wholeCocktailPage: number;
 }
 
 export const searchResult: Module<SearchResultState, RootState> = {
@@ -42,6 +46,10 @@ export const searchResult: Module<SearchResultState, RootState> = {
     searchUserPage: 0,
     searchCocktails: [],
     searchCocktailPage: 0,
+
+    // * 전체 검색 결과
+    wholeCocktails: [],
+    wholeCocktailPage: 0,
   },
 
   getters: {
@@ -54,6 +62,9 @@ export const searchResult: Module<SearchResultState, RootState> = {
     // * 검색어 칵테일 정보
     getSearchCocktails: (state) => state.searchCocktails,
     getSearchCocktailPage: (state) => state.searchCocktailPage,
+    // * 전체 칵테일 정보
+    getWholeCocktails: (state) => state.wholeCocktails,
+    getWholeCocktailPage: (state) => state.wholeCocktailPage,
   },
 
   mutations: {
@@ -86,6 +97,16 @@ export const searchResult: Module<SearchResultState, RootState> = {
     REMOVE_SEARCH_RESULT: (state) => {
       state.searchUsers = [];
       state.searchCocktails = [];
+    },
+
+    // * 전체 칵테일 정보 저장
+    SET_WHOLE_COCKTAILS: (state, newWholeCocktails: Cocktail[]) => {
+      newWholeCocktails.forEach((newCocktail) => {
+        state.wholeCocktails.push(newCocktail);
+      });
+    },
+    SET_WHOLE_COCKTAIL_PAGE: (state, value) => {
+      state.wholeCocktailPage = value;
     },
   },
 
@@ -150,6 +171,28 @@ export const searchResult: Module<SearchResultState, RootState> = {
       // 페이지 번호 0으로 초기화
       commit("SET_SEARCH_USER_PAGE", 0);
       commit("SET_SEARCH_COCKTAIL_PAGE", 0);
+    },
+
+    // * 전체 칵테일 추가
+    setWholeCocktail: ({ commit, getters, rootGetters }) => {
+      const email = rootGetters["personalInfo/getUserInfoId"];
+      axios({
+        url: api.lookups.wholeCocktail(),
+        method: "GET",
+        headers: {
+          email,
+        },
+        params: {
+          page: getters["getWholeCocktailPage"],
+        },
+      })
+        .then((res) => {
+          const newWholeCocktails = res.data;
+          commit("SET_WHOLE_COCKTAILS", newWholeCocktails);
+          const page = getters.getWholeCocktailPage;
+          commit("SET_WHOLE_COCKTAIL_PAGE", page + 1);
+        })
+        .catch((err) => console.error(err));
     },
   },
 };

@@ -16,6 +16,8 @@ time, mark, audio, video {
 	border: 0;
 };
 
+
+
 html, body, h1, h2, h3, h4, h5, h6, p, blockquote, code, img, dl, dt, dd, ol, ul, li, fieldset, legend, caption { margin: 0; padding: 0; border: 0; }
 div, span, article, section, header, footer, p, ul, li, fieldset, legend, label, a, nav { box-sizing: border-box; }
 html {
@@ -67,6 +69,7 @@ a {
 };
 
 body {
+  overflow-x: hidden;
   min-height: 100%;
   color: $main-color;
   font-weight: $fw-regular;

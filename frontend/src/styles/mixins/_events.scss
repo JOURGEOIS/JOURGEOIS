@@ -1,0 +1,7 @@
+@mixin list-hover($hover-color: $white100) {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+}

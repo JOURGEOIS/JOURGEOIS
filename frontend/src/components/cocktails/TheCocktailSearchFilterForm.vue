@@ -5,13 +5,13 @@
       <div class="cocktail-search-filter-radio">
         <!-- 알코올, 논 알코올 여부 -->
         <label for="filter-alcohol">
-          알코올
+          알콜
           <div>
             <span class="material-icons" v-show="statusAlcohol"> done </span>
           </div>
         </label>
         <label for="filter-none-alcohol">
-          논 알코올
+          무 알콜
           <div>
             <span class="material-icons" v-show="!statusAlcohol"> done </span>
           </div>
@@ -130,8 +130,7 @@ const images: ingredients[] = [
 ];
 
 // 카테고리 클릭
-const clickIngredient = (index: number) => {
-};
+const clickIngredient = (index: number) => {};
 </script>
 
 <style scoped lang="scss">

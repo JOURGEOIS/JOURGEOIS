@@ -52,5 +52,9 @@ const tagColor = computed((): string => {
   padding: 0.5em 1em;
   margin: 3px 0;
   border-radius: 10000px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>

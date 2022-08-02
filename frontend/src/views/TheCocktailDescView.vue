@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCocktailDescDetail from "@/components/cocktails/TheCocktailDescDetail.vue";
-import { onBeforeMount, defineAsyncComponent, computed, watch } from "vue";
+import { onMounted, defineAsyncComponent, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
@@ -73,7 +73,7 @@ watch(
 );
 
 // 동적 라우팅
-onBeforeMount(() => {
+onMounted(() => {
   store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
 });
 </script>

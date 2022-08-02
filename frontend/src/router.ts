@@ -69,6 +69,20 @@ const routes: any[] = [
     component: () => import("@/views/TheSearchResultView.vue"),
   },
 
+  // 칵테일 전체 리스트 페이지
+  {
+    path: "/cocktail/whole",
+    name: "TheWholeCocktailView",
+    component: () => import("@/views/TheWholeCocktailView.vue"),
+  },
+
+  // 필터 카테고리
+  {
+    path: "/cocktail/search/filter/:category",
+    name: "TheCocktailFilterCategory",
+    component: () => import("@/views/TheCocktailFilterCategory.vue"),
+  },
+
   // 칵테일 상세 페이지
   {
     path: "/cocktail/:cocktailId",

@@ -6,13 +6,16 @@
       <p>{{ cocktailData.nameKR }}</p>
       <p>{{ cocktailData.name }}</p>
     </div>
-    <round-image :round-image="cocktailImage"></round-image>
+    <div
+      class="image"
+      :style="{ backgroundImage: `url(${cocktailData.img})` }"
+    ></div>
 
     <!-- 칵테일 태그 -->
     <div class="cocktail-desc-tag">
       <tag-basic
         :tagStyle="['light-primary', '12px', '5px']"
-        v-for="(tag, index) in tags"
+        v-for="(tag, index) in cocktailTags"
         :key="index"
       >
         {{ tag }}
@@ -40,20 +43,22 @@
         <p>북마크</p>
         <!-- 북마크 수: 클릭 시 팔로우한 유저들을 보여주는 목록으로 이동 -->
         <router-link :to="`/cocktail/${cocktailId}/bookmark`">
-          <p class="bookmark">999+</p>
+          <p class="bookmark">0명</p>
         </router-link>
       </div>
       <!-- 2. 베이스 술 -->
       <div>
         <span class="material-icons-outlined"> local_bar </span>
         <p>베이스 술</p>
-        <p>데킬라</p>
+        <p>
+          {{ cocktailData.baseLiquor ? cocktailData.baseLiquor : "무알콜" }}
+        </p>
       </div>
-      <!-- 3. 데킬라 -->
+      <!-- 3. 도수 -->
       <div>
         <span class="material-icons-outlined"> bubble_chart </span>
         <p>도수</p>
-        <p>무알콜</p>
+        <p>{{ cocktailData.alcohol ? cocktailData.alcohol : "0도" }}</p>
       </div>
     </div>
   </div>
@@ -62,7 +67,7 @@
 <script setup lang="ts">
 import TagBasic from "@/components/basics/TagBasic.vue";
 import RoundImage from "@/components/basics/RoundImage.vue";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -70,25 +75,32 @@ const cocktailData = computed(
   () => store.getters["cocktailDesc/getCurrentCocktailData"]
 );
 
-// 칵테일 이미지
-const cocktailImage = {
-  image:
-    "https://www.thecocktaildb.com/images/media/drink/wx7hsg1504370510.jpg",
-  width: "120px",
-};
-
-// 칵테일 태그
-const tags = ["IBA", "ContemporaryClassic", "Strong", "Ordinary Drink"];
-
 // 북마크
 const isBookmarked = ref(false);
-
 const clickBookMark = () => {
   isBookmarked.value = !isBookmarked.value;
 };
 
 // 칵테일 id
-const cocktailId = ref(3);
+const cocktailId = computed(() => cocktailData.value.id);
+
+// 칵테일 태그
+const tags = computed(() => cocktailData?.value?.tag?.split(","));
+const category = computed(() => cocktailData?.value?.category);
+
+let cocktailTags = computed(() => {
+  if (tags?.value?.length < 4) {
+    if (!tags.value[0]) {
+      return Array(category.value);
+    } else {
+      const result = tags?.value?.concat(Array(category.value));
+      return result;
+    }
+  } else {
+    const result = tags?.value?.slice(0, 3)?.concat(Array(category.value));
+    return result;
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -160,5 +172,16 @@ const cocktailId = ref(3);
 
 a {
   text-decoration: none;
+}
+
+.image {
+  width: 120px;
+  height: 120px;
+  border: 0;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-color: $white200;
+  background-position: center;
+  background-size: cover;
 }
 </style>

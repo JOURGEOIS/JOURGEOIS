@@ -1,4 +1,4 @@
-<template class="the-search-result-user">
+<template class="the-search-result-cocktail">
   <the-list-item-cocktail
     v-for="(item, idx) in searchCocktails"
     :key="idx"

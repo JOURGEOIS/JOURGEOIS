@@ -67,6 +67,16 @@ onBeforeMount(() => {
     width: 100%;
     gap: 36px;
     margin-top: 2rem;
+
+    
+  @media #{$tablet} {
+    width: 80%;
+  }
+
+  @media #{$pc} {
+    width: 70%;
+  }
+
   }
 }
 

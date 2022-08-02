@@ -92,7 +92,7 @@ const store = useStore()
 
 // 제목 컴포넌트
 const nameTitleContents = reactive({
-  mainList: ['이름을 입력해주세요'],
+  mainList: ["이름을 입력해주세요"],
   subList: [],
 })
 
@@ -233,10 +233,10 @@ watchEffect(() => {
     clearTimeout(debounce)
   }
   debounce = setTimeout(async () => {
-    const a = await checkNicknameDuplication(nicknameInputValue.value)
+    const ret = await checkNicknameDuplication(nicknameInputValue.value);
     // 서버/네트워크 정상
-    if (typeof a === 'boolean') {
-      duplicatedNicknameCheckerProps.isChecked = a
+    if (typeof ret === "boolean") {
+      duplicatedNicknameCheckerProps.isChecked = ret;
     }
     // 서버/네트워크 비정상
     else {

@@ -34,6 +34,10 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     getFailPopupStatus: (state) => {
       return state.failPopupStatus
     },
+    getCurrentCocktailDataRecipe: (state) => {
+      return state.currentCocktailData.recipe
+    }
+
   },
   mutations: {
     SET_CURRENT_TAB: (state, value: number) => {

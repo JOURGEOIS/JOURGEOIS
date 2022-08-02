@@ -175,17 +175,6 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
         .catch((err) => console.error(err.response));
     },
 
-    // * [검색 결과] 칵테일
-    searchKeywordCocktail: ({ commit }, data) => {
-      axios({
-        url: api.lookups.cocktailall(),
-        method: "GET",
-        params: data,
-      })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.error(err.response));
-    },
-
     // 필터 토글
     toggleFilter: ({ commit }, value: boolean) => {
       commit("SET_FILTER_STATUS", value);

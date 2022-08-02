@@ -3,7 +3,7 @@ package com.jourgeois.backend.api.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class SearchTrendDTO implements Serializable {
+public class SearchTrendDto implements Serializable {
     String from;
 
     String to;

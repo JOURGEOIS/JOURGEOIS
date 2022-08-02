@@ -18,8 +18,8 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int port;
 
-//    @Value("${spring.redis.password}")
-//    private String password;
+    @Value("${spring.redis.password}")
+    private String password;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -37,7 +37,7 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         // hash value serializer
-//        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
     }

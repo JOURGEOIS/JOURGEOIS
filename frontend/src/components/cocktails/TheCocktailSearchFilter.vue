@@ -25,11 +25,13 @@ import { useStore } from "vuex";
 const store = useStore();
 
 // 애니메이션 상태
-const animation = ref("start");
+const animation = computed(
+  () => store.getters["cocktailSearch/getFilterClass"]
+);
 
 // 필터 off
 const clickXIcon = () => {
-  animation.value = "end";
+  store.dispatch("cocktailSearch/changeFilterClass", "end");
   setTimeout(() => store.dispatch("cocktailSearch/toggleFilter", false), 490);
 };
 </script>

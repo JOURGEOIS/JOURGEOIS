@@ -79,8 +79,8 @@ const routes: any[] = [
   // 필터 카테고리
   {
     path: "/cocktail/search/filter/:category",
-    name: "TheCocktailFilterCategory",
-    component: () => import("@/views/TheCocktailFilterCategory.vue"),
+    name: "TheCocktailFilterCategoryView",
+    component: () => import("@/views/TheCocktailFilterCategoryView.vue"),
   },
 
   // 칵테일 상세 페이지

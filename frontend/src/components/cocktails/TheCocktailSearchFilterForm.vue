@@ -1,6 +1,6 @@
 <!-- filter: form -->
 <template>
-  <form>
+  <form @submit.prevent="submitSearchFilterForm">
     <div>
       <div class="cocktail-search-filter-radio">
         <!-- 알코올, 논 알코올 여부 -->
@@ -59,7 +59,7 @@
         <div
           v-for="(image, index) in images"
           :key="`image-${index}`"
-          @click="clickIngredient(image.id)"
+          @click="clickIngredient(image.params)"
         >
           <div
             class="category-image"
@@ -73,7 +73,7 @@
       class="cocktail-search-filter-button"
       :button-style="['unchecked', 'long', '']"
     >
-      0개의 검색 결과
+      {{}}개의 검색 결과
     </button-basic-round>
   </form>
 </template>
@@ -83,7 +83,9 @@ import TheCocktailSearchFilterSlider from "@/components/cocktails/TheCocktailSea
 import ButtonBasicRound from "@/components/basics/ButtonBasicRound.vue";
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 const store = useStore();
+const router = useRouter();
 
 // 알코올 / 논 알코올 value
 const statusAlcohol = ref(true);
@@ -96,7 +98,7 @@ const rightValue = ref(15);
 
 // 재료 선택
 interface ingredients {
-  id: number;
+  params: string;
   image: string;
   name: string;
 }
@@ -104,25 +106,25 @@ interface ingredients {
 // 이미지
 const images: ingredients[] = [
   {
-    id: 0,
+    params: "alcohol",
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/Gin-Small.png)",
     name: "술",
   },
   {
-    id: 1,
+    params: "liqueur",
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/Kahlua-Small.png)",
     name: "리큐르",
   },
   {
-    id: 2,
+    params: "drinks",
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png)",
     name: "음료수",
   },
   {
-    id: 3,
+    params: "ingredients",
     image:
       "url(https://www.thecocktaildb.com/images/ingredients/lemon-Small.png)",
     name: "추가 재료",
@@ -130,7 +132,18 @@ const images: ingredients[] = [
 ];
 
 // 카테고리 클릭
-const clickIngredient = (index: number) => {};
+const clickIngredient = (params: string) => {
+  store.dispatch("cocktailSearch/changeFilterClass", "none");
+  router.push({
+    name: "TheCocktailFilterCategoryView",
+    params: {
+      category: params,
+    },
+  });
+};
+
+// 제출
+const submitSearchFilterForm = () => {};
 </script>
 
 <style scoped lang="scss">
@@ -205,7 +218,7 @@ form {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(25%, auto));
       row-gap: 24px;
-
+      cursor: pointer;
       > div {
         @include flex(column);
         align-items: center;

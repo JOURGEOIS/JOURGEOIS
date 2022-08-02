@@ -26,13 +26,22 @@ export interface popularSearchWords {
   delta: number[];
 }
 
+// 필터 interface
+export interface filter {
+  alcohol: boolean;
+  alcoholStrength: number[];
+  ingredients: number[];
+}
+
 // ! 기본 State Interface
 export interface CocktailSearchState {
   searchInputValue: string;
   recentSearchWords: string[];
   popularSearchWords: popularSearchWords;
   autoCompleteSearchWords: autoCompleteWords;
+  searchFilterData: filter;
   filterStatus: boolean;
+  filterClass: string;
 }
 
 export const cocktailSearch: Module<CocktailSearchState, RootState> = {
@@ -45,7 +54,14 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       JSON.parse(localStorage.getItem("recentSearchWords") || "[]") || [],
     popularSearchWords: { from: "", to: "", keywords: [""], delta: [0] },
     autoCompleteSearchWords: { cocktails: [], ingredients: [], users: [] },
+
+    // 칵테일 filter
+    searchFilterData: JSON.parse(
+      localStorage.getItem("searchFilter") ||
+        '{"alcohol": true, "alcoholStrength": [], "ingredients": []}'
+    ),
     filterStatus: false,
+    filterClass: "",
   },
 
   getters: {
@@ -63,6 +79,22 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
 
     // 필터 status
     getFilterStatus: (state) => state.filterStatus,
+
+    // 필터 class
+    getFilterClass: (state) => state.filterClass,
+
+    // 필터 정보
+    getSearchFilterData: (state) => state.searchFilterData,
+
+    // 필터 재료 정보
+    getSearchFilterIngredients: (state) => state.searchFilterData.ingredients,
+
+    // 필터 알코올 정보
+    getSearchFilterAlcohol: (state) => state.searchFilterData.alcohol,
+
+    // 필터 도수 정보
+    getSearchFilterAlcoholStrength: (state) =>
+      state.searchFilterData.alcoholStrength,
   },
 
   mutations: {
@@ -95,8 +127,16 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     SET_FILTER_STATUS: (state, value: boolean) => {
       state.filterStatus = value;
     },
-  },
 
+    // 필터 클래스 설정
+    SET_FILTER_CLASS: (state, value: string) => {
+      state.filterClass = value;
+    },
+    // 필터 데이터 저장
+    SET_SEARCH_FILTER_DATA: (state, value: filter) => {
+      state.searchFilterData = value;
+    },
+  },
   actions: {
     // * 검색어 string 저장
     setSearchInputValue: ({ commit }, value) => {
@@ -179,6 +219,48 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // 필터 토글
     toggleFilter: ({ commit }, value: boolean) => {
       commit("SET_FILTER_STATUS", value);
+    },
+
+    // 필터 클래스 변경
+    changeFilterClass: ({ commit }, value: string) => {
+      commit("SET_FILTER_CLASS", value);
+    },
+
+    // 필터 삭제하기
+    setSearchFilterData: ({ commit }) => {
+      localStorage.removeItem("searchFilter");
+      commit("SET_SEARCH_FILTER_DATA", {});
+    },
+
+    // 필터 검색하기
+    searchFilter: ({ commit }, data: filter) => {
+      const searchFilter = JSON.stringify(data);
+      localStorage.setItem("searchFilter", searchFilter);
+      commit("SET_SEARCH_FILTER_DATA", data);
+    },
+
+    // 필터 갯수 찾기
+
+    // 필터 재료 추가
+    addFilterIngredients: ({ commit, getters }, id: number) => {
+      const alcohol = getters["getSearchFilterAlcohol"];
+      const alcoholStrength = getters["getSearchFilterAlcoholStrength"];
+      const ingredients = getters["getSearchFilterIngredients"];
+      if (!ingredients.includes(id)) {
+        ingredients.push(id);
+      } else {
+        ingredients.forEach((item: number, index: number) => {
+          if (item === id) {
+            ingredients.splice(index, 1);
+          }
+        });
+      }
+      const data = {
+        alcohol,
+        alcoholStrength,
+        ingredients: ingredients,
+      };
+      commit("SET_SEARCH_FILTER_DATA", data);
     },
   },
 };

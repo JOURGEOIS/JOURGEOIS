@@ -69,8 +69,8 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       commit("SET_REFRESH_TOKEN", refreshToken);
     },
     removeToken: ({ commit }) => {
-      localStorage.setItem("accessToken", "");
-      localStorage.setItem("refreshToken", "");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       commit("SET_ACCESS_TOKEN", "");
       commit("SET_REFRESH_TOKEN", "");
     },
@@ -80,12 +80,14 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       commit("SET_USER_INFO", data);
     },
     removeUserInfo: ({ commit }) => {
-      localStorage.setItem("userInfo", "");
+      localStorage.removeItem("userInfo");
       commit("SET_USER_INFO", {});
     },
     resetUserInfo: ({ dispatch }) => {
       dispatch("removeToken");
       dispatch("removeUserInfo");
+      dispatch("cocktailSearch/removeRecentSearchWords", {}, { root: true });
+      dispatch("cocktailSearch/setSearchFilterData", {}, { root: true });
     },
     toggleRefreshFailPopup: ({ commit }, value) => {
       commit("SET_REFRESH_FAIL", value);

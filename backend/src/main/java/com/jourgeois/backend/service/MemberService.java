@@ -235,6 +235,10 @@ public class MemberService {
         return memberRepository.findByEmailAndName(email, userName).isPresent();
     }
 
+    public boolean checkUserUid(Long uid){
+        return memberRepository.findById(uid).isPresent();
+    }
+
     @Transactional
     public String ProfileImageLocalUpload(ProfileDTO profileDto) throws IOException {
         Member member = memberRepository.findByEmail(profileDto.getEmail()).get();

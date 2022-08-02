@@ -53,6 +53,11 @@ public class Member {
         this.introduce = introduce;
     }
 
+    @Builder
+    public Member(Long uid) {
+        this.uid = uid;
+    }
+
     @Override
     public String toString() {
         return "Member{" +

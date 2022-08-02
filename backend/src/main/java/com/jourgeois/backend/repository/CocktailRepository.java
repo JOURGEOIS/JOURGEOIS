@@ -2,7 +2,6 @@ package com.jourgeois.backend.repository;
 
 import com.jourgeois.backend.api.dto.CocktailVO;
 import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.Cup;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,11 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public interface CocktailRepository extends JpaRepository<Cocktail, Cup> {
+public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 
-    Optional<Cocktail> deleteById(Long id);
     List<Cocktail> findAllByOrderById(Pageable pageable);
-
     @Query("SELECT c.id as id, c.name as name, c.nameKR as nameKR, c.alcohol as alcohol, c.cupId as cupId, " +
             "c.tag as tag, c.baseLiquor as baseLiquor, c.category as category, c.recipe as recipe, c.img as img FROM Cocktail c WHERE c.id = :id")
     Optional<CocktailVO> findCocktailById(@Param("id") Long id);

@@ -1,9 +1,13 @@
 package com.jourgeois.backend.controller;
 
+import com.jourgeois.backend.api.dto.CocktailBookmarkDTO;
 import com.jourgeois.backend.api.dto.CocktailDTO;
 import com.jourgeois.backend.domain.Cocktail;
+import com.jourgeois.backend.domain.CocktailBookmark;
 import com.jourgeois.backend.domain.Material;
+import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.service.CocktailService;
+import com.jourgeois.backend.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +21,12 @@ import java.util.Map;
 @RequestMapping(value = "/cocktail")
 public class CocktailController {
     private final CocktailService cocktailService;
-
+    private final MemberService memberService;
     @Autowired
-    CocktailController(CocktailService cocktailService){
+    CocktailController(CocktailService cocktailService,
+                       MemberService memberService){
         this.cocktailService = cocktailService;
+        this.memberService = memberService;
     }
 
     @GetMapping(value = "/cocktail")
@@ -82,7 +88,7 @@ public class CocktailController {
     }
 
     @PostMapping(value = "/material")
-    public ResponseEntity<?> insertMaterial(@RequestBody Material material) {
+    public ResponseEntity insertMaterial(@RequestBody Material material) {
         Map<String, Boolean> data = new HashMap<>();
         try {
             boolean res = cocktailService.insertMaterial(material);
@@ -93,5 +99,26 @@ public class CocktailController {
             data.put("success", false);
             return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    // 원본 칵테일 북마크 (token 필요) => uid로 전체 바꿀 때 바꾼 후 적용 필요
+    @PostMapping(value = "/bookmark")
+    public ResponseEntity pushCocktailBookmark(@RequestBody Map<String, Long> bookmark){
+        if(memberService.checkUserUid(bookmark.get("m_id")) && cocktailService.checkCocktailUid(bookmark.get("c_id"))){
+            CocktailBookmarkDTO df = CocktailBookmarkDTO.builder()
+                    .member(new Member(bookmark.get("m_id")))
+                    .cocktail(new Cocktail(bookmark.get("c_id"))).build();
+            Map<String, Long> data = new HashMap<>();
+            if(cocktailService.pushBookmark(df)){
+                data.put("status", 1L);
+            }else{
+                data.put("status", 0L);
+            }
+            data.put("count", cocktailService.countCocktailBookmark(new Cocktail(bookmark.get("c_id"))));
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("fail", HttpStatus.NOT_ACCEPTABLE);
+        }
+
     }
 }

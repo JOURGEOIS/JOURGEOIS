@@ -32,6 +32,9 @@ public class Member {
     private java.util.Date creationDate;
     private String roles = "ROLE_USER";
 
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts;
+
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
         this.email = email;

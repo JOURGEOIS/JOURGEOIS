@@ -14,5 +14,4 @@ public class CocktailToMaterial implements Serializable {
     @ManyToOne
     @JoinColumn(name = "m_id")
     private Material material;
-
 }

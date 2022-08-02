@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
+import { toRaw } from "vue";
 
 // 자동완성 단어 interface
 export interface autoCompleteWord {
@@ -28,9 +29,9 @@ export interface popularSearchWords {
 
 // 필터 interface
 export interface filter {
-  alcohol: boolean;
-  alcoholStrength: number[];
-  ingredients: number[];
+  type: boolean;
+  abv: number[];
+  materials: number[];
 }
 
 // ! 기본 State Interface
@@ -42,6 +43,7 @@ export interface CocktailSearchState {
   searchFilterData: filter;
   filterStatus: boolean;
   filterClass: string;
+  filterResultCnt: number;
 }
 
 export const cocktailSearch: Module<CocktailSearchState, RootState> = {
@@ -58,10 +60,11 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // 칵테일 filter
     searchFilterData: JSON.parse(
       localStorage.getItem("searchFilter") ||
-        '{"alcohol": true, "alcoholStrength": [], "ingredients": []}'
+        '{"type": 1, "abv": [6, 15], "materials": []}'
     ),
     filterStatus: false,
     filterClass: "",
+    filterResultCnt: 0,
   },
 
   getters: {
@@ -87,14 +90,16 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     getSearchFilterData: (state) => state.searchFilterData,
 
     // 필터 재료 정보
-    getSearchFilterIngredients: (state) => state.searchFilterData.ingredients,
+    getSearchFilterIngredients: (state) => state.searchFilterData.materials,
 
     // 필터 알코올 정보
-    getSearchFilterAlcohol: (state) => state.searchFilterData.alcohol,
+    getSearchFilterAlcohol: (state) => state.searchFilterData.type,
 
     // 필터 도수 정보
-    getSearchFilterAlcoholStrength: (state) =>
-      state.searchFilterData.alcoholStrength,
+    getSearchFilterAlcoholStrength: (state) => state.searchFilterData.abv,
+
+    // 필터 결과 (개수)
+    getFilterResultCnt: (state) => state.filterResultCnt,
   },
 
   mutations: {
@@ -135,6 +140,10 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // 필터 데이터 저장
     SET_SEARCH_FILTER_DATA: (state, value: filter) => {
       state.searchFilterData = value;
+    },
+    // 필터 개수 저장
+    SET_SEARCH_RESULT_CNT: (state, value: number) => {
+      state.filterResultCnt = value;
     },
   },
   actions: {
@@ -239,28 +248,84 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       commit("SET_SEARCH_FILTER_DATA", data);
     },
 
-    // 필터 갯수 찾기
+    // 필터 갯수 찾기, 저장
+    searchFilterResultCnt: ({ commit, getters }) => {
+      const type = getters["getSearchFilterAlcohol"];
+      let abv = getters["getSearchFilterAlcoholStrength"];
+      const materials = getters["getSearchFilterIngredients"];
+      if (!type) {
+        abv = [0, 0];
+      }
+      const data = {
+        type,
+        abv,
+        materials,
+      };
+      axios({
+        url: api.lookups.filterCnt(),
+        method: "post",
+        data: data,
+      })
+        .then((response) => {
+          commit("SET_SEARCH_RESULT_CNT", response.data);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    },
 
     // 필터 재료 추가
-    addFilterIngredients: ({ commit, getters }, id: number) => {
-      const alcohol = getters["getSearchFilterAlcohol"];
-      const alcoholStrength = getters["getSearchFilterAlcoholStrength"];
-      const ingredients = getters["getSearchFilterIngredients"];
-      if (!ingredients.includes(id)) {
-        ingredients.push(id);
+    addFilterIngredients: ({ commit, getters, dispatch }, id: number) => {
+      const type = getters["getSearchFilterAlcohol"];
+      const abv = getters["getSearchFilterAlcoholStrength"];
+      const materials = getters["getSearchFilterIngredients"];
+      if (!materials.includes(id)) {
+        materials.push(id);
       } else {
-        ingredients.forEach((item: number, index: number) => {
+        materials.forEach((item: number, index: number) => {
           if (item === id) {
-            ingredients.splice(index, 1);
+            materials.splice(index, 1);
           }
         });
       }
       const data = {
-        alcohol,
-        alcoholStrength,
-        ingredients: ingredients,
+        type,
+        abv,
+        materials,
       };
       commit("SET_SEARCH_FILTER_DATA", data);
+      dispatch("searchFilterResultCnt");
+    },
+
+    // 필터 알코올 여부 변경
+    changeFilterAlcohol: ({ commit, getters, dispatch }, value: number) => {
+      const abv = getters["getSearchFilterAlcoholStrength"];
+      const materials = getters["getSearchFilterIngredients"];
+
+      const data = {
+        type: value,
+        abv,
+        materials,
+      };
+      commit("SET_SEARCH_FILTER_DATA", data);
+      dispatch("searchFilterResultCnt");
+    },
+
+    // 필터 도수 변경
+    changeFilterAlcoholStrength: (
+      { commit, getters, dispatch },
+      value: number[]
+    ) => {
+      const type = getters["getSearchFilterAlcohol"];
+      const materials = getters["getSearchFilterIngredients"];
+
+      const data = {
+        type,
+        abv: value,
+        materials,
+      };
+      commit("SET_SEARCH_FILTER_DATA", data);
+      dispatch("searchFilterResultCnt");
     },
   },
 };

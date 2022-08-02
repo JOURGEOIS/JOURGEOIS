@@ -35,10 +35,7 @@
     <div v-show="statusAlcohol">
       <p>도수</p>
       <!-- 멀티 레인지 슬라이더 -->
-      <the-cocktail-search-filter-slider
-        v-model:left-value="leftValue"
-        v-model:right-value="rightValue"
-      ></the-cocktail-search-filter-slider>
+      <the-cocktail-search-filter-slider></the-cocktail-search-filter-slider>
       <div class="class-search-filter-alcohol-info">
         <div>
           <p>
@@ -71,9 +68,9 @@
     </div>
     <button-basic-round
       class="cocktail-search-filter-button"
-      :button-style="['unchecked', 'long', '']"
+      :button-style="[buttonColor, 'long', '']"
     >
-      {{}}개의 검색 결과
+      {{ searchFilterResultCnt }}개의 검색 결과
     </button-basic-round>
   </form>
 </template>
@@ -81,20 +78,47 @@
 <script setup lang="ts">
 import TheCocktailSearchFilterSlider from "@/components/cocktails/TheCocktailSearchFilterSlider.vue";
 import ButtonBasicRound from "@/components/basics/ButtonBasicRound.vue";
-import { ref } from "vue";
+import { reactive, ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 
 // 알코올 / 논 알코올 value
-const statusAlcohol = ref(true);
-const trueValue = ref(true);
-const falseValue = ref(false);
+const trueValue = ref(1);
+const falseValue = ref(0);
+const statusAlcoholValue = computed(
+  () => store.getters["cocktailSearch/getSearchFilterAlcohol"]
+);
+const statusAlcohol = ref(statusAlcoholValue.value);
+watch(statusAlcohol, () => {
+  store.dispatch("cocktailSearch/changeFilterAlcohol", statusAlcohol.value);
+});
+
+// 개수
+const searchFilterResultCnt = computed(
+  () => store.getters["cocktailSearch/getFilterResultCnt"]
+);
 
 // 멀티 레인지 슬라이더 value
-const leftValue = ref(6);
-const rightValue = ref(15);
+// const strengthValue = computed(
+//   () => store.getters["cocktailSearch/getSearchFilterAlcoholStrength"]
+// );
+// const leftValue = ref(strengthValue.value[0]);
+// const rightValue = ref(strengthValue.value[1]);
+
+// let debounce: any;
+// watch([leftValue, rightValue], () => {
+//   clearTimeout(debounce);
+//   debounce = setTimeout(
+//     () =>
+//       store.dispatch("cocktailSearch/changeFilterAlcoholStrength", [
+//         leftValue.value,
+//         rightValue.value,
+//       ]),
+//     200
+//   );
+// });
 
 // 재료 선택
 interface ingredients {
@@ -102,6 +126,9 @@ interface ingredients {
   image: string;
   name: string;
 }
+const choiceIngredients = computed(
+  () => store.getters["cocktailSearch/getSearchFilterIngredients"]
+);
 
 // 이미지
 const images: ingredients[] = [
@@ -142,8 +169,21 @@ const clickIngredient = (params: string) => {
   });
 };
 
+// 버튼 색상
+const buttonColor = computed(() => {
+  if (searchFilterResultCnt.value) {
+    return "light-primary";
+  } else {
+    return "sub";
+  }
+});
+
 // 제출
 const submitSearchFilterForm = () => {};
+
+onMounted(() => {
+  store.dispatch("cocktailSearch/searchFilterResultCnt");
+});
 </script>
 
 <style scoped lang="scss">
@@ -254,8 +294,8 @@ form {
 }
 
 .cocktail-search-filter-button {
-  border-radius: 1000em;
-  padding: 8px;
+  border-radius: 1em;
+  padding: 10px;
   @include font(13px, $fw-bold);
 
   @media (min-height: 750px) {

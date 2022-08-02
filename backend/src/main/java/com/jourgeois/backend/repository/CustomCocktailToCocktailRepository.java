@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface CustomCocktailToCocktailRepository extends JpaRepository<CustomCocktailToCocktail, Long> {
     Optional<CustomCocktailToCocktail> findByCustomCocktailAndCocktail(CustomCocktail customCocktail, Cocktail cocktail);
+    Optional<CustomCocktailToCocktail> findByCustomCocktail_Id(Long id);
 }

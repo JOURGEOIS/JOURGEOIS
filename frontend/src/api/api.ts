@@ -37,5 +37,7 @@ export default {
     autoComplete: () => HOST + LOOKUP + "search",
     weeklyHotKeyword: () => HOST + LOOKUP + "weeklyhotkeyword",
     hotKeyword: () => HOST + LOOKUP + "hotkeyword",
+    filterCnt: () => HOST + LOOKUP + "filter",
+    filterResult: () => HOST + LOOKUP + "filter/list",
   },
 };

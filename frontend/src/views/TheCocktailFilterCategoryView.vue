@@ -15,6 +15,14 @@
         <p>{{ item.nameKr }}</p>
         <p>{{ item.name }}</p>
       </div>
+      <button-basic-round
+        class="cocktail-search-filter-button"
+        :button-style="[buttonColor, 'calc(100% - 32px)', '']"
+        :disabled="searchFilterResultCnt === 0"
+        @click="clickSearchFilterButton"
+      >
+        {{ searchFilterResultCnt }}개의 검색 결과
+      </button-basic-round>
     </section>
   </div>
   <nav-bar></nav-bar>
@@ -22,7 +30,7 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import NavBar from "@/components/basics/NavBar.vue";
+import ButtonBasicRound from "@/components/basics/ButtonBasicRound.vue";
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -66,11 +74,32 @@ const choiceIngredients = computed(
 );
 
 const array = choiceIngredients;
+
 // 재료 선택
 const clickIngredient = (id: number) => {
   store.dispatch("cocktailSearch/addFilterIngredients", id);
 };
 
+// 결과 개수
+const searchFilterResultCnt = computed(
+  () => store.getters["cocktailSearch/getFilterResultCnt"]
+);
+
+// 버튼 색상
+const buttonColor = computed(() => {
+  if (searchFilterResultCnt.value) {
+    return "light-primary";
+  } else {
+    return "sub";
+  }
+});
+
+// 버튼 클릭
+const clickSearchFilterButton = () => {
+  console.log("버튼 클릭");
+};
+
+// 결과 개수
 onMounted(() => {
   store.dispatch("cocktailSearch/toggleFilter", true);
 });
@@ -87,6 +116,7 @@ onMounted(() => {
   section {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40%, auto));
+    position: relative;
 
     @media #{$tablet} {
       grid-template-columns: repeat(auto-fill, minmax(25%, auto));
@@ -103,6 +133,7 @@ onMounted(() => {
     @media #{$pc} {
       width: 70%;
     }
+
     .the-cocktail-filter-category-item {
       @include flex(column);
       align-items: center;
@@ -137,5 +168,16 @@ onMounted(() => {
   .img {
     background-color: $white200;
   }
+}
+
+.cocktail-search-filter-button {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 16px;
+  border-radius: 10px;
+  @include font($fs-md, $fw-bold);
+  opacity: 0.85;
 }
 </style>

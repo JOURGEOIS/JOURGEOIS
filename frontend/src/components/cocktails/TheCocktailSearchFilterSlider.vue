@@ -18,7 +18,6 @@
         max="30"
         min="0"
         v-model.number="sliderLeftValue"
-        @input="$emit('update:leftValue', sliderLeftValue)"
       />
       <input
         type="range"
@@ -26,7 +25,6 @@
         max="30"
         min="0"
         v-model.number="sliderRightValue"
-        @input="$emit('update:rightValue', sliderRightValue)"
       />
 
       <!-- 보이는 슬라이더 -->
@@ -48,29 +46,41 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from "vue";
-
-// props
-const props = defineProps<{
-  leftValue: number;
-  rightValue: number;
-}>();
-
+import { useStore } from "vuex";
+const store = useStore();
 // slider Value
-const sliderLeftValue = ref(6);
-const sliderRightValue = ref(15);
+
+const sliderValue = computed(
+  () => store.getters["cocktailSearch/getSearchFilterAlcoholStrength"]
+);
+const sliderLeftValue = ref(sliderValue.value[0]);
+const sliderRightValue = ref(sliderValue.value[1]);
+
+let debounce: any;
+watch([sliderLeftValue, sliderRightValue], () => {
+  clearTimeout(debounce);
+  debounce = setTimeout(
+    () =>
+      store.dispatch("cocktailSearch/changeFilterAlcoholStrength", [
+        sliderLeftValue.value,
+        sliderRightValue.value,
+      ]),
+    200
+  );
+});
 
 // 가짜 Slider 위치 계산
 const leftThumbStyle = reactive({
-  left: "20%",
+  left: `${(sliderLeftValue.value / 30) * 100}%`,
 });
 
 const rightThumbStyle = reactive({
-  left: "50%",
+  left: `${(sliderRightValue.value / 30) * 100}%`,
 });
 
 const rangeStyle = reactive({
-  left: "20%",
-  width: "30%",
+  left: `${(sliderLeftValue.value / 30) * 100}%`,
+  width: `${((sliderRightValue.value - sliderLeftValue.value) / 30) * 100}%`,
 });
 
 // SliderValue
@@ -103,8 +113,6 @@ watch(sliderLeftValue, () => {
   rangeStyle.width = `${
     ((sliderRightValue.value - sliderLeftValue.value) / 30) * 100
   }%`;
-
-  console.log(sliderLeftValue.value);
 });
 
 // 오른쪽 Slider Value값이 변할 때 실행된다.
@@ -119,8 +127,6 @@ watch(sliderRightValue, () => {
   rangeStyle.width = `${
     ((sliderRightValue.value - sliderLeftValue.value) / 30) * 100
   }%`;
-
-  console.log(sliderRightValue.value);
 });
 </script>
 
@@ -136,7 +142,7 @@ watch(sliderRightValue, () => {
     width: 95%;
     input {
       position: absolute;
-      z-index: 1;
+      z-index: 10;
       width: 100%;
       height: 8px;
       background-color: black;
@@ -146,7 +152,7 @@ watch(sliderRightValue, () => {
 
       // 크롬
       &::-webkit-slider-thumb {
-        z-index: 10;
+        z-index: 100;
         width: 32px;
         height: 32px;
         background-color: black;
@@ -157,7 +163,7 @@ watch(sliderRightValue, () => {
 
       // 파이어폭스
       &::-moz-range-thumb {
-        z-index: 10;
+        z-index: 100;
         width: 32px;
         height: 32px;
         background-color: black;
@@ -197,7 +203,7 @@ watch(sliderRightValue, () => {
     }
   }
 
-  // 깂
+  // 값
   .cocktail-search-filter-slider-value {
     position: relative;
     width: 95.5%;
@@ -215,6 +221,7 @@ watch(sliderRightValue, () => {
     margin-top: -16px;
     @include font($fs-md, $fw-medium);
     color: $sub-color;
+    user-select: none;
   }
 }
 </style>

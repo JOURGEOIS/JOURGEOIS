@@ -48,14 +48,12 @@ public class PostService {
 
         Member member = memberRepository.findById(writerId)
                             .orElseThrow(()->new NoSuchElementException("유저를 찾을 수 없습니다."));
-
-        if(postDTO.getTitle().isEmpty()){
+        // post 이미지 업로드
+        String uploadURL = s3Util.upload(postDTO.getImg(), member.getUid(), ImgType.POST);
+        if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
             Post post = new Post();
             post.setDescription(postDTO.getDescription());
             post.setMember(member);
-
-            // post 이미지 업로드
-            String uploadURL = s3Util.upload(postDTO.getImg(), member.getUid(), ImgType.POST);
             post.setImg(uploadURL);
 
             // post 저장
@@ -67,8 +65,6 @@ public class PostService {
             cc.setMember(member);
             cc.setIngredients(postDTO.getIngredients());
             cc.setRecipe(postDTO.getRecipe());
-            // post 이미지 업로드
-            String uploadURL = s3Util.upload(postDTO.getImg(), member.getUid(), ImgType.POST);
             cc.setImg(uploadURL);
             // post 저장
             CustomCocktail cocktail = postRepository.save(cc);
@@ -93,16 +89,31 @@ public class PostService {
     @Transactional
     public void editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
         Long postId = postDTO.getPostId();
-
-        Post targetPost = postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
-
-        targetPost.setDescription(postDTO.getDescription());
         // post 이미지 업로드
         String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
-        targetPost.setImg(uploadURL);
-        s3Util.deleteFile(targetPost.getImg());
-        // post 저장
-        postRepository.save(targetPost);
+
+        // 커스텀 칵테일 제목이 Empty라면 일반 게시물이라는 의미
+        // postDTO.getTitle().isEmpty() 가끔씩 됨... 이유를 알고 싶다.
+        if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
+            Post targetPost = postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
+            targetPost.setDescription(postDTO.getDescription());
+
+            targetPost.setImg(uploadURL);
+            s3Util.deleteFile(targetPost.getImg());
+            // post 저장
+            postRepository.save(targetPost);
+        }else{
+            CustomCocktail targetCustomCocktail = (CustomCocktail) postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
+            targetCustomCocktail.setDescription(postDTO.getDescription());
+            targetCustomCocktail.setImg(uploadURL);
+            s3Util.deleteFile(targetCustomCocktail.getImg());
+            targetCustomCocktail.setTitle(postDTO.getTitle());
+            targetCustomCocktail.setRecipe(postDTO.getRecipe());
+            targetCustomCocktail.setIngredients(postDTO.getIngredients());
+            // post 저장
+            postRepository.save(targetCustomCocktail);
+        }
+
     }
 
     @Transactional
@@ -111,6 +122,9 @@ public class PostService {
                 .ifPresentOrElse((targetPost) -> {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
+                    // cascade 적용이 안됨..!!
+                    customCocktailToCocktailRepository.findByCustomCocktail_Id(postDeleteReq.get("p_id"))
+                                    .ifPresent(data -> {customCocktailToCocktailRepository.deleteById(data.getId());});
                     postRepository.delete(targetPost);
                 },
                 () -> {throw new NoSuchElementException("게시글을 찾을 수 없습니다.");}

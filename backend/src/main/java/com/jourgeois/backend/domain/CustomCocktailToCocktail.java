@@ -10,7 +10,7 @@ public class CustomCocktailToCocktail implements Serializable {
     @Column(nullable = false)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "p_id")
     private CustomCocktail customCocktail;
 
@@ -23,7 +23,9 @@ public class CustomCocktailToCocktail implements Serializable {
         this.cocktail = cocktail;
     }
 
-    public CustomCocktailToCocktail() {
+    public CustomCocktailToCocktail() {}
 
+    public Long getId() {
+        return id;
     }
 }

@@ -40,7 +40,7 @@ public class PostController {
             result.put("fail", "파일 업로드 실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NoSuchElementException e) {
-            result.put("fail", "글쓴이가 존재하지 않음");
+            result.put("fail", "글 등록 실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -67,9 +67,8 @@ public class PostController {
     public ResponseEntity postImageTempStorage(@ModelAttribute PostDTO postDTO){
         Map<String, String> data = new HashMap<>();
         try{
-                data.put("url", "http://13.209.206.237/img/" + postService.postImageLocalUpload(postDTO));
-                return new ResponseEntity(data, HttpStatus.CREATED);
-
+            data.put("url", "http://13.209.206.237/img/" + postService.postImageLocalUpload(postDTO));
+            return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
             data.put("fail", "이미지 업로드 실패");
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);

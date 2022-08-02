@@ -46,16 +46,22 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
             "group by c_id having count(c.c_id)=:sum)\n" +
             "and c_type=:type\n" +
             "and c_alcohol between :abvlow and :abvhigh")
-    Integer findByFilter(@Param("type") String type, @Param("abvlow") int abvlow, @Param("abvhigh") int abvhigh, @Param("materials") List<Integer> materials, @Param("sum") int sum);
+    Integer findByFilter(@Param("type") String type, @Param("abvlow") int abvlow, @Param("abvhigh") int abvhigh,
+                         @Param("materials") List<Integer> materials, @Param("sum") int sum);
+
+    Integer countByTypeAndAlcoholBetween(String type, double low, double high);
 
     @Query(nativeQuery = true, value="select * from cocktail where c_id in \n" +
             "(select c.c_id from \n" +
             "(select c_id from cocktail_to_material where m_id in :materials) c \n" +
             "group by c_id having count(c.c_id)=:sum)\n" +
             "and c_type=:type\n" +
-            "and c_alcohol between :abvlow and :abvhigh")
-    List<Cocktail> findByFilterInfo(@Param("type") String type, @Param("abvlow") int abvlow, @Param("abvhigh") int abvhigh, @Param("materials") List<Integer> materials, @Param("sum") int sum);
+            "and c_alcohol between :abvlow and :abvhigh limit 10 offset :page")
+    List<Cocktail> findByFilterInfo(@Param("type") String type, @Param("abvlow") int abvlow, @Param("abvhigh") int abvhigh,
+                                    @Param("materials") List<Integer> materials, @Param("sum") int sum, @Param("page") int page);
 
+    @Query(value="SELECT * FROM cocktail WHERE c_type=:type AND c_alcohol BETWEEN :low AND :high limit :limit offset :offset", nativeQuery = true)
+    List<Cocktail> findByTypeAndAlcoholBetween(String type, double low, double high, int offset, int limit);
 //    @Query("UPDATE Cocktail c SET c.name = :name, c.nameKR = :nameKR, c.alcohol = :alcohol, c.cupId = :cupId," +
 //            " c.tag = :tag, c.baseLiquor = :baseLiquor, c.category = :category, c.recipe = :recipe WHERE c.id = :id")
 //    Optional<Cocktail> updateCocktail(@Param("Cocktail") Cocktail cocktail);

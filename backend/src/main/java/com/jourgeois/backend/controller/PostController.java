@@ -1,5 +1,6 @@
 package com.jourgeois.backend.controller;
 
+import com.amazonaws.AmazonClientException;
 import com.jourgeois.backend.api.dto.PostDTO;
 import com.jourgeois.backend.api.dto.ProfileDTO;
 import com.jourgeois.backend.service.PostService;
@@ -64,16 +65,32 @@ public class PostController {
 
     @PostMapping("/tmp")
     public ResponseEntity postImageTempStorage(@ModelAttribute PostDTO postDTO){
+        Map<String, String> data = new HashMap<>();
         try{
-
-                Map<String, String> data = new HashMap<>();
                 data.put("url", "http://13.209.206.237/img/" + postService.postImageLocalUpload(postDTO));
                 return new ResponseEntity(data, HttpStatus.CREATED);
 
         }catch (Exception e) {
-            Map<String, Boolean> data = new HashMap<>();
-            data.put("success", false);
+            data.put("fail", "이미지 업로드 실패");
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity deletePost(@RequestBody Map<String, Long> postDeleteReq) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            postService.deletePost(postDeleteReq);
+            result.put("success", "성공");
+            return new ResponseEntity(result, HttpStatus.OK);
+        } catch (AmazonClientException e) {
+            System.out.println(e);
+            result.put("fail", "사진 삭제 실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NoSuchElementException e) {
+            System.out.println(e);
+            result.put("fail", "게시글이 존재하지 않음");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

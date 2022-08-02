@@ -1,6 +1,8 @@
 package com.jourgeois.backend.util;
 
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -107,7 +109,7 @@ public class S3Util {
         return Optional.empty();
     }
 
-    public void deleteFile(final String url){
+    public void deleteFile(final String url) throws SdkClientException {
         DeleteObjectRequest request = new DeleteObjectRequest(bucket, url);
         amazonS3Client.deleteObject(request);
     }

@@ -35,6 +35,13 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts;
 
+    @OneToMany(mappedBy = "member")
+    private List<CocktailBookmark> cocktailBookmarks;
+
+    @OneToMany(mappedBy = "member")
+    private List<PostBookmark> postBookmarks;
+
+
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
         this.email = email;

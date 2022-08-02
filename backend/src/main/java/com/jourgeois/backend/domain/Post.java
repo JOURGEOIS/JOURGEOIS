@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,4 +41,7 @@ public class Post {
     @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "p_writer")
     private Member member;
+
+    @OneToMany(mappedBy = "post")
+    private List<PostBookmark> postBookmarks;
 }

@@ -14,15 +14,19 @@ public class CocktailReviews extends BaseTime implements Serializable {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "uid")
+    private Member member;
+
+    @ManyToOne
     @JoinColumn(name = "c_id")
     private Cocktail cocktail;
 
     @Column(name = "cr_review")
     private String review;
 
-
-    @ManyToOne
-    @JoinColumn(name = "uid")
-    private Member member;
-
+    public CocktailReviews(Member m, Cocktail c, String review){
+        this.member = m;
+        this.cocktail = c;
+        this.review = review;
+    }
 }

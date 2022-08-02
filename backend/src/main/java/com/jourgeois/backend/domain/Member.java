@@ -55,30 +55,11 @@ public class Member {
         this.introduce = introduce;
     }
 
-<<<<<<< HEAD
-=======
     @Builder
     public Member(Long uid) {
         this.uid = uid;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "uid=" + uid +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", profileImg='" + profileImg + '\'' +
-                ", introduce='" + introduce + '\'' +
-                ", creationDate=" + creationDate +
-                ", roles='" + roles + '\'' +
-                '}';
-    }
-
->>>>>>> 8fdaec2e5c60d20415aed47079ead4c732528e0a
     public List<String> getRoleList() {
         if (roles.length() > 0) {
             System.out.println("roles " + roles.split(",").toString());

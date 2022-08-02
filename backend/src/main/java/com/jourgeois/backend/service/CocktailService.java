@@ -1,59 +1,33 @@
 package com.jourgeois.backend.service;
 
-<<<<<<< HEAD
-import com.jourgeois.backend.api.dto.CocktailCommentDTO;
-import com.jourgeois.backend.api.dto.CocktailDTO;
-import com.jourgeois.backend.api.dto.CocktailVO;
-import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.CocktailReviews;
-import com.jourgeois.backend.domain.Material;
-import com.jourgeois.backend.domain.Member;
-=======
-import com.jourgeois.backend.api.dto.CocktailBookmarkDTO;
-import com.jourgeois.backend.api.dto.CocktailDTO;
-import com.jourgeois.backend.api.dto.CocktailVO;
-import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.CocktailBookmark;
-import com.jourgeois.backend.domain.Material;
-import com.jourgeois.backend.repository.CocktailBookmarkRepository;
->>>>>>> 8fdaec2e5c60d20415aed47079ead4c732528e0a
-import com.jourgeois.backend.repository.CocktailRepository;
-import com.jourgeois.backend.repository.CocktailReviewRepository;
-import com.jourgeois.backend.repository.MaterialRepository;
-import com.jourgeois.backend.repository.MemberRepository;
+
+import com.jourgeois.backend.api.dto.*;
+import com.jourgeois.backend.domain.*;
+import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
 public class CocktailService {
     private final CocktailRepository cocktailRepository;
     private final MaterialRepository materialRepository;
-<<<<<<< HEAD
     private final CocktailReviewRepository cocktailReviewRepository;
     private final MemberRepository memberRepository;
+    private final CocktailBookmarkRepository cocktailBookmarkRepository;
 
     @Autowired
-    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository,
-                    CocktailReviewRepository cocktailReviewRepository, MemberRepository memberRepository){
+    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailReviewRepository cocktailReviewRepository,
+                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
         this.cocktailReviewRepository = cocktailReviewRepository;
         this.memberRepository = memberRepository;
-=======
-    private final CocktailBookmarkRepository cocktailBookmarkRepository;
-
-    @Autowired
-    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository
-                    ,CocktailBookmarkRepository cocktailBookmarkRepository
-    ){
-        this.cocktailRepository = cocktailRepository;
-        this.materialRepository = materialRepository;
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
->>>>>>> 8fdaec2e5c60d20415aed47079ead4c732528e0a
     }
 
     // 칵테일 저장 메소드
@@ -111,13 +85,12 @@ public class CocktailService {
 
     }
 
-<<<<<<< HEAD
-    public boolean createComment(CocktailCommentDTO cDTO) throws Exception {
+    public boolean createComment(CocktailCommentDTO cDTO) {
         try{
-            Member m = memberRepository.findById(cDTO.getId()).orElseThrow();
+            Member m = memberRepository.findById(cDTO.getUserId()).orElseThrow();
             Cocktail c = cocktailRepository.findById(cDTO.getCocktailId()).orElseThrow();
 
-            CocktailReviews cocktailReviews = new CocktailReviews(0L, c,cDTO.getReview(),m);
+            CocktailReviews cocktailReviews = new CocktailReviews(m, c, cDTO.getReview());
             cocktailReviewRepository.save(cocktailReviews);
 
             return true;
@@ -127,16 +100,36 @@ public class CocktailService {
         }
     }
 
-    public boolean readComment(CocktailCommentDTO cocktailCommentDTO) throws Exception {
-        try{
+    public List<CocktailCommentDTO> readComment(Long cocktailId) {
+        try {
+            List<CocktailCommentVO> ccVOs = cocktailReviewRepository.findBycId(cocktailId).orElseThrow(() -> new Exception("cocktailService.readComment"));
+            List<CocktailCommentDTO> ccDTOs = new ArrayList<>();
+
+            for (CocktailCommentVO ccVO : ccVOs) {
+                CocktailCommentDTO ccDTO = CocktailCommentDTO.builder().id(ccVO.getId()).createdDate(ccVO.getCreatedDate())
+                        .modifiedDate(ccVO.getModifiedDate()).review(ccVO.getReview()).cocktailId(ccVO.getCocktailId()).userId(ccVO.getUserId()).build();
+                System.out.println(ccDTO.toString());
+                ccDTOs.add(ccDTO);
+            }
+            System.out.println("ccDTO size : " + ccDTOs.size());
+            return ccDTOs;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean updateComment(CocktailCommentDTO cocktailCommentDTO) {
+        try {
 //            cocktailReviewRepository.save(cocktailCommentDTO);
 
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-=======
+    }
+
     @Transactional
     public boolean pushBookmark(CocktailBookmarkDTO cocktailBookmark){
         cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
@@ -149,7 +142,6 @@ public class CocktailService {
     public boolean checkUserBookmark(CocktailBookmarkDTO cocktailBookmark){
         return cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
                 cocktailBookmark.getCocktail()).isPresent();
->>>>>>> 8fdaec2e5c60d20415aed47079ead4c732528e0a
     }
 
     public boolean checkCocktailUid(Long uid){

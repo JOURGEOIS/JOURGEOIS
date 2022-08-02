@@ -11,11 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-<<<<<<< HEAD
-public interface CocktailRepository extends JpaRepository<Cocktail, String> {
-=======
+
 public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
->>>>>>> 8fdaec2e5c60d20415aed47079ead4c732528e0a
 
     List<Cocktail> findAllByOrderById(Pageable pageable);
     @Query("SELECT c.id as id, c.name as name, c.nameKR as nameKR, c.alcohol as alcohol, c.cupId as cupId, " +

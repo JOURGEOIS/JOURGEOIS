@@ -1,17 +1,19 @@
 package com.jourgeois.backend.api.dto;
 
-import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.Member;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Builder
 public class CocktailCommentDTO {
-    private String id;
+    private Long id;
+    private Long userId;
+    private Long cocktailId;
     private String review;
-    private String cocktailId;
-    private String memberId;
-
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 }

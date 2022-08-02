@@ -21,4 +21,6 @@ public class CocktailDTO {
     private String recipe;
     private String img;
     private ArrayList<String> materials;
+    private Long count;
+    private Long status;
 }

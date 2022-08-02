@@ -49,7 +49,7 @@ public class S3Util {
     public String localUpload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
         File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        return uploadFile.getName();
+        return imgType.getValue() + "/" + dirName + "/" + uploadFile.getName();
     }
 
     // S3로 파일 업로드하기

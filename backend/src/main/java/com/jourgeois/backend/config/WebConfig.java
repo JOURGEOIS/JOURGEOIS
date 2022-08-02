@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan("com.jourgeois.backend.controller")
 public class WebConfig implements WebMvcConfigurer{
 
-    private final String IMG_TMP = "file:/app/DATA/tmp/profile/";
+    private final String IMG_TMP = "file:/app/DATA/tmp/";
 //    private final String PROFILE_TMP = "C:///app/DATA/tmp/profile/";
 
     @Override

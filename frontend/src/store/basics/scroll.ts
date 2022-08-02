@@ -14,20 +14,14 @@ export const scroll: Module<ScrollState, RootState> = {
     debounce: 0,
   },
 
-  getters: {
-    // isLoggedIn: (state) => {
-    //   return !!state.accessToken;
-    // },
-  },
+  getters: {},
 
-  mutations: {
-    // SET_ACCESS_TOKEN: (state, token) => {
-    //   state.accessToken = token;
-    // },
-  },
+  mutations: {},
 
   actions: {
-    // * 내려오면 API 호출하여 아래에 더 추가, total값 최대면 호출X
+    // * 끝까지 내려오면 API 호출하여 아래에 더 추가, total값 최대면 호출X
+    // data: {action:string - 스크롤을 통해 API 호출 및 페이지 수 올리는 함수 전역경로}
+    // action 함수는 page 수를 올리는 vuex mutation이 있어야 함
     handleScroll: ({ state, dispatch }, data: any) => {
       if (state.debounce) {
         clearTimeout(state.debounce);

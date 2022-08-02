@@ -41,6 +41,8 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<PostBookmark> postBookmarks;
 
+    @OneToMany(mappedBy = "member")
+    private List<CocktailReviews> cocktailReviews;
 
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
@@ -51,22 +53,6 @@ public class Member {
         this.birthday = birthday;
         this.profileImg = profileImg;
         this.introduce = introduce;
-    }
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "uid=" + uid +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", profileImg='" + profileImg + '\'' +
-                ", introduce='" + introduce + '\'' +
-                ", creationDate=" + creationDate +
-                ", roles='" + roles + '\'' +
-                '}';
     }
 
     public List<String> getRoleList() {
@@ -84,10 +70,4 @@ public class Member {
         this.roles = "ROLE_USER";
     }
 
-//    public static Member testCreate(String userId, String pw) {
-//        return Member.builder()
-//                .userId(userId)
-//                .pw(pw)
-//                .build();
-//    }
 }

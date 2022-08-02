@@ -1,11 +1,16 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.CocktailCommentDTO;
 import com.jourgeois.backend.api.dto.CocktailDTO;
 import com.jourgeois.backend.api.dto.CocktailVO;
 import com.jourgeois.backend.domain.Cocktail;
+import com.jourgeois.backend.domain.CocktailReviews;
 import com.jourgeois.backend.domain.Material;
+import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.repository.CocktailRepository;
+import com.jourgeois.backend.repository.CocktailReviewRepository;
 import com.jourgeois.backend.repository.MaterialRepository;
+import com.jourgeois.backend.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +21,16 @@ import java.util.ArrayList;
 public class CocktailService {
     private final CocktailRepository cocktailRepository;
     private final MaterialRepository materialRepository;
+    private final CocktailReviewRepository cocktailReviewRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository){
+    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository,
+                    CocktailReviewRepository cocktailReviewRepository, MemberRepository memberRepository){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
+        this.cocktailReviewRepository = cocktailReviewRepository;
+        this.memberRepository = memberRepository;
     }
 
     // 칵테일 저장 메소드
@@ -53,8 +63,7 @@ public class CocktailService {
 
 
     public boolean updateCocktail(Cocktail cocktail) throws Exception {
-//        Cocktail findCocktail = cocktailRepository.findById(cocktail.getId()).orElseThrow(() -> new Exception("CocktailService.updateCocktail.findCocktail"));
-//        cocktailRepository.updateCocktail(cocktail); //.orElseThrow(() -> new Exception("CocktailService.updateCocktail.update"));
+
         return true;
     }
 
@@ -79,5 +88,30 @@ public class CocktailService {
 
     }
 
+    public boolean createComment(CocktailCommentDTO cDTO) throws Exception {
+        try{
+            Member m = memberRepository.findById(cDTO.getId()).orElseThrow();
+            Cocktail c = cocktailRepository.findById(cDTO.getCocktailId()).orElseThrow();
+
+            CocktailReviews cocktailReviews = new CocktailReviews(0L, c,cDTO.getReview(),m);
+            cocktailReviewRepository.save(cocktailReviews);
+
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean readComment(CocktailCommentDTO cocktailCommentDTO) throws Exception {
+        try{
+//            cocktailReviewRepository.save(cocktailCommentDTO);
+
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }

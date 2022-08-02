@@ -1,5 +1,6 @@
 package com.jourgeois.backend.controller;
 
+import com.jourgeois.backend.api.dto.CocktailCommentDTO;
 import com.jourgeois.backend.api.dto.CocktailDTO;
 import com.jourgeois.backend.domain.Cocktail;
 import com.jourgeois.backend.domain.Material;
@@ -50,7 +51,9 @@ public class CocktailController {
     }
 
     @PutMapping(value = "/cocktail")
-    public ResponseEntity<?> updateCocktail(@RequestBody Cocktail cocktail) {
+    public ResponseEntity<?> updateCocktail(@RequestParam(value = "id") Long id) {
+            Cocktail cocktail = null;
+//            (@RequestBody Cocktail cocktail) {
         Map<String, Boolean> data = new HashMap<>();
         try {
             System.out.println();
@@ -92,6 +95,19 @@ public class CocktailController {
             e.printStackTrace();
             data.put("success", false);
             return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/comment")
+    public ResponseEntity insertComment(@RequestBody CocktailCommentDTO cocktailCommentDTO){
+        // review, cocktailId, reviewId 정보 받음
+
+        try {
+            boolean res = cocktailService.createComment(cocktailCommentDTO);
+            return ResponseEntity.ok().body(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("result", "false"));
         }
     }
 }

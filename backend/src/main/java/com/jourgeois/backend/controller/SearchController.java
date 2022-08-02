@@ -90,13 +90,13 @@ public class SearchController {
         return new ResponseEntity(searchService.searchKeywords(keyword), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/filter")
+    @PostMapping(value = "/filter")
     public ResponseEntity filterCount(@RequestBody SearchFilterDTO searchFilterDto){
         System.out.println(searchFilterDto.toString());
         return new ResponseEntity(searchService.filterCount(searchFilterDto), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/filter/list")
+    @PostMapping(value = "/filter/list")
     public ResponseEntity filterList(@RequestBody SearchFilterDTO searchFilterDto){
         System.out.println(searchFilterDto.toString());
         return new ResponseEntity(searchService.filterList(searchFilterDto), HttpStatus.CREATED);

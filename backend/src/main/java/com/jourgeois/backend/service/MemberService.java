@@ -9,6 +9,7 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
+import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,7 +79,7 @@ public class MemberService {
                                             if(!member.getProfileImg().equals("default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid()));
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
@@ -242,7 +243,7 @@ public class MemberService {
     @Transactional
     public String ProfileImageLocalUpload(ProfileDTO profileDto) throws IOException {
         Member member = memberRepository.findByEmail(profileDto.getEmail()).get();
-        String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid());
-        return member.getUid() + "/" + url;
+        String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
+        return url;
     }
 }

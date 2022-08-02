@@ -39,4 +39,7 @@ public class Cocktail {
     @OneToMany(mappedBy = "cocktail")
     private List<CocktailToMaterial> cocktailToMaterials = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cocktail")
+    private List<CocktailBookmark> cocktailBookmarks;
+
 }

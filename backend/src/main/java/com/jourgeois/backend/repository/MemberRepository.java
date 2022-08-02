@@ -9,8 +9,9 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, String> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
+//    Optional<Member> findByUid(Long uid);
     Member findByNickname(String nickname);
     List<Member> findByNicknameContainingIgnoreCaseOrderByNickname(String nickname, Pageable pageable);
     List<Member> findTop10ByNicknameContainingIgnoreCaseOrderByNickname(String nickname);

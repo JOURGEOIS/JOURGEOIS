@@ -1,6 +1,6 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.SearchTrendDTO;
+import com.jourgeois.backend.api.dto.SearchTrendDto;
 import com.jourgeois.backend.domain.auth.EmailToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -63,29 +63,29 @@ public class RedisService {
         return res.toArray();
     }
 
-    public boolean setHotKeywords(String timepoint, SearchTrendDTO searchTrendDto) {
+    public boolean setHotKeywords(String timepoint, SearchTrendDto searchTrendDto) {
         String key = HOT_KEYWORD + timepoint;
         redisTemplate.opsForValue().set(key, searchTrendDto);
         System.out.println("저장 성공");
         return true;
     }
-    public SearchTrendDTO getHotKeywords(String timepoint) throws Exception {
+    public SearchTrendDto getHotKeywords(String timepoint) throws Exception {
         String key = HOT_KEYWORD + timepoint;
-        SearchTrendDTO searchTrend = (SearchTrendDTO) redisTemplate.opsForValue().get(key);
+        SearchTrendDto searchTrend = (SearchTrendDto) redisTemplate.opsForValue().get(key);
         System.out.println("가져오는 것 까지는 오키이이이ㅣ");
         System.out.println("조회 성공");
         return searchTrend;
     }
 
-    public boolean setWeeklyHotKeywords(String timepoint, SearchTrendDTO searchTrendDto) {
+    public boolean setWeeklyHotKeywords(String timepoint, SearchTrendDto searchTrendDto) {
         String key = WEEKLY_HOT_KEYWORD + timepoint;
         redisTemplate.opsForValue().set(key, searchTrendDto);
         System.out.println("저장 성공");
         return true;
     }
-    public SearchTrendDTO getWeeklyHotKeywords(String timepoint) throws Exception {
+    public SearchTrendDto getWeeklyHotKeywords(String timepoint) throws Exception {
         String key = WEEKLY_HOT_KEYWORD + timepoint;
-        SearchTrendDTO searchTrend = (SearchTrendDTO) redisTemplate.opsForValue().get(key);
+        SearchTrendDto searchTrend = (SearchTrendDto) redisTemplate.opsForValue().get(key);
         System.out.println("가져오는 것 까지는 오키이이이ㅣ");
         System.out.println("조회 성공");
         return searchTrend;

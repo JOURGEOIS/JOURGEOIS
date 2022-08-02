@@ -45,4 +45,8 @@ public class Cocktail {
     @OneToMany(mappedBy = "cocktail")
     private List<CocktailBookmark> cocktailBookmarks;
 
+
+    public Cocktail(Long id) {
+        this.id = id;
+    }
 }

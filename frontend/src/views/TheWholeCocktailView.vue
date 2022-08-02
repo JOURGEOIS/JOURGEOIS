@@ -12,11 +12,13 @@
       ></the-list-item-cocktail>
     </div>
   </div>
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
 import TheListItemCocktail from "@/components/cocktails/TheListItemCocktail.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 import axios from "axios";
 import api from "../api/api";
 import { useRoute, useRouter } from "vue-router";
@@ -77,14 +79,6 @@ onBeforeMount(() => {
     width: 100%;
 
     margin-top: 1rem;
-
-    @media #{$tablet} {
-      width: 80%;
-    }
-
-    @media #{$pc} {
-      width: 70%;
-    }
   }
 }
 </style>

@@ -24,6 +24,7 @@
     </form>
   </div>
   <the-cocktail-search-filter v-if="filterStatus"></the-cocktail-search-filter>
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
@@ -32,12 +33,19 @@ import TheCocktailSearchInit from "@/components/cocktails/TheCocktailSearchInit.
 import TheAutoComplete from "@/components/cocktails/TheAutoComplete.vue";
 import TheCocktailSearchButtonSection from "@/components/cocktails/TheCocktailSearchButtonSection.vue";
 import TheCocktailSearchFilter from "@/components/cocktails/TheCocktailSearchFilter.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
+// [basic] navbar icon 0번 켜기
+const setNavIconStatus = (index: number) => {
+  store.dispatch("navbar/setNavIconStatus", index);
+};
+setNavIconStatus(3);
 
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];
@@ -86,25 +94,17 @@ const clickCloseIcon = () => {
 
 <style scoped lang="scss">
 .cocktail-search-view {
+  @include flex;
   @include accountLayOut;
   form {
-    @include flex-center;
+    @include flex(column);
     width: 100%;
   }
   .cocktail-search-container {
     @include flex(column);
     justify-content: space-between;
     width: 100%;
-
     margin-top: 1rem;
-
-    @media #{$tablet} {
-      width: 80%;
-    }
-
-    @media #{$pc} {
-      width: 70%;
-    }
   }
 }
 

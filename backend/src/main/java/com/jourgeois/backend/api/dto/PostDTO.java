@@ -12,10 +12,10 @@ public class PostDTO {
     private Long uid;
     private MultipartFile img;
     private String imgLink;
-    private String title;
     private String description;
     
     // 커스텀 칵테일
+    private String title;
     private Long baseCocktail;
     private String ingredients;
     private String recipe;

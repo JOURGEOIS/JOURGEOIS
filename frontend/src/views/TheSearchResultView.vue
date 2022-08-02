@@ -24,10 +24,12 @@
       </section>
     </div>
   </div>
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
 import TheCocktailSearchHeader from "@/components/cocktails/TheCocktailSearchHeader.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 import {
   computed,
   onBeforeMount,
@@ -147,14 +149,6 @@ const currentComponent = computed(() => {
           color: $main-color;
         }
       }
-    }
-
-    @media #{$tablet} {
-      width: 80%;
-    }
-
-    @media #{$pc} {
-      width: 70%;
     }
   }
 }

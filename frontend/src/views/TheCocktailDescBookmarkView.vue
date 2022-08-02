@@ -11,10 +11,12 @@
       </div>
     </section>
   </div>
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 import { useStore } from "vuex";
 const store = useStore();
 </script>

@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import { navbar, NavbarState } from "../store/basics/navbar";
 import { scroll, ScrollState } from "../store/basics/scroll";
 import { account, AccountState } from "../store/accounts/account";
 import { signup, SignupState } from "../store/accounts/signup";
@@ -23,26 +24,23 @@ import {
   SearchResultState,
 } from "../store/cocktails/searchResult";
 
-import {
-  cocktailFilterIngredients,
-  CocktailFilterIngredientsStatus,
-} from "../store/cocktails/cocktailFilterIngredients";
-
 // 모듈의 state를 공유한다.
 export interface RootState {
+  navbar: NavbarState;
   scroll: ScrollState;
   account: AccountState;
   signup: SignupState;
   personalInfo: PersonalInfoState;
   password: PasswordState;
+  cocktailSearch: CocktailSearchState;
   cocktailDesc: CocktailDescState;
   searchResult: SearchResultState;
-  cocktailFilterIngredients: CocktailFilterIngredientsStatus;
 }
 
 // store를 생성한다.
 export default createStore({
   modules: {
+    navbar,
     scroll,
     account,
     signup,
@@ -51,6 +49,5 @@ export default createStore({
     cocktailDesc,
     cocktailSearch,
     searchResult,
-    cocktailFilterIngredients,
   },
 });

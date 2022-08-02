@@ -28,14 +28,22 @@
   <success-pop-up v-if="completeSignUpModalStatus"
     >회원가입이 완료되었습니다.</success-pop-up
   >
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
+import NavBar from "@/components/basics/NavBar.vue";
 import { computed, getCurrentInstance, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 const store = useStore();
+
+// [basic] navbar icon 0번 켜기
+const setNavIconStatus = (index: number) => {
+  store.dispatch("navbar/setNavIconStatus", index);
+};
+setNavIconStatus(0);
 
 const logOutPopupStatus = computed(
   () => store.getters["account/getLogOutPopupStatus"]

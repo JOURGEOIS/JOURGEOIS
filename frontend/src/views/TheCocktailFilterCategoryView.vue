@@ -25,6 +25,7 @@
       </button-basic-round>
     </section>
   </div>
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">

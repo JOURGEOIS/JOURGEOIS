@@ -69,6 +69,14 @@ a {
 };
 
 body {
+  // 스크롤 제거
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  padding-bottom: 60px;
+
   overflow-x: hidden;
   min-height: 100%;
   color: $main-color;

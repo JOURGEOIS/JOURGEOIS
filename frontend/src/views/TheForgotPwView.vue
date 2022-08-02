@@ -11,10 +11,12 @@
       <component :is="currentComponent"> </component>
     </section>
   </div>
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 import { computed, defineAsyncComponent, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 
@@ -68,15 +70,13 @@ onBeforeMount(() => {
     gap: 36px;
     margin-top: 2rem;
 
-    
-  @media #{$tablet} {
-    width: 80%;
-  }
+    @media #{$tablet} {
+      width: 80%;
+    }
 
-  @media #{$pc} {
-    width: 70%;
-  }
-
+    @media #{$pc} {
+      width: 70%;
+    }
   }
 }
 

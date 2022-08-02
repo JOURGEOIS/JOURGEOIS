@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class PostDTO {
     // 게시글 공통
+    private Long postId;
     private Long writer;
     private MultipartFile img;
     private String imgLink;
@@ -18,6 +19,14 @@ public class PostDTO {
     private Long baseCocktail;
     private String ingredients;
     private String recipe;
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
 
     public Long getWriter() {
         return writer;

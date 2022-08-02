@@ -240,6 +240,6 @@ public class MemberService {
     public String ProfileImageLocalUpload(ProfileDTO profileDto) throws IOException {
         Member member = memberRepository.findByEmail(profileDto.getEmail()).get();
         String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
-        return member.getUid() + "/" + url;
+        return url;
     }
 }

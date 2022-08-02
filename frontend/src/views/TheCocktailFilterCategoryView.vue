@@ -1,3 +1,4 @@
+<!-- filter 카테고리별 재료 상세 view -->
 <template>
   <div class="the-cocktail-filter-category-view">
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
@@ -19,7 +20,7 @@
         class="cocktail-search-filter-button"
         :button-style="[buttonColor, 'calc(100% - 32px)', '']"
         :disabled="searchFilterResultCnt === 0"
-        @click="clickSearchFilterButton"
+        @click="setSearchFilter"
       >
         {{ searchFilterResultCnt }}개의 검색 결과
       </button-basic-round>
@@ -31,11 +32,13 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import ButtonBasicRound from "@/components/basics/ButtonBasicRound.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 import { computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { baseAlcohol, liqueur, drinks, ingredients } from "../assets/filter";
 const route = useRoute();
+const router = useRouter();
 const store = useStore();
 
 // index: url 파라미터
@@ -73,19 +76,17 @@ const choiceIngredients = computed(
   () => store.getters["cocktailSearch/getSearchFilterIngredients"]
 );
 
-const array = choiceIngredients;
-
-// 재료 선택
+// 재료 선택하면 vuex에 저장한다.
 const clickIngredient = (id: number) => {
   store.dispatch("cocktailSearch/addFilterIngredients", id);
 };
 
-// 결과 개수
+// 만들 수 있는 칵테일 개수 값 가져오기
 const searchFilterResultCnt = computed(
   () => store.getters["cocktailSearch/getFilterResultCnt"]
 );
 
-// 버튼 색상
+// 버튼 색상 (만들 수 있는 칵테일이 생기면 활성화)
 const buttonColor = computed(() => {
   if (searchFilterResultCnt.value) {
     return "light-primary";
@@ -94,12 +95,12 @@ const buttonColor = computed(() => {
   }
 });
 
-// 버튼 클릭
-const clickSearchFilterButton = () => {
-  console.log("버튼 클릭");
+// 버튼 클릭하면 결과 창으로 이동한다.
+const setSearchFilter = () => {
+  router.push({ name: "TheSearchFilterResultView" });
 };
 
-// 결과 개수
+// 이전 창으로 가도 필터가 유지되도록 상태를 true로 유지 시킨다.
 onMounted(() => {
   store.dispatch("cocktailSearch/toggleFilter", true);
 });
@@ -172,7 +173,7 @@ onMounted(() => {
 
 .cocktail-search-filter-button {
   position: fixed;
-  bottom: 120px;
+  bottom: 100px;
   left: 50%;
   transform: translate(-50%, 0);
   padding: 16px;

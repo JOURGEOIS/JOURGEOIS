@@ -2,7 +2,6 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
-import { toRaw } from "vue";
 
 // 자동완성 단어 interface
 export interface autoCompleteWord {
@@ -57,6 +56,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     popularSearchWords: { from: "", to: "", keywords: [""], delta: [0] },
     autoCompleteSearchWords: { cocktails: [], ingredients: [], users: [] },
 
+    //========================
     // 칵테일 filter
     searchFilterData: JSON.parse(
       localStorage.getItem("searchFilter") ||
@@ -80,6 +80,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // * 검색 자동완성 autoCompleteWord[]
     getAutoCompleteSearchWords: (state) => state.autoCompleteSearchWords,
 
+    //========================
     // 필터 status
     getFilterStatus: (state) => state.filterStatus,
 
@@ -128,6 +129,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       state.recentSearchWords = [];
     },
 
+    //========================
     // 필터 토글
     SET_FILTER_STATUS: (state, value: boolean) => {
       state.filterStatus = value;
@@ -225,6 +227,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
         .catch((err) => console.error(err.response));
     },
 
+    //========================
     // 필터 토글
     toggleFilter: ({ commit }, value: boolean) => {
       commit("SET_FILTER_STATUS", value);
@@ -238,7 +241,11 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     // 필터 삭제하기
     setSearchFilterData: ({ commit }) => {
       localStorage.removeItem("searchFilter");
-      commit("SET_SEARCH_FILTER_DATA", {});
+      commit("SET_SEARCH_FILTER_DATA", {
+        type: 1,
+        abv: [6, 15],
+        materials: [],
+      });
     },
 
     // 필터 검색하기
@@ -256,15 +263,14 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       if (!type) {
         abv = [0, 0];
       }
-      const data = {
-        type,
-        abv,
-        materials,
-      };
       axios({
         url: api.lookups.filterCnt(),
         method: "post",
-        data: data,
+        data: {
+          type,
+          abv,
+          materials,
+        },
       })
         .then((response) => {
           commit("SET_SEARCH_RESULT_CNT", response.data);
@@ -326,6 +332,13 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       };
       commit("SET_SEARCH_FILTER_DATA", data);
       dispatch("searchFilterResultCnt");
+    },
+
+    // 필터 검색 결과 localStorage에 저장
+    submitSearchFilter: ({ getters, commit }) => {
+      const data = getters["getSearchFilterData"];
+      const jsonData = JSON.stringify(data);
+      localStorage.setItem("searchFilter", jsonData);
     },
   },
 };

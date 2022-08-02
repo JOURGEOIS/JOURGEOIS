@@ -1,6 +1,10 @@
-<!-- filter: form -->
+<!-- filter: form 
+  1. 알코올 여부
+  2. 도수(논 알코올 선택시 사라진다.) 
+  3. 재료 선택(클릭 시 상세 재료 페이지로 이동한다))-->
+
 <template>
-  <form @submit.prevent="submitSearchFilterForm">
+  <form @submit.prevent="setSearchFilter">
     <div>
       <div class="cocktail-search-filter-radio">
         <!-- 알코올, 논 알코올 여부 -->
@@ -68,7 +72,8 @@
     </div>
     <button-basic-round
       class="cocktail-search-filter-button"
-      :button-style="[buttonColor, 'long', '']"
+      :button-style="[buttonColor, 'calc(100% - 32px)', '']"
+      :disabled="searchFilterResultCnt === 0"
     >
       {{ searchFilterResultCnt }}개의 검색 결과
     </button-basic-round>
@@ -84,7 +89,7 @@ import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 
-// 알코올 / 논 알코올 value
+// 알코올 / 논 알코올 value (알코올 여부)
 const trueValue = ref(1);
 const falseValue = ref(0);
 const statusAlcoholValue = computed(
@@ -95,42 +100,18 @@ watch(statusAlcohol, () => {
   store.dispatch("cocktailSearch/changeFilterAlcohol", statusAlcohol.value);
 });
 
-// 개수
+// 칵테일 예상 검색 결과 수
 const searchFilterResultCnt = computed(
   () => store.getters["cocktailSearch/getFilterResultCnt"]
 );
 
-// 멀티 레인지 슬라이더 value
-// const strengthValue = computed(
-//   () => store.getters["cocktailSearch/getSearchFilterAlcoholStrength"]
-// );
-// const leftValue = ref(strengthValue.value[0]);
-// const rightValue = ref(strengthValue.value[1]);
-
-// let debounce: any;
-// watch([leftValue, rightValue], () => {
-//   clearTimeout(debounce);
-//   debounce = setTimeout(
-//     () =>
-//       store.dispatch("cocktailSearch/changeFilterAlcoholStrength", [
-//         leftValue.value,
-//         rightValue.value,
-//       ]),
-//     200
-//   );
-// });
-
-// 재료 선택
+// 재료 선택 시, 대표 이미지
 interface ingredients {
   params: string;
   image: string;
   name: string;
 }
-const choiceIngredients = computed(
-  () => store.getters["cocktailSearch/getSearchFilterIngredients"]
-);
 
-// 이미지
 const images: ingredients[] = [
   {
     params: "alcohol",
@@ -158,7 +139,7 @@ const images: ingredients[] = [
   },
 ];
 
-// 카테고리 클릭
+// 카테고리 클릭시, 재료 상세로 이동한다.
 const clickIngredient = (params: string) => {
   store.dispatch("cocktailSearch/changeFilterClass", "none");
   router.push({
@@ -169,7 +150,7 @@ const clickIngredient = (params: string) => {
   });
 };
 
-// 버튼 색상
+// 버튼 색상. (제작할 수 있는 칵테일 이 있으면 활성화된다.)
 const buttonColor = computed(() => {
   if (searchFilterResultCnt.value) {
     return "light-primary";
@@ -178,12 +159,10 @@ const buttonColor = computed(() => {
   }
 });
 
-// 제출
-const submitSearchFilterForm = () => {};
-
-onMounted(() => {
-  store.dispatch("cocktailSearch/searchFilterResultCnt");
-});
+// 제출 (결과 창으로 이동한다. )
+const setSearchFilter = () => {
+  router.push({ name: "TheSearchFilterResultView" });
+};
 </script>
 
 <style scoped lang="scss">
@@ -191,6 +170,7 @@ form {
   @include flex(column);
   align-items: center;
   gap: 32px;
+  user-select: none;
 
   > div {
     @include flex(column);
@@ -259,6 +239,7 @@ form {
       grid-template-columns: repeat(auto-fill, minmax(25%, auto));
       row-gap: 24px;
       cursor: pointer;
+      user-select: none;
       > div {
         @include flex(column);
         align-items: center;
@@ -294,13 +275,14 @@ form {
 }
 
 .cocktail-search-filter-button {
+  position: absolute;
   border-radius: 1em;
-  padding: 10px;
+  padding: 12px;
+  bottom: 80px;
   @include font(13px, $fw-bold);
 
   @media (min-height: 750px) {
-    margin-top: 16px;
-    padding: 12px;
+    bottom: 100px;
     @include font($fs-md, $fw-bold);
   }
 }

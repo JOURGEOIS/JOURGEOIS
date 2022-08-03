@@ -64,7 +64,7 @@ public class SearchService {
             memberRepository.findByNicknameContainingIgnoreCaseOrderByNickname(name, pageable)
                 .forEach(data ->
                         list.add(ProfileDTO.builder()
-                                .id(data.getUid())
+                                .uid(data.getUid())
                                 .email(data.getEmail())
                                 .nickname(data.getNickname())
                                 .profileImg(s3Url+data.getProfileImg())
@@ -74,7 +74,7 @@ public class SearchService {
 
     public List<SearchKeywordDTO> searchKeywords(String name){
         List<SearchKeywordDTO> list = new ArrayList<>();
-        searchKeywordRepository.findTop10ByKeywordContainingOrderByNameKr(name).forEach(data ->
+        searchKeywordRepository.findTop10ByNameContainingOrNameKrContainingOrderByNameKr(name, name).forEach(data ->
                 list.add(SearchKeywordDTO.builder()
                         .id(data.getId())
                         .name(data.getName())

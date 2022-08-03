@@ -104,22 +104,20 @@ public class CocktailService {
 
     public List<CocktailCommentDTO> readComment(Long cocktailId, Pageable pageable, String criteria) {
         try {
-            if(criteria == "modifiedDate"){
+            if(criteria == "date"){
                 criteria = "modified_date";
-            } else if(criteria == "likes"){
-                criteria = "likes";
             }
+
             List<CocktailCommentVO> ccVOs = cocktailCommentRepository.findCommentsByCocktailId(cocktailId, pageable, criteria).orElseThrow(() -> new Exception("cocktailService.readComment"));
             List<CocktailCommentDTO> ccDTOs = new ArrayList<>();
-            System.out.println("ccVO 사이즈 : " + ccVOs.size());
+
             for (CocktailCommentVO ccVO : ccVOs) {
                 CocktailCommentDTO ccDTO = CocktailCommentDTO.builder().commentId(ccVO.getCommentId()).nickname(ccVO.getNickname())
                         .profileImg(ccVO.getProfileImg()).createdDate(ccVO.getCreatedDate()).modifiedDate(ccVO.getModifiedDate())
                         .comment(ccVO.getComment()).cocktailId(ccVO.getCocktailId()).likes(ccVO.getLikes()).userId(ccVO.getUserId()).build();
-                System.out.println(ccDTO.toString());
+
                 ccDTOs.add(ccDTO);
             }
-            System.out.println("ccDTO size : " + ccDTOs.size());
             return ccDTOs;
         } catch (Exception e) {
             e.printStackTrace();

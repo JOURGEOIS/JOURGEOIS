@@ -27,8 +27,8 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("userId : " + username + " was not found"));
+        Member member = memberRepository.findById(Long.parseLong(username))
+                .orElseThrow(() -> new UsernameNotFoundException("Member uid : " + username + " was not found"));
 
         return createUserDetails(member);
     }
@@ -40,7 +40,7 @@ public class MyUserDetailsService implements UserDetailsService {
                 .map(authority -> new SimpleGrantedAuthority(authority))
                 .collect(Collectors.toList());
         System.out.println("UserDetails: " + grantedAuthorities);
-        return new User(member.getEmail(),
+        return new User(member.getUid().toString(),
                 member.getPassword(),
                 grantedAuthorities);
     }

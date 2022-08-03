@@ -34,10 +34,11 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             if ( jwt != null && jwtTokenProvider.validateToken(jwt)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                request.setAttribute("uid", (Object) authentication.getName().toString());
                 log.info("set Authentication to security context for '{}', uri: {}", authentication.getName());
-                }else {
-                    request.setAttribute("exception", "Exception");
-                }
+            }else {
+                request.setAttribute("exception", "Exception");
+            }
 //            }
         } catch(ExpiredJwtException e){
             request.setAttribute("exception", "ExpiredJwt");

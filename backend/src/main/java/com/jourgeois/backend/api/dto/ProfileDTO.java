@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 public class ProfileDTO {
-    private Long id;
+    private Long uid;
     private String email;
     private String name;
     private String nickname;
@@ -14,12 +14,12 @@ public class ProfileDTO {
     private MultipartFile profileLink;
     private String introduce;
 
-    public Long getId() {
-        return id;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
     public MultipartFile getProfileLink() {

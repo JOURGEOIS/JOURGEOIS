@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
@@ -43,6 +43,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<CocktailComment> cocktailReviews;
+
+    @OneToMany(mappedBy = "member")
+    private List<PostReview> postReviews;
 
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {

@@ -1,22 +1,20 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.ProfileDTO;
-import com.jourgeois.backend.api.dto.SearchCocktailDTO;
-import com.jourgeois.backend.api.dto.SearchFilterDTO;
-import com.jourgeois.backend.api.dto.SearchKeywordDTO;
-import com.jourgeois.backend.domain.Material;
+import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.search.SearchCocktailDTO;
+import com.jourgeois.backend.api.dto.search.SearchFilterDTO;
+import com.jourgeois.backend.api.dto.search.SearchKeywordDTO;
+import com.jourgeois.backend.domain.cocktail.Material;
 import com.jourgeois.backend.repository.CocktailRepository;
 import com.jourgeois.backend.repository.MaterialRepository;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.SearchKeywordRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service

@@ -1,18 +1,16 @@
 package com.jourgeois.backend.controller;
 
 import com.amazonaws.AmazonClientException;
-import com.jourgeois.backend.api.dto.PostDTO;
-import com.jourgeois.backend.api.dto.PostReviewDTO;
-import com.jourgeois.backend.api.dto.ProfileDTO;
-import com.jourgeois.backend.domain.PostReview;
+import com.jourgeois.backend.api.dto.post.PostDTO;
+import com.jourgeois.backend.api.dto.post.PostReviewDTO;
 import com.jourgeois.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -165,6 +163,25 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalArgumentException e) {
             result.put("fail", "올바른 입력값을 입력해주세요.");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/review")
+    public ResponseEntity getReviewAll(@RequestParam(value = "p_id") Long p_id,
+                                        @RequestParam(value = "asc") Boolean asc,
+                                        @PageableDefault(size=10, page = 0) Pageable pageable){
+        System.out.println("p_id: " + p_id);
+
+        Map<String, String> result = new HashMap<>();
+        if (p_id == null){
+            result.put("fail", "잘못된 입력");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+        try {
+            return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.CREATED);
+        } catch (Exception e) {
+            result.put("fail", "댓글을 불러오는 것을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

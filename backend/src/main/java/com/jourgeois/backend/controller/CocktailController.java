@@ -1,26 +1,24 @@
 package com.jourgeois.backend.controller;
 
 
-import com.jourgeois.backend.api.dto.CocktailCommentDTO;
+import com.jourgeois.backend.api.dto.cocktail.CocktailCommentDTO;
 
-import com.jourgeois.backend.api.dto.CocktailBookmarkDTO;
+import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
 
-import com.jourgeois.backend.api.dto.CocktailDTO;
-import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.Material;
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.api.dto.cocktail.CocktailDTO;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.cocktail.Material;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.service.CocktailService;
 import com.jourgeois.backend.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

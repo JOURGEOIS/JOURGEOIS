@@ -423,7 +423,7 @@ export const signup: Module<SignupState, RootState> = {
 		toggleTimedFailModalStatus: ({ dispatch }, time) => {
 			dispatch("toggleFailModalStatus", true);
 			if (typeof time !== "number") {
-				time = 3000;
+				time = 2000;
 			}
 			setTimeout(() => dispatch("toggleFailModalStatus", false), time);
 		},
@@ -435,7 +435,7 @@ export const signup: Module<SignupState, RootState> = {
 		toggleTimedEmailNonAuthModalStatus: ({ dispatch }, time) => {
 			dispatch("toggleEmailNonAuthModalStatus", true);
 			if (typeof time !== "number") {
-				time = 3000;
+				time = 2000;
 			}
 			setTimeout(() => dispatch("toggleEmailNonAuthModalStatus", false), time);
 		},
@@ -448,7 +448,7 @@ export const signup: Module<SignupState, RootState> = {
 		toggleTimedCompleteSignUpModalStatus: ({ dispatch }, time) => {
 			dispatch("toggleCompleteSignUpModalStatus", true);
 			if (typeof time !== "number") {
-				time = 3000;
+				time = 2000;
 			}
 			setTimeout(
 				() => dispatch("toggleCompleteSignUpModalStatus", false),

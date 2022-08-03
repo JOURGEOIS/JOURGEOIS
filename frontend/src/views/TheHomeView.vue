@@ -28,14 +28,22 @@
   <success-pop-up v-if="completeSignUpModalStatus"
     >회원가입이 완료되었습니다.</success-pop-up
   >
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
+import NavBar from "@/components/basics/NavBar.vue";
 import { computed, getCurrentInstance, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 const store = useStore();
+
+// [basic] navbar icon 0번 켜기
+const setNavIconStatus = (index: number) => {
+  store.dispatch("navbar/setNavIconStatus", index);
+};
+setNavIconStatus(0);
 
 const logOutPopupStatus = computed(
   () => store.getters["account/getLogOutPopupStatus"]
@@ -65,14 +73,14 @@ const completeSignUpModalStatus = computed(
 onMounted(() => {
   // 로그아웃 팝업 시간제 off
   if (logOutPopupStatus) {
-    setTimeout(() => store.dispatch("account/toggleLogOutPopup", false), 3000);
+    setTimeout(() => store.dispatch("account/toggleLogOutPopup", false), 2000);
   }
 
   // 비밀번호 변경 팝업 시간제 off
   if (changePwPopupStatus) {
     setTimeout(
       () => store.dispatch("password/toggleChangePwPopup", false),
-      3000
+      2000
     );
   }
 
@@ -80,20 +88,20 @@ onMounted(() => {
   if (failModalStatus) {
     setTimeout(
       () => store.dispatch("account/toggleFailModalStatus", false),
-      3000
+      2000
     );
   }
 
   // 탈퇴 팝업 시간제 off
   if (signOutPopupStatus) {
-    setTimeout(() => store.dispatch("account/toggleSignOutPopup", false), 3000);
+    setTimeout(() => store.dispatch("account/toggleSignOutPopup", false), 2000);
   }
 
   // 리프레시 실패 팝업 시간제 off
   if (refreshFailPopupStatus) {
     setTimeout(
       () => store.dispatch("personalInfo/toggleRefreshFailPopup", false),
-      3000
+      2000
     );
   }
 });

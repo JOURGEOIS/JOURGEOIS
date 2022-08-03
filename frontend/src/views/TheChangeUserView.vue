@@ -19,12 +19,14 @@
   <failure-pop-up v-if="failModalStatus">
     잠시 후에 다시 시도해주세요
   </failure-pop-up>
+  <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheUserInfoChangeForm from "@/components/accounts/TheUserInfoChangeForm.vue";
 import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { useStore } from "vuex";
@@ -60,7 +62,7 @@ watch(failModalStatus, () => {
   if (failModalStatus.value) {
     setTimeout(() => {
       toggleFailPopUp(false);
-    }, 3000);
+    }, 2000);
   }
 });
 
@@ -68,7 +70,7 @@ watch(successPopUpStatus, () => {
   if (successPopUpStatus.value) {
     setTimeout(() => {
       toggleSuccessPopUp(false);
-    }, 3000);
+    }, 2000);
   }
 });
 

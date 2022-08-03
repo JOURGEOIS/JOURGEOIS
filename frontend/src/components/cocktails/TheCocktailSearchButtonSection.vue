@@ -1,7 +1,7 @@
 <template>
   <section class="search-button-section">
-    <button-basic-round :button-style="['primary', 'long', 'small']"
-      >검색</button-basic-round
+    <button-basic-round :button-style="['primary', 'long', 'small']">
+      칵테일 전체 검색</button-basic-round
     >
   </section>
 </template>

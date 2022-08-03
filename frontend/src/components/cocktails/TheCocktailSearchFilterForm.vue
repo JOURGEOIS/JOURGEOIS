@@ -1,16 +1,21 @@
+<!-- filter: form 
+  1. 알코올 여부
+  2. 도수(논 알코올 선택시 사라진다.) 
+  3. 재료 선택(클릭 시 상세 재료 페이지로 이동한다))-->
+
 <template>
-  <form>
+  <form @submit.prevent="setSearchFilter">
     <div>
       <div class="cocktail-search-filter-radio">
         <!-- 알코올, 논 알코올 여부 -->
         <label for="filter-alcohol">
-          알코올
+          알콜
           <div>
             <span class="material-icons" v-show="statusAlcohol"> done </span>
           </div>
         </label>
         <label for="filter-none-alcohol">
-          논 알코올
+          무 알콜
           <div>
             <span class="material-icons" v-show="!statusAlcohol"> done </span>
           </div>
@@ -34,10 +39,7 @@
     <div v-show="statusAlcohol">
       <p>도수</p>
       <!-- 멀티 레인지 슬라이더 -->
-      <the-cocktail-search-filter-slider
-        v-model:left-value="leftValue"
-        v-model:right-value="rightValue"
-      ></the-cocktail-search-filter-slider>
+      <the-cocktail-search-filter-slider></the-cocktail-search-filter-slider>
       <div class="class-search-filter-alcohol-info">
         <div>
           <p>
@@ -55,69 +57,120 @@
     <div class="cocktail-search-filter-ingredients">
       <p>재료</p>
       <div class="cocktail-search-filter-category">
-        <div v-for="(image, index) in images" :key="`-${index}`">
-          <round-image
-            :round-image="{ image: image.image, width: image.width }"
-          ></round-image>
+        <div
+          v-for="(image, index) in images"
+          :key="`image-${index}`"
+          @click="clickIngredient(image.params)"
+        >
+          <div
+            class="category-image"
+            :style="{ backgroundImage: image.image }"
+          ></div>
           <p>{{ image.name }}</p>
         </div>
       </div>
     </div>
+    <button-basic-round
+      class="cocktail-search-filter-button"
+      :button-style="[buttonColor, 'calc(100% - 32px)', '']"
+      :disabled="searchFilterResultCnt === 0"
+    >
+      {{ searchFilterResultCnt }}개의 검색 결과
+    </button-basic-round>
   </form>
 </template>
 
 <script setup lang="ts">
 import TheCocktailSearchFilterSlider from "@/components/cocktails/TheCocktailSearchFilterSlider.vue";
-import RoundImage from "@/components/basics/RoundImage.vue";
-import { ref } from "vue";
-import { ingredients } from "../../assets/filter";
+import ButtonBasicRound from "@/components/basics/ButtonBasicRound.vue";
+import { reactive, ref, computed, onMounted, watch } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+const store = useStore();
+const router = useRouter();
 
-// 알코올 / 논 알코올 value
-const statusAlcohol = ref(true);
-const trueValue = ref(true);
-const falseValue = ref(false);
+// 알코올 / 논 알코올 value (알코올 여부)
+const trueValue = ref(1);
+const falseValue = ref(0);
+const statusAlcoholValue = computed(
+  () => store.getters["cocktailSearch/getSearchFilterAlcohol"]
+);
+const statusAlcohol = ref(statusAlcoholValue.value);
+watch(statusAlcohol, () => {
+  store.dispatch("cocktailSearch/changeFilterAlcohol", statusAlcohol.value);
+});
 
-// 멀티 레인지 슬라이더 value
-const leftValue = ref(6);
-const rightValue = ref(15);
+// 칵테일 예상 검색 결과 수
+const searchFilterResultCnt = computed(
+  () => store.getters["cocktailSearch/getFilterResultCnt"]
+);
 
-// 재료 선택
+// 재료 선택 시, 대표 이미지
 interface ingredients {
+  params: string;
   image: string;
-  width: string;
   name: string;
 }
 
 const images: ingredients[] = [
   {
-    image: "https://www.thecocktaildb.com/images/ingredients/Gin-Small.png",
-    width: "96px",
+    params: "alcohol",
+    image:
+      "url(https://www.thecocktaildb.com/images/ingredients/Gin-Small.png)",
     name: "술",
   },
   {
-    image: "https://www.thecocktaildb.com/images/ingredients/Kahlua-Small.png",
-    width: "96px",
+    params: "liqueur",
+    image:
+      "url(https://www.thecocktaildb.com/images/ingredients/Kahlua-Small.png)",
     name: "리큐르",
   },
   {
+    params: "drinks",
     image:
-      "https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png",
-    width: "96px",
+      "url(https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png)",
     name: "음료수",
   },
   {
-    image: "https://www.thecocktaildb.com/images/ingredients/lemon-Small.png",
-    width: "96px",
+    params: "ingredients",
+    image:
+      "url(https://www.thecocktaildb.com/images/ingredients/lemon-Small.png)",
     name: "추가 재료",
   },
 ];
+
+// 카테고리 클릭시, 재료 상세로 이동한다.
+const clickIngredient = (params: string) => {
+  store.dispatch("cocktailSearch/changeFilterClass", "none");
+  router.push({
+    name: "TheCocktailFilterCategoryView",
+    params: {
+      category: params,
+    },
+  });
+};
+
+// 버튼 색상. (제작할 수 있는 칵테일 이 있으면 활성화된다.)
+const buttonColor = computed(() => {
+  if (searchFilterResultCnt.value) {
+    return "light-primary";
+  } else {
+    return "sub";
+  }
+});
+
+// 제출 (결과 창으로 이동한다. )
+const setSearchFilter = () => {
+  router.push({ name: "TheSearchFilterResultView" });
+};
 </script>
 
 <style scoped lang="scss">
 form {
   @include flex(column);
   align-items: center;
-  gap: 40px;
+  gap: 32px;
+  user-select: none;
 
   > div {
     @include flex(column);
@@ -128,8 +181,12 @@ form {
       display: none;
     }
     > p {
-      @include font($fs-main, $fw-medium);
+      @include font($fs-md, $fw-medium);
       color: $main-color;
+
+      @media (min-height: 750px) {
+        @include font($fs-main, $fw-medium);
+      }
     }
     .cocktail-search-filter-radio {
       @include flex;
@@ -138,7 +195,11 @@ form {
       label {
         @include flex;
         gap: 16px;
-        @include font($fs-main, $fw-medium);
+        @include font($fs-md, $fw-medium);
+
+        @media (min-height: 750px) {
+          @include font($fs-main, $fw-medium);
+        }
 
         div {
           @include shadow-modal-2;
@@ -175,15 +236,54 @@ form {
     }
     .cocktail-search-filter-category {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(50%, auto));
-      row-gap: 32px;
-
-      div {
+      grid-template-columns: repeat(auto-fill, minmax(25%, auto));
+      row-gap: 24px;
+      cursor: pointer;
+      user-select: none;
+      > div {
         @include flex(column);
         align-items: center;
-        @include font($fs-main, $fw-medium);
+        @include font($fs-md, $fw-medium);
+        color: $gray200;
+
+        @media (min-height: 750px) {
+          @include font(16px, $fw-medium);
+        }
+
+        .category-image {
+          width: 72px;
+          height: 72px;
+          border: 0;
+          border-radius: 50%;
+          background-color: $white200;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+
+          @media (min-height: 750px) {
+            width: 80px;
+            height: 80px;
+          }
+          @media #{$tablet} {
+            width: 102px;
+            height: 102px;
+          }
+        }
       }
     }
+  }
+}
+
+.cocktail-search-filter-button {
+  position: absolute;
+  border-radius: 1em;
+  padding: 12px;
+  bottom: 80px;
+  @include font(13px, $fw-bold);
+
+  @media (min-height: 750px) {
+    bottom: 100px;
+    @include font($fs-md, $fw-bold);
   }
 }
 </style>

@@ -13,7 +13,8 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @DiscriminatorValue("cocktail")
-public class CustomCocktail extends Post {
+public class
+CustomCocktail extends Post {
     @Column(name = "cc_cocktail_title")
     private String title;
 

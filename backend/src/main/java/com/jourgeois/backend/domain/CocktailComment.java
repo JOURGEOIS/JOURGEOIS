@@ -2,6 +2,7 @@ package com.jourgeois.backend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,9 +10,10 @@ import java.io.Serializable;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class CocktailReviews extends BaseTime implements Serializable {
+@Setter
+public class CocktailComment extends BaseTime implements Serializable {
     @Id @GeneratedValue
-    private Long id;
+    private Long commentId;
 
     @ManyToOne
     @JoinColumn(name = "uid")
@@ -21,12 +23,15 @@ public class CocktailReviews extends BaseTime implements Serializable {
     @JoinColumn(name = "c_id")
     private Cocktail cocktail;
 
-    @Column(name = "cr_review")
-    private String review;
+    @Column(name = "cr_comment")
+    private String comment;
 
-    public CocktailReviews(Member m, Cocktail c, String review){
+    @Column(name = "c_likes")
+    private Integer likes = 0;
+
+    public CocktailComment(Member m, Cocktail c, String comment){
         this.member = m;
         this.cocktail = c;
-        this.review = review;
+        this.comment = comment;
     }
 }

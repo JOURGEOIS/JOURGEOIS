@@ -92,6 +92,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     toggleRefreshFailPopup: ({ commit }, value) => {
       commit("SET_REFRESH_FAIL", value);
     },
+    // 모듈화된 리프레시 토큰 요청 함수
     requestRefreshToken: ({ getters, dispatch, commit }, obj) => {
       const { func, params } = obj;
       axios({

@@ -31,6 +31,7 @@ export default {
   },
 
   lookups: {
+    cocktail: () => HOST + LOOKUP + "cocktail",
     cocktailall: () => HOST + LOOKUP + "cocktailall",
     wholeCocktail: () => HOST + LOOKUP + "cocktailwhole",
     user: () => HOST + LOOKUP + "user",

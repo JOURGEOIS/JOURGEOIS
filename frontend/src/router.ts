@@ -62,6 +62,13 @@ const routes: any[] = [
     component: () => import("@/views/TheCocktailSearchView.vue"),
   },
 
+  // 칵테일 검색 결과(재료) 페이지
+  {
+    path: "/cocktail/search/byingredients/:ingredientId",
+    name: "TheSearchCocktailByIngredientView",
+    component: () => import("@/views/TheSearchCocktailByIngredientView.vue"),
+  },
+
   // 칵테일 검색 결과 페이지
   {
     path: "/cocktail/search/:searchValue",

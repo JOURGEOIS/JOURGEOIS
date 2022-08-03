@@ -1,6 +1,6 @@
 <template class="the-search-result-cocktail">
   <the-list-item-cocktail
-    v-for="(item, idx) in searchCocktails"
+    v-for="(item, idx) in searchCocktailAlls"
     :key="idx"
     :data="item"
     @click="clickCocktail(item)"
@@ -16,8 +16,8 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-const searchCocktails = computed(() => {
-  return store.getters["searchResult/getSearchCocktails"];
+const searchCocktailAlls = computed(() => {
+  return store.getters["searchResult/getSearchCocktailAlls"];
 });
 
 interface Cocktail {

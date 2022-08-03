@@ -2,22 +2,20 @@ package com.jourgeois.backend.service;
 
 import com.amazonaws.SdkClientException;
 import com.jourgeois.backend.api.dto.PostDTO;
+import com.jourgeois.backend.api.dto.PostReviewDTO;
 import com.jourgeois.backend.domain.*;
-import com.jourgeois.backend.repository.CocktailRepository;
-import com.jourgeois.backend.repository.CustomCocktailToCocktailRepository;
-import com.jourgeois.backend.repository.MemberRepository;
-import com.jourgeois.backend.repository.PostRepository;
+import com.jourgeois.backend.repository.*;
 import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -26,18 +24,21 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
     private final CocktailRepository cocktailRepository;
+
+    private final PostReviewRepository postReviewRepository;
     private final S3Util s3Util;
     private final String s3Url;
 
     @Autowired
     public PostService(PostRepository postRepository,
                        MemberRepository memberRepository,
-                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, S3Util s3Util,
+                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostReviewRepository postReviewRepository, S3Util s3Util,
                        @Value("${cloud.aws.s3.bucket.path}") String s3Url) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
         this.cocktailRepository = cocktailRepository;
+        this.postReviewRepository = postReviewRepository;
         this.s3Util = s3Util;
         this.s3Url = s3Url;
     }
@@ -129,5 +130,21 @@ public class PostService {
                 },
                 () -> {throw new NoSuchElementException("게시글을 찾을 수 없습니다.");}
         );
+    }
+
+    public void postReview(PostReviewDTO postReviewDTO) throws Exception {
+
+        Member member = new Member();
+        member.setUid(postReviewDTO.getUid());
+
+        Post post = new Post();
+        post.setId(postReviewDTO.getP_id());
+
+        PostReview postReview = new PostReview();
+        postReview.setMember(member);
+        postReview.setPost(post);
+        postReview.setReview(postReviewDTO.getReview());
+
+        postReviewRepository.save(postReview);
     }
 }

@@ -55,9 +55,9 @@ onBeforeMount(async () => {
   await store.dispatch("cocktailSearch/setSearchInputValue", keyword);
 
   // keyword로 최초 칵테일정보 불러오기
-  store.dispatch("searchResult/setSearchCocktail", keyword);
+  store.dispatch("searchResult/setSearchCocktailAll", keyword);
   setTimeout(
-    () => store.dispatch("searchResult/setSearchCocktail", keyword),
+    () => store.dispatch("searchResult/setSearchCocktailAll", keyword),
     200
   );
 

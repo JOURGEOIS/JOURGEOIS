@@ -1,13 +1,18 @@
+<!-- filter: container
+  on, off시 트랜지션 효과를 준다.  -->
 <template>
   <teleport to="body">
     <div class="cocktail-search-filter">
       <div class="cocktail-search-filter-container" :class="animation">
+        <!-- filter: header -->
         <div class="cocktail-search-filter-header">
           <p>재 설정</p>
           <p>필터</p>
           <span class="material-icons" @click="clickXIcon"> close </span>
         </div>
         <hr />
+
+        <!-- filter:form  -->
         <the-cocktail-search-filter-form></the-cocktail-search-filter-form>
       </div>
     </div>
@@ -16,16 +21,18 @@
 
 <script setup lang="ts">
 import TheCocktailSearchFilterForm from "@/components/cocktails/TheCocktailSearchFilterForm.vue";
-import { computed, ref } from "vue";
+import { computed, ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
 // 애니메이션 상태
-const animation = ref("start");
+const animation = computed(
+  () => store.getters["cocktailSearch/getFilterClass"]
+);
 
 // 필터 off
 const clickXIcon = () => {
-  animation.value = "end";
+  store.dispatch("cocktailSearch/changeFilterClass", "end");
   setTimeout(() => store.dispatch("cocktailSearch/toggleFilter", false), 490);
 };
 </script>
@@ -62,7 +69,7 @@ const clickXIcon = () => {
     position: absolute;
     bottom: 0px;
     width: 100%;
-    height: 90%;
+    height: 98%;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding: 0 16px;
@@ -76,6 +83,10 @@ const clickXIcon = () => {
     @media #{$pc} {
       width: 42%;
       max-width: 1000px;
+    }
+
+    @media (min-height: 750px) {
+      height: 90%;
     }
 
     .cocktail-search-filter-header {

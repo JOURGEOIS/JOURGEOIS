@@ -77,7 +77,7 @@ const buttonColor = computed(() => {
 // 실패 팝업
 const failPopUp = ref(false);
 watch(failPopUp, () => {
-  setTimeout(() => (failPopUp.value = false), 3000);
+  setTimeout(() => (failPopUp.value = false), 2000);
 });
 
 // 탈퇴!

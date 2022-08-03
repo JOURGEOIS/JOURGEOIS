@@ -38,8 +38,6 @@ import { computed, ref } from 'vue'
 // props.data의 타입을 정의한 인터페이스
 export interface dataObject {
   button: boolean
-  id: string
-  label: string
   placeholder: string
   type: string
   maxlength: number
@@ -86,7 +84,7 @@ const emitValue = (event: Event) => {
 }
 
 textarea {
-  @include font($fs-md, $fw-medium);
+  @include font($fs-sm, $fw-medium);
   font-family: 'Noto Sans KR', sans-serif;
 
   flex-grow: 1;
@@ -103,7 +101,7 @@ textarea {
   }
 
   &::placeholder {
-    @include font($fs-md, $fw-medium);
+    @include font($fs-sm, $fw-medium);
     font-family: 'Noto Sans KR', sans-serif;
     color: $placeholder-color;
   }

@@ -68,6 +68,26 @@ const routes: any[] = [
     name: "TheSearchResultView",
     component: () => import("@/views/TheSearchResultView.vue"),
   },
+  // 칵테일 필터 검색 결과 페이지
+  {
+    path: "/cocktail/search/filter",
+    name: "TheSearchFilterResultView",
+    component: () => import("@/views/TheSearchFilterResultView.vue"),
+  },
+
+  // 칵테일 전체 리스트 페이지
+  {
+    path: "/cocktail/whole",
+    name: "TheWholeCocktailView",
+    component: () => import("@/views/TheWholeCocktailView.vue"),
+  },
+
+  // 필터 카테고리
+  {
+    path: "/cocktail/search/filter/:category",
+    name: "TheCocktailFilterCategoryView",
+    component: () => import("@/views/TheCocktailFilterCategoryView.vue"),
+  },
 
   // 칵테일 상세 페이지
   {

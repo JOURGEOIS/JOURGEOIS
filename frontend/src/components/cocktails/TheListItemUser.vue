@@ -25,8 +25,6 @@ const props = defineProps<{
   data: User;
 }>();
 
-console.log(props.data);
-
 // 유저 이미지
 const userImage = {
   image: props.data.profileImg,
@@ -40,6 +38,7 @@ const userImage = {
   padding: 10px;
   gap: 10px;
   border-bottom: 1px solid $seperate-color;
+  @include list-hover;
 
   .user-info-text {
     @include flex(column);

@@ -73,188 +73,187 @@
 </template>
 
 <script setup lang="ts">
-import TitleBlock from "@/components/accounts/TitleBlock.vue";
-import ConditionChecker from "@/components/accounts/ConditionChecker.vue";
-import InputBasic from "@/components/basics/InputBasic.vue";
-import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import { reactive, ref, computed, watchEffect } from "vue";
-import { useStore } from "vuex";
-import { react } from "@babel/types";
+import TitleBlock from '@/components/accounts/TitleBlock.vue'
+import ConditionChecker from '@/components/accounts/ConditionChecker.vue'
+import InputBasic from '@/components/basics/InputBasic.vue'
+import ButtonBasic from '@/components/basics/ButtonBasic.vue'
+import { reactive, ref, computed, watchEffect } from 'vue'
+import { useStore } from 'vuex'
+import { react } from '@babel/types'
 import {
   checkBadWord,
   checkAsterisk,
   checkEnKr,
   checkBirthFormat,
-} from "../../functions/checkText";
-import { checkNicknameDuplication } from "../../functions/checkUserInfo";
+} from '../../functions/checkText'
+import { checkNicknameDuplication } from '../../functions/checkUserInfo'
 
-const store = useStore();
+const store = useStore()
 
 // 제목 컴포넌트
 const nameTitleContents = reactive({
-  mainList: ["이름를 입력해주세요"],
+  mainList: ["이름을 입력해주세요"],
   subList: [],
-});
+})
 
 const birthTitleContents = reactive({
-  mainList: ["생년월일을 입력해주세요"],
+  mainList: ['생년월일을 입력해주세요'],
   subList: [],
-});
+})
 
 const nicknameTitleContents = reactive({
-  mainList: ["닉네임을 입력해주세요"],
+  mainList: ['닉네임을 입력해주세요'],
   subList: [],
-});
+})
 
 // input-value
-const nameInputValue = ref("");
-const birthInputValue = ref("");
-const nicknameInputValue = ref("");
+const nameInputValue = ref('')
+const birthInputValue = ref('')
+const nicknameInputValue = ref('')
 
 // input 데이터
 const nameInputData: object = reactive({
   button: true,
-  id: "signup-name-input",
+  id: 'signup-name-input',
   // label: "이름",
-  placeholder: "이름을 입력하세요.",
-  type: "text",
-});
+  placeholder: '이름을 입력하세요.',
+  type: 'text',
+})
 
 const birthInputData: object = reactive({
   button: true,
-  id: "signup-birth-input",
+  id: 'signup-birth-input',
   // label: "생년월일",
-  placeholder: "YYYYMMDD",
-  type: "text",
+  placeholder: 'YYYYMMDD',
+  type: 'text',
   maxlength: 10,
-});
+})
 
 const nicknameInputData: object = reactive({
   button: true,
-  id: "signup-nickname-input",
+  id: 'signup-nickname-input',
   // label: "닉네임",
-  placeholder: "닉네임 (2 ~ 12글자)",
-  type: "text",
+  placeholder: '닉네임 (2 ~ 12글자)',
+  type: 'text',
   maxlength: 12,
-});
+})
 
-const nameInputStyle = ref("normal");
-const birthInputStyle = ref("normal");
-const nicknameInputStyle = ref("normal");
-
+const nameInputStyle = ref('normal')
+const birthInputStyle = ref('normal')
+const nicknameInputStyle = ref('normal')
 // 조건 체크에 대한 props들
 const nameEnKrCheckerProps = reactive({
   isChecked: false,
-  checkContent: "한글 또는 영어로 구성되었습니다.",
+  checkContent: '한글 또는 영어로 구성되었습니다.',
   isIconTypeDanger: false,
-});
+})
 
 const birthLengthCheckerProps = reactive({
   isChecked: false,
-  checkContent: "생년월일 8자리를 입력해주세요.",
+  checkContent: '생년월일 8자리를 입력해주세요.',
   isIconTypeDanger: false,
-});
+})
 
 const birthFormatCheckerProps = reactive({
   isChecked: false,
-  checkContent: "입력형식이 일치합니다.",
+  checkContent: '입력형식이 일치합니다.',
   isIconTypeDanger: false,
-});
+})
 
 const nicknameLengthCheckerProps = reactive({
   isChecked: false,
-  checkContent: "최소 2자 이상, 최대 12자 이내로 입력해주세요.",
+  checkContent: '최소 2자 이상, 최대 12자 이내로 입력해주세요.',
   isIconTypeDanger: false,
-});
+})
 
 const duplicatedNicknameCheckerProps = reactive({
   isChecked: false,
-  checkContent: "중복되지 않은 닉네임입니다.",
+  checkContent: '중복되지 않은 닉네임입니다.',
   isIconTypeDanger: false,
-});
+})
 
 const badWordsCheckerProps = reactive({
   isChecked: false,
-  checkContent: "적절한 단어로 구성되었습니다.",
+  checkContent: '적절한 단어로 구성되었습니다.',
   isIconTypeDanger: false,
-});
+})
 
 const numEnKrCheckerProps = reactive({
   isChecked: false,
-  checkContent: "영어, 숫자, 한글로 구성되었습니다.",
+  checkContent: '영어, 숫자, 한글로 구성되었습니다.',
   isIconTypeDanger: false,
-});
+})
 
 // input값 변경에 따른 함수 실행
 watchEffect(() => {
   nameEnKrCheckerProps.isChecked =
-    !!nameInputValue.value && checkEnKr(nameInputValue.value) ? true : false;
-});
+    !!nameInputValue.value && checkEnKr(nameInputValue.value) ? true : false
+})
 
 watchEffect(() => {
-  birthInputValue.value;
-  const t = ref(birthInputValue.value);
-  const birthLength = t.value.length;
-  const lastChar = t.value[birthLength - 1];
-  birthFormatCheckerProps.isChecked = false;
-  birthLengthCheckerProps.isChecked = false;
+  birthInputValue.value
+  const t = ref(birthInputValue.value)
+  const birthLength = t.value.length
+  const lastChar = t.value[birthLength - 1]
+  birthFormatCheckerProps.isChecked = false
+  birthLengthCheckerProps.isChecked = false
   // 입력 완료 시
   if (birthLength === 10) {
-    birthLengthCheckerProps.isChecked = true;
-    birthFormatCheckerProps.isChecked = checkBirthFormat(t.value);
+    birthLengthCheckerProps.isChecked = true
+    birthFormatCheckerProps.isChecked = checkBirthFormat(t.value)
   } else if (birthLength === 5 || birthLength === 8) {
     // 지울 때
-    if (lastChar === "/") {
-      birthInputValue.value = t.value.substring(0, birthLength - 1);
+    if (lastChar === '/') {
+      birthInputValue.value = t.value.substring(0, birthLength - 1)
     } else if (isNaN(Number(lastChar))) {
-      birthInputValue.value = t.value.substring(0, birthLength - 2);
+      birthInputValue.value = t.value.substring(0, birthLength - 2)
     } else {
       // 입력할 때
       birthInputValue.value =
-        birthInputValue.value.substring(0, birthLength - 1) + "/" + lastChar;
+        birthInputValue.value.substring(0, birthLength - 1) + '/' + lastChar
     }
   }
-});
+})
 
 watchEffect(() => {
-  const nicknameLength = nicknameInputValue.value.length;
+  const nicknameLength = nicknameInputValue.value.length
   nicknameLengthCheckerProps.isChecked =
-    2 <= nicknameLength && nicknameLength <= 12 ? true : false;
-});
+    2 <= nicknameLength && nicknameLength <= 12 ? true : false
+})
 
 // * 닉네임 중복 확인 Debounce
 const toggleTimedFailModalStatus = () => {
-  store.dispatch("signup/toggleTimedFailModalStatus");
-};
-let debounce: any;
+  store.dispatch('signup/toggleTimedFailModalStatus')
+}
+let debounce: any
 watchEffect(() => {
   // watch 실행용 dummy code
-  nicknameInputValue.value;
+  nicknameInputValue.value
   if (debounce) {
-    clearTimeout(debounce);
+    clearTimeout(debounce)
   }
   debounce = setTimeout(async () => {
-    const a = await checkNicknameDuplication(nicknameInputValue.value);
+    const ret = await checkNicknameDuplication(nicknameInputValue.value);
     // 서버/네트워크 정상
-    if (typeof a === "boolean") {
-      duplicatedNicknameCheckerProps.isChecked = a;
+    if (typeof ret === "boolean") {
+      duplicatedNicknameCheckerProps.isChecked = ret;
     }
     // 서버/네트워크 비정상
     else {
-      toggleTimedFailModalStatus();
+      toggleTimedFailModalStatus()
     }
-  }, 200);
-});
+  }, 200)
+})
 
 watchEffect(() => {
   badWordsCheckerProps.isChecked =
-    !!nicknameInputValue.value && !checkBadWord(nicknameInputValue.value);
-});
+    !!nicknameInputValue.value && !checkBadWord(nicknameInputValue.value)
+})
 
 watchEffect(() => {
   numEnKrCheckerProps.isChecked =
-    !!nicknameInputValue.value && !checkAsterisk(nicknameInputValue.value);
-});
+    !!nicknameInputValue.value && !checkAsterisk(nicknameInputValue.value)
+})
 
 const isFulfillToNext = computed(() => {
   return (
@@ -265,34 +264,34 @@ const isFulfillToNext = computed(() => {
     duplicatedNicknameCheckerProps.isChecked &&
     badWordsCheckerProps.isChecked &&
     numEnKrCheckerProps.isChecked
-  );
-});
+  )
+})
 
 // 완료 버튼 색 설정
 const nextButtonColor = computed(() => {
-  return isFulfillToNext.value ? "primary" : "disabled";
-});
+  return isFulfillToNext.value ? 'primary' : 'disabled'
+})
 
 // 회원가입 함수
 const submitSignUp = (userInfo: any) =>
-  store.dispatch("signup/submitSignUp", userInfo);
+  store.dispatch('signup/submitSignUp', userInfo)
 
 // 회원가입 개인정보
 const email = computed(() => {
-  return store.getters["signup/getSignUpEmail"];
-});
+  return store.getters['signup/getSignUpEmail']
+})
 const password = computed(() => {
-  return store.getters["signup/getSignUpPw"];
-});
+  return store.getters['signup/getSignUpPw']
+})
 const name = computed(() => {
-  return store.getters["signup/getSignUpName"];
-});
+  return store.getters['signup/getSignUpName']
+})
 const nickname = computed(() => {
-  return store.getters["signup/getSignUpNickName"];
-});
+  return store.getters['signup/getSignUpNickName']
+})
 const birthday = computed(() => {
-  return store.getters["signup/getSignUpBirth"];
-});
+  return store.getters['signup/getSignUpBirth']
+})
 
 // 회원가입 완료 후 로그인 연결
 const completeSignupPage = async () => {
@@ -300,8 +299,8 @@ const completeSignupPage = async () => {
     name: nameInputValue.value,
     nickname: nicknameInputValue.value,
     birth: birthInputValue.value,
-  };
-  await store.dispatch("signup/saveSignupUserInfo", userInfo);
+  }
+  await store.dispatch('signup/saveSignupUserInfo', userInfo)
 
   const userInfoFinal = {
     email: email.value,
@@ -309,9 +308,9 @@ const completeSignupPage = async () => {
     name: name.value,
     nickname: nickname.value,
     birthday: birthday.value,
-  };
-  submitSignUp(userInfoFinal);
-};
+  }
+  submitSignUp(userInfoFinal)
+}
 </script>
 
 <style scoped lang="scss">

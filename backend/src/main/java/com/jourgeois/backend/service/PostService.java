@@ -3,17 +3,12 @@ package com.jourgeois.backend.service;
 import com.amazonaws.SdkClientException;
 
 
+import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
-import com.jourgeois.backend.api.dto.post.PostDTO;
-import com.jourgeois.backend.api.dto.post.PostInfoDTO;
-import com.jourgeois.backend.api.dto.post.PostReviewDTO;
-import com.jourgeois.backend.api.dto.post.PostReviewResponseVO;
+import com.jourgeois.backend.api.dto.post.*;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.Member;
-import com.jourgeois.backend.domain.post.CustomCocktail;
-import com.jourgeois.backend.domain.post.CustomCocktailToCocktail;
-import com.jourgeois.backend.domain.post.Post;
-import com.jourgeois.backend.domain.post.PostReview;
+import com.jourgeois.backend.domain.post.*;
 
 import com.jourgeois.backend.repository.*;
 import com.jourgeois.backend.util.ImgType;
@@ -38,7 +33,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
     private final CocktailRepository cocktailRepository;
-
+    private final PostBookmarkRepository postBookmarkRepository;
     private final PostReviewRepository postReviewRepository;
     private final S3Util s3Util;
     private final String s3Url;
@@ -46,12 +41,13 @@ public class PostService {
     @Autowired
     public PostService(PostRepository postRepository,
                        MemberRepository memberRepository,
-                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostReviewRepository postReviewRepository, S3Util s3Util,
+                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostBookmarkRepository postBookmarkRepository, PostReviewRepository postReviewRepository, S3Util s3Util,
                        @Value("${cloud.aws.s3.bucket.path}") String s3Url) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
         this.cocktailRepository = cocktailRepository;
+        this.postBookmarkRepository = postBookmarkRepository;
         this.postReviewRepository = postReviewRepository;
         this.s3Util = s3Util;
         this.s3Url = s3Url;
@@ -238,5 +234,26 @@ public class PostService {
         List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(p_id, pageable);
 
         return reviews;
+    }
+
+    @Transactional
+    public boolean pushBookmark(PostBookmarkDTO postBookmarkDTO){
+        postBookmarkRepository.findByMemberAndPost(postBookmarkDTO.getMember(),
+                postBookmarkDTO.getPost()).ifPresentOrElse(data -> {
+                    postBookmarkRepository.deleteById(data.getId());},
+                ()->{postBookmarkRepository.save(new PostBookmark(postBookmarkDTO.getMember(), postBookmarkDTO.getPost()));});
+        return checkUserBookmark(postBookmarkDTO);
+    }
+
+    public boolean checkUserBookmark(PostBookmarkDTO postBookmarkDTO){
+        return postBookmarkRepository.findByMemberAndPost(postBookmarkDTO.getMember(),
+                postBookmarkDTO.getPost()).isPresent();
+    }
+
+    public boolean checkPostId(Long id){
+        return postRepository.findById(id).isPresent();
+    }
+    public Long countPostBookmark(Post p_id){
+        return postBookmarkRepository.countByPost(p_id);
     }
 }

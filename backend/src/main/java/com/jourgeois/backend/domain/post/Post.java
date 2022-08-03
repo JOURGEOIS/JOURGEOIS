@@ -62,4 +62,8 @@ public class Post {
                 ", reviews=" + reviews +
                 '}';
     }
+
+    public Post(Long id) {
+        this.id = id;
+    }
 }

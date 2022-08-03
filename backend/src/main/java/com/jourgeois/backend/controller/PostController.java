@@ -1,8 +1,15 @@
 package com.jourgeois.backend.controller;
 
 import com.amazonaws.AmazonClientException;
+import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
+import com.jourgeois.backend.api.dto.post.PostBookmarkDTO;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.api.dto.post.PostReviewDTO;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.domain.post.Post;
+import com.jourgeois.backend.service.CocktailService;
+import com.jourgeois.backend.service.MemberService;
 import com.jourgeois.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +29,14 @@ import java.util.NoSuchElementException;
 public class PostController {
 
     private final PostService postService;
+    private final MemberService memberService;
+    private final CocktailService cocktailService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, MemberService memberService, CocktailService cocktailService) {
         this.postService = postService;
+        this.memberService = memberService;
+        this.cocktailService = cocktailService;
     }
 
     @PostMapping
@@ -197,5 +208,27 @@ public class PostController {
             result.put("fail", "댓글을 불러오는 것을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 원본 칵테일 북마크 (token 필요) => uid로 전체 바꿀 때 바꾼 후 적용 필요
+    @PostMapping(value = "/bookmark")
+    public ResponseEntity pushPostBookmark(@RequestBody Map<String, Long> bookmark){
+        Map<String, Long> data = new HashMap<>();
+        if(memberService.checkUserUid(bookmark.get("uid")) && postService.checkPostId(bookmark.get("p_id"))){
+            PostBookmarkDTO pBookmark = PostBookmarkDTO.builder()
+                    .member(new Member(bookmark.get("uid")))
+                    .post(new Post(bookmark.get("p_id"))).build();
+            if(postService.pushBookmark(pBookmark)){
+                data.put("status", 1L);
+            }else{
+                data.put("status", 0L);
+            }
+            data.put("count", postService.countPostBookmark(new Post(bookmark.get("p_id"))));
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("잘못된 회원이거나 게시물입니다.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+
     }
 }

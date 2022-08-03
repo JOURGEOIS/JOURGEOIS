@@ -32,6 +32,18 @@ public class Member {
     private java.util.Date creationDate;
     private String roles = "ROLE_USER";
 
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "member")
+    private List<CocktailBookmark> cocktailBookmarks;
+
+    @OneToMany(mappedBy = "member")
+    private List<PostBookmark> postBookmarks;
+
+    @OneToMany(mappedBy = "member")
+    private List<CocktailReviews> cocktailReviews;
+
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
         this.email = email;
@@ -43,20 +55,9 @@ public class Member {
         this.introduce = introduce;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "uid=" + uid +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", profileImg='" + profileImg + '\'' +
-                ", introduce='" + introduce + '\'' +
-                ", creationDate=" + creationDate +
-                ", roles='" + roles + '\'' +
-                '}';
+    @Builder
+    public Member(Long uid) {
+        this.uid = uid;
     }
 
     public List<String> getRoleList() {
@@ -74,10 +75,4 @@ public class Member {
         this.roles = "ROLE_USER";
     }
 
-//    public static Member testCreate(String userId, String pw) {
-//        return Member.builder()
-//                .userId(userId)
-//                .pw(pw)
-//                .build();
-//    }
 }

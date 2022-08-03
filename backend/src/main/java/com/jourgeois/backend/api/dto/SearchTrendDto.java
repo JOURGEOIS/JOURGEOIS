@@ -1,6 +1,5 @@
 package com.jourgeois.backend.api.dto;
 
-import com.jourgeois.backend.api.dto.SearchHistoryVO;
 import java.io.Serializable;
 import java.util.List;
 

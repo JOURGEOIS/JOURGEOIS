@@ -93,10 +93,12 @@ public class PostService {
         // post 이미지 업로드
         String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
 
+        Member member = new Member();
+        member.setUid(postDTO.getUid());
         // 커스텀 칵테일 제목이 Empty라면 일반 게시물이라는 의미
         // postDTO.getTitle().isEmpty() 가끔씩 됨... 이유를 알고 싶다.
         if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
-            Post targetPost = postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
+            Post targetPost = postRepository.findByIdAndMember(postId, member).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
             targetPost.setDescription(postDTO.getDescription());
 
             targetPost.setImg(uploadURL);
@@ -104,7 +106,7 @@ public class PostService {
             // post 저장
             postRepository.save(targetPost);
         }else{
-            CustomCocktail targetCustomCocktail = (CustomCocktail) postRepository.findById(postId).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
+            CustomCocktail targetCustomCocktail = (CustomCocktail) postRepository.findByIdAndMember(postId, member).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
             targetCustomCocktail.setDescription(postDTO.getDescription());
             targetCustomCocktail.setImg(uploadURL);
             s3Util.deleteFile(targetCustomCocktail.getImg());
@@ -119,7 +121,9 @@ public class PostService {
 
     @Transactional
     public void deletePost(Map<String, Long> postDeleteReq) throws NoSuchElementException, SdkClientException {
-        postRepository.findById(postDeleteReq.get("p_id"))
+        Member member = new Member();
+        member.setUid(postDeleteReq.get("uid"));
+        postRepository.findByIdAndMember(postDeleteReq.get("p_id"), member)
                 .ifPresentOrElse((targetPost) -> {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
@@ -145,6 +149,15 @@ public class PostService {
         postReview.setPost(post);
         postReview.setReview(postReviewDTO.getReview());
 
+        postReviewRepository.save(postReview);
+    }
+
+    public void editReview(PostReviewDTO postReviewDTO) throws NoSuchElementException, IllegalArgumentException {
+        Member member = new Member();
+        member.setUid(postReviewDTO.getUid());
+
+        PostReview postReview = postReviewRepository.findByIdAndMember(postReviewDTO.getPr_id(), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
+        postReview.setReview(postReviewDTO.getReview());
         postReviewRepository.save(postReview);
     }
 }

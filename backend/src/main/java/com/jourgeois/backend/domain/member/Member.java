@@ -82,4 +82,24 @@ public class Member {
         this.roles = "ROLE_USER";
     }
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "uid=" + uid +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", profileImg='" + profileImg + '\'' +
+                ", introduce='" + introduce + '\'' +
+                ", creationDate=" + creationDate +
+                ", roles='" + roles + '\'' +
+                ", posts=" + posts +
+                ", cocktailBookmarks=" + cocktailBookmarks +
+                ", postBookmarks=" + postBookmarks +
+                ", cocktailReviews=" + cocktailReviews +
+                ", postReviews=" + postReviews +
+                '}';
+    }
 }

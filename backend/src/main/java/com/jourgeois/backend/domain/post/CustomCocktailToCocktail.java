@@ -30,4 +30,24 @@ public class CustomCocktailToCocktail implements Serializable {
     public Long getId() {
         return id;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public CustomCocktail getCustomCocktail() {
+        return customCocktail;
+    }
+
+    public void setCustomCocktail(CustomCocktail customCocktail) {
+        this.customCocktail = customCocktail;
+    }
+
+    public Cocktail getCocktail() {
+        return cocktail;
+    }
+
+    public void setCocktail(Cocktail cocktail) {
+        this.cocktail = cocktail;
+    }
 }

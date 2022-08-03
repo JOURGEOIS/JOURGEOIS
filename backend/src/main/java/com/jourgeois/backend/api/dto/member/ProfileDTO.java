@@ -4,7 +4,7 @@ package com.jourgeois.backend.api.dto.member;
 import lombok.Builder;
 import org.springframework.web.multipart.MultipartFile;
 
-@Builder
+//@Builder
 public class ProfileDTO {
     private Long uid;
     private String email;
@@ -69,5 +69,15 @@ public class ProfileDTO {
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
     }
+
+    public ProfileDTO(Long uid, String email, String name, String nickname, String profileImg, String introduce) {
+        this.uid = uid;
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+        this.introduce = introduce;
+    }
+
 
 }

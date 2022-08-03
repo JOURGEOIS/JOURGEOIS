@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 @ToString
 @Builder
 public class PostDTO {
@@ -13,12 +15,30 @@ public class PostDTO {
     private MultipartFile img;
     private String imgLink;
     private String description;
+    private LocalDateTime createTime;
+    private LocalDateTime lastUpdateTime;
     
     // 커스텀 칵테일
     private String title;
     private Long baseCocktail;
     private String ingredients;
     private String recipe;
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public LocalDateTime getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(LocalDateTime lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
+    }
 
     public Long getPostId() {
         return postId;

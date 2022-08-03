@@ -117,6 +117,8 @@ public class PostService {
                             .description(customCocktail.getDescription())
                             .title(customCocktail.getTitle())
                             .baseCocktail(data.getCocktail().getId())
+                            .createTime(data.getCustomCocktail().getCreateTime())
+                            .lastUpdateTime(data.getCustomCocktail().getLastUpdateTime())
                             .recipe(customCocktail.getRecipe())
 //                            .ingredients(customCocktail.getIngredients())
                             .build();

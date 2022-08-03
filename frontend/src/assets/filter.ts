@@ -1,9 +1,16 @@
-const baseAlcohol: object[] = [
+interface ingredientsDesc {
+  id: number;
+  name: string;
+  nameKr: string;
+  img: string;
+}
+
+const baseAlcohol: ingredientsDesc[] = [
   {
     id: 179,
     name: "Dark Rum",
     nameKr: "다크럼",
-    img: "https://www.thecocktaildb.com/images/ingredients/Dark Rum-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Dark%20Rum-Small.png",
   },
   {
     id: 4,
@@ -15,7 +22,7 @@ const baseAlcohol: object[] = [
     id: 305,
     name: "Light Rum",
     nameKr: "라이트 럼",
-    img: "https://www.thecocktaildb.com/images/ingredients/Light Rum-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Light%20Rum-Small.png",
   },
   {
     id: 3,
@@ -81,17 +88,17 @@ const baseAlcohol: object[] = [
     id: 523,
     name: "White Rum",
     nameKr: "화이트 럼",
-    img: "https://www.thecocktaildb.com/images/ingredients/White Rum-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/White%20Rum-Small.png",
   },
   {
     id: 525,
     name: "White Wine",
     nameKr: "화이트 와인",
-    img: "https://www.thecocktaildb.com/images/ingredients/White Wine-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/White%20Wine-Small.png",
   },
 ];
 
-const liqueur: object[] = [
+const liqueur: ingredientsDesc[] = [
   {
     id: 223,
     name: "Galliano",
@@ -108,13 +115,13 @@ const liqueur: object[] = [
     id: 189,
     name: "Dry Vermouth",
     nameKr: "드라이 베르무트",
-    img: "https://www.thecocktaildb.com/images/ingredients/Dry Vermouth-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Dry%20Vermouth-Small.png",
   },
   {
     id: 323,
     name: "Maraschino Liqueur",
     nameKr: "마라스키노 리큐르",
-    img: "https://www.thecocktaildb.com/images/ingredients/Maraschino Liqueur-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Maraschino%20Liqueur-Small.png",
   },
   {
     id: 56,
@@ -126,19 +133,19 @@ const liqueur: object[] = [
     id: 32,
     name: "Apricot Brandy",
     nameKr: "살구 브랜디",
-    img: "https://www.thecocktaildb.com/images/ingredients/Apricot Brandy-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Apricot%20Brandy-Small.png",
   },
   {
     id: 480,
     name: "Sweet and Sour",
     nameKr: "새콤달콤한 맛",
-    img: "https://www.thecocktaildb.com/images/ingredients/Sweet and Sour-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Sweet%20and%20Sour-Small.png",
   },
   {
     id: 482,
     name: "Sweet Vermouth",
     nameKr: "스위트 베르무트",
-    img: "https://www.thecocktaildb.com/images/ingredients/Sweet Vermouth-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Sweet%20Vermouth-Small.png",
   },
   {
     id: 18,
@@ -150,25 +157,25 @@ const liqueur: object[] = [
     id: 20,
     name: "Angostura Bitters",
     nameKr: "앙고스투라 비터스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Angostura Bitters-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Angostura%20Bitters-Small.png",
   },
   {
     id: 26,
     name: "Apple Brandy",
     nameKr: "애플 브랜디",
-    img: "https://www.thecocktaildb.com/images/ingredients/Apple Brandy-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Apple%20Brandy-Small.png",
   },
   {
     id: 552,
     name: "Elderflower cordial",
     nameKr: "엘더플라워 코디얼",
-    img: "https://www.thecocktaildb.com/images/ingredients/Elderflower cordial-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Elderflower%20cordial-Small.png",
   },
   {
     id: 350,
     name: "Orange Bitters",
     nameKr: "오렌지 비터스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Orange Bitters-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Orange%20Bitters-Small.png",
   },
   {
     id: 83,
@@ -180,7 +187,7 @@ const liqueur: object[] = [
     id: 133,
     name: "Coconut Liqueur",
     nameKr: "코코넛 리큐어",
-    img: "https://www.thecocktaildb.com/images/ingredients/Coconut Liqueur-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Coconut%20Liqueur-Small.png",
   },
   {
     id: 142,
@@ -192,19 +199,19 @@ const liqueur: object[] = [
     id: 165,
     name: "Creme De Cassis",
     nameKr: "크레미 드 카시스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Creme De Cassis-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Creme%20De%20Cassis-Small.png",
   },
   {
     id: 164,
     name: "Creme De Cacao",
     nameKr: "크림 드 카카오",
-    img: "https://www.thecocktaildb.com/images/ingredients/Creme De Cacao-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Creme%20De%20Cacao-Small.png",
   },
   {
     id: 498,
     name: "Triple Sec",
     nameKr: "트리플 섹",
-    img: "https://www.thecocktaildb.com/images/ingredients/Triple Sec-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Triple%20Sec-Small.png",
   },
   {
     id: 374,
@@ -216,34 +223,34 @@ const liqueur: object[] = [
     id: 540,
     name: "Peach Bitters",
     nameKr: "피치 비터스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Peach Bitters-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Peach%20Bitters-Small.png",
   },
   {
     id: 379,
     name: "Peach Schnapps",
     nameKr: "피치스냅스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Peach Schnapps-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Peach%20Schnapps-Small.png",
   },
 ];
 
-const drinks: object[] = [
+const drinks: ingredientsDesc[] = [
   {
     id: 308,
     name: "Lime Juice",
     nameKr: "라임 즙",
-    img: "https://www.thecocktaildb.com/images/ingredients/Lime Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Lime%20Juice-Small.png",
   },
   {
     id: 297,
     name: "Lemon-lime soda",
     nameKr: "레몬 라임 소다",
-    img: "https://www.thecocktaildb.com/images/ingredients/Lemon-lime soda-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Lemon-lime%20soda-Small.png",
   },
   {
     id: 293,
     name: "Lemon Juice",
     nameKr: "레몬 즙",
-    img: "https://www.thecocktaildb.com/images/ingredients/Lemon Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Lemon%20Juice-Small.png",
   },
   {
     id: 300,
@@ -261,31 +268,31 @@ const drinks: object[] = [
     id: 455,
     name: "Soda Water",
     nameKr: "소다수",
-    img: "https://www.thecocktaildb.com/images/ingredients/Soda Water-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Soda%20Water-Small.png",
   },
   {
     id: 28,
     name: "Apple Juice",
     nameKr: "애플 주스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Apple Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Apple%20Juice-Small.png",
   },
   {
     id: 352,
     name: "Orange Juice",
     nameKr: "오렌지 주스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Orange Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Orange%20Juice-Small.png",
   },
   {
     id: 229,
     name: "Ginger Beer",
     nameKr: "진저 맥주",
-    img: "https://www.thecocktaildb.com/images/ingredients/Ginger Beer-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Ginger%20Beer-Small.png",
   },
   {
     id: 228,
     name: "Ginger Ale",
     nameKr: "진저 에일",
-    img: "https://www.thecocktaildb.com/images/ingredients/Ginger Ale-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Ginger%20Ale-Small.png",
   },
   {
     id: 139,
@@ -303,41 +310,41 @@ const drinks: object[] = [
     id: 155,
     name: "Cranberry Juice",
     nameKr: "크랜베리 주스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Cranberry Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Cranberry%20Juice-Small.png",
   },
   {
     id: 89,
     name: "Carbonated Water",
     nameKr: "탄산수",
-    img: "https://www.thecocktaildb.com/images/ingredients/Carbonated Water-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Carbonated%20Water-Small.png",
   },
   {
     id: 492,
     name: "Tomato Juice",
     nameKr: "토마토 주스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Tomato Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Tomato%20Juice-Small.png",
   },
   {
     id: 393,
     name: "Pineapple Juice",
     nameKr: "파인애플 주스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Pineapple Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Pineapple%20Juice-Small.png",
   },
   {
     id: 372,
     name: "Passion fruit juice",
     nameKr: "패션 과일 주스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Passion fruit juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Passion%20fruit%20juice-Small.png",
   },
   {
     id: 242,
     name: "Grapefruit Juice",
     nameKr: "포도 주스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Grapefruit Juice-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Grapefruit%20Juice-Small.png",
   },
 ];
 
-const ingredients: object[] = [
+const ingredients: ingredientsDesc[] = [
   {
     id: 122,
     name: "Cinnamon",
@@ -348,7 +355,7 @@ const ingredients: object[] = [
     id: 409,
     name: "Powdered Sugar",
     nameKr: "고운 설탕",
-    img: "https://www.thecocktaildb.com/images/ingredients/Powdered Sugar-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Powdered%20Sugar-Small.png",
   },
   {
     id: 250,
@@ -372,7 +379,7 @@ const ingredients: object[] = [
     id: 304,
     name: "Light Cream",
     nameKr: "라이트 크림",
-    img: "https://www.thecocktaildb.com/images/ingredients/Light Cream-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Light%20Cream-Small.png",
   },
   {
     id: 312,
@@ -390,13 +397,13 @@ const ingredients: object[] = [
     id: 294,
     name: "Lemon Peel",
     nameKr: "레몬 껍질",
-    img: "https://www.thecocktaildb.com/images/ingredients/Lemon Peel-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Lemon%20Peel-Small.png",
   },
   {
     id: 322,
     name: "Maraschino Cherry",
     nameKr: "마라스키노 체리",
-    img: "https://www.thecocktaildb.com/images/ingredients/Maraschino Cherry-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Maraschino%20Cherry-Small.png",
   },
   {
     id: 319,
@@ -414,7 +421,7 @@ const ingredients: object[] = [
     id: 77,
     name: "Brown Sugar",
     nameKr: "브라운 슈가",
-    img: "https://www.thecocktaildb.com/images/ingredients/Brown Sugar-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Brown%20Sugar-Small.png",
   },
   {
     id: 60,
@@ -426,7 +433,7 @@ const ingredients: object[] = [
     id: 67,
     name: "Blue Curacao",
     nameKr: "블루 큐라소",
-    img: "https://www.thecocktaildb.com/images/ingredients/Blue Curacao-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Blue%20Curacao-Small.png",
   },
   {
     id: 69,
@@ -450,7 +457,7 @@ const ingredients: object[] = [
     id: 94,
     name: "Celery Salt",
     nameKr: "셀러리 소금",
-    img: "https://www.thecocktaildb.com/images/ingredients/Celery Salt-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Celery%20Salt-Small.png",
   },
   {
     id: 448,
@@ -468,13 +475,13 @@ const ingredients: object[] = [
     id: 475,
     name: "Sugar Syrup",
     nameKr: "시럽",
-    img: "https://www.thecocktaildb.com/images/ingredients/Sugar Syrup-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Sugar%20Syrup-Small.png",
   },
   {
     id: 12,
     name: "Agave Syrup",
     nameKr: "아가베 시럽",
-    img: "https://www.thecocktaildb.com/images/ingredients/Agave Syrup-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Agave%20Syrup-Small.png",
   },
   {
     id: 270,
@@ -486,7 +493,7 @@ const ingredients: object[] = [
     id: 192,
     name: "Egg White",
     nameKr: "에그 화이트",
-    img: "https://www.thecocktaildb.com/images/ingredients/Egg White-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Egg%20White-Small.png",
   },
   {
     id: 359,
@@ -498,13 +505,13 @@ const ingredients: object[] = [
     id: 354,
     name: "Orange Peel",
     nameKr: "오렌지 껍질",
-    img: "https://www.thecocktaildb.com/images/ingredients/Orange Peel-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Orange%20Peel-Small.png",
   },
   {
     id: 362,
     name: "Orgeat Syrup",
     nameKr: "오르간 시럽",
-    img: "https://www.thecocktaildb.com/images/ingredients/Orgeat Syrup-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Orgeat%20Syrup-Small.png",
   },
   {
     id: 347,
@@ -522,7 +529,7 @@ const ingredients: object[] = [
     id: 529,
     name: "Worcestershire Sauce",
     nameKr: "우스터 소스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Worcestershire Sauce-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Worcestershire%20Sauce-Small.png",
   },
   {
     id: 344,
@@ -564,7 +571,7 @@ const ingredients: object[] = [
     id: 483,
     name: "Tabasco Sauce",
     nameKr: "타바스코 소스",
-    img: "https://www.thecocktaildb.com/images/ingredients/Tabasco Sauce-Small.png",
+    img: "https://www.thecocktaildb.com/images/ingredients/Tabasco%20Sauce-Small.png",
   },
   {
     id: 397,

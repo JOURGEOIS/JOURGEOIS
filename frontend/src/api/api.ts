@@ -2,7 +2,7 @@ const HOST: string = "http://13.209.206.237/api/";
 
 const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";
-const AUTH = "auth/";
+const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
 
 export default {
@@ -25,11 +25,19 @@ export default {
     emailVerified: () => HOST + EMAIL + "verified",
     emailConfirmed: () => HOST + EMAIL + "confirmed",
   },
+  cocktail: {
+    getCocktailData: () => HOST + COCKTAIL + "cocktail",
+    cocktailList: () => HOST + COCKTAIL + "list",
+  },
 
   lookups: {
     cocktailall: () => HOST + LOOKUP + "cocktailall",
-    user: () => HOST + LOOKUP + "users",
+    wholeCocktail: () => HOST + LOOKUP + "cocktailwhole",
+    user: () => HOST + LOOKUP + "user",
     autoComplete: () => HOST + LOOKUP + "search",
+    weeklyHotKeyword: () => HOST + LOOKUP + "weeklyhotkeyword",
     hotKeyword: () => HOST + LOOKUP + "hotkeyword",
+    filterCnt: () => HOST + LOOKUP + "filter",
+    filterResult: () => HOST + LOOKUP + "filter/list",
   },
 };

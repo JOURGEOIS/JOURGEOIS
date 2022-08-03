@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
+import { cocktailSearch } from "./cocktailSearch";
 
 export interface User {
   email: string | null;
@@ -15,7 +16,7 @@ export interface User {
 export interface Cocktail {
   id: number;
   name: string;
-  cocktailImg: string | null;
+  img: string | null;
   alcohol: number | null;
   baseLiquor: string;
 }
@@ -29,6 +30,14 @@ export interface SearchResultState {
   searchUserPage: number;
   searchCocktails: Cocktail[];
   searchCocktailPage: number;
+
+  // * 전체 검색 결과
+  wholeCocktails: Cocktail[];
+  wholeCocktailPage: number;
+
+  // 필터 검색 결과
+  searchFilter: Cocktail[];
+  searchFilterPage: number;
 }
 
 export const searchResult: Module<SearchResultState, RootState> = {
@@ -42,6 +51,14 @@ export const searchResult: Module<SearchResultState, RootState> = {
     searchUserPage: 0,
     searchCocktails: [],
     searchCocktailPage: 0,
+
+    // * 전체 검색 결과
+    wholeCocktails: [],
+    wholeCocktailPage: 0,
+
+    // 필터 검색 결과
+    searchFilter: [],
+    searchFilterPage: 0,
   },
 
   getters: {
@@ -54,6 +71,13 @@ export const searchResult: Module<SearchResultState, RootState> = {
     // * 검색어 칵테일 정보
     getSearchCocktails: (state) => state.searchCocktails,
     getSearchCocktailPage: (state) => state.searchCocktailPage,
+    // * 전체 칵테일 정보
+    getWholeCocktails: (state) => state.wholeCocktails,
+    getWholeCocktailPage: (state) => state.wholeCocktailPage,
+
+    // 필터 검색 결과
+    getSearchFilter: (state) => state.searchFilter,
+    getSearchFilterPage: (state) => state.searchFilterPage,
   },
 
   mutations: {
@@ -81,6 +105,36 @@ export const searchResult: Module<SearchResultState, RootState> = {
     SET_SEARCH_COCKTAIL_PAGE: (state, value) => {
       state.searchCocktailPage = value;
     },
+
+    // * 검색어 결과 삭제
+    REMOVE_SEARCH_RESULT: (state) => {
+      state.searchUsers = [];
+      state.searchCocktails = [];
+    },
+
+    // * 전체 칵테일 정보 저장
+    SET_WHOLE_COCKTAILS: (state, newWholeCocktails: Cocktail[]) => {
+      newWholeCocktails.forEach((newCocktail) => {
+        state.wholeCocktails.push(newCocktail);
+      });
+    },
+    SET_WHOLE_COCKTAIL_PAGE: (state, value) => {
+      state.wholeCocktailPage = value;
+    },
+
+    // 필터 검색 결과
+    REMOVE_SEARCH_FILTER: (state, data: Cocktail[]) => {
+      state.searchFilter = data;
+    },
+
+    SET_SEARCH_FILTER: (state, data: Cocktail[]) => {
+      data.forEach((data) => {
+        state.searchFilter.push(data);
+      });
+    },
+    SET_SEARCH_FILTER_PAGE: (state, value: number) => {
+      state.searchFilterPage = value;
+    },
   },
 
   actions: {
@@ -90,10 +144,14 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 User 검색결과
-    setSearchUser: ({ commit, state }, keyword: string) => {
+    setSearchUser: ({ commit, state, rootGetters }, keyword: string) => {
+      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.user(),
         method: "GET",
+        headers: {
+          email,
+        },
         params: {
           keyword,
           page: state.searchUserPage,
@@ -110,17 +168,18 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 Cocktail 검색결과
-    setSearchCocktail: ({ commit, state }, keyword: string) => {
+    setSearchCocktail: ({ commit, state, rootGetters }, keyword: string) => {
+      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
+        headers: { email },
         params: {
           keyword,
           page: state.searchCocktailPage,
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_SEARCH_COCKTAIL_PAGE", state.searchCocktailPage + 1);
           // 최대 10개 칵테일 정보 리스트에 추가
           commit("SET_SEARCH_COCKTAILS", res.data);
@@ -128,6 +187,70 @@ export const searchResult: Module<SearchResultState, RootState> = {
         .catch((err) => {
           console.error(err.response);
         });
+    },
+
+    // * 검색 결과 제거
+    removeSearchResult: ({ commit }) => {
+      commit("REMOVE_SEARCH_RESULT");
+      // 칵테일 탭으로 설정
+      commit("SET_CURRENT_TAB", 0);
+
+      // 페이지 번호 0으로 초기화
+      commit("SET_SEARCH_USER_PAGE", 0);
+      commit("SET_SEARCH_COCKTAIL_PAGE", 0);
+    },
+
+    // * 전체 칵테일 추가
+    setWholeCocktail: ({ commit, getters, rootGetters }) => {
+      const email = rootGetters["personalInfo/getUserInfoId"];
+      axios({
+        url: api.lookups.wholeCocktail(),
+        method: "GET",
+        headers: {
+          email,
+        },
+        params: {
+          page: getters["getWholeCocktailPage"],
+        },
+      })
+        .then((res) => {
+          const newWholeCocktails = res.data;
+          commit("SET_WHOLE_COCKTAILS", newWholeCocktails);
+          const page = getters.getWholeCocktailPage;
+          commit("SET_WHOLE_COCKTAIL_PAGE", page + 1);
+        })
+        .catch((err) => console.error(err));
+    },
+
+    setSearchFilter: ({ commit, getters, rootGetters }) => {
+      const type = rootGetters["cocktailSearch/getSearchFilterAlcohol"];
+      let abv = rootGetters["cocktailSearch/getSearchFilterAlcoholStrength"];
+      const materials =
+        rootGetters["cocktailSearch/getSearchFilterIngredients"];
+      const page = getters["getSearchFilterPage"];
+      if (!type) {
+        abv = [0, 0];
+      }
+      axios({
+        url: api.lookups.filterResult(),
+        method: "post",
+        data: {
+          type,
+          abv,
+          materials,
+          page,
+        },
+      })
+        .then((response) => {
+          commit("SET_SEARCH_FILTER", response.data);
+          commit("SET_SEARCH_FILTER_PAGE", page + 1);
+        })
+        .catch((error) => console.log(error));
+    },
+
+    removeSearchFilter: ({ commit }) => {
+      commit("REMOVE_SEARCH_FILTER", []);
+      commit("SET_SEARCH_FILTER_PAGE", 0);
     },
   },
 };

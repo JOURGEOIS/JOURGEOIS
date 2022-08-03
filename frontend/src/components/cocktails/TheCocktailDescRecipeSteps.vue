@@ -17,13 +17,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, computed, watch, watchEffect } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
 
-const steps = reactive([
-  "얼음을 채운 하이볼 글라스에 보드카 1/2 oz를 넣어주세요. ",
-  "데킬라, 진, 럼을 1/2 oz 넣어주세요. ",
-  "콜라 1/32 oz를 넣어주고 레몬으로 장식하고 마무리해요.",
-]);
+const cocktailData = computed(
+  () => store.getters["cocktailDesc/getCurrentCocktailDataRecipe"]
+);
+const steps = computed(() => cocktailData?.value?.split("<>"));
 </script>
 
 <style scoped lang="scss">
@@ -31,7 +32,7 @@ const steps = reactive([
   @include flex(column);
   gap: 16px;
   width: 90%;
-  margin-top: 16px;
+  margin-top: 40px;
 
   .cocktail-desc-steps-title {
     @include font($fs-main, $fw-medium);

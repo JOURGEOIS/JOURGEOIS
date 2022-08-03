@@ -29,23 +29,23 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-                String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
-                try{
-                    if ( jwt != null && jwtTokenProvider.validateToken(jwt)) {
-                        Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        request.setAttribute("uid", (Object) authentication.getName().toString());
-                        log.info("set Authentication to security context for '{}', uri: {}", authentication.getName());
-                    }else {
-                        request.setAttribute("exception", "Exception");
-                    }
+        String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
+        try{
+            if ( jwt != null && jwtTokenProvider.validateToken(jwt)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                request.setAttribute("uid", (Object) authentication.getName().toString());
+                log.info("set Authentication to security context for '{}', uri: {}", authentication.getName());
+            }else {
+                request.setAttribute("exception", "Exception");
+            }
 //            }
-                } catch(ExpiredJwtException e){
-                    request.setAttribute("exception", "ExpiredJwt");
-                    log.info("ExpiredJwtException {}", e.getMessage());
-                } catch(JwtException | IllegalArgumentException e){
-                    request.setAttribute("exception", "Exception");
-                    log.info("jwtException {}", e.getMessage());
+        } catch(ExpiredJwtException e){
+            request.setAttribute("exception", "ExpiredJwt");
+            log.info("ExpiredJwtException {}", e.getMessage());
+        } catch(JwtException | IllegalArgumentException e){
+            request.setAttribute("exception", "Exception");
+            log.info("jwtException {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

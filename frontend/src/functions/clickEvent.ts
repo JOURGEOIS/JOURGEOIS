@@ -8,4 +8,11 @@ function clickHome() {
   });
 }
 
-export { clickHome };
+function clickLogin() {
+  router.push({
+    path: "/user/login",
+    name: "TheLoginView",
+  });
+}
+
+export { clickHome, clickLogin };

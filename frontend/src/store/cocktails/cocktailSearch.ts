@@ -341,5 +341,12 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       const jsonData = JSON.stringify(data);
       localStorage.setItem("searchFilter", jsonData);
     },
+
+    // 필터 재료 리셋
+    resetSearchFilterIngredients: ({ getters, commit }) => {
+      const data = getters["getSearchFilterData"];
+      data.materials = [];
+      commit("SET_SEARCH_FILTER_DATA", data);
+    },
   },
 };

@@ -55,7 +55,10 @@
     </div>
     <!-- 재료 선택 -->
     <div class="cocktail-search-filter-ingredients">
-      <p>재료</p>
+      <div class="cocktail-search-filter-title">
+        <p>재료</p>
+        <p @click="resetSearchFilterIngredients">초기화</p>
+      </div>
       <div class="cocktail-search-filter-category">
         <div
           v-for="(image, index) in images"
@@ -163,6 +166,11 @@ const buttonColor = computed(() => {
 const setSearchFilter = () => {
   router.push({ name: "TheSearchFilterResultView" });
 };
+
+// 재료 리셋
+const resetSearchFilterIngredients = () => {
+  store.dispatch("cocktailSearch/resetSearchFilterIngredients");
+};
 </script>
 
 <style scoped lang="scss">
@@ -230,6 +238,29 @@ form {
 
           .material-icons-outlined {
             font-size: 16px;
+          }
+        }
+      }
+    }
+    .cocktail-search-filter-title {
+      @include flex-xy(flex-start, baseline);
+      gap: 4px;
+
+      p {
+        @include font($fs-md, $fw-medium);
+        color: $main-color;
+
+        @media (min-height: 750px) {
+          @include font($fs-main, $fw-medium);
+        }
+        &:last-child {
+          padding: 0 8px;
+          color: $danger-color;
+          @include font($fs-sm, $fw-regular);
+
+          cursor: pointer;
+          @media (min-height: 750px) {
+            @include font($fs-md, $fw-regular);
           }
         }
       }

@@ -1,13 +1,10 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.SearchHistoryDto;
 import com.jourgeois.backend.api.dto.SearchTrendDto;
 import com.jourgeois.backend.domain.auth.EmailToken;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Synchronize;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +18,7 @@ public class RedisService {
     private static final String EMAIL_TOKEN = "emailToken:";
     private static final String RECENT_KEYWORD = "recentKeyword:";
     private static final String HOT_KEYWORD = "hotKeyword:";
+    private static final String WEEKLY_HOT_KEYWORD = "weeklyHotKeyword:";
     public final RedisTemplate<String, Object> redisTemplate;
 
     public final RedisTemplate<String, String> redisStringTemplate;
@@ -73,6 +71,20 @@ public class RedisService {
     }
     public SearchTrendDto getHotKeywords(String timepoint) throws Exception {
         String key = HOT_KEYWORD + timepoint;
+        SearchTrendDto searchTrend = (SearchTrendDto) redisTemplate.opsForValue().get(key);
+        System.out.println("가져오는 것 까지는 오키이이이ㅣ");
+        System.out.println("조회 성공");
+        return searchTrend;
+    }
+
+    public boolean setWeeklyHotKeywords(String timepoint, SearchTrendDto searchTrendDto) {
+        String key = WEEKLY_HOT_KEYWORD + timepoint;
+        redisTemplate.opsForValue().set(key, searchTrendDto);
+        System.out.println("저장 성공");
+        return true;
+    }
+    public SearchTrendDto getWeeklyHotKeywords(String timepoint) throws Exception {
+        String key = WEEKLY_HOT_KEYWORD + timepoint;
         SearchTrendDto searchTrend = (SearchTrendDto) redisTemplate.opsForValue().get(key);
         System.out.println("가져오는 것 까지는 오키이이이ㅣ");
         System.out.println("조회 성공");

@@ -1,5 +1,6 @@
 package com.jourgeois.backend.controller;
 
+import com.jourgeois.backend.api.dto.SearchFilterDTO;
 import com.jourgeois.backend.service.CocktailService;
 import com.jourgeois.backend.service.RedisService;
 import com.jourgeois.backend.service.SearchHistoryService;
@@ -39,7 +40,10 @@ public class SearchController {
             if (!email.equals("null") && !email.isEmpty()) {
                 this.redisService.setRecentKeyword(email, keyword);
             }
-            this.searchHistoryService.writeSearchHistory(keyword);
+            System.out.println("keyword:"+keyword);
+            if(!keyword.isEmpty() || keyword != null) {
+                this.searchHistoryService.writeSearchHistory(keyword);
+            }
         } catch (Exception e) {
             System.out.println("검색 로그 기록 실패");
         }
@@ -65,12 +69,17 @@ public class SearchController {
     }
 
     @GetMapping(value="/user")
-    public ResponseEntity searchByUsers(@RequestParam(value = "keyword") String keyword,
+    public ResponseEntity searchByUsers(@RequestHeader(value = "email") String email, @RequestParam(value = "keyword") String keyword,
                               @PageableDefault(size=10, sort="name", direction = Sort.Direction.ASC) Pageable pageable){
         System.out.println(keyword);
         if (keyword.isEmpty())
             return ResponseEntity.status(HttpStatus.OK).body(null);
         return new ResponseEntity(searchService.searchByMember(keyword, pageable), HttpStatus.CREATED);
+    }
+
+    @GetMapping(value="/cocktailwhole")
+    public ResponseEntity searchByCocktailWhole(@PageableDefault(size=10) Pageable pageable){
+        return new ResponseEntity(searchService.CocktailList(pageable), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/search")
@@ -79,6 +88,18 @@ public class SearchController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         return new ResponseEntity(searchService.searchKeywords(keyword), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/filter")
+    public ResponseEntity filterCount(@RequestBody SearchFilterDTO searchFilterDto){
+        System.out.println(searchFilterDto.toString());
+        return new ResponseEntity(searchService.filterCount(searchFilterDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/filter/list")
+    public ResponseEntity filterList(@RequestBody SearchFilterDTO searchFilterDto){
+        System.out.println(searchFilterDto.toString());
+        return new ResponseEntity(searchService.filterList(searchFilterDto), HttpStatus.CREATED);
     }
 
     @GetMapping({"recentkeyword"})
@@ -96,6 +117,15 @@ public class SearchController {
     public ResponseEntity hotKeywordList() {
         try {
             return new ResponseEntity(this.redisService.getHotKeywords("cur"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("데이터를 불러오는데 실패함", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping({"weeklyhotkeyword"})
+    public ResponseEntity weeklyHotKeywordList() {
+        try {
+            return new ResponseEntity(this.redisService.getWeeklyHotKeywords("cur"), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("데이터를 불러오는데 실패함", HttpStatus.INTERNAL_SERVER_ERROR);
         }

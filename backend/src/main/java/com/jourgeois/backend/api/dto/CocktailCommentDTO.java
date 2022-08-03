@@ -10,10 +10,13 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class CocktailCommentDTO {
-    private Long id;
+    private Long commentId;
     private Long userId;
+    private String nickname;
+    private String profileImg;
     private Long cocktailId;
-    private String review;
+    private String comment;
+    private Integer likes;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 }

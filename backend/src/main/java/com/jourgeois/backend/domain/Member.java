@@ -42,7 +42,7 @@ public class Member {
     private List<PostBookmark> postBookmarks;
 
     @OneToMany(mappedBy = "member")
-    private List<CocktailReviews> cocktailReviews;
+    private List<CocktailComment> cocktailReviews;
 
     @OneToMany(mappedBy = "member")
     private List<PostReview> postReviews;

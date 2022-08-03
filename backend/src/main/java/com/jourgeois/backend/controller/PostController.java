@@ -7,6 +7,9 @@ import com.jourgeois.backend.api.dto.ProfileDTO;
 import com.jourgeois.backend.domain.PostReview;
 import com.jourgeois.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -105,6 +108,13 @@ public class PostController {
             result.put("fail", "게시글이 존재하지 않음");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 원본칵테일의 커스텀칵테일 탭 (리스트반환)
+    @GetMapping
+    public ResponseEntity readCustomCocktailList(@RequestParam Long id,
+                                   @PageableDefault(size=10) Pageable pageable){
+        return  new ResponseEntity(postService.readCumstomCoctailList(id, pageable), HttpStatus.CREATED);
     }
 
     // 댓글

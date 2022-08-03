@@ -62,13 +62,18 @@ public class SearchService {
     public List<ProfileDTO> searchByMember(String name, Pageable pageable){
             List<ProfileDTO> list = new ArrayList<>();
             memberRepository.findByNicknameContainingIgnoreCaseOrderByNickname(name, pageable)
-                .forEach(data ->
-                        list.add(ProfileDTO.builder()
-                                .uid(data.getUid())
-                                .email(data.getEmail())
-                                .nickname(data.getNickname())
-                                .profileImg(s3Url+data.getProfileImg())
-                                .introduce(data.getIntroduce()).build()));
+                .forEach(data ->{
+                            ProfileDTO p = new ProfileDTO(data.getUid(), data.getEmail(), data.getName(),
+                                    data.getNickname(), data.getProfileImg(), data.getIntroduce());
+                            list.add(p);
+                        });
+
+//        list.add(ProfileDTO.builder()
+//                .uid(data.getUid())
+//                .email(data.getEmail())
+//                .nickname(data.getNickname())
+//                .profileImg(s3Url+data.getProfileImg())
+//                .introduce(data.getIntroduce()).build())
         return list;
     }
 

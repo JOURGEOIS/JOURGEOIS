@@ -47,4 +47,18 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<PostReview> reviews;
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", img='" + img + '\'' +
+                ", description='" + description + '\'' +
+                ", createTime=" + createTime +
+                ", lastUpdateTime=" + lastUpdateTime +
+                ", member=" + member +
+                ", postBookmarks=" + postBookmarks +
+                ", reviews=" + reviews +
+                '}';
+    }
 }

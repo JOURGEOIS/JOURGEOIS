@@ -1,19 +1,22 @@
 package com.jourgeois.backend.service;
 
 import com.amazonaws.SdkClientException;
-import com.jourgeois.backend.api.dto.PostDTO;
-import com.jourgeois.backend.api.dto.PostReviewDTO;
+import com.jourgeois.backend.api.dto.*;
 import com.jourgeois.backend.domain.*;
 import com.jourgeois.backend.repository.*;
 import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
+
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -85,6 +88,50 @@ public class PostService {
         Long uid = postDTO.getUid();
         String url = s3Util.localUpload(postDTO.getImg(), uid, ImgType.POST);
         return url;
+    }
+
+    // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
+    public List<PostInfoDTO> readCumstomCoctailList(Long id, Pageable pageable){
+        List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
+        customCocktailToCocktailRepository.findByCocktail_Id(id, pageable)
+                .forEach(data ->{
+                    Long p_id = data.getCustomCocktail().getId();
+                    CustomCocktail customCocktail = (CustomCocktail) postRepository.findById(p_id).orElseThrow();
+                    Member member = memberRepository.findById(customCocktail.getMember().getUid()).orElseThrow();
+                    ProfileDTO profile = new ProfileDTO(member.getUid(), null, member.getName(),
+                            member.getNickname(), member.getProfileImg(), null);
+                    PostDTO post = PostDTO.builder()
+                            .postId(customCocktail.getId())
+                            .imgLink(customCocktail.getImg())
+                            .description(customCocktail.getDescription())
+                            .title(customCocktail.getTitle())
+                            .baseCocktail(data.getCocktail().getId())
+                            .recipe(customCocktail.getRecipe())
+//                            .ingredients(customCocktail.getIngredients())
+                            .build();
+                    postInfoDTOList.add(new PostInfoDTO(post, profile));
+        });
+        return postInfoDTOList;
+    }
+
+    // 위의 커스텀 칵테일 목록에서 상세보기 했을 때 전체 내용 (댓글 포함) 북마크 했을 때 수정 필요
+    public PostInfoDTO readCumstomCoctail(Long p_id){
+        CustomCocktail post = (CustomCocktail) postRepository.findById(p_id).get();
+        Member member = memberRepository.findById(post.getMember().getUid()).get();
+        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
+                member.getNickname(), member.getProfileImg(), member.getIntroduce());
+        PostDTO postpost = PostDTO.builder()
+                .postId(post.getId())
+                .imgLink(post.getImg())
+                .description(post.getDescription())
+                .title(post.getTitle())
+//                    .baseCocktail(data.getCocktail().getId())
+                .ingredients(post.getIngredients())
+                .recipe(post.getRecipe())
+                .ingredients(post.getIngredients()).build();
+        PostInfoDTO result = new PostInfoDTO(postpost, p);
+
+        return result;
     }
 
     @Transactional

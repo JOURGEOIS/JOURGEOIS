@@ -149,14 +149,9 @@ public class MemberService {
     @Transactional
     public ProfileDTO findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
-        return ProfileDTO.builder()
-                .email(member.getEmail())
-                .uid(member.getUid())
-                .name(member.getName())
-                .nickname(member.getNickname())
-                .introduce(member.getIntroduce())
-                .profileImg(s3Url+ member.getProfileImg())
-                .build();
+        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
+                member.getNickname(), member.getProfileImg(), member.getIntroduce());
+        return p;
 
     }
 

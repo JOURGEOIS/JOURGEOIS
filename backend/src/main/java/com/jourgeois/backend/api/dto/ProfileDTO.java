@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class ProfileDTO {
     private Long uid;
-//    private String email;
+    private String email;
     private String name;
     private String nickname;
     private String profileImg;
@@ -38,13 +38,13 @@ public class ProfileDTO {
         this.name = name;
     }
 
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getNickname() {
         return nickname;

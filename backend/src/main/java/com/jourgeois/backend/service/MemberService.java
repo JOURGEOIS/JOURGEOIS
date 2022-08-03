@@ -150,7 +150,7 @@ public class MemberService {
     public ProfileDTO findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
         return ProfileDTO.builder()
-//                .email(member.getEmail())
+                .email(member.getEmail())
                 .uid(member.getUid())
                 .name(member.getName())
                 .nickname(member.getNickname())

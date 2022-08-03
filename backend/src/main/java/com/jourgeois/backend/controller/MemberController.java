@@ -9,6 +9,7 @@ import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -202,6 +203,23 @@ public class MemberController {
         } catch (NoSuchElementException e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    // 팔로우
+    @PostMapping("/follow")
+    public ResponseEntity followMember(@RequestBody Map<String, Long> followRequest) {
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            memberService.followUser(followRequest);
+            data.put("success", true);
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch(JpaObjectRetrievalFailureException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

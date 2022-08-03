@@ -6,20 +6,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 public class ProfileDTO {
-    private Long id;
-    private String email;
+    private Long uid;
+//    private String email;
     private String name;
     private String nickname;
     private String profileImg;
     private MultipartFile profileLink;
     private String introduce;
 
-    public Long getId() {
-        return id;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
     public MultipartFile getProfileLink() {
@@ -38,13 +38,13 @@ public class ProfileDTO {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
     public String getNickname() {
         return nickname;

@@ -64,8 +64,8 @@ public class SearchService {
             memberRepository.findByNicknameContainingIgnoreCaseOrderByNickname(name, pageable)
                 .forEach(data ->
                         list.add(ProfileDTO.builder()
-                                .id(data.getUid())
-                                .email(data.getEmail())
+                                .uid(data.getUid())
+//                                .email(data.getEmail())
                                 .nickname(data.getNickname())
                                 .profileImg(s3Url+data.getProfileImg())
                                 .introduce(data.getIntroduce()).build()));

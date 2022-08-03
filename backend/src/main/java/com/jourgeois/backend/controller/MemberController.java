@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -90,31 +91,25 @@ public class MemberController {
         String email = loginForm.get("email");
         String password = loginForm.get("password");
         System.out.println(email + " " + password);
+
         Map<String, Object> data = new HashMap<>();
-        data.put("token", memberService.login(email ,password));
-        data.put("userInfo", memberService.findUserInfo(email));
+        UserDetails userDetails = memberService.loginUser(email, password);
+        data.put("token", memberService.createToken(userDetails));
+        data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @GetMapping("/logout")
-    public HttpStatus logout(@RequestParam String email){
-        memberService.logout(email);
+    @GetMapping("/auth/logout")
+    public HttpStatus logout(HttpServletRequest  request){
+        memberService.logout(Long.parseLong((String) request.getAttribute("uid")));
         return HttpStatus.OK;
     }
 
     @DeleteMapping("/auth/signOut")
-    public ResponseEntity signOut(HttpServletRequest request, @RequestBody Map<String, String> user) {
+    public ResponseEntity signOut(HttpServletRequest  request, @RequestBody Map<String, String> user) {
         try {
-            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
-            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-            if(authentication.getName().equals(user.get("email"))) {
-                System.out.println("같은 회원!");
-                memberService.signOut(user.get("email"));
-                return ResponseEntity.status(HttpStatus.OK).body(null);
-            }else {
-                System.out.println("다른 회원!");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); //403 error
-            }
+            memberService.signOut(Long.valueOf((String) request.getAttribute("uid")), user.get("email"));
+            return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
@@ -124,18 +119,11 @@ public class MemberController {
     @PutMapping("/auth/profile")
     public ResponseEntity changeProfile(HttpServletRequest request, @ModelAttribute ProfileDTO profileDto){
         Map<String, Boolean> data = new HashMap<>();
+
         try {
-            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
-            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-            if(authentication.getName().equals(profileDto.getEmail())) {
-                System.out.println("같은 회원!");
-                memberService.changeProfile(profileDto);
-                return new ResponseEntity(memberService.findUserInfo(profileDto.getEmail()), HttpStatus.CREATED);
-            }else {
-                System.out.println("다른 회원!");
-                data.put("success", false);
-                return new ResponseEntity(data, HttpStatus.FORBIDDEN);
-            }
+            profileDto.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
+            memberService.changeProfile(profileDto);
+            return new ResponseEntity(memberService.findUserInfo(profileDto.getUid()), HttpStatus.CREATED);
         }catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
@@ -147,19 +135,10 @@ public class MemberController {
     @PostMapping("/auth/profile")
     public ResponseEntity profileImageTempStorage(HttpServletRequest request, @ModelAttribute ProfileDTO profileDto){
         try{
-            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
-            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-            if(authentication.getName().equals(profileDto.getEmail())) {
-                System.out.println("같은 회원!");
-                Map<String, String> data = new HashMap<>();
-                data.put("url", "http://13.209.206.237/img/" + memberService.ProfileImageLocalUpload(profileDto));
-                return new ResponseEntity(data, HttpStatus.CREATED);
-            }else {
-                System.out.println("다른 회원!");
-                Map<String, Boolean> data = new HashMap<>();
-                data.put("success", false);
-                return new ResponseEntity(data, HttpStatus.FORBIDDEN);
-            }
+            Map<String, String> data = new HashMap<>();
+            profileDto.setUid(Long.parseLong((String) request.getAttribute("uid")));
+            data.put("url", "http://13.209.206.237/img/" + memberService.ProfileImageLocalUpload(profileDto));
+            return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
             Map<String, Boolean> data = new HashMap<>();
             data.put("success", false);
@@ -171,19 +150,12 @@ public class MemberController {
     @PutMapping("/auth/password")
     public ResponseEntity changePassword(HttpServletRequest request, @RequestBody PasswordChangeForm passwordChangeForm) {
         Map<String, Boolean> data = new HashMap<>();
+
         try {
-            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
-            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-            if(authentication.getName().equals(passwordChangeForm.getEmail())) {
-                System.out.println("같은 회원!");
-                memberService.changePassword(passwordChangeForm);
-                data.put("success", true);
-                return new ResponseEntity(data, HttpStatus.CREATED);
-            }else {
-                System.out.println("다른 회원!");
-                data.put("success", false);
-                return new ResponseEntity(data, HttpStatus.FORBIDDEN);
-            }
+            passwordChangeForm.setUid(Long.parseLong((String) request.getAttribute("uid")));
+            memberService.changePassword(passwordChangeForm);
+            data.put("success", true);
+            return new ResponseEntity(data, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.CREATED);
@@ -204,19 +176,12 @@ public class MemberController {
     @PostMapping("/auth/password")
     public ResponseEntity checkPassword(HttpServletRequest request, @RequestBody PasswordChangeForm passwordChangeForm) {
         Map<String, Boolean> data = new HashMap<>();
+
         try {
-            String jwt = jwtTokenProvider.resolveToken(request, AUTHORIZATION_HEADER);
-            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-            if(authentication.getName().equals(passwordChangeForm.getEmail())) {
-                System.out.println("같은 회원!");
-                boolean result = memberService.checkPassword(passwordChangeForm);
-                data.put("success", result);
-                return result ? new ResponseEntity(data, HttpStatus.CREATED) : new ResponseEntity(data, HttpStatus.CREATED);
-            }else {
-                System.out.println("다른 회원!");
-                data.put("success", false);
-                return new ResponseEntity(data, HttpStatus.FORBIDDEN);
-            }
+            passwordChangeForm.setUid(Long.parseLong((String) request.getAttribute("uid")));
+            boolean result = memberService.checkPassword(passwordChangeForm);
+            data.put("success", result);
+            return result ? new ResponseEntity(data, HttpStatus.CREATED) : new ResponseEntity(data, HttpStatus.CREATED);
         } catch (Exception e) {
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
@@ -227,6 +192,7 @@ public class MemberController {
     @PutMapping("/password")
     public ResponseEntity findPassword(@RequestBody PasswordChangeForm passwordChangeForm) {
         Map<String, Boolean> data = new HashMap<>();
+
         try {
             memberService.findPassword(passwordChangeForm);
             data.put("success", true);

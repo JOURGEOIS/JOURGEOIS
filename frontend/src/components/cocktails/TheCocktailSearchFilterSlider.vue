@@ -1,4 +1,6 @@
-<!-- filter: form - slider -->
+<!-- filter: form에 사용될 멀티 range 슬라이더
+  자세한 원리는 노션 및 블로그에 정리되어 있다. 
+-->
 <template>
   <div class="cocktail-search-filter-slider-container">
     <!-- slider value -->
@@ -48,14 +50,15 @@
 import { ref, reactive, watch, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
-// slider Value
 
+// slider Value
 const sliderValue = computed(
   () => store.getters["cocktailSearch/getSearchFilterAlcoholStrength"]
 );
 const sliderLeftValue = ref(sliderValue.value[0]);
 const sliderRightValue = ref(sliderValue.value[1]);
 
+// 슬라이더 값이 변경될 때, 값을 저장한다. (디바운스 사용하여 요청을 적당히...ㅎㅎ)
 let debounce: any;
 watch([sliderLeftValue, sliderRightValue], () => {
   clearTimeout(debounce);
@@ -83,7 +86,7 @@ const rangeStyle = reactive({
   width: `${((sliderRightValue.value - sliderLeftValue.value) / 30) * 100}%`,
 });
 
-// SliderValue
+// 보여지는 Slider Value로 한 자리 수면 앞에 0을 붙인다.
 const sliderLeft = computed(() => {
   if (String(sliderLeftValue.value).length === 1) {
     return "0" + sliderLeftValue.value;

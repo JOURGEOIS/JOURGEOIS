@@ -1,14 +1,15 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.ProfileDto;
+import com.jourgeois.backend.api.dto.ProfileDTO;
 import com.jourgeois.backend.api.dto.PasswordChangeForm;
-import com.jourgeois.backend.api.dto.TokenResponseDto;
+import com.jourgeois.backend.api.dto.TokenResponseDTO;
 import com.jourgeois.backend.domain.Member;
 import com.jourgeois.backend.domain.auth.RefreshToken;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
+import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +65,7 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean changeProfile(ProfileDto data){
+    public boolean changeProfile(ProfileDTO data){
         memberRepository.findByNicknameAndEmailIsNot(data.getNickname(), data.getEmail())
                 .ifPresentOrElse(
                         (member -> {throw new IllegalArgumentException("닉네임 중복");}),
@@ -78,7 +79,7 @@ public class MemberService {
                                             if(!member.getProfileImg().equals("default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid()));
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
@@ -113,7 +114,7 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenResponseDto login(String email, String password) {
+    public TokenResponseDTO login(String email, String password) {
         // userId 확인
         System.out.println("3333331231231231312");
         UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
@@ -142,16 +143,16 @@ public class MemberService {
 
         System.out.println("33333333333333333");
 
-        return TokenResponseDto.builder()
+        return TokenResponseDTO.builder()
                 .accessToken("Bearer-"+jwtTokenProvider.createAccessToken(authentication))
                 .refreshToken("Bearer-"+refreshToken)
                 .build();
     }
 
     @Transactional
-    public ProfileDto findUserInfo(String userId){
+    public ProfileDTO findUserInfo(String userId){
         Optional<Member> member = memberRepository.findByEmail(userId);
-        return ProfileDto.builder()
+        return ProfileDTO.builder()
                 .email(member.get().getEmail())
                 .name(member.get().getName())
                 .nickname(member.get().getNickname())
@@ -235,10 +236,14 @@ public class MemberService {
         return memberRepository.findByEmailAndName(email, userName).isPresent();
     }
 
+    public boolean checkUserUid(Long uid){
+        return memberRepository.findById(uid).isPresent();
+    }
+
     @Transactional
-    public String ProfileImageLocalUpload(ProfileDto profileDto) throws IOException {
+    public String ProfileImageLocalUpload(ProfileDTO profileDto) throws IOException {
         Member member = memberRepository.findByEmail(profileDto.getEmail()).get();
-        String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid());
-        return member.getUid() + "/" + url;
+        String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
+        return url;
     }
 }

@@ -7,6 +7,7 @@ services:
                         - nginx
                         - springboot
                         - db
+                        - redis
                 ports:
                         - "80:80"
                 restart: always
@@ -29,6 +30,10 @@ services:
                         - ./db/cnf:/etc/mysql/conf.d
                 ports:
                         - "3306:3306"
+        redis:
+                image: redis:alpine
+                volumes:
+                        - ./redis/data:/data
         springboot:
                 build: ./backend
                 restart: always
@@ -40,3 +45,4 @@ services:
                         - "8080"
                 depends_on:
                         - db
+                        - redis

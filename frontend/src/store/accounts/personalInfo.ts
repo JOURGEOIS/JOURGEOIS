@@ -21,7 +21,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
   state: {
     accessToken: localStorage.getItem("accessToken") || "",
     refreshToken: localStorage.getItem("refreshToken") || "",
-    userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}") || {},
+    userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}"),
     refreshFailPopupStatus: false,
   },
 
@@ -117,6 +117,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           commit("SET_REFRESH_FAIL", true);
         });
     },
+    // 이미지 저장
     changeProfileImage: ({ getters, dispatch }, params) => {
       const { imageFile, profileImage } = params;
       axios({
@@ -127,11 +128,11 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           "Content-Type": "multipart/form-data",
         },
         data: {
-          email: getters.getUserInfoId,
           profileLink: imageFile,
         },
       })
         .then((response) => {
+          console.log(response.data);
           profileImage.image = response.data.url;
         })
         .catch((error) => {
@@ -148,6 +149,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           }
         });
     },
+    // 프로필 변경
     submitChangeUserInfoForm: ({ dispatch, getters }, params) => {
       const { name, nickname, profileLink, introduce } = params;
       axios({
@@ -158,7 +160,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           "Content-Type": "multipart/form-data",
         },
         data: {
-          email: getters.getUserInfoId,
           name,
           nickname,
           profileLink,

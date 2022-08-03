@@ -185,7 +185,6 @@ export const password: Module<PasswordState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          email: rootGetters["personalInfo/getUserInfoId"],
           passwordOld: pwInputValue.value,
         },
       })
@@ -216,7 +215,6 @@ export const password: Module<PasswordState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          email: rootGetters["personalInfo/getUserInfoId"],
           passwordNew,
           passwordConfirm,
         },

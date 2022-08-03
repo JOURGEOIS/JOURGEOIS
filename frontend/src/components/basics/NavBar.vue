@@ -70,6 +70,7 @@ const clickPost = () => {
 // 검색 버튼 클릭
 const clickSearch = () => {
   setNavIconStatus(3);
+  store.dispatch("cocktailSearch/toggleFilter", false);
   router.push({ name: "TheCocktailSearchView" });
 };
 

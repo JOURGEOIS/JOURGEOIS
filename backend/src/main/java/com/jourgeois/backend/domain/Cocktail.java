@@ -20,11 +20,9 @@ public class Cocktail {
     @Column(name = "c_name_kr")
     private String nameKR;
     @Column(name = "c_alcohol")
-    private double alcohol;
-//    @Column(name = "c_cup_id")
+    private Double alcohol;
     @ManyToOne
     private Cup cupId;
-//    private int cupId;
     @Column(name = "c_tag")
     private String tag;
     @Column(name = "c_base_liquor")
@@ -39,6 +37,16 @@ public class Cocktail {
     private String img;
 
     @OneToMany(mappedBy = "cocktail")
+    private List<CocktailReviews> cocktailReviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cocktail")
     private List<CocktailToMaterial> cocktailToMaterials = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cocktail")
+    private List<CocktailBookmark> cocktailBookmarks;
+
+
+    public Cocktail(Long id) {
+        this.id = id;
+    }
 }

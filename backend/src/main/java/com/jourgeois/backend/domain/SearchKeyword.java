@@ -13,6 +13,7 @@ public class SearchKeyword {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long uid;
     private Long id;
+    private String keyword;
     private String name;
     private String nameKr;
     private String type;

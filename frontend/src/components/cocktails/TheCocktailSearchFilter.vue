@@ -1,4 +1,5 @@
-<!-- filter: container -->
+<!-- filter: container
+  on, off시 트랜지션 효과를 준다.  -->
 <template>
   <teleport to="body">
     <div class="cocktail-search-filter">

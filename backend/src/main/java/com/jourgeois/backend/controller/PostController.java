@@ -34,6 +34,12 @@ public class PostController {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
+
+        if(post.getImg() == null || post.getImg().isEmpty()) {
+            result.put("fail", "이미지를 등록해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
         try{
             postService.postPost(post);
             result.put("success", "성공");
@@ -52,6 +58,12 @@ public class PostController {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
+
+        if(post.getImg() == null || post.getImg().isEmpty()) {
+            result.put("fail", "이미지를 등록해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+        
         try{
             postService.editPost(post);
             result.put("success", "성공");
@@ -101,6 +113,12 @@ public class PostController {
         System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, String> result = new HashMap<>();
+
+        if(postReviewDTO.getReview() == null || postReviewDTO.getReview().isEmpty()) {
+            result.put("fail", "내용을 입력해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
         try{
             postService.postReview(postReviewDTO);
             result.put("success", "성공");
@@ -116,6 +134,10 @@ public class PostController {
         System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, String> result = new HashMap<>();
+        if(postReviewDTO.getReview() == null || postReviewDTO.getReview().isEmpty()) {
+            result.put("fail", "내용을 입력해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
         try{
             postService.editReview(postReviewDTO);
             result.put("success", "성공");

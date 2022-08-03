@@ -152,6 +152,7 @@ public class PostService {
         postReviewRepository.save(postReview);
     }
 
+    @Transactional
     public void editReview(PostReviewDTO postReviewDTO) throws NoSuchElementException, IllegalArgumentException {
         Member member = new Member();
         member.setUid(postReviewDTO.getUid());
@@ -159,5 +160,14 @@ public class PostService {
         PostReview postReview = postReviewRepository.findByIdAndMember(postReviewDTO.getPr_id(), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReview.setReview(postReviewDTO.getReview());
         postReviewRepository.save(postReview);
+    }
+
+    @Transactional
+    public void deleteReview(Map<String, Long> reviewDeleteReq) throws NoSuchElementException, IllegalArgumentException {
+        Member member = new Member();
+        member.setUid(reviewDeleteReq.get("uid"));
+
+        PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("pr_id"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
+        postReviewRepository.delete(postReview);
     }
 }

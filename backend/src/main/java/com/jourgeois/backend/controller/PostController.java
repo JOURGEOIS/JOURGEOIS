@@ -192,7 +192,7 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
         try {
-            return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.CREATED);
+            return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.OK);
         } catch (Exception e) {
             result.put("fail", "댓글을 불러오는 것을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);

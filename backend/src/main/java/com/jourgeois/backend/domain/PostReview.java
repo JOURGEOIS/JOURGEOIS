@@ -1,5 +1,6 @@
 package com.jourgeois.backend.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,42 +10,35 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "p_dtype")
+@Setter
+@Getter
 @EntityListeners(AuditingEntityListener.class)
-public class Post {
+@Table(name = "post_review")
+public class PostReview {
     @Id
     @GeneratedValue
-    @Column(name = "p_id")
     private Long id;
 
-    @Column(name = "p_img")
-    private String img;
+    @Column(name = "pr_review", length = 200)
+    private String review;
 
-    @Column(name = "p_description", length = 500)
-    private String description;
-
-    @Column(name = "p_create_time")
+    @Column(name = "pr_create_time")
     @CreatedDate
     private LocalDateTime createTime;
 
-    @Column(name = "p_last_update_time")
+    @Column(name = "pr_last_update_time")
     @LastModifiedDate
     private LocalDateTime lastUpdateTime;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "p_writer")
+    @ManyToOne
+    @JoinColumn(name = "pr_uid")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
-    private List<PostBookmark> postBookmarks;
-
-    @OneToMany(mappedBy = "post")
-    private List<PostReview> reviews;
+    @ManyToOne
+    @JoinColumn(name = "pr_p_id")
+    private Post post;
 }

@@ -16,7 +16,6 @@ public class CocktailCommentDTO {
     private String profileImg;
     private Long cocktailId;
     private String comment;
-    private Integer likes;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 }

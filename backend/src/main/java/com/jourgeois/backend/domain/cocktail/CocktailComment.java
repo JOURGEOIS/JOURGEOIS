@@ -28,9 +28,6 @@ public class CocktailComment extends BaseTime implements Serializable {
     @Column(name = "cr_comment")
     private String comment;
 
-    @Column(name = "c_likes")
-    private Integer likes = 0;
-
     public CocktailComment(Member m, Cocktail c, String comment){
         this.member = m;
         this.cocktail = c;

@@ -128,12 +128,11 @@ public class CocktailController {
 
     @GetMapping(value = "/comment")
     public ResponseEntity selectReview(@RequestParam(value = "cocktailId") Long cocktailId,
-                                       @PageableDefault(size=10, page = 0) Pageable pageable,
-                                       @RequestParam(value = "criteria") String criteria) {
+                                       @PageableDefault(size=10, page = 0) Pageable pageable) {
         // cocktailId, page, page size 정보 받음
         // criteria -> modifiedDate (등록/수정 날짜 기준), likes(좋아요 기준)
         try {
-            List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId, pageable, criteria);
+            List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId, pageable);
             return ResponseEntity.ok().body(cc);
         } catch (Exception e) {
             e.printStackTrace();

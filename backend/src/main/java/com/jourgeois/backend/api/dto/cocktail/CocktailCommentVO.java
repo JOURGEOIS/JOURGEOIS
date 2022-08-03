@@ -10,7 +10,6 @@ public interface CocktailCommentVO {
 
     String getNickname();
     String getProfileImg();
-    Integer getLikes();
     LocalDateTime getCreatedDate();
     LocalDateTime getModifiedDate();
     String getComment();

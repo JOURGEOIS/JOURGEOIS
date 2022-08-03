@@ -1,8 +1,12 @@
 package com.jourgeois.backend.service;
 
 
-import com.jourgeois.backend.api.dto.*;
-import com.jourgeois.backend.domain.*;
+import com.jourgeois.backend.api.dto.cocktail.*;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.cocktail.CocktailBookmark;
+import com.jourgeois.backend.domain.cocktail.CocktailComment;
+import com.jourgeois.backend.domain.cocktail.Material;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service

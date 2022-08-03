@@ -1,19 +1,26 @@
 package com.jourgeois.backend.service;
 
 import com.amazonaws.SdkClientException;
-import com.jourgeois.backend.api.dto.PostDTO;
-import com.jourgeois.backend.api.dto.PostReviewDTO;
-import com.jourgeois.backend.domain.*;
+import com.jourgeois.backend.api.dto.post.PostDTO;
+import com.jourgeois.backend.api.dto.post.PostReviewDTO;
+import com.jourgeois.backend.api.dto.post.PostReviewResponseVO;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.domain.post.CustomCocktail;
+import com.jourgeois.backend.domain.post.CustomCocktailToCocktail;
+import com.jourgeois.backend.domain.post.Post;
+import com.jourgeois.backend.domain.post.PostReview;
 import com.jourgeois.backend.repository.*;
 import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -169,5 +176,14 @@ public class PostService {
 
         PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("pr_id"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReviewRepository.delete(postReview);
+    }
+
+    public List<PostReviewResponseVO> getReviewAll(Long p_id, Boolean asc, Pageable pageable) throws Exception {
+        if(asc) pageable.getSort().ascending();
+        else pageable.getSort().descending();
+
+        List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(p_id, pageable);
+
+        return reviews;
     }
 }

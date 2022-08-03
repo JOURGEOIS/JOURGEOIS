@@ -1,9 +1,8 @@
 package com.jourgeois.backend.security;
 
 
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

@@ -1,9 +1,9 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.ProfileDTO;
-import com.jourgeois.backend.api.dto.PasswordChangeForm;
-import com.jourgeois.backend.api.dto.TokenResponseDTO;
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
+import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.auth.RefreshToken;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;

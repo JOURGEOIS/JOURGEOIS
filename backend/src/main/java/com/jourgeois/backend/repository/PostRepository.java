@@ -1,7 +1,7 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.domain.Member;
-import com.jourgeois.backend.domain.Post;
+import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.domain.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

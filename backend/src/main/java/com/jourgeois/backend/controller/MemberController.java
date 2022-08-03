@@ -1,15 +1,14 @@
 package com.jourgeois.backend.controller;
 
-import com.jourgeois.backend.api.dto.ProfileDTO;
-import com.jourgeois.backend.api.dto.PasswordChangeForm;
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
 import com.jourgeois.backend.service.MemberService;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 

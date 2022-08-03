@@ -1,11 +1,9 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.api.dto.PasswordChangeForm;
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.domain.member.Member;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

@@ -65,7 +65,7 @@ public class SearchService {
                 .forEach(data ->
                         list.add(ProfileDTO.builder()
                                 .uid(data.getUid())
-//                                .email(data.getEmail())
+                                .email(data.getEmail())
                                 .nickname(data.getNickname())
                                 .profileImg(s3Url+data.getProfileImg())
                                 .introduce(data.getIntroduce()).build()));
@@ -74,7 +74,7 @@ public class SearchService {
 
     public List<SearchKeywordDTO> searchKeywords(String name){
         List<SearchKeywordDTO> list = new ArrayList<>();
-        searchKeywordRepository.findTop10ByKeywordContainingOrderByNameKr(name).forEach(data ->
+        searchKeywordRepository.findTop10ByNameContainingOrNameKrContainingOrderByNameKr(name, name).forEach(data ->
                 list.add(SearchKeywordDTO.builder()
                         .id(data.getId())
                         .name(data.getName())

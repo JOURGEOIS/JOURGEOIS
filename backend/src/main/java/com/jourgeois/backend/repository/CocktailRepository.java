@@ -31,9 +31,9 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
     @Query(value = "INSERT INTO cocktail_reviews (cr_review) VALUE ('taltaltal')", nativeQuery = true)
     Boolean insertCocktailgogoComment();
 
-    @Query(nativeQuery = true, value="select * from cocktail where c_name_kr LIKE CONCAT('%',:name,'%') union " +
+    @Query(nativeQuery = true, value="select * from cocktail where c_name_kr LIKE CONCAT('%',:name,'%') or c_name LIKE CONCAT('%',:name,'%') union " +
             "select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id in " +
-            "(select m_id from material where m_name_kr LIKE CONCAT('%',:name,'%'))) order by c_name_kr limit 10 offset :page")
+            "(select m_id from material where m_name_kr LIKE CONCAT('%',:name,'%') or m_name LIKE CONCAT('%',:name,'%'))) order by c_name_kr limit 10 offset :page")
     List<Cocktail> findCocktailBySearch(@Param("name") String name, @Param("page") int page);
 
     @Query(nativeQuery = true, value = "select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id=:id)" +

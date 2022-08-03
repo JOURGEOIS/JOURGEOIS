@@ -1,4 +1,7 @@
 <template class="the-search-result-cocktail">
+  <div class="no-content" v-if="!searchCocktailAlls.length">
+    검색 결과가 없습니다
+  </div>
   <the-list-item-cocktail
     v-for="(item, idx) in searchCocktailAlls"
     :key="idx"
@@ -33,4 +36,10 @@ const clickCocktail = (item: Cocktail) => {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.no-content {
+  text-align: center;
+  padding: 30px 0;
+  @include font-size-sub(15px);
+}
+</style>

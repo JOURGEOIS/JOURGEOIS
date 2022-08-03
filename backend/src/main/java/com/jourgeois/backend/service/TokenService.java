@@ -1,6 +1,6 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.TokenResponseDTO;
+import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
 import com.jourgeois.backend.domain.auth.RefreshToken;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;

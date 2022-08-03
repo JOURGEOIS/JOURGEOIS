@@ -1,9 +1,10 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.CustomCocktail;
-import com.jourgeois.backend.domain.CustomCocktailToCocktail;
 import org.springframework.data.domain.Pageable;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.post.CustomCocktail;
+import com.jourgeois.backend.domain.post.CustomCocktailToCocktail;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

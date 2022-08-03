@@ -1,6 +1,6 @@
 package com.jourgeois.backend.util.auth;
 
-import com.jourgeois.backend.api.dto.EmailAuthForm;
+import com.jourgeois.backend.api.dto.auth.EmailAuthForm;
 import com.jourgeois.backend.domain.auth.EmailToken;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDateTime;
 import java.util.Random;
 
 @Component

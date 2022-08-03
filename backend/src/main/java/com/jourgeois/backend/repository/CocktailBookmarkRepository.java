@@ -1,10 +1,9 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.CocktailBookmark;
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.cocktail.CocktailBookmark;
+import com.jourgeois.backend.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 

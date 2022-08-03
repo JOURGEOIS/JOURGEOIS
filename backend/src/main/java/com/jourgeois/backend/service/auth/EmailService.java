@@ -1,24 +1,17 @@
 package com.jourgeois.backend.service.auth;
 
-import com.jourgeois.backend.api.dto.EmailAuthForm;
+import com.jourgeois.backend.api.dto.auth.EmailAuthForm;
 import com.jourgeois.backend.domain.auth.EmailToken;
 //import com.jourgeois.backend.repository.auth.EmailTokenRepository;
 import com.jourgeois.backend.service.RedisService;
-import com.jourgeois.backend.service.auth.EmailSenderService;
 import com.jourgeois.backend.util.auth.MailAuthUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service

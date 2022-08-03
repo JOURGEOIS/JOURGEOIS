@@ -110,4 +110,22 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/review")
+    public ResponseEntity editReview(@RequestBody PostReviewDTO postReviewDTO) {
+        System.out.println("Request: " + postReviewDTO.toString());
+
+        Map<String, String> result = new HashMap<>();
+        try{
+            postService.editReview(postReviewDTO);
+            result.put("success", "성공");
+            return new ResponseEntity(result, HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
+            result.put("fail", "유저가 작성한 댓글이 없습니다.");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalArgumentException e) {
+            result.put("fail", "올바른 입력값을 입력해주세요.");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -38,6 +38,9 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     getUserInfo: (state) => {
       return state.userInfo;
     },
+    getUserInfoUserId: (state) => {
+      return state.userInfo.uid;
+    },
     getUserInfoId: (state) => {
       return state.userInfo.email;
     },

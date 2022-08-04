@@ -12,18 +12,19 @@
 <script setup lang="ts">
 import TheListItemCustomCocktail from "@/components/cocktails/TheListItemCustomCocktail.vue";
 import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
 const router = useRouter();
 const route = useRoute();
+const store = useStore();
 
 const customCocktails = [];
 
 // 커스텀 칵테일 만들기 클릭
 const addCustomCocktail = () => {
-  alert("커스텀 칵테일 form view로 이동시켜라");
-  // router.push({
-  //   name: "TheCustomCocktailFormView",
-  //   params: { cocktailId: route.params.cocktailId },
-  // });
+  router.push({
+    name: "TheCustomCocktailFormView",
+    params: { cocktailId: route.params.cocktailId },
+  });
 };
 </script>
 

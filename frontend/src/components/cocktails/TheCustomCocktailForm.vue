@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitCustomCocktailForm">
+  <form @submit.prevent="submitCustomCocktailForm" class="custom-cocktail-form">
     <input-basic
       :data="customCocktailTitleData"
       :input-style="customCocktailTitleStyle"
@@ -38,13 +38,13 @@ const customCocktailValue = ref("");
 const customCocktailDescValue = ref("");
 
 const submitCustomCocktailForm = () => {
-  console.log(customCocktailValue.value);
+  console.log("폼 제출");
 };
 </script>
 
 <style scoped lang="scss">
-form {
+.custom-cocktail-form {
   @include flex(column);
-  gap: 32px;
+  gap: 40px;
 }
 </style>

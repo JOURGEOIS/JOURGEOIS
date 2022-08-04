@@ -203,7 +203,7 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
         try {
-            return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.CREATED);
+            return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.OK);
         } catch (Exception e) {
             result.put("fail", "댓글을 불러오는 것을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -214,16 +214,13 @@ public class PostController {
     @PostMapping(value = "/bookmark")
     public ResponseEntity pushPostBookmark(@RequestBody Map<String, Long> bookmark){
         Map<String, Long> data = new HashMap<>();
-        if(memberService.checkUserUid(bookmark.get("uid")) && postService.checkPostId(bookmark.get("p_id"))){
-            PostBookmarkDTO pBookmark = PostBookmarkDTO.builder()
-                    .member(new Member(bookmark.get("uid")))
-                    .post(new Post(bookmark.get("p_id"))).build();
-            if(postService.pushBookmark(pBookmark)){
+        if(memberService.checkUserUid(bookmark.get("uid")) && postService.checkPostId(bookmark.get("p_id"))) {
+            if (postService.pushBookmark(bookmark)) {
                 data.put("status", 1L);
-            }else{
+            } else {
                 data.put("status", 0L);
             }
-            data.put("count", postService.countPostBookmark(new Post(bookmark.get("p_id"))));
+            data.put("count", postService.countPostBookmark(bookmark.get("p_id")));
             return new ResponseEntity<>(data, HttpStatus.OK);
         }else{
             return new ResponseEntity<>("잘못된 회원이거나 게시물입니다.", HttpStatus.NOT_ACCEPTABLE);

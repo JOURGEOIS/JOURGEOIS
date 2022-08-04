@@ -1,5 +1,6 @@
 package com.jourgeois.backend.repository;
 
+import com.jourgeois.backend.domain.member.Follow;
 import com.jourgeois.backend.domain.member.Member;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

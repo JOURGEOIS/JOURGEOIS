@@ -3,8 +3,10 @@ package com.jourgeois.backend.service;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
+import com.jourgeois.backend.domain.member.Follow;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.auth.RefreshToken;
+import com.jourgeois.backend.repository.FollowRepository;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -29,6 +32,8 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+    private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final MyUserDetailsService myUserDetailsService;
@@ -37,13 +42,14 @@ public class MemberService {
     private final String s3Url;
     @Autowired
     MemberService(MemberRepository memberRepository,
-                  PasswordEncoder passwordEncoder,
+                  FollowRepository followRepository, PasswordEncoder passwordEncoder,
                   JwtTokenProvider jwtTokenProvider,
                   MyUserDetailsService myUserDetailsService,
                   RefreshTokenRepository refreshTokenRepository,
                   S3Util s3Util,
                   @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.memberRepository = memberRepository;
+        this.followRepository = followRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.myUserDetailsService = myUserDetailsService;
@@ -79,7 +85,7 @@ public class MemberService {
                                             if(!member.getProfileImg().equals("default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
+                                            member.setProfileImg(s3Url + s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
@@ -236,5 +242,23 @@ public class MemberService {
         Member member = memberRepository.findById(profileDto.getUid()).get();
         String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
         return url;
+    }
+
+    public boolean followUser(Map<String, Long> followRequest) throws IllegalArgumentException, Exception{
+        Long from = followRequest.get("from");
+        Long to = followRequest.get("to");
+
+        Follow follow = new Follow();
+
+        Member follower = new Member();
+        follower.setUid(from);
+        Member followee = new Member();
+        followee.setUid(to);
+
+        follow.setFrom(follower);
+        follow.setTo(followee);
+        followRepository.save(follow);
+
+        return true;
     }
 }

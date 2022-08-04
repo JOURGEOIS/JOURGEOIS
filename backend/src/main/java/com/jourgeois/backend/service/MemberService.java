@@ -13,6 +13,7 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
+import com.jourgeois.backend.socialLogin.GoogleLoginDTO;
 import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -41,9 +43,10 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final S3Util s3Util;
     private final String s3Url;
+
+
     @Autowired
-    MemberService(MemberRepository memberRepository,
-                  FollowRepository followRepository, PasswordEncoder passwordEncoder,
+    MemberService(MemberRepository memberRepository, FollowRepository followRepository, PasswordEncoder passwordEncoder,
                   JwtTokenProvider jwtTokenProvider,
                   MyUserDetailsService myUserDetailsService,
                   RefreshTokenRepository refreshTokenRepository,
@@ -130,6 +133,47 @@ public class MemberService {
         }
         return userDetails;
     }
+
+    public UserDetails loginUser(GoogleLoginDTO googleLoginDTO){
+        System.out.println("GOOGLE EMAIL : " + googleLoginDTO.getEmail());
+        Member member = memberRepository.findByEmail(googleLoginDTO.getEmail()).orElse(null) ;
+        UserDetails userDetails = null;
+
+        // 찾는 멤버가 없으면 리턴
+        if(member == null){
+            member = signUpSocialUser(googleLoginDTO);
+        }
+
+        userDetails = myUserDetailsService.loadUserByUsername(member.getUid().toString());
+
+        System.out.println("member.getPassword() : "+member.getPassword());
+        System.out.println("googleLoginDTO.getSub() : "+googleLoginDTO.getSub());
+        // DB에 있는 sub(password)와 들어온 sub와 일치하는 지 확인
+        if(member.getPassword().equals(googleLoginDTO.getSub())){
+            return userDetails;
+        }
+        else {
+            throw new BadCredentialsException("uid : " + userDetails.getUsername() + " / Invalid social login");
+        }
+    }
+
+    public Member signUpSocialUser(GoogleLoginDTO gDTO){
+        String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now());
+
+        Member m = Member.builder().email(gDTO.getEmail()).password(gDTO.getSub()).name(gDTO.getName())
+                .nickname("유저"+gDTO.getSub().substring(3,10) + date).build();
+        try{
+            memberRepository.save(m);
+            memberRepository.flush();
+
+            return memberRepository.findByEmail(gDTO.getEmail()).orElseThrow(()-> new Exception("signUpSocialUser"));
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     @Transactional
     public TokenResponseDTO createToken(UserDetails userDetails) {
         Authentication authentication =  new UsernamePasswordAuthenticationToken(

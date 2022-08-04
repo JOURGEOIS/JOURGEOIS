@@ -24,6 +24,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -137,7 +138,7 @@ public class MemberController {
     }
 
     @GetMapping(value = "/login/google/redirect")
-    public ResponseEntity<GoogleLoginDTO> redirectGoogleLogin(@RequestParam(value = "code") String authCode) {
+    public ResponseEntity<?> redirectGoogleLogin(@RequestParam(value = "code") String authCode) {
         // HTTP 통신을 위해 RestTemplate 활용
         RestTemplate restTemplate = new RestTemplate();
         GoogleLoginRequest requestParams = GoogleLoginRequest.builder()
@@ -170,10 +171,17 @@ public class MemberController {
             String resultJson = restTemplate.getForObject(requestUrl, String.class);
 
             if(resultJson != null) {
-                GoogleLoginDTO userInfoDto = objectMapper.readValue(resultJson, new TypeReference<GoogleLoginDTO>() {});
+                GoogleLoginDTO googleLoginInfo = objectMapper.readValue(resultJson, new TypeReference<GoogleLoginDTO>() {});
+                googleLoginInfo.setEmail("google/"+googleLoginInfo.getEmail());
 
 
-                return ResponseEntity.ok().body(userInfoDto);
+                Map<String, Object> data = new HashMap<>();
+                UserDetails userDetails = memberService.loginUser(googleLoginInfo);
+
+                data.put("token", memberService.createToken(userDetails));
+                data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+
+                return ResponseEntity.ok().body(data);
             }
             else {
                 throw new Exception("Google OAuth failed!");

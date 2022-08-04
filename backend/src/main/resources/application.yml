@@ -10,8 +10,8 @@ spring:
 
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
-    username: root
-    password: nh0455k8613!
+#    username: root
+#    password: nh0455k8613!
 
     hikari:
       auto-commit: false
@@ -32,9 +32,6 @@ spring:
 #    host: localhost
 #    password: 1q2w3e4r!@#
     port: 6379
-
-  profiles:
-    include: oauth
 
 #cloud:
 #  aws:

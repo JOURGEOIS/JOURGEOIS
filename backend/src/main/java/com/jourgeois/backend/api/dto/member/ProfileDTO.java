@@ -5,10 +5,12 @@ import com.jourgeois.backend.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 //@Builder
 @Getter @Setter
+@ToString
 public class ProfileDTO {
     private Long uid;
     private String email;
@@ -27,5 +29,9 @@ public class ProfileDTO {
         this.introduce = introduce;
     }
 
-
+    public ProfileDTO(String email, String name, String profileImg) {
+        this.email = email;
+        this.name = name;
+        this.profileImg = profileImg;
+    }
 }

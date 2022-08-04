@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -46,10 +47,13 @@ public class Member {
     private List<PostBookmark> postBookmarks;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<CocktailComment> cocktailReviews;
+    private List<CocktailComment> cocktailComments;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<PostReview> postReviews;
+
+    @Transient
+    private Date date = new Date();
 
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
@@ -60,6 +64,14 @@ public class Member {
         this.birthday = birthday;
         this.profileImg = profileImg;
         this.introduce = introduce;
+    }
+
+    @Builder
+    public Member(String email, String password, String name, String profileImg) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.profileImg = profileImg;
     }
 
     @Builder
@@ -105,7 +117,7 @@ public class Member {
                 ", posts=" + posts +
                 ", cocktailBookmarks=" + cocktailBookmarks +
                 ", postBookmarks=" + postBookmarks +
-                ", cocktailReviews=" + cocktailReviews +
+                ", cocktailComments=" + cocktailComments +
                 ", postReviews=" + postReviews +
                 '}';
     }

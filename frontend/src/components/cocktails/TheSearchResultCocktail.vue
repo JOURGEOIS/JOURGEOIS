@@ -1,6 +1,9 @@
 <template class="the-search-result-cocktail">
+  <div class="no-content" v-if="!searchCocktailAlls.length">
+    검색 결과가 없습니다
+  </div>
   <the-list-item-cocktail
-    v-for="(item, idx) in searchCocktails"
+    v-for="(item, idx) in searchCocktailAlls"
     :key="idx"
     :data="item"
     @click="clickCocktail(item)"
@@ -16,8 +19,8 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-const searchCocktails = computed(() => {
-  return store.getters["searchResult/getSearchCocktails"];
+const searchCocktailAlls = computed(() => {
+  return store.getters["searchResult/getSearchCocktailAlls"];
 });
 
 interface Cocktail {
@@ -33,4 +36,10 @@ const clickCocktail = (item: Cocktail) => {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.no-content {
+  text-align: center;
+  padding: 30px 0;
+  @include font-size-sub(15px);
+}
+</style>

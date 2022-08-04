@@ -3,11 +3,7 @@
     <form @submit.prevent="searchComplete">
       <div class="cocktail-search-container">
         <!-- 검색 창 섹션 -->
-        <the-cocktail-search-header
-          @clickBackIcon="clickBackIcon"
-          @clickCloseIcon="clickCloseIcon"
-        >
-        </the-cocktail-search-header>
+        <the-cocktail-search-header> </the-cocktail-search-header>
         <!-- 처음 보이는 공간 -->
         <the-cocktail-search-init
           v-if="!searchInputValue"
@@ -19,6 +15,7 @@
         <!-- 검색 버튼 구역 -->
         <the-cocktail-search-button-section
           v-if="!searchInputValue"
+          class="whole-search-button"
         ></the-cocktail-search-button-section>
       </div>
     </form>
@@ -81,11 +78,6 @@ const filterStatus = computed(
   () => store.getters["cocktailSearch/getFilterStatus"]
 );
 
-// 뒤로가기 아이콘 누르기
-const clickBackIcon = () => {
-  router.push({ name: "TheHomeView" });
-};
-
 // 삭제 아이콘 누르기
 const clickCloseIcon = () => {
   store.dispatch("cocktailSearch/setSearchInputValue", "");
@@ -105,6 +97,22 @@ const clickCloseIcon = () => {
     justify-content: space-between;
     width: 100%;
     margin-top: 1rem;
+
+    .whole-search-button {
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 90%;
+      bottom: 100px;
+
+      @media #{$tablet} {
+        width: 50%;
+      }
+
+      @media #{$pc} {
+        width: 60%;
+      }
+    }
   }
 }
 

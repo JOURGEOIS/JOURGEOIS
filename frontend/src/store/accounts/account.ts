@@ -143,8 +143,8 @@ export const account: Module<AccountState, RootState> = {
       axios({
         url: api.accounts.logout(),
         method: "get",
-        params: {
-          email: rootGetters["personalInfo/getUserInfoId"],
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
       })
         .then(() => {
@@ -156,8 +156,17 @@ export const account: Module<AccountState, RootState> = {
         })
         .catch((error) => {
           // 실패 시, 홈으로 이동 후 에러 모달 on
-          clickHome();
-          commit("SET_FAIL_MODAL", true);
+          if (error.response.status !== 401) {
+            clickHome();
+            commit("SET_FAIL_MODAL", true);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "account/logout",
+              params: {},
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
 
@@ -171,7 +180,6 @@ export const account: Module<AccountState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          email: rootGetters["personalInfo/getUserInfoId"],
           passwordOld: pwInputValue.value,
         },
       })

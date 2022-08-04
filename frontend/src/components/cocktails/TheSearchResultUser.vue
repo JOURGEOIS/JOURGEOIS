@@ -1,4 +1,5 @@
 <template class="the-search-result-user">
+  <div class="no-content" v-if="!searchUsers.length">검색 결과가 없습니다</div>
   <the-list-item-user
     v-for="(item, idx) in searchUsers"
     :key="idx"
@@ -19,4 +20,15 @@ const searchUsers = computed(() => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.no-content {
+  text-align: center;
+  padding: 30px 0;
+  @include font-size-sub(15px);
+}
+
+.big-icon {
+  padding: 0;
+  @include font-size-sub(30px);
+}
+</style>

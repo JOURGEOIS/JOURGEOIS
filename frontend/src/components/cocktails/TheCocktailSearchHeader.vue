@@ -22,7 +22,10 @@
 <script setup lang="ts">
 import TheSearchInput from "@/components/cocktails/TheSearchInput.vue";
 import { reactive, ref, computed, watch, watchEffect } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
 const emit = defineEmits<{
@@ -32,7 +35,25 @@ const emit = defineEmits<{
 }>();
 
 const clickBackIconInner = () => {
-  emit("clickBackIcon");
+  // 검색 view 인 경우
+  if (route.name == "TheCocktailSearchView") {
+    // 검색어가 있는 경우
+    if (store.getters["cocktailSearch/getSearchInputValue"]) {
+      store.dispatch("cocktailSearch/setSearchInputValue", "");
+      searchInputValue.value = "";
+    }
+    // 검색어가 없는 경우
+    else {
+      router.push({ name: "TheHomeView" });
+    }
+  }
+  // 검색 view가 아닌 경우
+  else {
+    router.push({
+      name: "TheCocktailSearchView",
+      params: { searchValue: searchInputValue.value },
+    });
+  }
 };
 
 // vuex의 저장 입력값 초기에 넣어주기
@@ -62,7 +83,8 @@ const clickFilterIcon = () => {
 // x 버튼 클릭
 const clickCloseIconInner = () => {
   searchInputValue.value = "";
-  emit("clickCloseIcon");
+  router.push({ name: "TheCocktailSearchView" });
+  // emit("clickCloseIcon");
 };
 
 // input 버튼 누르면 emit

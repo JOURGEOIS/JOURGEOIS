@@ -30,6 +30,8 @@ export interface SearchResultState {
   searchUserPage: number;
   searchCocktails: Cocktail[];
   searchCocktailPage: number;
+  searchCocktailAlls: Cocktail[];
+  searchCocktailAllPage: number;
 
   // * 전체 검색 결과
   wholeCocktails: Cocktail[];
@@ -51,6 +53,8 @@ export const searchResult: Module<SearchResultState, RootState> = {
     searchUserPage: 0,
     searchCocktails: [],
     searchCocktailPage: 0,
+    searchCocktailAlls: [],
+    searchCocktailAllPage: 0,
 
     // * 전체 검색 결과
     wholeCocktails: [],
@@ -68,9 +72,12 @@ export const searchResult: Module<SearchResultState, RootState> = {
     // * 검색어 유저 정보
     getSearchUsers: (state) => state.searchUsers,
     getSearchUserPage: (state) => state.searchUserPage,
-    // * 검색어 칵테일 정보
+    // * 검색어 자동완성 재료 칵테일 정보
     getSearchCocktails: (state) => state.searchCocktails,
     getSearchCocktailPage: (state) => state.searchCocktailPage,
+    // * 검색어 칵테일 정보
+    getSearchCocktailAlls: (state) => state.searchCocktailAlls,
+    getSearchCocktailAllPage: (state) => state.searchCocktailAllPage,
     // * 전체 칵테일 정보
     getWholeCocktails: (state) => state.wholeCocktails,
     getWholeCocktailPage: (state) => state.wholeCocktailPage,
@@ -98,18 +105,28 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 검색어 칵테일 정보 저장
     SET_SEARCH_COCKTAILS: (state, searchCocktails: Cocktail[]) => {
-      searchCocktails.forEach((user) => {
-        state.searchCocktails.push(user);
+      searchCocktails.forEach((cocktail) => {
+        state.searchCocktails.push(cocktail);
       });
     },
     SET_SEARCH_COCKTAIL_PAGE: (state, value) => {
       state.searchCocktailPage = value;
     },
 
+    // * 검색어 칵테일 정보 저장
+    SET_SEARCH_COCKTAIL_ALLS: (state, searchCocktailAlls: Cocktail[]) => {
+      searchCocktailAlls.forEach((cocktail) => {
+        state.searchCocktailAlls.push(cocktail);
+      });
+    },
+    SET_SEARCH_COCKTAIL_ALL_PAGE: (state, value) => {
+      state.searchCocktailAllPage = value;
+    },
+
     // * 검색어 결과 삭제
     REMOVE_SEARCH_RESULT: (state) => {
       state.searchUsers = [];
-      state.searchCocktails = [];
+      state.searchCocktailAlls = [];
     },
 
     // * 전체 칵테일 정보 저장
@@ -167,15 +184,20 @@ export const searchResult: Module<SearchResultState, RootState> = {
         });
     },
 
-    // * 검색어 Cocktail 검색결과
-    setSearchCocktail: ({ commit, state, rootGetters }, keyword: string) => {
+    // * 검색어 자동완성 재료 Cocktail 검색결과
+    setSearchCocktail: (
+      { commit, state, rootGetters },
+      ingredientId: number
+    ) => {
+      // 오류 처리
+      if (typeof ingredientId !== "number") return;
       const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
-        url: api.lookups.cocktailall(),
+        url: api.lookups.cocktail(),
         method: "GET",
         headers: { email },
         params: {
-          keyword,
+          id: ingredientId,
           page: state.searchCocktailPage,
         },
       })
@@ -183,6 +205,31 @@ export const searchResult: Module<SearchResultState, RootState> = {
           commit("SET_SEARCH_COCKTAIL_PAGE", state.searchCocktailPage + 1);
           // 최대 10개 칵테일 정보 리스트에 추가
           commit("SET_SEARCH_COCKTAILS", res.data);
+        })
+        .catch((err) => {
+          console.error(err.response);
+        });
+    },
+
+    // * 검색어 Cocktail 검색결과
+    setSearchCocktailAll: ({ commit, state, rootGetters }, keyword: string) => {
+      const email = rootGetters["personalInfo/getUserInfoId"];
+      axios({
+        url: api.lookups.cocktailall(),
+        method: "GET",
+        headers: { email },
+        params: {
+          keyword,
+          page: state.searchCocktailAllPage,
+        },
+      })
+        .then((res) => {
+          commit(
+            "SET_SEARCH_COCKTAIL_ALL_PAGE",
+            state.searchCocktailAllPage + 1
+          );
+          // 최대 10개 칵테일 정보 리스트에 추가
+          commit("SET_SEARCH_COCKTAIL_ALLS", res.data);
         })
         .catch((err) => {
           console.error(err.response);

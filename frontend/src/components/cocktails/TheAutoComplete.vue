@@ -92,11 +92,22 @@ const clickCocktail = (item: autoCompleteWord) => {
   router.push({ name: "TheCocktailDescView", params: { cocktailId: item.id } });
 };
 
+// 재료 자동완성 클릭 시
 const clickIngredient = (item: autoCompleteWord) => {
-  alert(item.nameKr);
-  // router.push({ name: "TheHomeView", params: { } });
+  // 한글 재료명을 입력값으로 저장
+  store.dispatch("cocktailSearch/setSearchInputValue", item.nameKr);
+  // 입력값 state를 최근 검색어에 추가
+  store.dispatch("cocktailSearch/setRecentSearchWords");
+  // 재료 id로 재료를 포함한 칵테일 리스트 저장
+  store.dispatch("searchResult/setSearchCocktail", item.id);
+  // 칵테일 리스트 view로 이동
+  router.push({
+    name: "TheSearchCocktailByIngredientView",
+    params: { ingredientId: item.id },
+  });
 };
 
+// 계정 자동완성 클릭 시
 const clickUser = (item: autoCompleteWord) => {
   alert(item.nameKr);
   // router.push({ name: "TheProfileView", params: { userId: item.id } });

@@ -14,7 +14,7 @@ export default {
     signUpCheckEmail: () => HOST + ACCOUNTS + "signup/checkEmail",
     signUpCheckNickname: () => HOST + ACCOUNTS + "signup/checkNickname",
     login: () => HOST + ACCOUNTS + "login",
-    logout: () => HOST + ACCOUNTS + "logout",
+    logout: () => HOST + ACCOUNTS + "auth/logout",
     forgotPassword: () => HOST + ACCOUNTS + "password",
     changePassword: () => HOST + ACCOUNTS + "auth/password",
     signOut: () => HOST + ACCOUNTS + "auth/signOut",
@@ -31,6 +31,7 @@ export default {
   },
 
   lookups: {
+    cocktail: () => HOST + LOOKUP + "cocktail",
     cocktailall: () => HOST + LOOKUP + "cocktailall",
     wholeCocktail: () => HOST + LOOKUP + "cocktailwhole",
     user: () => HOST + LOOKUP + "user",

@@ -3,7 +3,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import api from "../../api/api";
 import axios from "axios";
-import { clickHome } from "../../functions/clickEvent";
+import { clickHome, clickLogin } from "../../functions/clickEvent";
 
 // Signup의 State 타입을 설정한다.
 export interface PasswordState {
@@ -101,10 +101,15 @@ export const password: Module<PasswordState, RootState> = {
           userName,
         },
       })
-        .then(() => {
+        .then((response) => {
           // 다음 페이지로 이동, 이메일 정보 저장
-          commit("SET_FORGOT_PW_CURRENT_TAB", 1);
-          commit("SET_FORGOT_PW_EMAIL", email);
+          if (response.data.success) {
+            commit("SET_FORGOT_PW_CURRENT_TAB", 1);
+            commit("SET_FORGOT_PW_EMAIL", email);
+          } else {
+            // 에러 메시지 하단에 배치
+            commit("SET_FORGOT_PW_ERROR_MSG", true);
+          }
         })
         .catch(() => {
           // 에러 메시지 하단에 배치
@@ -122,10 +127,16 @@ export const password: Module<PasswordState, RootState> = {
           email: getters.getForgotPwEmail,
         },
       })
-        .then(() => {
-          // 버튼 섹션 생성, 로딩창 끄기
-          btnStatus.value = true;
-          loadingStatus.value = false;
+        .then((response) => {
+          if (response.data.success) {
+            // 버튼 섹션 생성, 로딩창 끄기
+            btnStatus.value = true;
+            loadingStatus.value = false;
+          } else {
+            // 에러메시지 하단에 배치
+            authFailError.value = true;
+            loadingStatus.value = false;
+          }
         })
         .catch(() => {
           // 에러메시지 하단에 배치
@@ -143,9 +154,14 @@ export const password: Module<PasswordState, RootState> = {
           email: getters.getForgotPwEmail,
         },
       })
-        .then(() => {
+        .then((response) => {
           // 다음 페이지로 이동
-          commit("SET_FORGOT_PW_CURRENT_TAB", 2);
+          if (response.data.success) {
+            commit("SET_FORGOT_PW_CURRENT_TAB", 2);
+          } else {
+            // 에러 메시지 하단에 배치
+            errorStatus.value = true;
+          }
         })
         .catch(() => {
           // 에러 메시지 하단에 배치
@@ -167,7 +183,12 @@ export const password: Module<PasswordState, RootState> = {
       })
         .then((response) => {
           // 홈으로 이동
-          clickHome();
+          if (response.data.success) {
+            clickLogin();
+          } else {
+            // 에러 메시지 하단에 배치
+            failStatus.value = true;
+          }
         })
         .catch(() => {
           // 에러 메시지 하단에 배치
@@ -185,12 +206,15 @@ export const password: Module<PasswordState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          email: rootGetters["personalInfo/getUserInfoId"],
           passwordOld: pwInputValue.value,
         },
       })
-        .then(() => {
-          commit("SET_CHANGE_PW_CURRENT_TAB", 1);
+        .then((response) => {
+          if (response.data.success) {
+            commit("SET_CHANGE_PW_CURRENT_TAB", 1);
+          } else {
+            failStatus.value = true;
+          }
         })
         .catch((error) => {
           console.error(error.response.status);
@@ -216,14 +240,17 @@ export const password: Module<PasswordState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          email: rootGetters["personalInfo/getUserInfoId"],
           passwordNew,
           passwordConfirm,
         },
       })
-        .then(() => {
-          clickHome();
-          commit("SET_CHANGE_PW_POPUP", true);
+        .then((response) => {
+          if (response.data.success) {
+            clickHome();
+            commit("SET_CHANGE_PW_POPUP", true);
+          } else {
+            failStatus.value = true;
+          }
         })
         .catch((error) => {
           if (error.response.status !== 401) {

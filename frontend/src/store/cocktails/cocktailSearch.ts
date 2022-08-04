@@ -273,6 +273,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
         },
       })
         .then((response) => {
+          console.log(response);
           commit("SET_SEARCH_RESULT_CNT", response.data);
         })
         .catch((error) => {
@@ -339,6 +340,13 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
       const data = getters["getSearchFilterData"];
       const jsonData = JSON.stringify(data);
       localStorage.setItem("searchFilter", jsonData);
+    },
+
+    // 필터 재료 리셋
+    resetSearchFilterIngredients: ({ getters, commit }) => {
+      const data = getters["getSearchFilterData"];
+      data.materials = [];
+      commit("SET_SEARCH_FILTER_DATA", data);
     },
   },
 };

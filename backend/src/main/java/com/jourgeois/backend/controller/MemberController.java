@@ -194,6 +194,23 @@ public class MemberController {
         return ResponseEntity.badRequest().body(null);
     }
 
+    @GetMapping(value = "/login/kakao")
+    public ResponseEntity<?> moveKakaoInitUrl() {
+        String authUrl = configUtils.googleInitUrl();
+        URI redirectUri = null;
+        try {
+            redirectUri = new URI(authUrl);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(redirectUri);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+
     @GetMapping("/auth/logout")
     public HttpStatus logout(HttpServletRequest  request){
         memberService.logout(Long.parseLong((String) request.getAttribute("uid")));

@@ -1,5 +1,7 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.member.FollowerDTO;
+import com.jourgeois.backend.api.dto.member.FollowerVO;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
@@ -15,6 +17,7 @@ import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,9 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MemberService {
@@ -82,7 +83,7 @@ public class MemberService {
                                     member.setNickname(data.getNickname());
                                     try{
                                         if(data.getProfileLink()!=null && !data.getProfileLink().isEmpty()){
-                                            if(!member.getProfileImg().equals("default/1.png")) {
+                                            if(!member.getProfileImg().equals("profile/default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
                                             member.setProfileImg(s3Url + s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
@@ -156,7 +157,7 @@ public class MemberService {
     public ProfileDTO findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
         ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
-                member.getNickname(), member.getProfileImg(), member.getIntroduce());
+                member.getNickname(), s3Url + member.getProfileImg(), member.getIntroduce());
         return p;
 
     }
@@ -260,5 +261,41 @@ public class MemberService {
         followRepository.save(follow);
 
         return true;
+    }
+
+    public List<FollowerDTO> getFollowerAll(Map<String, String> request, Pageable pageable) throws NumberFormatException{
+        String uid = request.get("uid");
+        List<FollowerVO> followers = followRepository.getFollwerAll(Long.parseLong(uid), pageable);
+
+        List<FollowerDTO> followersResponse = new ArrayList<>();
+
+        followers.forEach((follower) -> {
+            FollowerDTO followerDTO = FollowerDTO.builder()
+                    .isFollowed(follower.getIsFollowed())
+                    .nickname(follower.getNickname())
+                    .uid(follower.getUid())
+                    .profileImg(s3Url + follower.getProfileImg())
+                    .build();
+            followersResponse.add(followerDTO);
+        });
+        return followersResponse;
+    }
+
+    public Object getFolloweeAll(Map<String, String> request, Pageable pageable) {
+        String uid = request.get("uid");
+        List<FollowerVO> followers = followRepository.getFollweeAll(Long.parseLong(uid), pageable);
+
+        List<FollowerDTO> followeesResponse = new ArrayList<>();
+
+        followers.forEach((follower) -> {
+            FollowerDTO followerDTO = FollowerDTO.builder()
+                    .isFollowed(follower.getIsFollowed())
+                    .nickname(follower.getNickname())
+                    .uid(follower.getUid())
+                    .profileImg(s3Url + follower.getProfileImg())
+                    .build();
+            followeesResponse.add(followerDTO);
+        });
+        return followeesResponse;
     }
 }

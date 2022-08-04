@@ -7,6 +7,7 @@ import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
 
 import com.jourgeois.backend.api.dto.cocktail.CocktailDTO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.cocktail.CocktailBookmarkId;
 import com.jourgeois.backend.domain.cocktail.Material;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.service.CocktailService;
@@ -39,12 +40,10 @@ public class CocktailController {
     public ResponseEntity readCocktail(@RequestHeader(value = "uid", defaultValue = "0") Long uid, @RequestParam(value = "id") Long id) {
         try {
             CocktailDTO cocktail = cocktailService.readCocktail(id);
+            cocktail.setCount(cocktailService.countCocktailBookmark(new Cocktail(id)));
             if (uid != 0) {
-                CocktailBookmarkDTO df = CocktailBookmarkDTO.builder()
-                        .member(new Member(uid))
-                        .cocktail(new Cocktail(id)).build();
-                cocktail.setCount(cocktailService.countCocktailBookmark(new Cocktail(id)));
-                cocktail.setStatus(cocktailService.checkUserBookmark(df) ? 1L : 0L);
+                CocktailBookmarkId key = new CocktailBookmarkId(uid, id);
+                cocktail.setStatus(cocktailService.checkUserBookmark(key) ? 1L : 0L);
             }
             return ResponseEntity.ok().body(cocktail);
         } catch (Exception e) {
@@ -166,12 +165,9 @@ public class CocktailController {
     // 원본 칵테일 북마크 (token 필요) => uid로 전체 바꿀 때 바꾼 후 적용 필요
     @PostMapping(value = "/bookmark")
     public ResponseEntity pushCocktailBookmark(@RequestBody Map<String, Long> bookmark){
+        Map<String, Long> data = new HashMap<>();
         if(memberService.checkUserUid(bookmark.get("uid")) && cocktailService.checkCocktailUid(bookmark.get("c_id"))){
-            CocktailBookmarkDTO df = CocktailBookmarkDTO.builder()
-                    .member(new Member(bookmark.get("uid")))
-                    .cocktail(new Cocktail(bookmark.get("c_id"))).build();
-            Map<String, Long> data = new HashMap<>();
-            if(cocktailService.pushBookmark(df)){
+            if(cocktailService.pushBookmark(bookmark)){
                 data.put("status", 1L);
             }else{
                 data.put("status", 0L);
@@ -181,7 +177,23 @@ public class CocktailController {
         }else{
             return new ResponseEntity<>("fail", HttpStatus.NOT_ACCEPTABLE);
         }
+    }
 
-
+    // uid와 칵테일 id로
+    @GetMapping(value="/bookmakrlist")
+    public ResponseEntity getBookmarkList(@RequestParam(value = "uid") Long uid, @RequestParam(value = "c_id") Long c_id,
+                                @PageableDefault(size=10, page=0) Pageable pageable){
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(cocktailService.getBookmarkList(uid, c_id, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "잘못된 인풋");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

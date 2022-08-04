@@ -29,7 +29,7 @@ public class Member {
     private String name;
     private String nickname;
     private String birthday;
-    private String profileImg ="default/1.png";
+    private String profileImg ="profile/default/1.png";
 
     private String introduce;
     @CreatedDate
@@ -39,7 +39,7 @@ public class Member {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY)
     private List<CocktailBookmark> cocktailBookmarks;
 
     @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY)

@@ -193,7 +193,7 @@ public class PostController {
 
     @GetMapping("/review")
     public ResponseEntity getReviewAll(@RequestParam(value = "p_id") Long p_id,
-                                        @RequestParam(value = "asc") Boolean asc,
+                                        @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                         @PageableDefault(size=10, page = 0) Pageable pageable){
         System.out.println("p_id: " + p_id);
 

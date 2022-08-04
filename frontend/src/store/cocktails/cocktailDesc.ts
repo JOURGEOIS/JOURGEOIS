@@ -4,7 +4,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 
 export interface cocktailData {
-  [key: string]: string | string[];
+  [key: string]: string | string[] | number[] | number;
 }
 
 export interface CocktailDescState {
@@ -50,9 +50,12 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     },
   },
   actions: {
+    // 탭 변경
     changeCurrentTab: ({ commit }, value: number) => {
       commit("SET_CURRENT_TAB", value);
     },
+
+    // 칵테일 정보 불러오기
     getCocktailDb: ({ commit }, id: number) => {
       axios({
         url: api.cocktail.getCocktailData(),

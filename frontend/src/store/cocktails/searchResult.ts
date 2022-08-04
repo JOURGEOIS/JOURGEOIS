@@ -2,7 +2,6 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
-import { cocktailSearch } from "./cocktailSearch";
 
 export interface User {
   email: string | null;

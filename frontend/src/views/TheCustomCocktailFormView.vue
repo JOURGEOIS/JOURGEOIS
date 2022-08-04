@@ -21,6 +21,18 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCustomCocktailForm from "@/components/cocktails/TheCustomCocktailForm.vue";
+import { useStore } from "vuex";
+import { onBeforeMount } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const store = useStore();
+
+onBeforeMount(() => {
+  store.dispatch(
+    "customCocktail/getOriginalCocktailData",
+    route.params.cocktailId
+  );
+});
 </script>
 
 <style scoped lang="scss">

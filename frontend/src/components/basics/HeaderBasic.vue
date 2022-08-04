@@ -37,7 +37,7 @@ import { computed } from "vue";
 const props = defineProps<{
   prev: boolean;
   success: boolean;
-  formId: string;
+  formId?: string;
 }>();
 
 const emit = defineEmits<{

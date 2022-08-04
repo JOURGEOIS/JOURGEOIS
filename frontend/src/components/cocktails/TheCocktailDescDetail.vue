@@ -58,7 +58,7 @@
       <div>
         <span class="material-icons-outlined"> bubble_chart </span>
         <p>도수</p>
-        <p>{{ cocktailData.alcohol ? cocktailData.alcohol : "0도" }}</p>
+        <p>{{ cocktailData.alcohol ? cocktailData.alcohol + "도" : "0도" }}</p>
       </div>
     </div>
   </div>

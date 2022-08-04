@@ -5,7 +5,7 @@ import { clickHome } from "../../functions/clickEvent";
 import { RootState } from "../index";
 
 export interface userInfo {
-  [props: string]: string;
+  [props: string]: string | number;
 }
 
 export interface PersonalInfoState {
@@ -21,7 +21,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
   state: {
     accessToken: localStorage.getItem("accessToken") || "",
     refreshToken: localStorage.getItem("refreshToken") || "",
-    userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}") || {},
+    userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}"),
     refreshFailPopupStatus: false,
   },
 
@@ -78,6 +78,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       commit("SET_REFRESH_TOKEN", "");
     },
     saveUserInfo: ({ commit }, data: object) => {
+      console.log(data);
       const jsonUserInfo = JSON.stringify(data);
       localStorage.setItem("userInfo", jsonUserInfo);
       commit("SET_USER_INFO", data);
@@ -95,6 +96,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     toggleRefreshFailPopup: ({ commit }, value) => {
       commit("SET_REFRESH_FAIL", value);
     },
+    // 모듈화된 리프레시 토큰 요청 함수
     requestRefreshToken: ({ getters, dispatch, commit }, obj) => {
       const { func, params } = obj;
       axios({
@@ -120,6 +122,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           commit("SET_REFRESH_FAIL", true);
         });
     },
+    // 이미지 저장
     changeProfileImage: ({ getters, dispatch }, params) => {
       const { imageFile, profileImage } = params;
       axios({
@@ -130,7 +133,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           "Content-Type": "multipart/form-data",
         },
         data: {
-          email: getters.getUserInfoId,
           profileLink: imageFile,
         },
       })
@@ -151,6 +153,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           }
         });
     },
+    // 프로필 변경
     submitChangeUserInfoForm: ({ dispatch, getters }, params) => {
       const { name, nickname, profileLink, introduce } = params;
       axios({
@@ -161,7 +164,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           "Content-Type": "multipart/form-data",
         },
         data: {
-          email: getters.getUserInfoId,
           name,
           nickname,
           profileLink,

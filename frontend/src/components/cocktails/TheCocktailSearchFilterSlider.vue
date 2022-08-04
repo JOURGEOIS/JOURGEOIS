@@ -41,7 +41,7 @@
     <!--슬라이더 범위  -->
     <div class="cocktail-search-filter-slider-desc">
       <p>0도</p>
-      <p>30도</p>
+      <p>30도 이상</p>
     </div>
   </div>
 </template>
@@ -59,9 +59,11 @@ const sliderLeftValue = ref(sliderValue.value[0]);
 const sliderRightValue = ref(sliderValue.value[1]);
 
 // 슬라이더 값이 변경될 때, 값을 저장한다. (디바운스 사용하여 요청을 적당히...ㅎㅎ)
-let debounce: any;
+let debounce: ReturnType<typeof setTimeout>;
 watch([sliderLeftValue, sliderRightValue], () => {
-  clearTimeout(debounce);
+  if (debounce) {
+    clearTimeout(debounce);
+  }
   debounce = setTimeout(
     () =>
       store.dispatch("cocktailSearch/changeFilterAlcoholStrength", [
@@ -105,8 +107,13 @@ const sliderRight = computed(() => {
 
 // 왼쪽 Slider Value값이 변할 때 실행된다.
 watch(sliderLeftValue, () => {
+  //맥시멈
+  if (sliderLeftValue.value > 27) {
+    sliderLeftValue.value = 27;
+  }
+
   // 범위 제한
-  if (sliderRightValue.value <= sliderLeftValue.value) {
+  if (sliderRightValue.value <= sliderLeftValue.value + 3) {
     sliderLeftValue.value = sliderRightValue.value - 3;
   }
 
@@ -120,8 +127,13 @@ watch(sliderLeftValue, () => {
 
 // 오른쪽 Slider Value값이 변할 때 실행된다.
 watch(sliderRightValue, () => {
+  // 미니멈
+  if (sliderRightValue.value < 3) {
+    sliderRightValue.value = 3;
+  }
+
   // 범위 제한
-  if (sliderRightValue.value <= sliderLeftValue.value) {
+  if (sliderRightValue.value - 3 <= sliderLeftValue.value) {
     sliderRightValue.value = sliderLeftValue.value + 3;
   }
 

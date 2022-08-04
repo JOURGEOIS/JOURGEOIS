@@ -1,10 +1,12 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.ProfileDTO;
-import com.jourgeois.backend.api.dto.PasswordChangeForm;
-import com.jourgeois.backend.api.dto.TokenResponseDTO;
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
+import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
+import com.jourgeois.backend.domain.member.Follow;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.auth.RefreshToken;
+import com.jourgeois.backend.repository.FollowRepository;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -29,6 +32,8 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+    private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final MyUserDetailsService myUserDetailsService;
@@ -37,13 +42,14 @@ public class MemberService {
     private final String s3Url;
     @Autowired
     MemberService(MemberRepository memberRepository,
-                  PasswordEncoder passwordEncoder,
+                  FollowRepository followRepository, PasswordEncoder passwordEncoder,
                   JwtTokenProvider jwtTokenProvider,
                   MyUserDetailsService myUserDetailsService,
                   RefreshTokenRepository refreshTokenRepository,
                   S3Util s3Util,
                   @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.memberRepository = memberRepository;
+        this.followRepository = followRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.myUserDetailsService = myUserDetailsService;
@@ -66,10 +72,10 @@ public class MemberService {
 
     @Transactional
     public boolean changeProfile(ProfileDTO data){
-        memberRepository.findByNicknameAndEmailIsNot(data.getNickname(), data.getEmail())
+        memberRepository.findByNicknameAndUidIsNot(data.getNickname(), data.getUid())
                 .ifPresentOrElse(
                         (member -> {throw new IllegalArgumentException("닉네임 중복");}),
-                        ()->memberRepository.findByEmail(data.getEmail())
+                        ()->memberRepository.findById(data.getUid())
                                 .ifPresent(member -> {
                                     member.setName(data.getName());
                                     member.setIntroduce(data.getIntroduce());
@@ -79,7 +85,7 @@ public class MemberService {
                                             if(!member.getProfileImg().equals("default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
+                                            member.setProfileImg(s3Url + s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
@@ -113,35 +119,32 @@ public class MemberService {
         }
     }
 
-    @Transactional
-    public TokenResponseDTO login(String email, String password) {
-        // userId 확인
-        System.out.println("3333331231231231312");
-        UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
+    public UserDetails loginUser(String email, String password){
+        Member member = memberRepository.findByEmail(email).get();
+        UserDetails userDetails = myUserDetailsService.loadUserByUsername(member.getUid().toString());
 
-        System.out.println("111111111");
         // pw 확인
         if(!passwordEncoder.matches(password, userDetails.getPassword())){
             throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
         }
-
+        return userDetails;
+    }
+    @Transactional
+    public TokenResponseDTO createToken(UserDetails userDetails) {
         Authentication authentication =  new UsernamePasswordAuthenticationToken(
                 userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
 
-        System.out.println("222222222");
-
         // refresh token 발급 및 저장
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
-        RefreshToken token = RefreshToken.createToken(email, refreshToken);
+        RefreshToken token = RefreshToken.createToken(Long.valueOf(userDetails.getUsername()), refreshToken);
         System.out.println(refreshToken + " " + token);
+
         // 기존 토큰이 있으면 수정, 없으면 생성
-        refreshTokenRepository.findByEmail(email)
+        refreshTokenRepository.findByUid(Long.valueOf(userDetails.getUsername()))
                 .ifPresentOrElse(
                         (tokenEntity)->tokenEntity.changeToken(refreshToken),
-                        ()->refreshTokenRepository.save(RefreshToken.createToken(email, refreshToken))
+                        ()->refreshTokenRepository.save(RefreshToken.createToken(Long.valueOf(userDetails.getUsername()), refreshToken))
                 );
-
-        System.out.println("33333333333333333");
 
         return TokenResponseDTO.builder()
                 .accessToken("Bearer-"+jwtTokenProvider.createAccessToken(authentication))
@@ -150,21 +153,17 @@ public class MemberService {
     }
 
     @Transactional
-    public ProfileDTO findUserInfo(String userId){
-        Optional<Member> member = memberRepository.findByEmail(userId);
-        return ProfileDTO.builder()
-                .email(member.get().getEmail())
-                .name(member.get().getName())
-                .nickname(member.get().getNickname())
-                .introduce(member.get().getIntroduce())
-                .profileImg(s3Url+ member.get().getProfileImg())
-                .build();
+    public ProfileDTO findUserInfo(Long uid){
+        Member member = memberRepository.findById(uid).get();
+        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
+                member.getNickname(), member.getProfileImg(), member.getIntroduce());
+        return p;
 
     }
 
     @Transactional
-    public void logout(String email){
-        refreshTokenRepository.deleteByEmail(email);
+    public void logout(Long uid){
+        refreshTokenRepository.deleteByUid(uid);
         System.out.println("토큰 삭제 완료");
     }
 
@@ -178,10 +177,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void signOut(String email) throws NoSuchElementException{
-        Optional<Member> member = memberRepository.findByEmail(email);
+    public void signOut(Long uid, String email) throws NoSuchElementException{
+        Optional<Member> member = memberRepository.findByUidAndEmail(uid, email);
         member.ifPresentOrElse(selectMember -> {
-            refreshTokenRepository.deleteByEmail(selectMember.getEmail());
+            refreshTokenRepository.deleteByUid(selectMember.getUid());
             String userProfile = selectMember.getProfileImg();
             if(!userProfile.equals("default/1.png"))
                 s3Util.deleteFile(userProfile);
@@ -194,8 +193,8 @@ public class MemberService {
 
     @Transactional
     public void changePassword(PasswordChangeForm passwordChangeForm) throws IllegalArgumentException, NoSuchElementException {
-        String email = passwordChangeForm.getEmail();
-        memberRepository.findByEmail(email)
+        Long uid = passwordChangeForm.getUid();
+        memberRepository.findById(uid)
                 .ifPresentOrElse((member)-> {
                             if(passwordChangeForm.getPasswordNew().equals(passwordChangeForm.getPasswordConfirm())) {
                                 member.setPassword(passwordEncoder.encode(passwordChangeForm.getPasswordNew()));
@@ -209,10 +208,8 @@ public class MemberService {
 
     @Transactional
     public boolean checkPassword(PasswordChangeForm passwordChangeForm) throws NoSuchElementException {
-        String email = passwordChangeForm.getEmail();
-
-        Member member = memberRepository.findByEmail(email).get();
-
+        Long uid = passwordChangeForm.getUid();
+        Member member = memberRepository.findById(uid).get();
         return passwordEncoder.matches(passwordChangeForm.getPasswordOld(), member.getPassword());
     }
 
@@ -242,8 +239,26 @@ public class MemberService {
 
     @Transactional
     public String ProfileImageLocalUpload(ProfileDTO profileDto) throws IOException {
-        Member member = memberRepository.findByEmail(profileDto.getEmail()).get();
+        Member member = memberRepository.findById(profileDto.getUid()).get();
         String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
         return url;
+    }
+
+    public boolean followUser(Map<String, Long> followRequest) throws IllegalArgumentException, Exception{
+        Long from = followRequest.get("from");
+        Long to = followRequest.get("to");
+
+        Follow follow = new Follow();
+
+        Member follower = new Member();
+        follower.setUid(from);
+        Member followee = new Member();
+        followee.setUid(to);
+
+        follow.setFrom(follower);
+        follow.setTo(followee);
+        followRepository.save(follow);
+
+        return true;
     }
 }

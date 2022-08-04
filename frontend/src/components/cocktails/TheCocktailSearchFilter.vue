@@ -6,7 +6,6 @@
       <div class="cocktail-search-filter-container" :class="animation">
         <!-- filter: header -->
         <div class="cocktail-search-filter-header">
-          <p>재 설정</p>
           <p>필터</p>
           <span class="material-icons" @click="clickXIcon"> close </span>
         </div>
@@ -35,6 +34,11 @@ const clickXIcon = () => {
   store.dispatch("cocktailSearch/changeFilterClass", "end");
   setTimeout(() => store.dispatch("cocktailSearch/toggleFilter", false), 490);
 };
+
+// 필터 초기화 (선택지 리셋!)
+const resetFilter = () => {
+  store.dispatch("cocktailSearch/resetSearchFilter");
+};
 </script>
 
 <style scoped lang="scss">
@@ -61,6 +65,7 @@ const clickXIcon = () => {
   position: fixed;
   top: 0;
   height: 100vh;
+  z-index: 10;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.7);
   .cocktail-search-filter-container {
@@ -69,6 +74,7 @@ const clickXIcon = () => {
     position: absolute;
     bottom: 0px;
     width: 100%;
+    max-width: 600px;
     height: 98%;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
@@ -77,12 +83,6 @@ const clickXIcon = () => {
 
     @media #{$tablet} {
       width: 64%;
-      max-width: 600px;
-    }
-
-    @media #{$pc} {
-      width: 42%;
-      max-width: 1000px;
     }
 
     @media (min-height: 750px) {
@@ -90,22 +90,18 @@ const clickXIcon = () => {
     }
 
     .cocktail-search-filter-header {
-      @include flex-xy(space-between, center);
+      @include flex-xy(center, center);
       margin-top: 24px;
 
       p {
         &:first-child {
-          @include font($fs-md, $fw-medium);
-          color: $danger-color;
-          cursor: pointer;
-        }
-
-        &:nth-child(2) {
           @include font($fs-main, $fw-medium);
           color: $main-color;
         }
       }
       .material-icons {
+        position: absolute;
+        right: 5px;
         width: 42.78px;
         text-align: center;
         cursor: pointer;

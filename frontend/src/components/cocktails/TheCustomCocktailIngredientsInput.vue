@@ -38,7 +38,7 @@ const store = useStore();
 const customCocktailSearchData = {
   button: true,
   id: "custom-cocktail-search-input",
-  placeholder: "재료 검색",
+  placeholder: "재료를 입력해주세요",
   maxlength: 20,
 };
 

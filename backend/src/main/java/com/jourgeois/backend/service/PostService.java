@@ -319,4 +319,35 @@ public class PostService {
 
         return PostInfoDTO.builder().followerDTO(profile).customCocktail(postDTO).build();
     }
+
+    public List<NewsFeedDTO> getNewsFeed(Long me, Pageable pageable) {
+        List<NewsFeedVO> feeds = postRepository.getNewsFeed(me, pageable);
+
+        List<NewsFeedDTO> feedResponse = new ArrayList<>();
+        feeds.forEach((feed) -> {
+            NewsFeedDTO feedDTO = NewsFeedDTO.builder()
+                    .createTime(feed.getCreateTime())
+                    .updateTime(feed.getUpdateTime())
+                    .isUpdated(feed.getIsUpdated())
+                    .pid(feed.getPid())
+                    .type(feed.getType())
+                    .writer(feed.getWriter())
+                    .nickname(feed.getNickname())
+                    .profileImg(s3Url + feed.getProfileImg())
+                    .isSuperCustomCocktail(feed.getIsSuperCustomCocktail())
+                    .baseCocktailId(feed.getBaseCocktailId())
+                    .baseCocktailName(feed.getBaseCocktailName())
+                    .cocktailTitle(feed.getCocktailTitle())
+                    .postImg(s3Url + feed.getPostImg())
+                    .description(feed.getDescription())
+                    .followerCount(feed.getFollowerCount())
+                    .reviewCount(feed.getReviewCount())
+                    .likeCount(feed.getLikeCount())
+                    .build();
+
+            feedResponse.add(feedDTO);
+        });
+
+        return feedResponse;
+    }
 }

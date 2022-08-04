@@ -37,20 +37,27 @@ public class Member {
     private java.util.Date creationDate;
     private String roles = "ROLE_USER";
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<CocktailBookmark> cocktailBookmarks;
 
-    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PostBookmark> postBookmarks;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<CocktailComment> cocktailComments;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PostReview> postReviews;
+
+    @OneToMany(mappedBy = "from", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Follow> follower;
+
+    @OneToMany(mappedBy = "to", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Follow> followee;
 
     @Transient
     private Date date = new Date();
@@ -113,12 +120,13 @@ public class Member {
                 ", profileImg='" + profileImg + '\'' +
                 ", introduce='" + introduce + '\'' +
                 ", creationDate=" + creationDate +
-                ", roles='" + roles + '\'' +
-                ", posts=" + posts +
-                ", cocktailBookmarks=" + cocktailBookmarks +
-                ", postBookmarks=" + postBookmarks +
-                ", cocktailComments=" + cocktailComments +
-                ", postReviews=" + postReviews +
-                '}';
+
+                ", roles='" + roles + '\'' +"}"; //+
+//                ", posts=" + posts +
+//                ", cocktailBookmarks=" + cocktailBookmarks +
+//                ", postBookmarks=" + postBookmarks +
+//                ", cocktailReviews=" + cocktailReviews +
+//                ", postReviews=" + postReviews +
+//                '}';
     }
 }

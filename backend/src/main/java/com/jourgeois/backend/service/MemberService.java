@@ -89,7 +89,7 @@ public class MemberService {
                                             if(!member.getProfileImg().equals("profile/default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Url + s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
@@ -161,7 +161,7 @@ public class MemberService {
         String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now());
 
         Member m = Member.builder().email(gDTO.getEmail()).password(gDTO.getSub()).name(gDTO.getName())
-                .nickname("유저"+gDTO.getSub().substring(3,10) + date).build();
+                .profileImg("profile/default/1.png").nickname("유저"+gDTO.getSub().substring(3,10) + date).build();
         try{
             memberRepository.save(m);
             memberRepository.flush();

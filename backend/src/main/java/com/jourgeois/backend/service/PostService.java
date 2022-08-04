@@ -4,7 +4,6 @@ import com.amazonaws.SdkClientException;
 
 
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.api.dto.post.*;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.FollowPK;
@@ -102,7 +101,7 @@ public class PostService {
     public List<PostInfoDTO> readCumstomCoctailList(Long id, int type, Pageable pageable){
         List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
         // 1은 시간순 정렬, 나머지는 좋아요
-        List<CustomCocktailVO> result;
+        List<PostInfoVO> result;
         if(type == 1){
             result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id);
         }else{

@@ -1,10 +1,7 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.api.dto.post.CustomCocktailVO;
-import com.jourgeois.backend.api.dto.post.PostInfoDTO;
+import com.jourgeois.backend.api.dto.post.PostInfoVO;
 import com.jourgeois.backend.domain.post.CustomCocktailId;
-import org.springframework.data.domain.Pageable;
-import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.post.CustomCocktail;
 import com.jourgeois.backend.domain.post.CustomCocktailToCocktail;
 
@@ -37,7 +34,7 @@ public interface CustomCocktailToCocktailRepository extends JpaRepository<Custom
             "(select count(*) as count, p_id as pp from post_bookmark group by p_id having p_id in (select c.p_id from custom_cocktail_to_cocktail c where c_id = :id)) as test2 \n" +
             "on test1.p_id = test2.pp) as result \n" +
             "on m.uid=result.p_writer order by result.p_create_time desc", nativeQuery = true)
-    List<CustomCocktailVO> findByCustomCocktailListOrderbyCreateTime(@Param(value="id") Long id);
+    List<PostInfoVO> findByCustomCocktailListOrderbyCreateTime(@Param(value="id") Long id);
 
     @Query(value = "select m.uid as uid, m.nickname as nickname, m.profile_img as profileImg\n" +
             ",result.cc_cocktail_ingredients as postIngredients, result.cc_cocktail_recipe as postRecipe, result.cc_cocktail_title as postTitle,\n" +
@@ -52,5 +49,5 @@ public interface CustomCocktailToCocktailRepository extends JpaRepository<Custom
             "(select count(*) as count, p_id as pp from post_bookmark group by p_id having p_id in (select c.p_id from custom_cocktail_to_cocktail c where c_id = :id)) as test2 \n" +
             "on test1.p_id = test2.pp) as result \n" +
             "on m.uid=result.p_writer order by result.count desc", nativeQuery = true)
-    List<CustomCocktailVO> findByCustomCocktailListOrderbyCount(@Param(value="id") Long id);
+    List<PostInfoVO> findByCustomCocktailListOrderbyCount(@Param(value="id") Long id);
 }

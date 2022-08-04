@@ -1,23 +1,24 @@
 package com.jourgeois.backend.controller;
 
 
-import com.jourgeois.backend.api.dto.CocktailCommentDTO;
+import com.jourgeois.backend.api.dto.cocktail.CocktailCommentDTO;
 
-import com.jourgeois.backend.api.dto.CocktailBookmarkDTO;
+import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
 
-import com.jourgeois.backend.api.dto.CocktailDTO;
-import com.jourgeois.backend.domain.Cocktail;
-import com.jourgeois.backend.domain.Material;
-import com.jourgeois.backend.domain.Member;
+import com.jourgeois.backend.api.dto.cocktail.CocktailDTO;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.cocktail.Material;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.service.CocktailService;
 import com.jourgeois.backend.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,6 @@ public class CocktailController {
             return ResponseEntity.badRequest().body(Map.of("result", "none"));
         }
 
-        //
     }
 
     @PostMapping(value = "/cocktail")
@@ -119,22 +119,47 @@ public class CocktailController {
         System.out.println(cocktailCommentDTO.toString());
         try {
             boolean res = cocktailService.createComment(cocktailCommentDTO);
-            return ResponseEntity.ok().body(res);
+            return ResponseEntity.ok().body(Map.of("success", "true"));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("result", "false"));
+            return ResponseEntity.badRequest().body(Map.of("success", "false"));
         }
     }
 
     @GetMapping(value = "/comment")
-    public ResponseEntity selectReview(@RequestParam(value = "cocktailId") Long cocktailId) {
-        // review, cocktailId, reviewId 정보 받음
+    public ResponseEntity selectReview(@RequestParam(value = "cocktailId") Long cocktailId,
+                                       @PageableDefault(size=10, page = 0) Pageable pageable) {
+        // cocktailId, page, page size 정보 받음
+        // criteria -> modifiedDate (등록/수정 날짜 기준), likes(좋아요 기준)
         try {
-            List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId);
+            List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId, pageable);
             return ResponseEntity.ok().body(cc);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("result", "false"));
+            return ResponseEntity.badRequest().body(Map.of("result", "none"));
+        }
+    }
+
+    @PutMapping(value = "/comment")
+    public ResponseEntity updateReview(@RequestBody CocktailCommentDTO cocktailCommentDTO) {
+        // commentId, comment 받음
+        try {
+            cocktailService.updateComment(cocktailCommentDTO);
+            return ResponseEntity.ok().body(Map.of("success", "true"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("success", "false"));
+        }
+    }
+
+    @DeleteMapping(value = "/comment")
+    public ResponseEntity deleteReview(@RequestBody CocktailCommentDTO cDTO) {
+        try {
+            boolean res = cocktailService.deleteComment(cDTO.getUserId(), cDTO.getCommentId());
+            return ResponseEntity.ok().body(Map.of("success", res));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("success", "false"));
         }
     }
 

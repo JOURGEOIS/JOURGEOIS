@@ -15,17 +15,19 @@ public class RefreshToken {
     @Column(name = "refresh_token_id")
     private Long id;
 
-    private String email;
+//    @OneToOne
+//    @JoinColumn
+    private Long uid;
     private String token;
 
 
-    private RefreshToken(String id, String token) {
-        this.email = id;
+    private RefreshToken(Long uid, String token) {
+        this.uid = uid;
         this.token = token;
     }
 
-    public static RefreshToken createToken(String userId, String token){
-        return new RefreshToken(userId, token);
+    public static RefreshToken createToken(Long uid, String token){
+        return new RefreshToken(uid, token);
     }
 
     public void changeToken(String token) {

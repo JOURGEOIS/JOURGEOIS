@@ -3,12 +3,15 @@ package com.jourgeois.backend.service;
 
 import com.jourgeois.backend.api.dto.cocktail.*;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
+import com.jourgeois.backend.api.dto.post.PostDTO;
+import com.jourgeois.backend.api.dto.post.PostInfoDTO;
+import com.jourgeois.backend.api.dto.post.PostInfoVO;
 import com.jourgeois.backend.domain.cocktail.*;
-import com.jourgeois.backend.domain.member.Follow;
 import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +29,21 @@ public class CocktailService {
     private final MemberRepository memberRepository;
     private final CocktailBookmarkRepository cocktailBookmarkRepository;
     private final FollowRepository followRepository;
+    private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
+    private final String s3Url;
 
     @Autowired
     CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailCommentRepository cocktailCommentRepository,
-                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository){
+                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository,
+                    CustomCocktailToCocktailRepository customCocktailToCocktailRepository, @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
         this.cocktailCommentRepository = cocktailCommentRepository;
         this.memberRepository = memberRepository;
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
         this.followRepository = followRepository;
+        this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
+        this.s3Url = s3Url;
     }
 
     // 칵테일 저장 메소드
@@ -194,15 +202,51 @@ public class CocktailService {
         cocktailBookmarkRepository.findByCocktailId(new Cocktail(c_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
             FollowPK key = new FollowPK(uid, member.getUid());
-//            Follow followers = followRepository.findByFromAndTo(key).orElseThrow();
+
+            Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+            if(uid.equals(member.getUid())) {
+                status = -1;
+            }
 
             followersResponse.add(FollowerDTO.builder()
-                    .isFollowed(followRepository.findById(key).isPresent() ? 1 : 0)
+                    .isFollowed(status)
                     .nickname(member.getNickname())
                     .uid(member.getUid())
-                    .profileImg(member.getProfileImg())
+                    .profileImg(s3Url+member.getProfileImg())
                     .build());
         });
         return followersResponse;
+    }
+
+    // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
+    public List<PostInfoDTO> readCumstomCoctailList(Long id, int type, Pageable pageable){
+        List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
+        // 1은 시간순 정렬, 나머지는 좋아요
+        List<PostInfoVO> result;
+        if(type == 1){
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id);
+        }else{
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCount(id);
+        }
+        result.forEach((data) -> {
+            PostDTO post = PostDTO.builder()
+                    .postId(data.getPostId())
+                    .imgLink(s3Url + data.getPostImg())
+                    .description(data.getPostDescription())
+                    .lastUpdateTime(data.getPostLastUpdateTime())
+                    .createTime(data.getPostCreateTime())
+                    .like(data.getPostCount())
+                    .title(data.getPostTitle())
+                    .recipe(data.getPostRecipe())
+                    .ingredients(data.getPostIngredients())
+                    .build();
+            FollowerDTO profile = FollowerDTO.builder()
+                    .uid(data.getUid())
+                    .profileImg(s3Url + data.getProfileImg())
+                    .nickname(data.getNickname())
+                    .build();
+            postInfoDTOList.add(PostInfoDTO.builder().followerDTO(profile).customCocktail(post).build());
+        });
+        return postInfoDTOList;
     }
 }

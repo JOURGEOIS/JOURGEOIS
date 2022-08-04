@@ -339,12 +339,19 @@ public class MemberController {
 
     // 다른 유저를 팔로우하는 사람 목록 보기
     @GetMapping("/auth/follower")
-    public ResponseEntity getFollowerAll(@RequestParam Long uid,
+    public ResponseEntity getFollowerAll(HttpServletRequest request,
+                                         @RequestParam Long uid,
                                          @PageableDefault(size=10, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
-            return new ResponseEntity(memberService.getFollowerAll(uid, pageable), HttpStatus.OK);
-        } catch (Exception e) {
+            Long me = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(memberService.getFollowerAll(uid, me, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "uid 형식 오류");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
             System.out.println(e);
             data.put("fail", "오류 발생");
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -353,11 +360,17 @@ public class MemberController {
 
     // 다른 유저가 팔로우하는 살마 목록 보기
     @GetMapping("/auth/followee")
-    public ResponseEntity getFolloweeAll(@RequestParam Long uid,
+    public ResponseEntity getFolloweeAll(HttpServletRequest request,
+                                         @RequestParam Long uid,
                                          @PageableDefault(size=10, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
-            return new ResponseEntity(memberService.getFolloweeAll(uid, pageable), HttpStatus.OK);
+            Long me = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(memberService.getFolloweeAll(uid, me, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "uid 형식 오류");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             System.out.println(e);
             data.put("fail", "오류 발생");
@@ -371,7 +384,8 @@ public class MemberController {
         Map<String, String> data = new HashMap<>();
         try {
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
-            return new ResponseEntity(memberService.getFollowerAll(uid, pageable), HttpStatus.OK);
+            Long me = uid;
+            return new ResponseEntity(memberService.getFollowerAll(uid, me, pageable), HttpStatus.OK);
         } catch (NumberFormatException e) {
             System.out.println(e);
             data.put("fail", "uid가 이상해요.");
@@ -389,7 +403,8 @@ public class MemberController {
         Map<String, String> data = new HashMap<>();
         try {
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
-            return new ResponseEntity(memberService.getFolloweeAll(uid, pageable), HttpStatus.OK);
+            Long me = uid;
+            return new ResponseEntity(memberService.getFolloweeAll(uid, me, pageable), HttpStatus.OK);
         } catch (NumberFormatException e) {
             System.out.println(e);
             data.put("fail", "uid가 이상해요.");

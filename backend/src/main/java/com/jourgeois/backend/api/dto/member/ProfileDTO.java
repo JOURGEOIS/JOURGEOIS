@@ -29,9 +29,29 @@ public class ProfileDTO {
         this.introduce = introduce;
     }
 
+    public ProfileDTO(Long uid, String nickname, String profileImg) {
+        this.uid = uid;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+    }
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+        this.introduce = introduce;
+    }
+
     public ProfileDTO(String email, String name, String profileImg) {
         this.email = email;
         this.name = name;
         this.profileImg = profileImg;
     }
+
 }

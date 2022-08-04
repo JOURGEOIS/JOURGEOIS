@@ -304,8 +304,8 @@ public class MemberService {
         return true;
     }
 
-    public List<FollowerDTO> getFollowerAll(Long uid, Pageable pageable) throws NumberFormatException{
-        List<FollowerVO> followers = followRepository.getFollwerAll(uid, pageable);
+    public List<FollowerDTO> getFollowerAll(Long uid, Long me, Pageable pageable) throws NumberFormatException{
+        List<FollowerVO> followers = followRepository.getFollwerAll(uid, me, pageable);
 
         List<FollowerDTO> followersResponse = new ArrayList<>();
 
@@ -321,8 +321,8 @@ public class MemberService {
         return followersResponse;
     }
 
-    public Object getFolloweeAll(Long uid, Pageable pageable) {
-        List<FollowerVO> followers = followRepository.getFollweeAll(uid, pageable);
+    public Object getFolloweeAll(Long uid, Long me, Pageable pageable) {
+        List<FollowerVO> followers = followRepository.getFollweeAll(uid, me, pageable);
 
         List<FollowerDTO> followeesResponse = new ArrayList<>();
 

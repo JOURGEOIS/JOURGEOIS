@@ -3,15 +3,13 @@ package com.jourgeois.backend.controller;
 
 import com.jourgeois.backend.api.dto.cocktail.CocktailCommentDTO;
 
-import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
-
 import com.jourgeois.backend.api.dto.cocktail.CocktailDTO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.cocktail.CocktailBookmarkId;
 import com.jourgeois.backend.domain.cocktail.Material;
-import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.service.CocktailService;
 import com.jourgeois.backend.service.MemberService;
+import com.jourgeois.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,11 +27,13 @@ import java.util.Map;
 public class CocktailController {
     private final CocktailService cocktailService;
     private final MemberService memberService;
+    private final PostService postService;
     @Autowired
     CocktailController(CocktailService cocktailService,
-                       MemberService memberService){
+                       MemberService memberService, PostService postService){
         this.cocktailService = cocktailService;
         this.memberService = memberService;
+        this.postService = postService;
     }
 
     @GetMapping(value = "/cocktail")
@@ -180,7 +180,7 @@ public class CocktailController {
     }
 
     // uid와 칵테일 id로
-    @GetMapping(value="/bookmakrlist")
+    @GetMapping(value="/bookmarklist")
     public ResponseEntity getBookmarkList(@RequestParam(value = "uid") Long uid, @RequestParam(value = "c_id") Long c_id,
                                 @PageableDefault(size=10, page=0) Pageable pageable){
         Map<String, String> data = new HashMap<>();
@@ -195,5 +195,20 @@ public class CocktailController {
             data.put("fail", "오류 발생");
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 원본칵테일의 커스텀칵테일 탭 (리스트반환)
+    @GetMapping
+    public ResponseEntity readCustomCocktailList(@RequestParam Long id, @RequestParam int type,
+                                                 @PageableDefault(size=10, page = 0) Pageable pageable){
+        try{
+            return  new ResponseEntity(cocktailService.readCumstomCoctailList(id, type, pageable), HttpStatus.CREATED);
+        }catch (NumberFormatException e) {
+            System.out.println(e);
+            return new ResponseEntity("잘못된 인풋", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity("리스트를 불러오지 못했습니다.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
     }
 }

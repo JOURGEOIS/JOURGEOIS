@@ -1,6 +1,6 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.SearchTrendDto;
+import com.jourgeois.backend.api.dto.search.SearchTrendDto;
 import com.jourgeois.backend.domain.auth.EmailToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

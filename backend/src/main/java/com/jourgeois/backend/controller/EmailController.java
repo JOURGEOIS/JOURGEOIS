@@ -1,6 +1,6 @@
 package com.jourgeois.backend.controller;
 
-import com.jourgeois.backend.api.dto.EmailAuthForm;
+import com.jourgeois.backend.api.dto.auth.EmailAuthForm;
 import com.jourgeois.backend.service.auth.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

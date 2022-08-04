@@ -4,6 +4,7 @@ const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";
 const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
+const POST = "posts/auth/";
 
 export default {
   token: {
@@ -28,7 +29,7 @@ export default {
   cocktail: {
     getCocktailData: () => HOST + COCKTAIL + "cocktail",
     cocktailList: () => HOST + COCKTAIL + "list",
-    cocktailReview: () => HOST + COCKTAIL + "comment"
+    cocktailReview: () => HOST + COCKTAIL + "comment",
   },
 
   lookups: {
@@ -41,5 +42,9 @@ export default {
     hotKeyword: () => HOST + LOOKUP + "hotkeyword",
     filterCnt: () => HOST + LOOKUP + "filter",
     filterResult: () => HOST + LOOKUP + "filter/list",
+  },
+
+  POST: {
+    uploadImage: () => HOST + POST + "tmp",
   },
 };

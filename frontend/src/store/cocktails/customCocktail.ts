@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
+import { stat } from "fs";
 
 // ! main State
 export interface CustomCocktailState {
@@ -44,7 +45,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
       state.originalCocktailIngredients,
 
     // 원본 칵테일 레세피 정보
-    getOriginalCocktailRecipe: (state) => state.originalCocktailIngredients,
+    getOriginalCocktailRecipe: (state) => state.originalCocktailRecipe,
 
     // 검색 자동 완성 재료 리스트
     getSearchIngredientsList: (state) => state.searchIngredientsList,
@@ -102,6 +103,38 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         .catch((error) => console.error(error));
     },
 
+    // 사진 업로드 임시 저장
+    uploadImage: ({ rootGetters, dispatch }, data) => {
+      const { img, imageUrl } = data;
+      axios({
+        url: api.POST.uploadImage(),
+        method: "post",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+          "Content-Type": "multipart/form-data",
+        },
+        data: {
+          img,
+        },
+      })
+        .then((response) => {
+          imageUrl.value = response.data.url;
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            // 실패 팝업
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "customCocktail/uploadImage",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+
     // 재료 검색 자동완성
     searchIngredients: ({ commit }, keyword: string) => {
       console.log("몇번");
@@ -154,6 +187,23 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
       const ingredients: string[] = getters["getOriginalCocktailIngredients"];
       const newIngredients = ingredients.filter((item) => item !== value);
       commit("SET_ORIGINAL_COCKTAIL_INGREDIENTS", newIngredients);
+    },
+
+    // 레시피 단계 추가하기
+    addRecipeStep: ({ commit, getters }) => {
+      const steps: string[] = getters["getOriginalCocktailRecipe"];
+      if (steps.length > 9) {
+        alert("10단계 넘음 ㅋ");
+      } else {
+        commit("SET_ORIGINAL_COCKTAIL_RECIPE", "");
+      }
+    },
+
+    // 해당 인덱스 레시피 삭제하기
+    deleteRecipeStep: ({ commit, getters }, value: number) => {
+      const steps: string[] = getters["getOriginalCocktailRecipe"];
+      steps.splice(value, 1);
+      commit("SET_ORIGINAL_COCKTAIL_RECIPE", steps);
     },
   },
 };

@@ -1,6 +1,8 @@
 <template>
   <form class="custom-cocktail-search" @submit.self.prevent="submitSearchValue">
-    <label for="custom-cocktail-search-input">재료 (최대 10개)</label>
+    <label for="custom-cocktail-search-input">
+      재료 (최대 10개) <span> *</span>
+    </label>
     <the-search-input
       :data="customCocktailSearchData"
       v-model="customCocktailSearchValue"
@@ -116,18 +118,22 @@ const clickSearchValue = (item: string) => {
   label {
     @include font($fs-md, $fw-medium);
     color: $label-color;
+    span {
+      @include font($fs-md, $fw-bold);
+      color: $danger-color;
+    }
   }
   .custom-cocktail-search-ingredients {
     @include flex-xy(flex-start, center);
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 4px;
 
     div {
       position: relative;
       padding: 0.5em 1.2em;
       margin: 0 5px;
       border-radius: 10px;
-      @include font($fs-md, $fw-medium);
+      @include font($fs-md, $fw-regular);
       background-color: $navy500;
       color: $white;
       span {
@@ -136,7 +142,7 @@ const clickSearchValue = (item: string) => {
         right: -4px;
         padding: 8px;
         color: $white;
-        @include font($fs-sm, $fw-medium);
+        @include font($fs-sm, $fw-bold);
         cursor: pointer;
       }
     }

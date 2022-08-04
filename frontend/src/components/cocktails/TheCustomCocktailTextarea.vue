@@ -48,7 +48,7 @@ const emitValue = (event: Event) => {
     &::placeholder {
       @include font($fs-md, $fw-medium);
       font-family: $ff-main;
-      color: $placeholder-color;
+      color: $white400;
     }
   }
 }

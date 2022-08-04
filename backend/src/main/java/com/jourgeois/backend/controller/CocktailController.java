@@ -202,7 +202,7 @@ public class CocktailController {
     public ResponseEntity readCustomCocktailList(@RequestParam Long id, @RequestParam int type,
                                                  @PageableDefault(size=10, page = 0) Pageable pageable){
         try{
-            return  new ResponseEntity(postService.readCumstomCoctailList(id, type, pageable), HttpStatus.CREATED);
+            return  new ResponseEntity(cocktailService.readCumstomCoctailList(id, type, pageable), HttpStatus.CREATED);
         }catch (NumberFormatException e) {
             System.out.println(e);
             return new ResponseEntity("잘못된 인풋", HttpStatus.BAD_REQUEST);

@@ -1,5 +1,7 @@
 // * 현재 일시를 기준으로 한글로 얼마 전인지 표시
-function calcDateDelta(date: number[]) {
+// 전달인자는 [2022, 8, 5, 1, 22, 18, 83204000]처럼 작성시각, 수정시각 자체
+// 현재 시각을 기준으로 `... 전` 정보를 현재 시각을 기준으로 delta값 계산 후 반환
+function calcDateDelta(date: number[]): string {
   const [Y, M, D, hour, min, sec, nanoSec] = date;
   const date1: number = new Date(Y, M - 1, D, hour, min, sec).getTime();
   const date2: number = new Date().getTime();

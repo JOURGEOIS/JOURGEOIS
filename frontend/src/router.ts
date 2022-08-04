@@ -116,6 +116,13 @@ const routes: any[] = [
     name: "TheCustomCocktailFormView",
     component: () => import("@/views/TheCustomCocktailFormView.vue"),
   },
+
+  // 커스텀 칵테일 상세 페이지
+  {
+    path: "/cocktail/:cocktailId/custom/:customCocktailId",
+    name: "TheCustomCocktailDescView",
+    component: () => import("@/views/TheCustomCocktailDescView.vue"),
+  },
 ];
 
 const router = createRouter({

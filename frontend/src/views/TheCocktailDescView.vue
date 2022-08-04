@@ -18,11 +18,11 @@
         </div>
         <div class="cocktail-desc-tab-review" :class="`index-${index}`">
           <p @click="clickReviewTab">후기</p>
-          <span>99+</span>
+          <!-- <span>99+</span> -->
         </div>
         <div class="cocktail-desc-tab-custom" :class="`index-${index}`">
           <p @click="clickCustomTab">커스텀</p>
-          <span>99+</span>
+          <!-- <span>99+</span> -->
         </div>
       </div>
       <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
@@ -92,9 +92,9 @@ onMounted(() => {
     @include flex(column);
     justify-content: center;
     align-items: center;
-    gap: 24px;
+    gap: 40px;
     width: 100%;
-    margin-top: 24px;
+    margin-top: 40px;
 
     @media #{$tablet} {
       gap: 40px;
@@ -105,6 +105,7 @@ onMounted(() => {
       height: 1px;
       border: 0;
       background-color: $unchecked-color;
+      margin: 0;
     }
     .cocktail-desc-tab {
       @include flex-xy(space-between, center);

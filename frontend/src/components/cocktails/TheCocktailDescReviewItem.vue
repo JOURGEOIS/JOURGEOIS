@@ -1,23 +1,81 @@
 <template>
   <div
     class="cocktail-desc-review"
-    v-for="(review, id) in reviews"
+    @load="getReview(cocktailId)"
+    v-for="(review, id) in cocktailReviewData"
     :key="`main-${id}`"
   >
     <div class="cocktail-desc-review-profile-content">
       <div class="cocktail-desc-review-profile">
         <round-image
-          :round-image="{ image: review.image, width: '45px', height: '45px' }"
+          :round-image="{
+            image: review.profileImg,
+            width: '45px',
+            height: '45px',
+          }"
         ></round-image>
       </div>
       <div class="cocktail-desc-review-content">
         <div class="cocktail-decs-review-front">
           <div class="cocktail-desc-review-name-time">
-            <p class="cocktail-desc-review-profile-name">{{ review.name }}</p>
-            <p class="cocktail-desc-review-time">{{ review.time }}</p>
+            <p class="cocktail-desc-review-profile-name">
+              {{ review.nickname }}
+            </p>
+            <p
+              v-if="
+                review.createdDate[0] === year &&
+                review.createdDate[1] === month &&
+                review.createdDate[2] === day &&
+                review.createdDate[3] === hours &&
+                review.createdDate[4] === minutes
+              "
+            >
+              방금 전
+            </p>
+            <p
+              v-else-if="
+                review.createdDate[0] === year &&
+                review.createdDate[1] === month &&
+                review.createdDate[2] === day &&
+                review.createdDate[3] === hours &&
+                review.createdDate[4] - minutes > 0
+              "
+            >
+              {{ review.createdDate[4] - minutes }}분 전
+            </p>
+            <p
+              v-else-if="
+                review.createdDate[0] === year &&
+                review.createdDate[1] === month &&
+                review.createdDate[2] === day &&
+                review.createdDate[3] - hours > 0
+              "
+            >
+              {{ review.createdDate[3] - hours }}시간 전
+            </p>
+            <p
+              v-else-if="
+                review.createdDate[0] === year &&
+                review.createdDate[1] === month &&
+                review.createdDate[2] - day > 0
+              "
+            >
+              {{ review.createdDate[2] - day }}일 전
+            </p>
+            <p
+              v-else-if="
+                review.createdDate[0] === year &&
+                review.createdDate[1] - month > 0
+              "
+            >
+              {{ review.createdDate[1] - month }}달 전
+            </p>
+            <p v-else-if="review.createdDate[0] - year > 0">
+              {{ review.createdDate[0] - year }}년 전
+            </p>
           </div>
           <div
-            v-if="userInfo.nickname == review.name"
+            v-if="userInfo.nickname == review.nickname"
             class="cocktail-desc-review-button"
           >
             <button-basic
@@ -37,7 +95,7 @@
           </div>
         </div>
         <p>
-          {{ review.content }}
+          {{ review.comment }}
         </p>
       </div>
     </div>
@@ -53,36 +111,37 @@ import ButtonBasic from '@/components/basics/ButtonBasic.vue'
 // 유저 정보 불러오기
 const store = useStore()
 const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
+const userId = computed(() => store.getters['personalInfo/getUserInfoUserId'])
 
 const img: string = userInfo.value.profileImg
 const name: string = userInfo.value.nickname
 
 // 칵테일 후기 정보 불러오기
 const cocktailReviewData = computed(
-  () => store.getters["cocktailReview/getCurrentCocktailReview"]
-);
+  () => store.getters['cocktailReview/getCurrentCocktailReview'],
+)
+const getReview = (cocktailId: number) =>
+  store.dispatch('cocktailReview/getCocktailReview', cocktailId)
 // 칵테일 id
-const cocktailId = computed(() => cocktailReviewData.value.cocktailId);
-// console.log(cocktailId)
+const cocktailData = computed(
+  () => store.getters['cocktailDesc/getCurrentCocktailData'],
+)
+const cocktailId = Number(cocktailData.value.id)
 
-// profile image
-const reviews = ref([
-  {
-    image: img,
-    name: name,
-    time: '방금 전',
-    content:
-      '첫 맛에 인위적이지 않은 라임맛이 강하게 느껴진다. 가볍고 상큼하기만 하다. 진하지가 않다. 맛있다 맛있다 맛있다',
-  },
-  {
-    Image:
-      'https://postfiles.pstatic.net/20131008_266/jane0014_1381217202727MJPj3_JPEG/2_5347259.jpg?type=w3',
-    name: '레몬이좋아',
-    time: '두 시간 전',
-    content:
-      '첫 맛에 인위적이지 않은 레몬맛이 강하게 느껴진다. 가볍고 상큼하기만 하다. 진하지가 않다. 맛있다 맛있다 맛있다',
-  },
-])
+getReview(cocktailId)
+
+console.log('cacktailInfo: ', cocktailReviewData.value)
+// 칵테일 날짜
+const today = new Date()
+
+const year = today.getFullYear()
+const month = today.getMonth() + 1
+const day = today.getDate()
+const hours = today.getHours()
+const minutes = today.getMinutes()
+const seconds = today.getSeconds()
+
+console.log(today, year, month, day, hours, minutes, seconds)
 
 // button
 const reviewEditValue = ref('')
@@ -94,7 +153,8 @@ const buttonColor = computed(() => {
 
 <style scoped lang="scss">
 .cocktail-desc-review {
-  @include flex-center;
+  @include flex;
+  width: 100%;
   .cocktail-desc-review-profile-content {
     @include flex;
     gap: 12px;
@@ -105,11 +165,13 @@ const buttonColor = computed(() => {
     .cocktail-desc-review-content {
       @include flex;
       @include font($fs-md, $fw-regular);
+      flex-grow: 1;
       flex-direction: column;
       width: 100%;
 
       .cocktail-decs-review-front {
         @include flex;
+
         justify-content: space-between;
         padding: 0px;
         .cocktail-desc-review-name-time {

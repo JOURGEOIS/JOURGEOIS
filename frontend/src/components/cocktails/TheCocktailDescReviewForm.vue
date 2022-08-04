@@ -42,6 +42,7 @@ import { checkBadWord } from '../../functions/checkText'
 // 유저 정보 불러오기
 const store = useStore()
 const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
+const userId = computed(() => store.getters['personalInfo/getUserInfoUserId'])
 
 const text = ref('')
 
@@ -105,11 +106,13 @@ onMounted(() => {
 
 // 데이터 전송
 const createReview = (data: object) =>
-  store.dispatch("cocktailReview/createCocktailReview",data)
+  store.dispatch("cocktailReview/createCocktailReview", data)
 
 const cocktailData = computed(() => store.getters['cocktailDesc/getCurrentCocktailData'])
 const cocktailId = Number(cocktailData.value.id)
 // console.log(cocktailId)
+// console.log(userId.value)
+const getReview = (cocktailId: number) => store.dispatch("cocktailReview/getCocktailReview", cocktailId)
 
 // 제출
 const submitCreateReviewForm = () => {
@@ -118,12 +121,11 @@ const submitCreateReviewForm = () => {
   const reviewCondition = checkBadWord(reviewInputValue.value)
   // 전달할 데이터
   const data: object = {
-    nickname: profileInfo.name,
-    profileImg: profileInfo.image,
+    userId: userId.value,
     cocktailId: cocktailId,
     comment: reviewInputValue.value,
   }
-  // console.log('data', data)
+  console.log('data', data)
   // 제출
   if (reviewCondition) {
     reviewInputStyle.value = 'error'
@@ -132,7 +134,7 @@ const submitCreateReviewForm = () => {
     // console.log(data)
 
   } else {
-    console.log(data)
+    console.log('data:', data)
     createReview(data)
 
     // 리셋

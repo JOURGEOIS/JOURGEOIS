@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,22 +40,26 @@ public class PostController {
         this.cocktailService = cocktailService;
     }
 
-    @PostMapping
-    public ResponseEntity postPost(@ModelAttribute PostDTO post) {
+    @PostMapping("/auth")
+    public ResponseEntity postPost(HttpServletRequest request, @ModelAttribute PostDTO post) {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
-
         if(post.getImg() == null || post.getImg().isEmpty()) {
             result.put("fail", "이미지를 등록해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
 
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            post.setUid(uid);
             postService.postPost(post);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
-        } catch (IOException e) {
+        } catch(NumberFormatException e){
+            result.put("fail", "uid의 형식이 다릅니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(IOException e) {
             result.put("fail", "파일 업로드 실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NoSuchElementException e) {
@@ -63,8 +68,8 @@ public class PostController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity editPost(@ModelAttribute PostDTO post) {
+    @PutMapping("/auth")
+    public ResponseEntity editPost(HttpServletRequest request, @ModelAttribute PostDTO post) {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
@@ -75,6 +80,8 @@ public class PostController {
         }
         
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            post.setUid(uid);
             postService.editPost(post);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
@@ -87,10 +94,18 @@ public class PostController {
         }
     }
 
-    @PostMapping("/tmp")
-    public ResponseEntity postImageTempStorage(@ModelAttribute PostDTO postDTO){
+    @PostMapping("/auth/tmp")
+    public ResponseEntity postImageTempStorage(HttpServletRequest request, @ModelAttribute PostDTO postDTO){
         Map<String, String> data = new HashMap<>();
+
+        if(postDTO.getImg() == null || postDTO.getImg().isEmpty()) {
+            data.put("fail", "이미지를 등록해주세요.");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        }
+
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postDTO.setUid(uid);
             data.put("url", "http://13.209.206.237/img/" + postService.postImageLocalUpload(postDTO));
             return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
@@ -99,10 +114,13 @@ public class PostController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity deletePost(@RequestBody Map<String, Long> postDeleteReq) {
+    @DeleteMapping("/auth")
+    public ResponseEntity deletePost(HttpServletRequest request, @RequestBody Map<String, Long> postDeleteReq) {
         Map<String, String> result = new HashMap<>();
         try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postDeleteReq.put("uid", uid);
+
             postService.deletePost(postDeleteReq);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.OK);
@@ -130,8 +148,8 @@ public class PostController {
     }
 
     // 댓글
-    @PostMapping("/review")
-    public ResponseEntity postReview(@RequestBody PostReviewDTO postReviewDTO) {
+    @PostMapping("/auth/review")
+    public ResponseEntity postReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
         System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, String> result = new HashMap<>();
@@ -141,18 +159,25 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
 
+
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postReviewDTO.setUid(uid);
             postService.postReview(postReviewDTO);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            result.put("fail", "실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        catch (Exception e) {
             result.put("fail", "실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/review")
-    public ResponseEntity editReview(@RequestBody PostReviewDTO postReviewDTO) {
+    @PutMapping("/auth/review")
+    public ResponseEntity editReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
         System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, String> result = new HashMap<>();
@@ -160,7 +185,10 @@ public class PostController {
             result.put("fail", "내용을 입력해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
+
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postReviewDTO.setUid(uid);
             postService.editReview(postReviewDTO);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
@@ -173,12 +201,14 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/review")
-    public ResponseEntity deleteReview(@RequestBody Map<String, Long> postDeleteReq) {
+    @DeleteMapping("/auth/review")
+    public ResponseEntity deleteReview(HttpServletRequest request, @RequestBody Map<String, Long> postDeleteReq) {
         System.out.println("Request: " + postDeleteReq.toString());
 
         Map<String, String> result = new HashMap<>();
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postDeleteReq.put("uid", uid);
             postService.deleteReview(postDeleteReq);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);

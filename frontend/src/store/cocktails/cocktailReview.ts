@@ -32,6 +32,9 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     SET_REVIEW_COCKTAIL_PAGE: (state, value) => {
       state.reviewCocktailPage = value
     },
+    RESET_CURRENT_COCKTAIL_REVIEW: (state) => {
+      state.currentCocktailReview = []
+    },
   },
 
   actions: {
@@ -58,7 +61,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
         })
     },
     createCocktailReview: (
-      { commit, rootGetters },
+      { commit, dispatch, rootGetters, getters },
       { cocktailId, comment },
     ) => {
       const userId = rootGetters['personalInfo/getUserInfoUserId']
@@ -75,6 +78,9 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
         .then((res) => {
           console.log(res.data)
           console.log('보냄')
+          commit('RESET_CURRENT_COCKTAIL_REVIEW')
+          commit('SET_REVIEW_COCKTAIL_PAGE', 0)
+          dispatch('getCocktailReview', cocktailId)
         })
         .catch((err) => {
           console.log(err.res)

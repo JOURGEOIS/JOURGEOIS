@@ -280,4 +280,22 @@ public class MemberService {
         });
         return followersResponse;
     }
+
+    public Object getFolloweeAll(Map<String, String> request, Pageable pageable) {
+        String uid = request.get("uid");
+        List<FollowerVO> followers = followRepository.getFollweeAll(Long.parseLong(uid), pageable);
+
+        List<FollowerDTO> followeesResponse = new ArrayList<>();
+
+        followers.forEach((follower) -> {
+            FollowerDTO followerDTO = FollowerDTO.builder()
+                    .isFollowed(follower.getIsFollowed())
+                    .nickname(follower.getNickname())
+                    .uid(follower.getUid())
+                    .profileImg(s3Url + follower.getProfileImg())
+                    .build();
+            followeesResponse.add(followerDTO);
+        });
+        return followeesResponse;
+    }
 }

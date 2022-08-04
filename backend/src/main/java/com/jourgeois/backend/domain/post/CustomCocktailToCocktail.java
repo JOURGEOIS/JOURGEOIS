@@ -6,48 +6,39 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-public class CustomCocktailToCocktail implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private Long id;
+@IdClass(CustomCocktailId.class)
+public class CustomCocktailToCocktail{
 
+    @Id
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "p_id")
-    private CustomCocktail customCocktail;
+    private CustomCocktail customCocktailId;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "c_id")
-    private Cocktail cocktail;
+    private Cocktail cocktailId;
 
     public CustomCocktailToCocktail(CustomCocktail customCocktail, Cocktail cocktail) {
-        this.customCocktail = customCocktail;
-        this.cocktail = cocktail;
+        this.customCocktailId = customCocktail;
+        this.cocktailId = cocktail;
     }
 
     public CustomCocktailToCocktail() {}
 
-    public Long getId() {
-        return id;
+    public CustomCocktail getCustomCocktailId() {
+        return customCocktailId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCustomCocktailId(CustomCocktail customCocktailId) {
+        this.customCocktailId = customCocktailId;
     }
 
-    public CustomCocktail getCustomCocktail() {
-        return customCocktail;
+    public Cocktail getCocktailId() {
+        return cocktailId;
     }
 
-    public void setCustomCocktail(CustomCocktail customCocktail) {
-        this.customCocktail = customCocktail;
-    }
-
-    public Cocktail getCocktail() {
-        return cocktail;
-    }
-
-    public void setCocktail(Cocktail cocktail) {
-        this.cocktail = cocktail;
+    public void setCocktailId(Cocktail cocktailId) {
+        this.cocktailId = cocktailId;
     }
 }

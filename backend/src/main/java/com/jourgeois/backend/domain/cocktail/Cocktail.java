@@ -37,7 +37,7 @@ public class Cocktail {
     private String img;
 
     @OneToMany(mappedBy = "cocktail")
-    private List<CocktailComment> cocktailReviews = new ArrayList<>();
+    private List<CocktailComment> cocktailComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "cocktail")
     private List<CocktailToMaterial> cocktailToMaterials = new ArrayList<>();

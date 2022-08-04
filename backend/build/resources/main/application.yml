@@ -28,10 +28,11 @@ spring:
         format_sql: true
         show_sql: true
   redis:
-#    host: redis
-    host: localhost
-    password: 1q2w3e4r!@#
+    host: redis
+#    host: localhost
+#    password: 1q2w3e4r!@#
     port: 6379
+
 #cloud:
 #  aws:
 #    s3:
@@ -61,3 +62,4 @@ cloud:
   aws:
     stack:
       auto: false
+

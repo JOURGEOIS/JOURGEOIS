@@ -161,7 +161,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 User 검색결과
-    setSearchUser: ({ commit, state, rootGetters }, keyword: string) => {
+    setSearchUser: ({ commit, state, rootGetters }, data) => {
       const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.user(),
@@ -170,7 +170,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
           email,
         },
         params: {
-          keyword,
+          keyword: data.keyword,
           page: state.searchUserPage,
         },
       })
@@ -212,14 +212,14 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 Cocktail 검색결과
-    setSearchCocktailAll: ({ commit, state, rootGetters }, keyword: string) => {
+    setSearchCocktailAll: ({ commit, state, rootGetters }, data) => {
       const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
         headers: { email },
         params: {
-          keyword,
+          keyword: data.keyword,
           page: state.searchCocktailAllPage,
         },
       })
@@ -244,7 +244,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
       // 페이지 번호 0으로 초기화
       commit("SET_SEARCH_USER_PAGE", 0);
-      commit("SET_SEARCH_COCKTAIL_PAGE", 0);
+      commit("SET_SEARCH_COCKTAIL_ALL_PAGE", 0);
     },
 
     // * 전체 칵테일 추가

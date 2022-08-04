@@ -53,7 +53,7 @@ const componentArray = [
     () => import("@/components/cocktails/TheCocktailDescReview.vue")
   ),
   defineAsyncComponent(
-    () => import("@/components/cocktails/TheCocktailDescCustom.vue")
+    () => import("@/components/cocktails/TheCocktailDescCustomCocktail.vue")
   ),
 ];
 

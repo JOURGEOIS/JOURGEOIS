@@ -33,7 +33,7 @@ export const scroll: Module<ScrollState, RootState> = {
           scrollHeight < scrollTop + clientHeight + 10 &&
           scrollHeight > scrollTop + clientHeight - 10;
         if (isAtTheBottom) {
-          dispatch(data.action, {}, { root: true });
+          dispatch(data.action, data.data, { root: true });
         }
       }, 100);
     },

@@ -82,6 +82,13 @@ public class Member {
         this.roles = "ROLE_USER";
     }
 
+    public Member update(String name, String profileImg){
+        this.name = name;
+        this.profileImg = profileImg;
+
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Member{" +

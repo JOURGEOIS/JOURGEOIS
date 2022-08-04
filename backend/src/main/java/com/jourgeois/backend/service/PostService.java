@@ -97,38 +97,6 @@ public class PostService {
         return url;
     }
 
-    // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
-    public List<PostInfoDTO> readCumstomCoctailList(Long id, int type, Pageable pageable){
-        List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
-        // 1은 시간순 정렬, 나머지는 좋아요
-        List<PostInfoVO> result;
-        if(type == 1){
-            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id);
-        }else{
-            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCount(id);
-        }
-        result.forEach((data) -> {
-            PostDTO post = PostDTO.builder()
-                    .postId(data.getPostId())
-                    .imgLink(s3Url + data.getPostImg())
-                    .description(data.getPostDescription())
-                    .lastUpdateTime(data.getPostLastUpdateTime())
-                    .createTime(data.getPostCreateTime())
-                    .like(data.getPostCount())
-                    .title(data.getPostTitle())
-                    .recipe(data.getPostRecipe())
-                    .ingredients(data.getPostIngredients())
-                    .build();
-            FollowerDTO profile = FollowerDTO.builder()
-                    .uid(data.getUid())
-                    .profileImg(s3Url + data.getProfileImg())
-                    .nickname(data.getNickname())
-                    .build();
-            postInfoDTOList.add(PostInfoDTO.builder().followerDTO(profile).customCocktail(post).build());
-        });
-        return postInfoDTOList;
-    }
-
     // 위의 커스텀 칵테일 목록에서 상세보기 했을 때 전체 내용 (댓글 포함) 북마크 했을 때 수정 필요
 //    public PostInfoDTO readCumstomCoctail(Long p_id){
 //        CustomCocktail post = (CustomCocktail) postRepository.findById(p_id).get();
@@ -284,7 +252,7 @@ public class PostService {
         return postRepository.findById(id).isPresent();
     }
 
-    public Long countPostBookmark(Long p_id){
+    public Integer countPostBookmark(Long p_id){
         return postBookmarkRepository.countByPostId(new Post(p_id));
     }
 
@@ -309,5 +277,46 @@ public class PostService {
                     .build());
         });
         return followersResponse;
+    }
+
+    public PostInfoDTO readCustomCocktail(Long p_id, Long uid){
+        Post post = postRepository.findById(p_id).orElseThrow();
+        PostDTO postDTO = PostDTO.builder().postId(post.getId())
+                .imgLink(s3Url + post.getImg())
+                .description(post.getDescription())
+                .createTime(post.getCreateTime())
+                .lastUpdateTime(post.getLastUpdateTime())
+                .isUpdated(post.getCreateTime().isBefore(post.getLastUpdateTime()) ? 1 : 0) // 수정됐으면 1
+                .like(postBookmarkRepository.countByPostId(new Post(p_id)))
+                .build();
+
+        if(post.getD_type().equals("cocktail")){
+            CustomCocktail cocktail = (CustomCocktail) post;
+            postDTO.setTitle(cocktail.getTitle());
+            postDTO.setIngredients(cocktail.getIngredients());
+            postDTO.setRecipe(cocktail.getRecipe());
+            customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(p_id))
+                    .ifPresent(data -> {
+                        postDTO.setBaseCocktail(data.getCocktailId().getId());
+                        postDTO.setBaseCocktailName(cocktailRepository.findById(data.getCocktailId().getId()).get().getNameKR());
+                    });
+        }
+
+        // uid 는 본인 post의 주인과 비교
+        Member member = memberRepository.findById(post.getMember().getUid()).orElseThrow();
+        FollowPK key = new FollowPK(uid, member.getUid());
+        Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+        if(uid.equals(member.getUid())) {
+            status = -1;
+        }
+
+        FollowerDTO profile = FollowerDTO.builder()
+                .uid(member.getUid())
+                .profileImg(s3Url + member.getProfileImg())
+                .nickname(member.getNickname())
+                .isFollowed(status)
+                .build();
+
+        return PostInfoDTO.builder().followerDTO(profile).customCocktail(postDTO).build();
     }
 }

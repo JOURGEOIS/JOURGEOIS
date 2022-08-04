@@ -18,15 +18,33 @@ public class PostDTO {
     private String description;
     private LocalDateTime createTime;
     private LocalDateTime lastUpdateTime;
+    private Integer isUpdated;
+
     private Integer like;
 
     // 커스텀 칵테일
     private String title;
     private Long baseCocktail;
+    private String baseCocktailName;
     private String ingredients;
     private String recipe;
     private Integer type;
 
+    public Integer getIsUpdated() {
+        return isUpdated;
+    }
+
+    public void setIsUpdated(Integer isUpdated) {
+        this.isUpdated = isUpdated;
+    }
+
+    public String getBaseCocktailName() {
+        return baseCocktailName;
+    }
+
+    public void setBaseCocktailName(String baseCocktailName) {
+        this.baseCocktailName = baseCocktailName;
+    }
     public Integer getLike() {
         return like;
     }

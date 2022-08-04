@@ -3,6 +3,9 @@ package com.jourgeois.backend.service;
 
 import com.jourgeois.backend.api.dto.cocktail.*;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
+import com.jourgeois.backend.api.dto.post.PostDTO;
+import com.jourgeois.backend.api.dto.post.PostInfoDTO;
+import com.jourgeois.backend.api.dto.post.PostInfoVO;
 import com.jourgeois.backend.domain.cocktail.*;
 import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
@@ -26,18 +29,20 @@ public class CocktailService {
     private final MemberRepository memberRepository;
     private final CocktailBookmarkRepository cocktailBookmarkRepository;
     private final FollowRepository followRepository;
+    private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
     private final String s3Url;
 
     @Autowired
     CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailCommentRepository cocktailCommentRepository,
                     MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository,
-                    @Value("${cloud.aws.s3.bucket.path}") String s3Url){
+                    CustomCocktailToCocktailRepository customCocktailToCocktailRepository, @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
         this.cocktailCommentRepository = cocktailCommentRepository;
         this.memberRepository = memberRepository;
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
         this.followRepository = followRepository;
+        this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
         this.s3Url = s3Url;
     }
 
@@ -211,5 +216,37 @@ public class CocktailService {
                     .build());
         });
         return followersResponse;
+    }
+
+    // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
+    public List<PostInfoDTO> readCumstomCoctailList(Long id, int type, Pageable pageable){
+        List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
+        // 1은 시간순 정렬, 나머지는 좋아요
+        List<PostInfoVO> result;
+        if(type == 1){
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id);
+        }else{
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCount(id);
+        }
+        result.forEach((data) -> {
+            PostDTO post = PostDTO.builder()
+                    .postId(data.getPostId())
+                    .imgLink(s3Url + data.getPostImg())
+                    .description(data.getPostDescription())
+                    .lastUpdateTime(data.getPostLastUpdateTime())
+                    .createTime(data.getPostCreateTime())
+                    .like(data.getPostCount())
+                    .title(data.getPostTitle())
+                    .recipe(data.getPostRecipe())
+                    .ingredients(data.getPostIngredients())
+                    .build();
+            FollowerDTO profile = FollowerDTO.builder()
+                    .uid(data.getUid())
+                    .profileImg(s3Url + data.getProfileImg())
+                    .nickname(data.getNickname())
+                    .build();
+            postInfoDTOList.add(PostInfoDTO.builder().followerDTO(profile).customCocktail(post).build());
+        });
+        return postInfoDTOList;
     }
 }

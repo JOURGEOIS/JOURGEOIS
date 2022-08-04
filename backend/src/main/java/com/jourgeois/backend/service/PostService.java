@@ -4,7 +4,6 @@ import com.amazonaws.SdkClientException;
 
 
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.api.dto.post.*;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.FollowPK;
@@ -99,28 +98,33 @@ public class PostService {
     }
 
     // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
-    public List<PostInfoDTO> readCumstomCoctailList(Long id, Pageable pageable){
-        // id == cocktail원본 id
+    public List<PostInfoDTO> readCumstomCoctailList(Long id, int type, Pageable pageable){
         List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
-        customCocktailToCocktailRepository.findByCocktailId(new Cocktail(id), pageable)
-                .forEach(data ->{
-                    Long p_id = data.getCustomCocktailId().getId();
-                    CustomCocktail customCocktail = (CustomCocktail) postRepository.findById(p_id).orElseThrow();
-                    Member member = memberRepository.findById(customCocktail.getMember().getUid()).orElseThrow();
-                    ProfileDTO profile = new ProfileDTO(member.getUid(), null, member.getName(),
-                            member.getNickname(), s3Url+member.getProfileImg(), null);
-                    PostDTO post = PostDTO.builder()
-                            .postId(customCocktail.getId())
-                            .imgLink(s3Url + customCocktail.getImg())
-                            .description(customCocktail.getDescription())
-                            .title(customCocktail.getTitle())
-//                            .baseCocktail(data.getCustomCocktailId().getId())
-                            .createTime(data.getCustomCocktailId().getCreateTime())
-                            .lastUpdateTime(data.getCustomCocktailId().getLastUpdateTime())
-//                            .recipe(customCocktail.getRecipe())
-                            .ingredients(customCocktail.getIngredients())
-                            .build();
-                    postInfoDTOList.add(new PostInfoDTO(post, profile, postBookmarkRepository.countByPostId(new Post(p_id))));
+        // 1은 시간순 정렬, 나머지는 좋아요
+        List<PostInfoVO> result;
+        if(type == 1){
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id);
+        }else{
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCount(id);
+        }
+        result.forEach((data) -> {
+            PostDTO post = PostDTO.builder()
+                    .postId(data.getPostId())
+                    .imgLink(s3Url + data.getPostImg())
+                    .description(data.getPostDescription())
+                    .lastUpdateTime(data.getPostLastUpdateTime())
+                    .createTime(data.getPostCreateTime())
+                    .like(data.getPostCount())
+                    .title(data.getPostTitle())
+                    .recipe(data.getPostRecipe())
+                    .ingredients(data.getPostIngredients())
+                    .build();
+            FollowerDTO profile = FollowerDTO.builder()
+                    .uid(data.getUid())
+                    .profileImg(s3Url + data.getProfileImg())
+                    .nickname(data.getNickname())
+                    .build();
+            postInfoDTOList.add(PostInfoDTO.builder().followerDTO(profile).customCocktail(post).build());
         });
         return postInfoDTOList;
     }

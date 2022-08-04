@@ -14,6 +14,12 @@ public class ProfileDTO {
     private MultipartFile profileLink;
     private String introduce;
 
+    public ProfileDTO(Long uid, String nickname, String profileImg) {
+        this.uid = uid;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+    }
+
     public Long getUid() {
         return uid;
     }
@@ -79,5 +85,5 @@ public class ProfileDTO {
         this.introduce = introduce;
     }
 
-
+//    public ProfileDTO(Long uid, String nickname, String profileImg){}
 }

@@ -28,9 +28,9 @@ spring:
         format_sql: true
         show_sql: true
   redis:
-    host: redis
-#    host: localhost
-#    password: 1q2w3e4r!@#
+#    host: redis
+    host: localhost
+    password: 1q2w3e4r!@#
     port: 6379
 #cloud:
 #  aws:
@@ -45,7 +45,7 @@ spring:
 #      auto: false
 jwt:
   secret-key: secret-key-ssafy-daejeon-jourgeois-service-HS512-algorithm
-  token-validity-in-sec: 60
+  token-validity-in-sec: 5
   refresh-token-validity-in-sec: 604800
 server:
   port: 8080

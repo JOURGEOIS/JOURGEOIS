@@ -86,7 +86,7 @@ public class MemberService {
                                             if(!member.getProfileImg().equals("profile/default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Url + s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");

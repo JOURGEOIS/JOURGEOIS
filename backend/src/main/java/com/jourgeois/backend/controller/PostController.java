@@ -284,4 +284,17 @@ public class PostController {
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value="/auth/feed")
+    public ResponseEntity getNewsFeed(HttpServletRequest request, @PageableDefault(size=10, page = 0) Pageable pageable){
+        Map<String, String> result = new HashMap<>();
+
+        try {
+            Long me = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(postService.getNewsFeed(me, pageable), HttpStatus.OK);
+        } catch (Exception e) {
+            result.put("fail", "피드를 불러오는 것을 실패했습니다.");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

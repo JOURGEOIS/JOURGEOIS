@@ -2,7 +2,10 @@ package com.jourgeois.backend.service;
 
 
 import com.jourgeois.backend.api.dto.cocktail.*;
+import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.domain.cocktail.*;
+import com.jourgeois.backend.domain.member.Follow;
+import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +25,17 @@ public class CocktailService {
     private final CocktailCommentRepository cocktailCommentRepository;
     private final MemberRepository memberRepository;
     private final CocktailBookmarkRepository cocktailBookmarkRepository;
+    private final FollowRepository followRepository;
 
     @Autowired
     CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailCommentRepository cocktailCommentRepository,
-                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository){
+                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
         this.cocktailCommentRepository = cocktailCommentRepository;
         this.memberRepository = memberRepository;
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
+        this.followRepository = followRepository;
     }
 
     // 칵테일 저장 메소드
@@ -179,5 +184,25 @@ public class CocktailService {
 
     public Long countCocktailBookmark(Cocktail cocktail_id){
         return cocktailBookmarkRepository.countByCocktailId(cocktail_id);
+    }
+
+    // uid와 칵테일 id로
+    public List<FollowerDTO> getBookmarkList(Long uid, Long c_id, Pageable pageable){
+        List<FollowerDTO> followersResponse = new ArrayList<>();
+
+        // c_id를 북마크 한 사람들 목록 가져오기
+        cocktailBookmarkRepository.findByCocktailId(new Cocktail(c_id), pageable).forEach(data -> {
+            Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
+            FollowPK key = new FollowPK(uid, member.getUid());
+//            Follow followers = followRepository.findByFromAndTo(key).orElseThrow();
+
+            followersResponse.add(FollowerDTO.builder()
+                    .isFollowed(followRepository.findById(key).isPresent() ? 1 : 0)
+                    .nickname(member.getNickname())
+                    .uid(member.getUid())
+                    .profileImg(member.getProfileImg())
+                    .build());
+        });
+        return followersResponse;
     }
 }

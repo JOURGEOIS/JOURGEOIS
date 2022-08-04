@@ -178,4 +178,22 @@ public class CocktailController {
             return new ResponseEntity<>("fail", HttpStatus.NOT_ACCEPTABLE);
         }
     }
+
+    // uid와 칵테일 id로
+    @GetMapping(value="/bookmakrlist")
+    public ResponseEntity getBookmarkList(@RequestParam(value = "uid") Long uid, @RequestParam(value = "c_id") Long c_id,
+                                @PageableDefault(size=10, page=0) Pageable pageable){
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(cocktailService.getBookmarkList(uid, c_id, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "잘못된 인풋");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

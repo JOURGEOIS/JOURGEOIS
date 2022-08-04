@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
 
@@ -17,4 +18,5 @@ public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
 
     @Query(value = "select member.uid as uid, member.nickname as nickname, member.profile_img as profileImg, 1 as isFollowed from (select * from follow where from_user_id = :uid) as myFollowee left join member on myFollowee.to_user_id = member.uid", nativeQuery = true)
     List<FollowerVO> getFollweeAll(@Param(value = "uid") Long uid, Pageable pageable);
+
 }

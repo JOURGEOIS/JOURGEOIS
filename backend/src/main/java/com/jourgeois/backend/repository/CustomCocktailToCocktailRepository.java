@@ -18,4 +18,5 @@ public interface CustomCocktailToCocktailRepository extends JpaRepository<Custom
     List<CustomCocktailToCocktail> findByCocktailId(Cocktail cocktail, Pageable pageable);
     Optional<CustomCocktailToCocktail> findByCustomCocktailId(CustomCocktail customCocktail);
     void deleteByCustomCocktailId(CustomCocktail id);
+
 }

@@ -18,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -48,8 +49,10 @@ public class PostController {
         if(post.getImg() == null || post.getImg().isEmpty()) {
             result.put("fail", "이미지를 등록해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }else if(post.getType() != null && post.getType() == 1 && (post.getBaseCocktail() == null || post.getBaseCocktail().equals(null))){
+            result.put("fail", "Base Cocktail이 없습니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
-
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
@@ -133,18 +136,6 @@ public class PostController {
             result.put("fail", "게시글이 존재하지 않음");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    // 원본칵테일의 커스텀칵테일 탭 (리스트반환)
-    @GetMapping
-    public ResponseEntity readCustomCocktailList(@RequestParam Long id,
-                                   @PageableDefault(size=10) Pageable pageable){
-        try{
-            return  new ResponseEntity(postService.readCumstomCoctailList(id, pageable), HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity("리스트를 불러오지 못했습니다.", HttpStatus.NOT_ACCEPTABLE);
-        }
-
     }
 
     // 댓글
@@ -255,7 +246,22 @@ public class PostController {
         }else{
             return new ResponseEntity<>("잘못된 회원이거나 게시물입니다.", HttpStatus.NOT_ACCEPTABLE);
         }
+    }
 
-
+    @GetMapping(value="/likelist")
+    public ResponseEntity getLikeList(@RequestParam(value = "uid") Long uid, @RequestParam(value = "p_id") Long p_id,
+                            @PageableDefault(size=10, page=0) Pageable pageable){
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(postService.getLikeList(uid, p_id, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "잘못된 인풋");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

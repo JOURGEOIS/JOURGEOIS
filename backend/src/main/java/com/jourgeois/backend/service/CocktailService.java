@@ -4,11 +4,11 @@ package com.jourgeois.backend.service;
 import com.jourgeois.backend.api.dto.cocktail.*;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.domain.cocktail.*;
-import com.jourgeois.backend.domain.member.Follow;
 import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +26,19 @@ public class CocktailService {
     private final MemberRepository memberRepository;
     private final CocktailBookmarkRepository cocktailBookmarkRepository;
     private final FollowRepository followRepository;
+    private final String s3Url;
 
     @Autowired
     CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailCommentRepository cocktailCommentRepository,
-                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository){
+                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository,
+                    @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
         this.cocktailCommentRepository = cocktailCommentRepository;
         this.memberRepository = memberRepository;
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
         this.followRepository = followRepository;
+        this.s3Url = s3Url;
     }
 
     // 칵테일 저장 메소드
@@ -194,13 +197,17 @@ public class CocktailService {
         cocktailBookmarkRepository.findByCocktailId(new Cocktail(c_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
             FollowPK key = new FollowPK(uid, member.getUid());
-//            Follow followers = followRepository.findByFromAndTo(key).orElseThrow();
+
+            Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+            if(uid.equals(member.getUid())) {
+                status = -1;
+            }
 
             followersResponse.add(FollowerDTO.builder()
-                    .isFollowed(followRepository.findById(key).isPresent() ? 1 : 0)
+                    .isFollowed(status)
                     .nickname(member.getNickname())
                     .uid(member.getUid())
-                    .profileImg(member.getProfileImg())
+                    .profileImg(s3Url+member.getProfileImg())
                     .build());
         });
         return followersResponse;

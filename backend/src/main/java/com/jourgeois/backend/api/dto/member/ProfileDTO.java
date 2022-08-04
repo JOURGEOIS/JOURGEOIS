@@ -20,6 +20,8 @@ public class ProfileDTO {
     private MultipartFile profileLink;
     private String introduce;
 
+    public ProfileDTO(){}
+
     public ProfileDTO(Long uid, String email, String name, String nickname, String profileImg, String introduce) {
         this.uid = uid;
         this.email = email;
@@ -46,12 +48,6 @@ public class ProfileDTO {
         this.nickname = nickname;
         this.profileImg = profileImg;
         this.introduce = introduce;
-    }
-
-    public ProfileDTO(String email, String name, String profileImg) {
-        this.email = email;
-        this.name = name;
-        this.profileImg = profileImg;
     }
 
 }

@@ -5,8 +5,7 @@ import com.jourgeois.backend.security.jwt.JwtAccessDeniedHandler;
 import com.jourgeois.backend.security.jwt.JwtAuthenticationEntryPoint;
 import com.jourgeois.backend.security.jwt.JwtTokenFilterConfigurer;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jourgeois.backend.security.oauth2.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,9 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -32,8 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     WebSecurityConfig(JwtTokenProvider jwtTokenProvider,
-                     JwtAccessDeniedHandler jwtAccessDeniedHandler,
-                     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+                      JwtAccessDeniedHandler jwtAccessDeniedHandler,
+                      JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;

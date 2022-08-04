@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -46,7 +47,8 @@ public class Member {
     private List<PostBookmark> postBookmarks;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<CocktailComment> cocktailReviews;
+    private List<CocktailComment> cocktailComments;
+
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PostReview> postReviews;
@@ -56,6 +58,10 @@ public class Member {
 
     @OneToMany(mappedBy = "to", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Follow> followee;
+
+    @Transient
+    private Date date = new Date();
+
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
         this.email = email;
@@ -65,6 +71,14 @@ public class Member {
         this.birthday = birthday;
         this.profileImg = profileImg;
         this.introduce = introduce;
+    }
+
+    @Builder
+    public Member(String email, String password, String name, String profileImg) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.profileImg = profileImg;
     }
 
     @Builder
@@ -87,6 +101,13 @@ public class Member {
         this.roles = "ROLE_USER";
     }
 
+    public Member update(String name, String profileImg){
+        this.name = name;
+        this.profileImg = profileImg;
+
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
@@ -99,7 +120,8 @@ public class Member {
                 ", profileImg='" + profileImg + '\'' +
                 ", introduce='" + introduce + '\'' +
                 ", creationDate=" + creationDate +
-                ", roles='" + roles + '\''; //+
+
+                ", roles='" + roles + '\'' +"}"; //+
 //                ", posts=" + posts +
 //                ", cocktailBookmarks=" + cocktailBookmarks +
 //                ", postBookmarks=" + postBookmarks +

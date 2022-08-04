@@ -245,10 +245,7 @@ public class MemberService {
         return url;
     }
 
-    public boolean followUser(Map<String, Long> followRequest) throws IllegalArgumentException, Exception{
-        Long from = followRequest.get("from");
-        Long to = followRequest.get("to");
-
+    public boolean followUser(Long from, Long to) throws IllegalArgumentException, Exception{
         Follow follow = new Follow();
 
         Member follower = new Member();
@@ -263,9 +260,8 @@ public class MemberService {
         return true;
     }
 
-    public List<FollowerDTO> getFollowerAll(Map<String, String> request, Pageable pageable) throws NumberFormatException{
-        String uid = request.get("uid");
-        List<FollowerVO> followers = followRepository.getFollwerAll(Long.parseLong(uid), pageable);
+    public List<FollowerDTO> getFollowerAll(Long uid, Pageable pageable) throws NumberFormatException{
+        List<FollowerVO> followers = followRepository.getFollwerAll(uid, pageable);
 
         List<FollowerDTO> followersResponse = new ArrayList<>();
 
@@ -281,9 +277,8 @@ public class MemberService {
         return followersResponse;
     }
 
-    public Object getFolloweeAll(Map<String, String> request, Pageable pageable) {
-        String uid = request.get("uid");
-        List<FollowerVO> followers = followRepository.getFollweeAll(Long.parseLong(uid), pageable);
+    public Object getFolloweeAll(Long uid, Pageable pageable) {
+        List<FollowerVO> followers = followRepository.getFollweeAll(uid, pageable);
 
         List<FollowerDTO> followeesResponse = new ArrayList<>();
 
@@ -297,5 +292,20 @@ public class MemberService {
             followeesResponse.add(followerDTO);
         });
         return followeesResponse;
+    }
+
+    public boolean unfollowUser(Long from, Long to) {
+        Follow follow = new Follow();
+
+        Member follower = new Member();
+        follower.setUid(from);
+        Member followee = new Member();
+        followee.setUid(to);
+
+        follow.setFrom(follower);
+        follow.setTo(followee);
+        followRepository.delete(follow);
+
+        return true;
     }
 }

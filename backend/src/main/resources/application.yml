@@ -10,8 +10,8 @@ spring:
 
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
-#    username: root
-#    password: nh0455k8613!
+    username: root
+    password: nh0455k8613!
 
     hikari:
       auto-commit: false
@@ -49,7 +49,7 @@ spring:
 #      auto: false
 jwt:
   secret-key: secret-key-ssafy-daejeon-jourgeois-service-HS512-algorithm
-  token-validity-in-sec: 5
+  token-validity-in-sec: 60
   refresh-token-validity-in-sec: 604800
 server:
   port: 8080

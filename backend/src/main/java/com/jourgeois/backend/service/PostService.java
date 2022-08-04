@@ -178,7 +178,7 @@ public class PostService {
     public void deletePost(Map<String, Long> postDeleteReq) throws NoSuchElementException, SdkClientException {
         Member member = new Member();
         member.setUid(postDeleteReq.get("uid"));
-        postRepository.findByIdAndMember(postDeleteReq.get("p_id"), member)
+        postRepository.findByIdAndMember(postDeleteReq.get("postId"), member)
                 .ifPresentOrElse((targetPost) -> {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());

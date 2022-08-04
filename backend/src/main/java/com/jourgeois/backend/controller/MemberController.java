@@ -306,12 +306,19 @@ public class MemberController {
     }
 
     // 팔로우
-    @PostMapping("/follow")
-    public ResponseEntity followMember(@RequestBody Map<String, Long> followRequest) {
+    @PostMapping("/auth/follow")
+    public ResponseEntity followMember(HttpServletRequest request, @RequestBody Map<String, Long> followRequest) {
         Map<String, Boolean> data = new HashMap<>();
         try {
-            memberService.followUser(followRequest);
-            data.put("success", true);
+            Long from = Long.valueOf((String) request.getAttribute("uid"));
+            Long to = followRequest.get("to");
+
+            if(to == from) {
+                data.put("success", false);
+                return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+            }
+
+            data.put("success", memberService.followUser(from, to));
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch(JpaObjectRetrievalFailureException e) {
             data.put("success", false);
@@ -322,17 +329,45 @@ public class MemberController {
         }
     }
 
-    // 나를 팔로우하는 사람 목록 보기
-    @GetMapping("/follower")
-    public ResponseEntity getFollowerAll(@RequestParam Map<String, String> request,
+    // 다른 유저를 팔로우하는 사람 목록 보기
+    @GetMapping("/auth/follower")
+    public ResponseEntity getFollowerAll(@RequestParam Long uid,
                                          @PageableDefault(size=10, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
-            return new ResponseEntity(memberService.getFollowerAll(request, pageable), HttpStatus.OK);
+            return new ResponseEntity(memberService.getFollowerAll(uid, pageable), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 다른 유저가 팔로우하는 살마 목록 보기
+    @GetMapping("/auth/followee")
+    public ResponseEntity getFolloweeAll(@RequestParam Long uid,
+                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(memberService.getFolloweeAll(uid, pageable), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 나를 팔로우하는 사람 목록 보기
+    @GetMapping("/auth/my-follower")
+    public ResponseEntity getMyFollowerAll(HttpServletRequest request, @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(memberService.getFollowerAll(uid, pageable), HttpStatus.OK);
         } catch (NumberFormatException e) {
             System.out.println(e);
-            data.put("fail", "잘못된 인풋");
-            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+            data.put("fail", "uid가 이상해요.");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             System.out.println(e);
             data.put("fail", "오류 발생");
@@ -341,19 +376,37 @@ public class MemberController {
     }
 
     // 내가 팔로우하는 살마 목록 보기
-    @GetMapping("/followee")
-    public ResponseEntity getFolloweeAll(@RequestParam Map<String, String> request,
-                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+    @GetMapping("/auth/my-followee")
+    public ResponseEntity getMyFolloweeAll(HttpServletRequest request, @PageableDefault(size=10, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
-            return new ResponseEntity(memberService.getFolloweeAll(request, pageable), HttpStatus.OK);
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(memberService.getFolloweeAll(uid, pageable), HttpStatus.OK);
         } catch (NumberFormatException e) {
             System.out.println(e);
-            data.put("fail", "잘못된 인풋");
-            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+            data.put("fail", "uid가 이상해요.");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             System.out.println(e);
             data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 팔로우 해제
+    @DeleteMapping("/auth/follow")
+    public ResponseEntity unfollow(HttpServletRequest request, @RequestBody Map<String, Long> followRequest) {
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            Long from = Long.valueOf((String) request.getAttribute("uid"));
+            Long to = followRequest.get("to");
+            data.put("success", memberService.unfollowUser(from, to));
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch(JpaObjectRetrievalFailureException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            data.put("success", false);
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

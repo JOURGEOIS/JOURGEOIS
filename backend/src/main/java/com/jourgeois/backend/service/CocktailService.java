@@ -1,10 +1,15 @@
 package com.jourgeois.backend.service;
 
 
-import com.jourgeois.backend.api.dto.*;
-import com.jourgeois.backend.domain.*;
+import com.jourgeois.backend.api.dto.cocktail.*;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.cocktail.CocktailBookmark;
+import com.jourgeois.backend.domain.cocktail.CocktailComment;
+import com.jourgeois.backend.domain.cocktail.Material;
+import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,16 +21,16 @@ import java.util.List;
 public class CocktailService {
     private final CocktailRepository cocktailRepository;
     private final MaterialRepository materialRepository;
-    private final CocktailReviewRepository cocktailReviewRepository;
+    private final CocktailCommentRepository cocktailCommentRepository;
     private final MemberRepository memberRepository;
     private final CocktailBookmarkRepository cocktailBookmarkRepository;
 
     @Autowired
-    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailReviewRepository cocktailReviewRepository,
+    CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailCommentRepository cocktailCommentRepository,
                     MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
-        this.cocktailReviewRepository = cocktailReviewRepository;
+        this.cocktailCommentRepository = cocktailCommentRepository;
         this.memberRepository = memberRepository;
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
     }
@@ -90,8 +95,8 @@ public class CocktailService {
             Member m = memberRepository.findById(cDTO.getUserId()).orElseThrow();
             Cocktail c = cocktailRepository.findById(cDTO.getCocktailId()).orElseThrow();
 
-            CocktailReviews cocktailReviews = new CocktailReviews(m, c, cDTO.getReview());
-            cocktailReviewRepository.save(cocktailReviews);
+            CocktailComment cocktailReviews = new CocktailComment(m, c, cDTO.getComment());
+            cocktailCommentRepository.save(cocktailReviews);
 
             return true;
         } catch (Exception e){
@@ -100,18 +105,18 @@ public class CocktailService {
         }
     }
 
-    public List<CocktailCommentDTO> readComment(Long cocktailId) {
+    public List<CocktailCommentDTO> readComment(Long cocktailId, Pageable pageable) {
         try {
-            List<CocktailCommentVO> ccVOs = cocktailReviewRepository.findBycId(cocktailId).orElseThrow(() -> new Exception("cocktailService.readComment"));
+            List<CocktailCommentVO> ccVOs = cocktailCommentRepository.findCommentsByCocktailId(cocktailId, pageable).orElseThrow(() -> new Exception("cocktailService.readComment"));
             List<CocktailCommentDTO> ccDTOs = new ArrayList<>();
 
             for (CocktailCommentVO ccVO : ccVOs) {
-                CocktailCommentDTO ccDTO = CocktailCommentDTO.builder().id(ccVO.getId()).createdDate(ccVO.getCreatedDate())
-                        .modifiedDate(ccVO.getModifiedDate()).review(ccVO.getReview()).cocktailId(ccVO.getCocktailId()).userId(ccVO.getUserId()).build();
-                System.out.println(ccDTO.toString());
+                CocktailCommentDTO ccDTO = CocktailCommentDTO.builder().commentId(ccVO.getCommentId()).nickname(ccVO.getNickname())
+                        .profileImg(ccVO.getProfileImg()).createdDate(ccVO.getCreatedDate()).modifiedDate(ccVO.getModifiedDate())
+                        .comment(ccVO.getComment()).cocktailId(ccVO.getCocktailId()).userId(ccVO.getUserId()).build();
+
                 ccDTOs.add(ccDTO);
             }
-            System.out.println("ccDTO size : " + ccDTOs.size());
             return ccDTOs;
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,8 +126,26 @@ public class CocktailService {
 
     public boolean updateComment(CocktailCommentDTO cocktailCommentDTO) {
         try {
-//            cocktailReviewRepository.save(cocktailCommentDTO);
+            Long commentId = cocktailCommentDTO.getCommentId();
+            String comment = cocktailCommentDTO.getComment();
 
+            CocktailComment findComment = cocktailCommentRepository.findCocktailCommentByCommentId(commentId).orElseThrow();
+            findComment.setComment(comment);
+            cocktailCommentRepository.save(findComment);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean deleteComment(Long userId, Long commentId) {
+        try {
+            CocktailComment cc = cocktailCommentRepository.findByUidAndCommentId(userId, commentId)
+                                .orElseThrow(() -> new Exception("CocktailService.deleteComment"));
+            cocktailCommentRepository.delete(cc);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

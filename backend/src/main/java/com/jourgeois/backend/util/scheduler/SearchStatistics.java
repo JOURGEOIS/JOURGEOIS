@@ -1,8 +1,8 @@
 package com.jourgeois.backend.util.scheduler;
 
-import com.jourgeois.backend.api.dto.SearchHistoryDTO;
-import com.jourgeois.backend.api.dto.SearchHistoryVO;
-import com.jourgeois.backend.api.dto.SearchTrendDto;
+import com.jourgeois.backend.api.dto.search.SearchHistoryDTO;
+import com.jourgeois.backend.api.dto.search.SearchHistoryVO;
+import com.jourgeois.backend.api.dto.search.SearchTrendDto;
 import com.jourgeois.backend.service.RedisService;
 import com.jourgeois.backend.service.SearchHistoryService;
 import org.springframework.scheduling.annotation.EnableScheduling;

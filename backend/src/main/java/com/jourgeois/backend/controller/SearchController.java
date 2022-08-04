@@ -1,6 +1,6 @@
 package com.jourgeois.backend.controller;
 
-import com.jourgeois.backend.api.dto.SearchFilterDTO;
+import com.jourgeois.backend.api.dto.search.SearchFilterDTO;
 import com.jourgeois.backend.service.CocktailService;
 import com.jourgeois.backend.service.RedisService;
 import com.jourgeois.backend.service.SearchHistoryService;

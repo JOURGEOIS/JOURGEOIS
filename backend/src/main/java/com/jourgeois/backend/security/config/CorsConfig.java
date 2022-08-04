@@ -22,6 +22,7 @@ public class CorsConfig {
         source.registerCorsConfiguration("/token", config);
         source.registerCorsConfiguration("/cocktail/**", config);
         source.registerCorsConfiguration("/lookup/**", config);
+        source.registerCorsConfiguration("/posts/**", config);
         return new CorsFilter(source);
     }
 }

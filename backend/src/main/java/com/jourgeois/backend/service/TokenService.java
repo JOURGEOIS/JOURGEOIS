@@ -1,6 +1,6 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.TokenResponseDTO;
+import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
 import com.jourgeois.backend.domain.auth.RefreshToken;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
@@ -33,7 +33,7 @@ public class TokenService {
 
         Authentication authentication = jwtTokenProvider.getAuthentication(resolveToken);
         // 디비에 있는게 맞는지 확인
-        RefreshToken findTokenEntity = refreshTokenRepository.findByEmail(authentication.getName())
+        RefreshToken findTokenEntity = refreshTokenRepository.findByUid(Long.parseLong(authentication.getName()))
                 .orElseThrow(()-> new RuntimeException("not find refresh Token"));
 
         // 토큰이 같은지 확인

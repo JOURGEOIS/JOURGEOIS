@@ -1,22 +1,20 @@
 package com.jourgeois.backend.service;
 
-import com.jourgeois.backend.api.dto.ProfileDTO;
-import com.jourgeois.backend.api.dto.SearchCocktailDTO;
-import com.jourgeois.backend.api.dto.SearchFilterDTO;
-import com.jourgeois.backend.api.dto.SearchKeywordDTO;
-import com.jourgeois.backend.domain.Material;
+import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.search.SearchCocktailDTO;
+import com.jourgeois.backend.api.dto.search.SearchFilterDTO;
+import com.jourgeois.backend.api.dto.search.SearchKeywordDTO;
+import com.jourgeois.backend.domain.cocktail.Material;
 import com.jourgeois.backend.repository.CocktailRepository;
 import com.jourgeois.backend.repository.MaterialRepository;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.SearchKeywordRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
@@ -62,19 +60,24 @@ public class SearchService {
     public List<ProfileDTO> searchByMember(String name, Pageable pageable){
             List<ProfileDTO> list = new ArrayList<>();
             memberRepository.findByNicknameContainingIgnoreCaseOrderByNickname(name, pageable)
-                .forEach(data ->
-                        list.add(ProfileDTO.builder()
-                                .id(data.getUid())
-                                .email(data.getEmail())
-                                .nickname(data.getNickname())
-                                .profileImg(s3Url+data.getProfileImg())
-                                .introduce(data.getIntroduce()).build()));
+                .forEach(data ->{
+                            ProfileDTO p = new ProfileDTO(data.getUid(), data.getEmail(), data.getName(),
+                                    data.getNickname(), data.getProfileImg(), data.getIntroduce());
+                            list.add(p);
+                        });
+
+//        list.add(ProfileDTO.builder()
+//                .uid(data.getUid())
+//                .email(data.getEmail())
+//                .nickname(data.getNickname())
+//                .profileImg(s3Url+data.getProfileImg())
+//                .introduce(data.getIntroduce()).build())
         return list;
     }
 
     public List<SearchKeywordDTO> searchKeywords(String name){
         List<SearchKeywordDTO> list = new ArrayList<>();
-        searchKeywordRepository.findTop10ByKeywordContainingOrderByNameKr(name).forEach(data ->
+        searchKeywordRepository.findTop10ByNameContainingOrNameKrContainingOrderByNameKr(name, name).forEach(data ->
                 list.add(SearchKeywordDTO.builder()
                         .id(data.getId())
                         .name(data.getName())

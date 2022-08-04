@@ -1,7 +1,7 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.api.dto.SearchHistoryDTO;
-import com.jourgeois.backend.domain.SearchHistory;
+import com.jourgeois.backend.api.dto.search.SearchHistoryDTO;
+import com.jourgeois.backend.domain.search.SearchHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

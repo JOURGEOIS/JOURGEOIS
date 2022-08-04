@@ -38,6 +38,9 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     getUserInfo: (state) => {
       return state.userInfo;
     },
+    getUserInfoUserId: (state) => {
+      return state.userInfo.uid;
+    },
     getUserInfoId: (state) => {
       return state.userInfo.email;
     },
@@ -134,7 +137,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           profileImage.image = response.data.url;
         })
         .catch((error) => {

@@ -103,28 +103,43 @@ onMounted(() => {
   toggleFailPopUp(false)
 })
 
+// 데이터 전송
+const createReview = (data: object) =>
+  store.dispatch("cocktailReview/createCocktailReview",data)
+
+const cocktailData = computed(() => store.getters['cocktailDesc/getCurrentCocktailData'])
+const cocktailId = Number(cocktailData.value.id)
+// console.log(cocktailId)
+
 // 제출
 const submitCreateReviewForm = () => {
-  // 리셋
-  errorMessage.length = 0
-  reviewInputStyle.value = 'normal'
-  occurredError.value = false
 
   // 유효성 검사
   const reviewCondition = checkBadWord(reviewInputValue.value)
-
   // 전달할 데이터
-  const data = {
-    name: profileInfo.name,
-    profileLink: profileInfo.image,
-    content: reviewInputValue.value,
+  const data: object = {
+    nickname: profileInfo.name,
+    profileImg: profileInfo.image,
+    cocktailId: cocktailId,
+    comment: reviewInputValue.value,
   }
-
+  // console.log('data', data)
   // 제출
   if (reviewCondition) {
     reviewInputStyle.value = 'error'
     occurredError.value = true
     toggleFailPopUp(true)
+    // console.log(data)
+
+  } else {
+    console.log(data)
+    createReview(data)
+
+    // 리셋
+    errorMessage.length = 0
+    reviewInputStyle.value = 'normal'
+    occurredError.value = false
+    reviewInputValue.value = ''
   }
 }
 </script>

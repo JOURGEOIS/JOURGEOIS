@@ -3,14 +3,12 @@ package com.jourgeois.backend.service;
 import com.amazonaws.SdkClientException;
 
 
+import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.api.dto.post.*;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.Member;
-import com.jourgeois.backend.domain.post.CustomCocktail;
-import com.jourgeois.backend.domain.post.CustomCocktailToCocktail;
-import com.jourgeois.backend.domain.post.Post;
-import com.jourgeois.backend.domain.post.PostReview;
+import com.jourgeois.backend.domain.post.*;
 
 import com.jourgeois.backend.repository.*;
 import com.jourgeois.backend.util.ImgType;
@@ -19,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
     private final CocktailRepository cocktailRepository;
-
+    private final PostBookmarkRepository postBookmarkRepository;
     private final PostReviewRepository postReviewRepository;
     private final S3Util s3Util;
     private final String s3Url;
@@ -40,12 +39,13 @@ public class PostService {
     @Autowired
     public PostService(PostRepository postRepository,
                        MemberRepository memberRepository,
-                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostReviewRepository postReviewRepository, S3Util s3Util,
+                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostBookmarkRepository postBookmarkRepository, PostReviewRepository postReviewRepository, S3Util s3Util,
                        @Value("${cloud.aws.s3.bucket.path}") String s3Url) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
         this.cocktailRepository = cocktailRepository;
+        this.postBookmarkRepository = postBookmarkRepository;
         this.postReviewRepository = postReviewRepository;
         this.s3Util = s3Util;
         this.s3Url = s3Url;
@@ -81,7 +81,8 @@ public class PostService {
             // 베이스가 있는 커스텀 칵테일이라면
             if(postDTO.getBaseCocktail()!=null){
                 Cocktail ori = cocktailRepository.findById(postDTO.getBaseCocktail()).get();
-                customCocktailToCocktailRepository.findByCustomCocktailAndCocktail(cocktail, ori)
+
+                customCocktailToCocktailRepository.findById(new CustomCocktailId(cocktail.getId(), ori.getId()))
                                 .ifPresentOrElse(data -> {new Exception("BaseCocktail  save Error");},
                                         ()->{customCocktailToCocktailRepository.save(new CustomCocktailToCocktail(cocktail, ori));});
             }
@@ -98,9 +99,9 @@ public class PostService {
     // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
     public List<PostInfoDTO> readCumstomCoctailList(Long id, Pageable pageable){
         List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
-        customCocktailToCocktailRepository.findByCocktail_Id(id, pageable)
+        customCocktailToCocktailRepository.findByCocktailId(new Cocktail(id), pageable)
                 .forEach(data ->{
-                    Long p_id = data.getCustomCocktail().getId();
+                    Long p_id = data.getCocktailId().getId();
                     CustomCocktail customCocktail = (CustomCocktail) postRepository.findById(p_id).orElseThrow();
                     Member member = memberRepository.findById(customCocktail.getMember().getUid()).orElseThrow();
                     ProfileDTO profile = new ProfileDTO(member.getUid(), null, member.getName(),
@@ -110,9 +111,9 @@ public class PostService {
                             .imgLink(customCocktail.getImg())
                             .description(customCocktail.getDescription())
                             .title(customCocktail.getTitle())
-                            .baseCocktail(data.getCocktail().getId())
-                            .createTime(data.getCustomCocktail().getCreateTime())
-                            .lastUpdateTime(data.getCustomCocktail().getLastUpdateTime())
+                            .baseCocktail(data.getCustomCocktailId().getId())
+                            .createTime(data.getCustomCocktailId().getCreateTime())
+                            .lastUpdateTime(data.getCustomCocktailId().getLastUpdateTime())
                             .recipe(customCocktail.getRecipe())
 //                            .ingredients(customCocktail.getIngredients())
                             .build();
@@ -182,8 +183,8 @@ public class PostService {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
                     // cascade 적용이 안됨..!!
-                    customCocktailToCocktailRepository.findByCustomCocktail_Id(postDeleteReq.get("p_id"))
-                                    .ifPresent(data -> {customCocktailToCocktailRepository.deleteById(data.getId());});
+                    customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(postDeleteReq.get("p_id")))
+                                    .ifPresent(data -> {customCocktailToCocktailRepository.deleteByCustomCocktailId(new CustomCocktail(data.getCustomCocktailId()));});
                     postRepository.delete(targetPost);
                 },
                 () -> {throw new NoSuchElementException("게시글을 찾을 수 없습니다.");}
@@ -248,5 +249,35 @@ public class PostService {
         });
 
         return response;
+    }
+
+    @Transactional
+    public boolean pushBookmark(Map<String, Long> bookmark){
+        Long m_id = bookmark.get("uid");
+        Long p_id = bookmark.get("p_id");
+        PostBookmarkId key = new PostBookmarkId(m_id, p_id);
+
+        Member member = new Member();
+        member.setUid(m_id);
+        Post post = new Post();
+        post.setId(p_id);
+
+        postBookmarkRepository.findById(key).ifPresentOrElse(data ->{
+            postBookmarkRepository.deleteById(key);},
+                ()->{postBookmarkRepository.save(new PostBookmark(member, post));});
+
+        return checkUserBookmark(key);
+    }
+
+    public boolean checkUserBookmark(PostBookmarkId key){
+        return postBookmarkRepository.findById(key).isPresent();
+    }
+
+    public boolean checkPostId(Long id){
+        return postRepository.findById(id).isPresent();
+    }
+
+    public Long countPostBookmark(Long p_id){
+        return postBookmarkRepository.countByPostId(new Post(p_id));
     }
 }

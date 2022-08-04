@@ -1,24 +1,31 @@
 package com.jourgeois.backend.domain.post;
 
 import com.jourgeois.backend.domain.member.Member;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-public class PostBookmark implements Serializable {
+@Getter @Setter
+@IdClass(PostBookmarkId.class)
+public class PostBookmark{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private Long id;
-
     @ManyToOne
     @JoinColumn(name = "m_id")
-    private Member member;
+    private Member memberId;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "p_id")
-    private Post post;
+    private Post postId;
+
+    public PostBookmark(){}
+    public PostBookmark(Member member, Post post) {
+        this.memberId = member;
+        this.postId = post;
+    }
+
 
 }

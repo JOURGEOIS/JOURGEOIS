@@ -43,7 +43,7 @@ public class Post {
     @JoinColumn(name = "p_writer")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "postId")
     private List<PostBookmark> postBookmarks;
 
     @OneToMany(mappedBy = "post")
@@ -58,8 +58,12 @@ public class Post {
                 ", createTime=" + createTime +
                 ", lastUpdateTime=" + lastUpdateTime +
                 ", member=" + member +
-                ", postBookmarks=" + postBookmarks +
+//                ", postBookmarks=" + postBookmarks +
                 ", reviews=" + reviews +
                 '}';
+    }
+
+    public Post(Long id) {
+        this.id = id;
     }
 }

@@ -15,8 +15,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @ToString
 @DiscriminatorValue("cocktail")
-public class
-CustomCocktail extends Post {
+public class CustomCocktail extends Post {
     @Column(name = "cc_cocktail_title")
     private String title;
 
@@ -25,4 +24,12 @@ CustomCocktail extends Post {
 
     @Column(name = "cc_cocktail_recipe")
     private String recipe;
+
+    public CustomCocktail(Long p_id) {
+        this.setId(p_id);
+    }
+
+    public CustomCocktail(CustomCocktail customCocktailId) {
+        this.setId(customCocktailId.getId());
+    }
 }

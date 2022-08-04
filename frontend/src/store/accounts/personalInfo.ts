@@ -5,7 +5,7 @@ import { clickHome } from "../../functions/clickEvent";
 import { RootState } from "../index";
 
 export interface userInfo {
-  [props: string]: string;
+  [props: string]: string | number;
 }
 
 export interface PersonalInfoState {
@@ -75,6 +75,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       commit("SET_REFRESH_TOKEN", "");
     },
     saveUserInfo: ({ commit }, data: object) => {
+      console.log(data);
       const jsonUserInfo = JSON.stringify(data);
       localStorage.setItem("userInfo", jsonUserInfo);
       commit("SET_USER_INFO", data);

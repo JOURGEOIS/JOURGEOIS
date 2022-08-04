@@ -1,10 +1,11 @@
 <!-- 
-  부모에서 보내는 props => prev, success
+  부모에서 보내는 props => prev, success, formId
   -------------------------------------------------------------
   prev가 true이면 이전으로 가기 버튼이 보인다. 
   prev가 false이면 이전으로 가기 버튼이 보이지 않는다. 
   success가 true이면 완료 버튼이 보인다.
-  success가 false이면 완료 버튼이 보이지 않는다. 
+  success가 false이면 완료 버튼이 보이지 않는다.
+  formIds는 success 버튼을 클릭하면 보내는 form의 id이다.  
 -->
 
 <template>
@@ -17,9 +18,14 @@
       arrow_back_ios_new
     </span>
     <div class="header-content"><slot></slot></div>
-    <div class="header-success" :style="{ visibility: successVisibility }">
+    <button
+      class="header-success"
+      :style="{ visibility: successVisibility }"
+      type="submit"
+      :form="formId"
+    >
       완료
-    </div>
+    </button>
   </header>
   <hr />
 </template>
@@ -31,11 +37,20 @@ import { computed } from "vue";
 const props = defineProps<{
   prev: boolean;
   success: boolean;
+  formId: string;
 }>();
 
-const emit = defineEmits<{ (e: "prevClicked"): void }>();
+const emit = defineEmits<{
+  (e: "prevClicked"): void;
+  (e: "successClicked"): void;
+}>();
+
 const clicked = () => {
   emit("prevClicked");
+};
+
+const submitted = () => {
+  emit("successClicked");
 };
 
 const iconVisibility = computed(() => {
@@ -92,8 +107,10 @@ header {
 }
 
 .header-success {
+  width: fit-content;
   padding: 0.5em 0 0.5em 0.5em;
   @include font($fs-main, $fw-medium);
+  background-color: white;
 
   @media #{$tablet} {
     font-size: $fs-title;

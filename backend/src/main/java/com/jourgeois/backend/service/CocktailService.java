@@ -123,7 +123,7 @@ public class CocktailService {
 
             for (CocktailCommentVO ccVO : ccVOs) {
                 CocktailCommentDTO ccDTO = CocktailCommentDTO.builder().commentId(ccVO.getCommentId()).nickname(ccVO.getNickname())
-                        .profileImg(ccVO.getProfileImg()).createdDate(ccVO.getCreatedDate()).modifiedDate(ccVO.getModifiedDate())
+                        .profileImg(s3Url + ccVO.getProfileImg()).createdDate(ccVO.getCreatedDate()).modifiedDate(ccVO.getModifiedDate())
                         .comment(ccVO.getComment()).cocktailId(ccVO.getCocktailId()).userId(ccVO.getUserId()).build();
 
                 ccDTOs.add(ccDTO);

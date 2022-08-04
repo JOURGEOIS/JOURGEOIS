@@ -193,18 +193,23 @@ public class MemberController {
 
         return ResponseEntity.badRequest().body(null);
     }
-//    @PostMapping("/social-login-google")
-//    public ResponseEntity socialLoginKakao(@RequestBody Map<String, String> loginForm) {
-//        String email = loginForm.get("email");
-//        String password = loginForm.get("password");
-//        System.out.println(email + " " + password);
-//
-//        Map<String, Object> data = new HashMap<>();
-//        UserDetails userDetails = memberService.loginUser(email, password);
-//        data.put("token", memberService.createToken(userDetails));
-//        data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
-//        return new ResponseEntity(data, HttpStatus.OK);
-//    }
+
+    @GetMapping(value = "/login/kakao")
+    public ResponseEntity<?> moveKakaoInitUrl() {
+        String authUrl = configUtils.googleInitUrl();
+        URI redirectUri = null;
+        try {
+            redirectUri = new URI(authUrl);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(redirectUri);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
 
     @GetMapping("/auth/logout")
     public HttpStatus logout(HttpServletRequest  request){

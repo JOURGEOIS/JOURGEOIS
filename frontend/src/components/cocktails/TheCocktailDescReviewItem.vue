@@ -57,6 +57,14 @@ const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
 const img: string = userInfo.value.profileImg
 const name: string = userInfo.value.nickname
 
+// 칵테일 후기 정보 불러오기
+const cocktailReviewData = computed(
+  () => store.getters["cocktailReview/getCurrentCocktailReview"]
+);
+// 칵테일 id
+const cocktailId = computed(() => cocktailReviewData.value.cocktailId);
+// console.log(cocktailId)
+
 // profile image
 const reviews = ref([
   {

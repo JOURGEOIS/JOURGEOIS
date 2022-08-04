@@ -1,6 +1,5 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
 import com.jourgeois.backend.domain.post.PostBookmark;
 import com.jourgeois.backend.domain.post.PostBookmarkId;

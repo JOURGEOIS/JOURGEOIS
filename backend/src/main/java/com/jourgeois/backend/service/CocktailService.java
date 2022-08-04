@@ -2,10 +2,7 @@ package com.jourgeois.backend.service;
 
 
 import com.jourgeois.backend.api.dto.cocktail.*;
-import com.jourgeois.backend.domain.cocktail.Cocktail;
-import com.jourgeois.backend.domain.cocktail.CocktailBookmark;
-import com.jourgeois.backend.domain.cocktail.CocktailComment;
-import com.jourgeois.backend.domain.cocktail.Material;
+import com.jourgeois.backend.domain.cocktail.*;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -154,17 +152,25 @@ public class CocktailService {
     }
 
     @Transactional
-    public boolean pushBookmark(CocktailBookmarkDTO cocktailBookmark){
-        cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
-                cocktailBookmark.getCocktail()).ifPresentOrElse(data -> {
-                    cocktailBookmarkRepository.deleteById(data.getId());},
-            ()->{cocktailBookmarkRepository.save(new CocktailBookmark(cocktailBookmark.getMember(), cocktailBookmark.getCocktail()));});
-        return checkUserBookmark(cocktailBookmark);
+    public boolean pushBookmark(Map<String, Long> cocktailBookmark){
+        Long m_id = cocktailBookmark.get("uid");
+        Long c_id = cocktailBookmark.get("c_id");
+        CocktailBookmarkId key = new CocktailBookmarkId(m_id, c_id);
+
+        Member member = new Member();
+        member.setUid(m_id);
+        Cocktail cocktail = new Cocktail();
+        cocktail.setId(c_id);
+
+        cocktailBookmarkRepository.findById(key).ifPresentOrElse(data -> {
+            cocktailBookmarkRepository.deleteById(key);},
+                ()->{cocktailBookmarkRepository.save(new CocktailBookmark(member, cocktail));});
+
+        return checkUserBookmark(key);
     }
 
-    public boolean checkUserBookmark(CocktailBookmarkDTO cocktailBookmark){
-        return cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
-                cocktailBookmark.getCocktail()).isPresent();
+    public boolean checkUserBookmark(CocktailBookmarkId key){
+        return cocktailBookmarkRepository.findById(key).isPresent();
     }
 
     public boolean checkCocktailUid(Long uid){
@@ -172,6 +178,6 @@ public class CocktailService {
     }
 
     public Long countCocktailBookmark(Cocktail cocktail_id){
-        return cocktailBookmarkRepository.countByCocktail(cocktail_id);
+        return cocktailBookmarkRepository.countByCocktailId(cocktail_id);
     }
 }

@@ -39,7 +39,7 @@ public class Member {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY)
     private List<CocktailBookmark> cocktailBookmarks;
 
     @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY)

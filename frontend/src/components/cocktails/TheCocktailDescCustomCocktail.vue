@@ -1,6 +1,6 @@
 <template>
   <section class="add-custom-cocktail" @click="addCustomCocktail">
-    <span class="material-icons add-icon"> add_circle </span>
+    <span class="material-icons add-icon">add_circle</span>
     <span>커스텀 칵테일 만들기</span>
   </section>
   <section class="custom-cocktail-section">
@@ -10,22 +10,22 @@
 </template>
 
 <script setup lang="ts">
-import TheListItemCustomCocktail from "@/components/cocktails/TheListItemCustomCocktail.vue";
-import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
-const router = useRouter();
-const route = useRoute();
-const store = useStore();
+import TheListItemCustomCocktail from '@/components/cocktails/TheListItemCustomCocktail.vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+const router = useRouter()
+const route = useRoute()
+const store = useStore()
 
-const customCocktails = [];
+const customCocktails = []
 
 // 커스텀 칵테일 만들기 클릭
 const addCustomCocktail = () => {
   router.push({
-    name: "TheCustomCocktailFormView",
+    name: 'TheCustomCocktailFormView',
     params: { cocktailId: route.params.cocktailId },
-  });
-};
+  })
+}
 </script>
 
 <style scoped lang="scss">

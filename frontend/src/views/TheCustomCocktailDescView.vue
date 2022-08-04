@@ -40,7 +40,7 @@ const customCocktailInfo: CustomCocktail = {
     title: "마!가린",
     baseCocktail: 17216,
     baseCocktailName: "토미스 마가리타",
-    ingredients: "",
+    ingredients: ["데킬라", "마가린", "치즈", "레몬"],
     recipe:
       "부어요. <> 막 부어요. <> 몰라 그냥 부어요. <> 냅다 부어요 그냥. <> 섞어요 엄청 섞어요",
   },

@@ -8,12 +8,21 @@ import lombok.Builder;
 public class PostInfoDTO {
     private PostDTO customCocktail;
     private ProfileDTO profileDTO;
-
+    private Long like;
     public PostInfoDTO(){}
 
-    public PostInfoDTO(PostDTO post, ProfileDTO profileDTO) {
-        this.customCocktail = post;
+    public PostInfoDTO(PostDTO customCocktail, ProfileDTO profileDTO, Long like) {
+        this.customCocktail = customCocktail;
         this.profileDTO = profileDTO;
+        this.like = like;
+    }
+
+    public Long getLike() {
+        return like;
+    }
+
+    public void setLike(Long like) {
+        this.like = like;
     }
 
     public PostDTO getCustomCocktail() {

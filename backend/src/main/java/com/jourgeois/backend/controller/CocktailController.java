@@ -198,13 +198,15 @@ public class CocktailController {
     }
 
     // 원본칵테일의 커스텀칵테일 탭 (리스트반환)
-    // s3 url 넣어야됨, 재료넣어야되고 baseCocktail, recipe 필요없음., 좋아요 개수 필요 좋아요 최신순 정멸
     @GetMapping
-    public ResponseEntity readCustomCocktailList(@RequestParam Long id,
+    public ResponseEntity readCustomCocktailList(@RequestParam Long id, @RequestParam int type,
                                                  @PageableDefault(size=10, page = 0) Pageable pageable){
         try{
-            return  new ResponseEntity(postService.readCumstomCoctailList(id, pageable), HttpStatus.CREATED);
-        }catch (Exception e) {
+            return  new ResponseEntity(postService.readCumstomCoctailList(id, type, pageable), HttpStatus.CREATED);
+        }catch (NumberFormatException e) {
+            System.out.println(e);
+            return new ResponseEntity("잘못된 인풋", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity("리스트를 불러오지 못했습니다.", HttpStatus.NOT_ACCEPTABLE);
         }
 

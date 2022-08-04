@@ -242,4 +242,22 @@ public class MemberController {
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // 내가 팔로우하는 살마 목록 보기
+    @GetMapping("/followee")
+    public ResponseEntity getFolloweeAll(@RequestParam Map<String, String> request,
+                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(memberService.getFolloweeAll(request, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "잘못된 인풋");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

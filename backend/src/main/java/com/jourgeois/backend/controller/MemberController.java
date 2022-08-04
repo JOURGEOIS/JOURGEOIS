@@ -7,6 +7,8 @@ import com.jourgeois.backend.security.jwt.JwtTokenProvider;
 import com.jourgeois.backend.service.MemberService;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -219,6 +221,24 @@ public class MemberController {
             return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 나를 팔로우하는 사람 목록 보기
+    @GetMapping("/follower")
+    public ResponseEntity getFollowerAll(@RequestParam Map<String, String> request,
+                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(memberService.getFollowerAll(request, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "잘못된 인풋");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -229,13 +226,29 @@ public class PostService {
         postReviewRepository.delete(postReview);
     }
 
-    public List<PostReviewResponseVO> getReviewAll(Long p_id, Boolean asc, Pageable pageable) throws Exception {
+    public List<PostReviewResponseDTO> getReviewAll(Long p_id, Boolean asc, Pageable pageable) throws Exception {
         if(asc) pageable.getSort().ascending();
         else pageable.getSort().descending();
 
         List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(p_id, pageable);
+        List<PostReviewResponseDTO> response = new LinkedList<>();
 
-        return reviews;
+        reviews.forEach((review) -> {
+            PostReviewResponseDTO postReviewResponse = PostReviewResponseDTO.builder()
+                    .uid(review.getUid())
+                    .nickname(review.getNickname())
+                    .review(review.getReview())
+                    .profileImg(s3Url + review.getProfileImg())
+                    .isUpdated(review.getIsUpdated())
+                    .createTime(review.getCreateTime())
+                    .updateTime(review.getUpdateTime())
+                    .build();
+
+            response.add(postReviewResponse);
+
+        });
+
+        return response;
     }
 
     @Transactional

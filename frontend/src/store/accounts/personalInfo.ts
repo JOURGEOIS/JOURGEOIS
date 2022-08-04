@@ -136,7 +136,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           profileImage.image = response.data.url;
         })
         .catch((error) => {

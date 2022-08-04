@@ -292,7 +292,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
           commit("SET_SEARCH_FILTER", response.data);
           commit("SET_SEARCH_FILTER_PAGE", page + 1);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.error(error));
     },
 
     removeSearchFilter: ({ commit }) => {

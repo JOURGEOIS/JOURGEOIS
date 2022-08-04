@@ -157,7 +157,7 @@ public class MemberService {
     public ProfileDTO findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
         ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
-                member.getNickname(), member.getProfileImg(), member.getIntroduce());
+                member.getNickname(), s3Url + member.getProfileImg(), member.getIntroduce());
         return p;
 
     }

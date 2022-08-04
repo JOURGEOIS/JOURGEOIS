@@ -76,6 +76,8 @@ public class ProfileDTO {
         this.introduce = introduce;
     }
 
+    public ProfileDTO(){}
+
     public ProfileDTO(Long uid, String email, String name, String nickname, String profileImg, String introduce) {
         this.uid = uid;
         this.email = email;

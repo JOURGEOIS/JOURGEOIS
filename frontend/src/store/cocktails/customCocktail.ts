@@ -2,10 +2,14 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
-import { stat } from "fs";
+import { checkBadWord } from "../../functions/checkText";
+import router from "../../router";
 
 // ! main State
 export interface CustomCocktailState {
+  // 원본 칵테일 번호
+  originalCocktailId: number;
+
   // 원본 칵테일 이름
   originalCocktailName: string;
 
@@ -17,12 +21,24 @@ export interface CustomCocktailState {
 
   // 검색 자동완성 재료 리스트
   searchIngredientsList: string[];
+
+  // 팝업 알림
+  alertStatus: boolean;
+
+  // 오류 메시지
+  errorMessage: string;
+
+  // 성공 메시지
+  successMessage: string;
 }
 
 export const customCocktail: Module<CustomCocktailState, RootState> = {
   namespaced: true,
 
   state: {
+    // 원본 칵테일 번호
+    originalCocktailId: 0,
+
     // 원본 칵테일 이름
     originalCocktailName: "",
 
@@ -34,9 +50,21 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
 
     // 검색 자동완성 재료 리스트
     searchIngredientsList: [],
+
+    // 에러 팝업 상태
+    alertStatus: false,
+
+    // 에러 메시지
+    errorMessage: "",
+
+    // 성공 메시지
+    successMessage: "",
   },
 
   getters: {
+    // 원본 칵테일 번호
+    getOriginalCocktailId: (state) => state.originalCocktailId,
+
     // 원본 칵테일 이름
     getOriginalCocktailName: (state) => state.originalCocktailName,
 
@@ -49,9 +77,23 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
 
     // 검색 자동 완성 재료 리스트
     getSearchIngredientsList: (state) => state.searchIngredientsList,
+
+    // 알럿 팝업 상태
+    getAlertStatus: (state) => state.alertStatus,
+
+    // 에러 메시지
+    getErrorMessage: (state) => state.errorMessage,
+
+    // 성공 메시지
+    getSuccessMessage: (state) => state.successMessage,
   },
 
   mutations: {
+    // 원본 칵테일 번호
+    SET_ORIGINAL_COCKTAIL_ID: (state, value: number) => {
+      state.originalCocktailId = value;
+    },
+
     // 원본 칵테일 이름
     SET_ORIGINAL_COCKTAIL_NAME: (state, value: string) =>
       (state.originalCocktailName = value),
@@ -77,9 +119,29 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
     // 검색 자동 완성 리스트
     SET_SEARCH_INGREDIENTS_LIST: (state, value: string[]) =>
       (state.searchIngredientsList = value),
+
+    // 에러 팝업
+    SET_ALERT_STATUS: (state, value: boolean) => {
+      state.alertStatus = value;
+    },
+
+    // 에러 메시지
+    SET_ERROR_MESSAGE: (state, value: string) => {
+      state.errorMessage = value;
+    },
+
+    // 성공 메시지
+    SET_SUCCESS_MESSAGE: (state, value: string) => {
+      state.successMessage = value;
+    },
   },
 
   actions: {
+    // 알럿 팝업
+    changeAlertStatus: ({ commit }, value: boolean) => {
+      commit("SET_ALERT_STATUS", value);
+    },
+
     // 칵테일 정보 가져오기
     getOriginalCocktailData: ({ commit }, id: number) => {
       axios({
@@ -96,6 +158,8 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           );
           const recipe = data.recipe.split(" <> ");
 
+          // 전처리한 데이터 저장
+          commit("SET_ORIGINAL_COCKTAIL_ID", id);
           commit("SET_ORIGINAL_COCKTAIL_NAME", data.nameKR);
           commit("SET_ORIGINAL_COCKTAIL_INGREDIENTS", ingredients);
           commit("SET_ORIGINAL_COCKTAIL_RECIPE", recipe);
@@ -104,7 +168,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
     },
 
     // 사진 업로드 임시 저장
-    uploadImage: ({ rootGetters, dispatch }, data) => {
+    uploadImage: ({ rootGetters, dispatch, commit }, data) => {
       const { img, imageUrl } = data;
       axios({
         url: api.post.uploadImage(),
@@ -122,8 +186,8 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            // 실패 팝업
-            console.error(error);
+            commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            commit("SET_ALERT_STATUS", true);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -135,6 +199,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         });
     },
 
+    //------------------------------------ 재료 검색 ----------------------------------------
     // 재료 검색 자동완성
     searchIngredients: ({ commit }, keyword: string) => {
       console.log("몇번");
@@ -174,10 +239,12 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         commit("SET_ORIGINAL_COCKTAIL_INGREDIENTS", value);
       } else {
         if (!conditionA) {
-          alert("중복된 재료를 등록할 수 없습니다. ");
+          commit("SET_ERROR_MESSAGE", "이미 등록된 재료입니다.");
+          commit("SET_ALERT_STATUS", true);
         }
         if (!conditionB) {
-          alert("최대 10개의 재료를 등록할 수 있습니다.");
+          commit("SET_ERROR_MESSAGE", "최대 10개까지 등록할 수 있습니다.");
+          commit("SET_ALERT_STATUS", true);
         }
       }
     },
@@ -189,11 +256,13 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
       commit("SET_ORIGINAL_COCKTAIL_INGREDIENTS", newIngredients);
     },
 
+    //------------------------------------ 레시피 ----------------------------------------
     // 레시피 단계 추가하기
     addRecipeStep: ({ commit, getters }) => {
       const steps: string[] = getters["getOriginalCocktailRecipe"];
       if (steps.length > 9) {
-        alert("10단계 넘음 ㅋ");
+        commit("SET_ERROR_MESSAGE", "최대 10개까지 등록할 수 있습니다.");
+        commit("SET_ALERT_STATUS", true);
       } else {
         commit("SET_ORIGINAL_COCKTAIL_RECIPE", "");
       }
@@ -204,6 +273,114 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
       const steps: string[] = getters["getOriginalCocktailRecipe"];
       steps.splice(value, 1);
       commit("SET_ORIGINAL_COCKTAIL_RECIPE", steps);
+    },
+
+    //------------------------------------ 제출 ----------------------------------------
+    // 칵테일 제출전 유효성 검사 (빈 필드가 있는지 확인한다.)
+    submitCustomCocktailForm: ({ commit, getters, dispatch }, data) => {
+      const { title, img } = data;
+
+      // 빈필드 확인 (빈 필드가 있으면 false)
+      const imgRequired = img instanceof File;
+      const titleRequired = !!title;
+      const recipeRequired = !!(
+        getters["getOriginalCocktailRecipe"].length > 0
+      );
+      const ingredientsRequired = !!(
+        getters["getOriginalCocktailIngredients"].length > 0
+      );
+
+      // 전부 true면 유효성 검사 통과!
+      if (
+        imgRequired &&
+        titleRequired &&
+        recipeRequired &&
+        ingredientsRequired
+      ) {
+        // 비속어 유효성 검사, 레시피 빈칸 유효성 검사
+        dispatch("checkTextInput", data);
+      } else {
+        commit(
+          "SET_ERROR_MESSAGE",
+          "이름, 이미지, 재료, 제작 항목은 필수 입력입니다"
+        );
+        commit("SET_ALERT_STATUS", true);
+      }
+    },
+
+    checkTextInput: ({ dispatch, getters, commit }, data) => {
+      const { title, description } = data;
+
+      // 레시피 중 빈 문자만 제출했는지 확인 (빈문자열이 있으면 false)
+      const recipeNull = !getters["getOriginalCocktailRecipe"].some(
+        (item: string) => item === ""
+      );
+      if (!recipeNull) {
+        commit("SET_ERROR_MESSAGE", "제작 항목에는 빈 값을 입력할 수 없습니다");
+        commit("SET_ALERT_STATUS", true);
+        return;
+      }
+
+      // 비속어 확인 (비속어가 있으면 true)
+      const titleCheck = checkBadWord(title);
+      const descriptionCheck = checkBadWord(description);
+
+      if (titleCheck || descriptionCheck) {
+        commit("SET_ERROR_MESSAGE", "부적절한 언어가 포함되었습니다");
+        commit("SET_ALERT_STATUS", true);
+        return;
+      }
+
+      // 저장
+      dispatch("saveCustomCocktail", data);
+    },
+
+    // 저장
+    saveCustomCocktail: ({ commit, getters, rootGetters, dispatch }, data) => {
+      const { img, title, description } = data;
+      // 저장하기
+      axios({
+        url: api.post.postCocktail(),
+        method: "post",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+          "Content-Type": "multipart/form-data",
+        },
+        data: {
+          img,
+          description,
+          title,
+          baseCocktail: getters["getOriginalCocktailId"],
+          ingredients: getters["getOriginalCocktailIngredients"].join(),
+          recipe: getters["getOriginalCocktailRecipe"].join(" <> "),
+          type: 1,
+        },
+      })
+        .then(() => {
+          // 상세 페이지로 이동
+          router.push({
+            name: "TheCocktailDescView",
+            params: { cocktailId: getters["getOriginalCocktailId"] },
+          });
+
+          // 성공 알림
+          commit("SET_SUCCESS_MESSAGE", "성공적으로 등록되었습니다");
+          commit("SET_ALERT_STATUS", true);
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            // 실패 팝업
+            commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            commit("SET_ALERT_STATUS", true);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "customCocktail/saveCustomCocktail",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
     },
   },
 };

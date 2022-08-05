@@ -8,12 +8,18 @@
       maxlength="500"
       placeholder="광고 및 욕설, 비속어나 타인을 비방하는 문구를 사용하면 비공개 될 수 있습니다"
       @input="emitValue"
+      :value="modelValue"
     ></textarea>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+
+// textarea value
+const props = defineProps<{
+  modelValue: string;
+}>();
 
 // textarea의 value emit하기
 const emit = defineEmits<{

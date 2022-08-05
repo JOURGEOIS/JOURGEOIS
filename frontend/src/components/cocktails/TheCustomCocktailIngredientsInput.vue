@@ -94,6 +94,9 @@ const deleteSearchIngredients = (item: string) =>
 
 // 검색어 제출
 const submitSearchValue = () => {
+  if (!customCocktailSearchValue.value) {
+    return;
+  }
   store.dispatch(
     "customCocktail/addIngredients",
     customCocktailSearchValue.value

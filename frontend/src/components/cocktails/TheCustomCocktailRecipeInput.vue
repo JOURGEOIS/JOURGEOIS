@@ -14,9 +14,9 @@
       </div>
       <input
         type="text"
-        :value="item"
         :id="`recipe-input-${index}`"
         maxlength="40"
+        v-model="customCocktailRecipeList[index]"
       />
     </div>
   </form>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 import { useStore } from "vuex";
 import InputBasic from "@/components/basics/InputBasic.vue";
 const store = useStore();

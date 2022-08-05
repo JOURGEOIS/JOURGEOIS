@@ -64,7 +64,8 @@ const clickNewsFeed = () => {
 // 게시 버튼 클릭
 const clickPost = () => {
   setNavIconStatus(2);
-  alert("게시 모달을 띄워라");
+  store.dispatch("createFeed/changeCreateFeedModalClass", "start");
+  store.dispatch("createFeed/toggleCreateFeedModal", true);
 };
 
 // 검색 버튼 클릭

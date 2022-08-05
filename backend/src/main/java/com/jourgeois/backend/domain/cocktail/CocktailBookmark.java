@@ -11,25 +11,28 @@ import javax.persistence.*;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
+@IdClass(CocktailBookmarkId.class)
 public class CocktailBookmark{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Column(nullable = false)
+//    private Long id;
 
+    @Id
     @ManyToOne
     @JoinColumn(name="m_id")
-    private Member member;
+    private Member memberId;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "c_id")
-    private Cocktail cocktail;
+    private Cocktail cocktailId;
 
     @Builder
     public CocktailBookmark(Member member, Cocktail cocktail){
-        this.member = member;
-        this.cocktail = cocktail;
+        this.memberId = member;
+        this.cocktailId = cocktail;
     }
 
 }

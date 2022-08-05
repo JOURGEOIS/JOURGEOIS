@@ -6,15 +6,10 @@ spring:
 #    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    username: root
-#    password: 1q2w3e4r!@#
+#    password:
 
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
-#    username: root
-#    password: nh0455k8613!
-
-#    username: root
-#    password: 1q2w3e4r!@#
 
     hikari:
       auto-commit: false
@@ -35,20 +30,10 @@ spring:
 #    host: localhost
 #    password: 1q2w3e4r!@#
     port: 6379
-#cloud:
-#  aws:
-#    s3:
-#      bucket: jourgeois-profile-image
-#    region:
-#      static: ap-northeast-2
-#    credentials:
-#      accessKey: AKIA3UA3EZT64ZXACMGY
-#      secretKey: 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
-#    stack:
-#      auto: false
+
 jwt:
   secret-key: secret-key-ssafy-daejeon-jourgeois-service-HS512-algorithm
-  token-validity-in-sec: 5
+  token-validity-in-sec: 30
   refresh-token-validity-in-sec: 604800
 server:
   port: 8080
@@ -64,3 +49,5 @@ cloud:
   aws:
     stack:
       auto: false
+
+# 정리 한 번 합시다..

@@ -62,7 +62,7 @@ public class SearchService {
             memberRepository.findByNicknameContainingIgnoreCaseOrderByNickname(name, pageable)
                 .forEach(data ->{
                             ProfileDTO p = new ProfileDTO(data.getUid(), data.getEmail(), data.getName(),
-                                    data.getNickname(), data.getProfileImg(), data.getIntroduce());
+                                    data.getNickname(), s3Url + data.getProfileImg(), data.getIntroduce());
                             list.add(p);
                         });
 

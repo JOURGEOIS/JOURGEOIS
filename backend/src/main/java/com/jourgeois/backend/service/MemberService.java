@@ -1,5 +1,7 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.member.FollowerDTO;
+import com.jourgeois.backend.api.dto.member.FollowerVO;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
@@ -11,10 +13,12 @@ import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.repository.auth.RefreshTokenRepository;
 import com.jourgeois.backend.security.MyUserDetailsService;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
+import com.jourgeois.backend.socialLogin.GoogleLoginDTO;
 import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,15 +28,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -40,9 +43,10 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final S3Util s3Util;
     private final String s3Url;
+
+
     @Autowired
-    MemberService(MemberRepository memberRepository,
-                  FollowRepository followRepository, PasswordEncoder passwordEncoder,
+    MemberService(MemberRepository memberRepository, FollowRepository followRepository, PasswordEncoder passwordEncoder,
                   JwtTokenProvider jwtTokenProvider,
                   MyUserDetailsService myUserDetailsService,
                   RefreshTokenRepository refreshTokenRepository,
@@ -82,10 +86,10 @@ public class MemberService {
                                     member.setNickname(data.getNickname());
                                     try{
                                         if(data.getProfileLink()!=null && !data.getProfileLink().isEmpty()){
-                                            if(!member.getProfileImg().equals("default/1.png")) {
+                                            if(!member.getProfileImg().equals("profile/default/1.png")) {
                                                 s3Util.deleteFile(member.getProfileImg());
                                             }
-                                            member.setProfileImg(s3Url + s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
+                                            member.setProfileImg(s3Util.upload(data.getProfileLink(), member.getUid(), ImgType.PROFILE));
                                         }
                                     } catch (IOException e){
                                         throw new IllegalArgumentException("이미지 업로드 오류");
@@ -129,6 +133,47 @@ public class MemberService {
         }
         return userDetails;
     }
+
+    public UserDetails loginUser(GoogleLoginDTO googleLoginDTO){
+        System.out.println("GOOGLE EMAIL : " + googleLoginDTO.getEmail());
+        Member member = memberRepository.findByEmail(googleLoginDTO.getEmail()).orElse(null) ;
+        UserDetails userDetails = null;
+
+        // 찾는 멤버가 없으면 리턴
+        if(member == null){
+            member = signUpSocialUser(googleLoginDTO);
+        }
+
+        userDetails = myUserDetailsService.loadUserByUsername(member.getUid().toString());
+
+        System.out.println("member.getPassword() : "+member.getPassword());
+        System.out.println("googleLoginDTO.getSub() : "+googleLoginDTO.getSub());
+        // DB에 있는 sub(password)와 들어온 sub와 일치하는 지 확인
+        if(member.getPassword().equals(googleLoginDTO.getSub())){
+            return userDetails;
+        }
+        else {
+            throw new BadCredentialsException("uid : " + userDetails.getUsername() + " / Invalid social login");
+        }
+    }
+
+    public Member signUpSocialUser(GoogleLoginDTO gDTO){
+        String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now());
+
+        Member m = Member.builder().email(gDTO.getEmail()).password(gDTO.getSub()).name(gDTO.getName())
+                .profileImg("profile/default/1.png").nickname("유저"+gDTO.getSub().substring(3,10) + date).build();
+        try{
+            memberRepository.save(m);
+            memberRepository.flush();
+
+            return memberRepository.findByEmail(gDTO.getEmail()).orElseThrow(()-> new Exception("signUpSocialUser"));
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     @Transactional
     public TokenResponseDTO createToken(UserDetails userDetails) {
         Authentication authentication =  new UsernamePasswordAuthenticationToken(
@@ -156,7 +201,7 @@ public class MemberService {
     public ProfileDTO findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
         ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
-                member.getNickname(), member.getProfileImg(), member.getIntroduce());
+                member.getNickname(), s3Url + member.getProfileImg(), member.getIntroduce());
         return p;
 
     }
@@ -244,10 +289,7 @@ public class MemberService {
         return url;
     }
 
-    public boolean followUser(Map<String, Long> followRequest) throws IllegalArgumentException, Exception{
-        Long from = followRequest.get("from");
-        Long to = followRequest.get("to");
-
+    public boolean followUser(Long from, Long to) throws IllegalArgumentException, Exception{
         Follow follow = new Follow();
 
         Member follower = new Member();
@@ -258,6 +300,55 @@ public class MemberService {
         follow.setFrom(follower);
         follow.setTo(followee);
         followRepository.save(follow);
+
+        return true;
+    }
+
+    public List<FollowerDTO> getFollowerAll(Long uid, Long me, Pageable pageable) throws NumberFormatException{
+        List<FollowerVO> followers = followRepository.getFollwerAll(uid, me, pageable);
+
+        List<FollowerDTO> followersResponse = new ArrayList<>();
+
+        followers.forEach((follower) -> {
+            FollowerDTO followerDTO = FollowerDTO.builder()
+                    .isFollowed(follower.getIsFollowed())
+                    .nickname(follower.getNickname())
+                    .uid(follower.getUid())
+                    .profileImg(s3Url + follower.getProfileImg())
+                    .build();
+            followersResponse.add(followerDTO);
+        });
+        return followersResponse;
+    }
+
+    public Object getFolloweeAll(Long uid, Long me, Pageable pageable) {
+        List<FollowerVO> followers = followRepository.getFollweeAll(uid, me, pageable);
+
+        List<FollowerDTO> followeesResponse = new ArrayList<>();
+
+        followers.forEach((follower) -> {
+            FollowerDTO followerDTO = FollowerDTO.builder()
+                    .isFollowed(follower.getIsFollowed())
+                    .nickname(follower.getNickname())
+                    .uid(follower.getUid())
+                    .profileImg(s3Url + follower.getProfileImg())
+                    .build();
+            followeesResponse.add(followerDTO);
+        });
+        return followeesResponse;
+    }
+
+    public boolean unfollowUser(Long from, Long to) {
+        Follow follow = new Follow();
+
+        Member follower = new Member();
+        follower.setUid(from);
+        Member followee = new Member();
+        followee.setUid(to);
+
+        follow.setFrom(follower);
+        follow.setTo(followee);
+        followRepository.delete(follow);
 
         return true;
     }

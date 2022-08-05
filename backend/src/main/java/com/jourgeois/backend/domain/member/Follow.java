@@ -3,6 +3,8 @@ package com.jourgeois.backend.domain.member;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 

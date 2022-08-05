@@ -1,6 +1,6 @@
 <template>
   <form class="comment-form" @submit.prevent="submitCommentForm">
-    <RoundImage :round-image="imageData"></RoundImage>
+    <RoundImage :round-image="imageData" class="round-image"></RoundImage>
     <input
       class="comment-input"
       :class="commentErrorClass"
@@ -24,6 +24,10 @@ import { checkBadWord } from "../../functions/checkText";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
+
+const props = defineProps<{
+  pageId: number;
+}>();
 
 // 본인 프로필 사진
 const profileImage = computed(
@@ -51,15 +55,24 @@ const commentDisabled = computed(() => {
 const commentErrorStatus = ref(false);
 const commentErrorClass = ref("");
 
-// 후기 제출
+// 댓글 제출
 const submitCommentForm = () => {
   // 리셋
   commentErrorStatus.value = false;
   commentErrorClass.value = "";
 
+  // 비속어 유효성 검사
   const conditionA = checkBadWord(commentInputValue.value);
+
+  // 보낼 데이터
+  const data = {
+    p_id: props.pageId,
+    review: commentInputValue.value,
+  };
+  console.log(data);
   if (!conditionA) {
-    store.dispatch("comment/createCustomCocktailComment", commentInputValue);
+    store.dispatch("comment/createComment", data);
+    commentInputValue.value = "";
   } else {
     commentErrorStatus.value = true;
     commentErrorClass.value = "error";
@@ -72,7 +85,9 @@ const submitCommentForm = () => {
   @include flex-xy(flex-start, center);
   gap: 4px;
   width: 100%;
-  .round-image {
+
+  > .round-image {
+    flex-shrink: 0;
     width: 30px;
     height: 30px;
 
@@ -101,6 +116,7 @@ const submitCommentForm = () => {
   }
 
   .comment-button {
+    flex-shrink: 0;
     width: fit-content;
     height: 40px;
     padding: 4px;

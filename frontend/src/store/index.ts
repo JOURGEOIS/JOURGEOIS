@@ -43,6 +43,8 @@ import {
 // ? Feed
 import { createFeed, CreateFeedState } from "../store/feeds/createFeed";
 
+import { comment, Comment } from "../store/basics/comment";
+
 // 모듈의 state를 공유한다.
 export interface RootState {
   navbar: NavbarState;
@@ -59,6 +61,7 @@ export interface RootState {
   customCocktail: CustomCocktailState;
   customCocktailInfo: CustomCocktailInfoState;
   createFeed: CreateFeedState;
+  comment: Comment;
 }
 
 // store를 생성한다.
@@ -78,5 +81,6 @@ export default createStore({
     customCocktail,
     customCocktailInfo,
     createFeed,
+    comment,
   },
 });

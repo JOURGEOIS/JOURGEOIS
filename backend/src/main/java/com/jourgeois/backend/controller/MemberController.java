@@ -9,7 +9,7 @@ import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
 import com.jourgeois.backend.service.MemberService;
-import com.jourgeois.backend.socialLogin.GoogleConfigUtils;
+import com.jourgeois.backend.socialLogin.SocialLoginConfigUtils;
 import com.jourgeois.backend.socialLogin.GoogleLoginDTO;
 import com.jourgeois.backend.socialLogin.GoogleLoginRequest;
 import com.jourgeois.backend.socialLogin.GoogleLoginResponse;
@@ -24,7 +24,6 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +32,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/member")
@@ -44,7 +44,7 @@ public class MemberController {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    MemberController(MemberService memberService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, GoogleConfigUtils configUtils) {
+    MemberController(MemberService memberService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, SocialLoginConfigUtils configUtils) {
         this.memberService = memberService;
         this.s3Uploader = s3Uploader;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -119,14 +119,13 @@ public class MemberController {
     /*
     =================================================================== google login
      */
-    private final GoogleConfigUtils configUtils;
+    private final SocialLoginConfigUtils configUtils;
 
     @GetMapping(value = "/login/google")
     public ResponseEntity<Object> moveGoogleInitUrl() {
         String authUrl = configUtils.googleInitUrl();
-        URI redirectUri = null;
         try {
-            redirectUri = new URI(authUrl);
+            URI redirectUri = new URI(authUrl);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);
             return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
@@ -196,10 +195,9 @@ public class MemberController {
 
     @GetMapping(value = "/login/kakao")
     public ResponseEntity<?> moveKakaoInitUrl() {
-        String authUrl = configUtils.googleInitUrl();
-        URI redirectUri = null;
+        String authUrl = configUtils.kakaoInitUrl();
         try {
-            redirectUri = new URI(authUrl);
+            URI redirectUri = new URI(authUrl);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);
             return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
@@ -207,9 +205,75 @@ public class MemberController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().body(null);
     }
 
+    @GetMapping(value = "/login/kakao/redirect")
+    public ResponseEntity<?> redirectKakaoLogin(@RequestParam String code) {
+
+        System.out.println("Kakao Code : " + code);
+        try {
+//            System.out.println("1111111111111");
+            String accessToken = memberService.getKakaoAccessToken(code, "kakao");
+//            System.out.println("222222222222");
+            Map<String, Object> kakaoUserInfo = memberService.getKakaoUserInfo(accessToken);
+//            System.out.println("233333333333");
+            UserDetails userDetails = memberService.loginUser(kakaoUserInfo);
+            System.out.println("USERDTAEIRAED : "+userDetails.toString());
+//            System.out.println("444444444444444");
+            Map<String, Object> data = new HashMap<>();
+
+//            System.out.println("ddddddd여기는나와야한다 ㅡ");
+            data.put("token", memberService.createToken(userDetails));
+//            System.out.println("이거안뜨면 앞에놈이문젱미 ");
+            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+
+            String value = data.entrySet().stream().map(param -> param.getKey() + " : " + param.getValue()).collect(Collectors.joining("/"));
+
+            return ResponseEntity.ok().body(data);
+
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/login/naver")
+    public ResponseEntity<?> moveNaverInitUrl() {
+        String authUrl = configUtils.naverInitUrl();
+        try {
+            URI redirectUri = new URI(authUrl);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(redirectUri);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(null);
+    }
+
+    @GetMapping(value = "/login/naver/redirect")
+    public ResponseEntity<?> redirectNaverLogin(@RequestParam String code) {
+
+        System.out.println("Naver Code : " + code);
+        try {
+            String accessToken = memberService.getKakaoAccessToken(code, "naver");
+//            Map<String, Object> kakaoUserInfo = memberService.getKakaoUserInfo(accessToken);
+//            UserDetails userDetails = memberService.loginUser(kakaoUserInfo);
+//
+            Map<String, Object> data = new HashMap<>();
+//
+//            data.put("token", memberService.createToken(userDetails));
+//            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+//
+//            String value = data.entrySet().stream().map(param -> param.getKey() + " : " + param.getValue()).collect(Collectors.joining("/"));
+
+            return ResponseEntity.ok().body(data);
+
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
     @GetMapping("/auth/logout")
     public HttpStatus logout(HttpServletRequest  request){

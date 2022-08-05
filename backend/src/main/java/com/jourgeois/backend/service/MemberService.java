@@ -315,6 +315,7 @@ public class MemberService {
                     .nickname(follower.getNickname())
                     .uid(follower.getUid())
                     .profileImg(s3Url + follower.getProfileImg())
+                    .introduce(follower.getIntroduce())
                     .build();
             followersResponse.add(followerDTO);
         });
@@ -332,6 +333,7 @@ public class MemberService {
                     .nickname(follower.getNickname())
                     .uid(follower.getUid())
                     .profileImg(s3Url + follower.getProfileImg())
+                    .introduce(follower.getIntroduce())
                     .build();
             followeesResponse.add(followerDTO);
         });

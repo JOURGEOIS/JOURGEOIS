@@ -30,4 +30,6 @@ public class NewsFeedDTO {
     Long baseCocktailId;
 
     String baseCocktailName;
+
+    Integer isLiked;
 }

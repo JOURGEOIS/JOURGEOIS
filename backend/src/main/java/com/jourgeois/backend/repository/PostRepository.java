@@ -20,7 +20,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "isSuperCustomCocktail, c_id as baseCocktailId, c_name_kr as baseCocktailName, cc_cocktail_title as cocktailTitle, p_img as postImg, p_description as description,\n" +
             "(select count(*) from follow where to_user_id = uid) as followerCount, \n" +
             "(select count(*) from post_review where pr_p_id = p_id) as reviewCount, \n" +
-            "(select count(*) from post_bookmark where post_bookmark.p_id = p_id) as likeCount\n" +
+            "(select count(*) from post_bookmark where post_bookmark.p_id = pid) as likeCount,\n" +
+            "(select count(*) from post_bookmark where post_bookmark.p_id = pid and post_bookmark.m_id = :me) as isLiked\n" +
             "from member join\n" +
             "(select * from (select * from post where p_writer in (select to_user_id from follow where from_user_id = :me) or p_writer = :me) as followerFeed left join \n" +
             "(select * from (select cc_cocktail_ingredients, cc_cocktail_recipe, cc_cocktail_title, custom_cocktail.p_id as cock_p_id, c_id as base_c_id, c_id is null as isSuperCustomCocktail from custom_cocktail \n" +

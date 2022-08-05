@@ -32,6 +32,7 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0' // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation'com.google.code.gson:gson:2.8.7'
 }
 
 

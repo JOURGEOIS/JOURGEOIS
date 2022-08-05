@@ -73,7 +73,7 @@ public class PostService {
             cc.setTitle(postDTO.getTitle());
             cc.setDescription(postDTO.getDescription());
             cc.setMember(member);
-            cc.setIngredients(postDTO.getIngredients());
+            cc.setIngredients(Arrays.toString(postDTO.getIngredients()).replace("[","").replace("]",""));
             cc.setRecipe(postDTO.getRecipe());
             cc.setImg(uploadURL);
             // post 저장
@@ -96,26 +96,6 @@ public class PostService {
         String url = s3Util.localUpload(postDTO.getImg(), uid, ImgType.POST);
         return url;
     }
-
-    // 위의 커스텀 칵테일 목록에서 상세보기 했을 때 전체 내용 (댓글 포함) 북마크 했을 때 수정 필요
-//    public PostInfoDTO readCumstomCoctail(Long p_id){
-//        CustomCocktail post = (CustomCocktail) postRepository.findById(p_id).get();
-//        Member member = memberRepository.findById(post.getMember().getUid()).get();
-//        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
-//                member.getNickname(), member.getProfileImg(), member.getIntroduce());
-//        PostDTO postpost = PostDTO.builder()
-//                .postId(post.getId())
-//                .imgLink(post.getImg())
-//                .description(post.getDescription())
-//                .title(post.getTitle())
-////                    .baseCocktail(data.getCocktail().getId())
-//                .ingredients(post.getIngredients())
-//                .recipe(post.getRecipe())
-//                .ingredients(post.getIngredients()).build();
-//        PostInfoDTO result = new PostInfoDTO(postpost, p);
-//
-//        return result;
-//    }
 
     @Transactional
     public void editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
@@ -142,7 +122,7 @@ public class PostService {
             s3Util.deleteFile(targetCustomCocktail.getImg());
             targetCustomCocktail.setTitle(postDTO.getTitle());
             targetCustomCocktail.setRecipe(postDTO.getRecipe());
-            targetCustomCocktail.setIngredients(postDTO.getIngredients());
+            targetCustomCocktail.setIngredients(Arrays.toString(postDTO.getIngredients()).replace("[","").replace("]",""));
             // post 저장
             postRepository.save(targetCustomCocktail);
         }
@@ -288,12 +268,13 @@ public class PostService {
                 .lastUpdateTime(post.getLastUpdateTime())
                 .isUpdated(post.getCreateTime().isBefore(post.getLastUpdateTime()) ? 1 : 0) // 수정됐으면 1
                 .like(postBookmarkRepository.countByPostId(new Post(p_id)))
+                .ilike(postBookmarkRepository.findById(new PostBookmarkId(uid, post.getId())).isPresent())
                 .build();
 
         if(post.getD_type().equals("cocktail")){
             CustomCocktail cocktail = (CustomCocktail) post;
             postDTO.setTitle(cocktail.getTitle());
-            postDTO.setIngredients(cocktail.getIngredients());
+            postDTO.setIngredients(cocktail.getIngredients().split(", "));
             postDTO.setRecipe(cocktail.getRecipe());
             customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(p_id))
                     .ifPresent(data -> {
@@ -343,6 +324,7 @@ public class PostService {
                     .followerCount(feed.getFollowerCount())
                     .reviewCount(feed.getReviewCount())
                     .likeCount(feed.getLikeCount())
+                    .isLiked(feed.getIsLiked())
                     .build();
 
             feedResponse.add(feedDTO);

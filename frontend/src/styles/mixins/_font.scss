@@ -5,7 +5,7 @@
 
 @mixin font-size-primary($fs: $fs-main) {
   font-size: $fs;
-  color: $danger-color;
+  color: $primary-color;
 }
 
 @mixin font-size-danger($fs: $fs-main) {
@@ -41,11 +41,6 @@
 @mixin font-size-sub($fs: $fs-main) {
   font-size: $fs;
   color: $sub-color;
-}
-
-@mixin font-size-unchecked($fs: $fs-main) {
-  font-size: $fs;
-  color: $unchecked-color;
 }
 
 @mixin font-size-label($fs: $fs-main) {

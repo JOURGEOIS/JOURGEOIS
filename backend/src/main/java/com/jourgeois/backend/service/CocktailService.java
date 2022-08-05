@@ -9,6 +9,7 @@ import com.jourgeois.backend.api.dto.post.PostInfoVO;
 import com.jourgeois.backend.domain.cocktail.*;
 import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.domain.post.PostBookmarkId;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +31,13 @@ public class CocktailService {
     private final CocktailBookmarkRepository cocktailBookmarkRepository;
     private final FollowRepository followRepository;
     private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
+    private final PostBookmarkRepository postBookmarkRepository;
     private final String s3Url;
 
     @Autowired
     CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailCommentRepository cocktailCommentRepository,
                     MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository,
-                    CustomCocktailToCocktailRepository customCocktailToCocktailRepository, @Value("${cloud.aws.s3.bucket.path}") String s3Url){
+                    CustomCocktailToCocktailRepository customCocktailToCocktailRepository, PostBookmarkRepository postBookmarkRepository, @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
         this.cocktailCommentRepository = cocktailCommentRepository;
@@ -43,6 +45,7 @@ public class CocktailService {
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
         this.followRepository = followRepository;
         this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
+        this.postBookmarkRepository = postBookmarkRepository;
         this.s3Url = s3Url;
     }
 
@@ -187,6 +190,7 @@ public class CocktailService {
     }
 
     public boolean checkCocktailUid(Long uid){
+        System.out.println(cocktailRepository.findById(uid).isPresent());
         return cocktailRepository.findById(uid).isPresent();
     }
 
@@ -219,26 +223,29 @@ public class CocktailService {
     }
 
     // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
-    public List<PostInfoDTO> readCumstomCoctailList(Long id, int type, Pageable pageable){
+    public List<PostInfoDTO> readCumstomCoctailList(Long uid, Long id, boolean asc, Pageable pageable){
         List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
-        // 1은 시간순 정렬, 나머지는 좋아요
+        // 1은 좋아요 정렬, 나머지는 시간순
         List<PostInfoVO> result;
-        if(type == 1){
-            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id);
+        if(asc){
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCount(id, pageable);
         }else{
-            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCount(id);
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id, pageable);
         }
         result.forEach((data) -> {
+            PostBookmarkId key = new PostBookmarkId(uid, data.getPostId());
             PostDTO post = PostDTO.builder()
                     .postId(data.getPostId())
                     .imgLink(s3Url + data.getPostImg())
                     .description(data.getPostDescription())
                     .lastUpdateTime(data.getPostLastUpdateTime())
                     .createTime(data.getPostCreateTime())
+                    .isUpdated(data.getPostCreateTime().isBefore(data.getPostLastUpdateTime()) ? 1 : 0)
                     .like(data.getPostCount())
+                    .ilike(postBookmarkRepository.findById(key).isPresent())
                     .title(data.getPostTitle())
                     .recipe(data.getPostRecipe())
-                    .ingredients(data.getPostIngredients())
+                    .ingredients(data.getPostIngredients().split(", "))
                     .build();
             FollowerDTO profile = FollowerDTO.builder()
                     .uid(data.getUid())

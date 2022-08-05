@@ -23,4 +23,6 @@ public interface NewsFeedVO {
     Long getBaseCocktailId();
 
     String getBaseCocktailName();
+
+    Integer getIsLiked();
 }

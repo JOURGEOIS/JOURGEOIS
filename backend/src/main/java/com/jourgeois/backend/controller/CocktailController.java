@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
@@ -162,34 +163,36 @@ public class CocktailController {
         }
     }
 
-    // 원본 칵테일 북마크 (token 필요) => uid로 전체 바꿀 때 바꾼 후 적용 필요
-    @PostMapping(value = "/bookmark")
-    public ResponseEntity pushCocktailBookmark(@RequestBody Map<String, Long> bookmark){
-        Map<String, Long> data = new HashMap<>();
-        if(memberService.checkUserUid(bookmark.get("uid")) && cocktailService.checkCocktailUid(bookmark.get("c_id"))){
-            if(cocktailService.pushBookmark(bookmark)){
-                data.put("status", 1L);
+    @PostMapping(value = "/auth/bookmark")
+    public ResponseEntity pushCocktailBookmark(HttpServletRequest request, @RequestBody Map<String, Long> bookmark){
+        try{
+            Map<String, Long> data = new HashMap<>();
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            bookmark.put("uid", uid);
+            if(cocktailService.checkCocktailUid(bookmark.get("c_id"))){
+                if(cocktailService.pushBookmark(bookmark)){
+                    data.put("status", 1L);
+                }else{
+                    data.put("status", 0L);
+                }
+                data.put("count", cocktailService.countCocktailBookmark(new Cocktail(bookmark.get("c_id"))));
+                return new ResponseEntity<>(data, HttpStatus.CREATED);
             }else{
-                data.put("status", 0L);
+                return new ResponseEntity<>("Not Found" ,  HttpStatus.NOT_FOUND);
             }
-            data.put("count", cocktailService.countCocktailBookmark(new Cocktail(bookmark.get("c_id"))));
-            return new ResponseEntity<>(data, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("fail", HttpStatus.NOT_ACCEPTABLE);
+        }catch (Exception e){
+            return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
-    // uid와 칵테일 id로
-    @GetMapping(value="/bookmarklist")
-    public ResponseEntity getBookmarkList(@RequestParam(value = "uid") Long uid, @RequestParam(value = "c_id") Long c_id,
+    @GetMapping(value="/auth/bookmarklist")
+    public ResponseEntity getBookmarkList(HttpServletRequest request, @RequestParam(value = "c_id") Long c_id,
                                 @PageableDefault(size=10, page=0) Pageable pageable){
         Map<String, String> data = new HashMap<>();
         try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
             return new ResponseEntity(cocktailService.getBookmarkList(uid, c_id, pageable), HttpStatus.OK);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-            data.put("fail", "잘못된 인풋");
-            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             System.out.println(e);
             data.put("fail", "오류 발생");
@@ -199,15 +202,14 @@ public class CocktailController {
 
     // 원본칵테일의 커스텀칵테일 탭 (리스트반환)
     @GetMapping
-    public ResponseEntity readCustomCocktailList(@RequestParam Long id, @RequestParam int type,
+    public ResponseEntity readCustomCocktailList(@RequestHeader(value = "uid", defaultValue = "0") Long uid,
+                                                 @RequestParam(value = "id") Long id,
+                                                 @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                                  @PageableDefault(size=10, page = 0) Pageable pageable){
         try{
-            return  new ResponseEntity(cocktailService.readCumstomCoctailList(id, type, pageable), HttpStatus.CREATED);
-        }catch (NumberFormatException e) {
-            System.out.println(e);
-            return new ResponseEntity("잘못된 인풋", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity("리스트를 불러오지 못했습니다.", HttpStatus.NOT_ACCEPTABLE);
+            return  new ResponseEntity(cocktailService.readCumstomCoctailList(uid, id, asc, pageable), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

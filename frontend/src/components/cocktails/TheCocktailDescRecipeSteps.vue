@@ -32,7 +32,6 @@ const steps = computed(() => cocktailData?.value?.split("<>"));
   @include flex(column);
   gap: 16px;
   width: 90%;
-  margin-top: 40px;
 
   .cocktail-desc-steps-title {
     @include font($fs-main, $fw-medium);

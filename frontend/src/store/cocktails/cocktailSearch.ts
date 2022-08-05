@@ -273,11 +273,10 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response);
           commit("SET_SEARCH_RESULT_CNT", response.data);
         })
         .catch((error) => {
-          console.log(error.response);
+          console.error(error.response);
         });
     },
 

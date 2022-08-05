@@ -1,0 +1,151 @@
+<template>
+  <section class="the-custom-cocktail-desc-body">
+    <!-- 칵테일 제목 섹션 -->
+    <article class="cocktail-title-section">
+      <h1 class="cocktail-title">{{ title }}</h1>
+      <div class="base-cocktail-line" @click="clickBaseCocktail">
+        <span class="base-cocktail-title">
+          <span class="material-icons-outlined cocktail-icon"> local_bar </span>
+          <span class="base-cocktail">베이스 칵테일</span>
+        </span>
+        <span class="base-cocktail-name">{{ baseCocktailName }}</span>
+      </div>
+    </article>
+    <!-- 칵테일 이미지 섹션 -->
+    <article
+      class="cocktail-image"
+      :style="{ backgroundImage: `url(${imgLink})` }"
+    ></article>
+    <!-- 작성자 정보 섹션 -->
+    <post-user-section
+      :userInfo="data.followerDTO"
+      :date="data.customCocktail.createTime"
+    ></post-user-section>
+    <!-- 칵테일 설명 섹션 -->
+    <article class="cocktail-description">
+      <h1 class="title1">설명</h1>
+      <p class="normal-paragraph">{{ description }}</p>
+    </article>
+    <!-- 칵테일 레시피 섹션 -->
+    <article class="cocktail-recipe">
+      <h1 class="title1">제작</h1>
+      <h2 class="title2 ingredients-title">재료</h2>
+      <p class="normal-paragraph">{{ ingredientString }}</p>
+      <div class="recipe-line" v-for="(txt, idx) in recipeList" :key="idx">
+        <h2 class="title2">{{ idx + 1 }}단계</h2>
+        <p class="normal-paragraph">{{ txt }}</p>
+      </div>
+    </article>
+  </section>
+</template>
+
+<script setup lang="ts">
+import PostUserSection from "@/components/basics/PostUserSection.vue";
+import { CustomCocktail } from "../../interface";
+import { toRefs } from "vue";
+import { useStore } from "vuex";
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
+const store = useStore();
+
+const props = defineProps<{
+  data: CustomCocktail;
+}>();
+
+const {
+  postId,
+  imgLink,
+  description,
+  like,
+  title,
+  baseCocktail,
+  baseCocktailName,
+  ingredients,
+  recipe,
+} = toRefs(props.data.customCocktail);
+
+// 레시피 string -> string[]
+const recipeList = recipe.value.split(" <> ");
+
+// 재료 ingredients string[] -> string
+const ingredientString = ingredients.value.join(", ");
+
+// 베이스칵테일 구역 누르면 베이스칵테일로 이동
+const clickBaseCocktail = () => {
+  router.push({
+    name: "TheCocktailDescView",
+    params: { cocktailId: baseCocktail.value },
+  });
+};
+</script>
+
+<style scoped lang="scss">
+.the-custom-cocktail-desc-body {
+  @include flex(column);
+  width: 100%;
+  gap: 10px;
+
+  .cocktail-title-section {
+    .cocktail-title {
+      margin: 10px 0;
+      @include font(25px, $fw-medium);
+    }
+    .base-cocktail-line {
+      @include flex-xy(flex-start, center);
+      gap: 10px;
+      @include for-click;
+
+      .base-cocktail-title {
+        @include flex-xy(flex-start, flex-end);
+        gap: 2px;
+        .cocktail-icon {
+          @include font-size-navy(19px);
+        }
+        .base-cocktail {
+          @include font-size-navy(15px);
+        }
+      }
+      .base-cocktail-name {
+        @include font(15px);
+      }
+    }
+  }
+
+  .cocktail-image {
+    width: calc(100% + 32px);
+    margin: 10px -16px;
+    aspect-ratio: 1/1;
+    background : {
+      size: cover;
+      position: center center;
+    }
+  }
+}
+
+.recipe-line {
+  margin: 20px 0;
+}
+
+.title1 {
+  @include font(15px, $fw-bold);
+  color: $navy600;
+  margin: 10px 0;
+  user-select: none;
+}
+
+.title2 {
+  @include font(13px, $fw-medium);
+  color: $navy500;
+  user-select: none;
+}
+
+.ingredients-title {
+  @include font(13px, $fw-bold);
+  color: $navy600;
+}
+
+.normarl-paragraph {
+  @include font-size-sub(15px);
+}
+</style>

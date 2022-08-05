@@ -47,23 +47,47 @@ const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];
 });
 
+// 현재 탭
+const currentTab = computed(() => store.getters["searchResult/getCurrentTab"]);
+
+const handleScroll = (event: any) => {
+  const action = currentTab.value
+    ? "searchResult/setSearchUser"
+    : "searchResult/setSearchCocktailAll";
+  store.dispatch("scroll/handleScroll", {
+    event,
+    action,
+    data: { keyword: searchInputValue.value },
+  });
+};
+
+// View 입장 후 Mount 전에
 onBeforeMount(async () => {
+  // 이전 검색 결과 state 초기화
+  store.dispatch("searchResult/removeSearchResult");
+
   // router의 params를 keyword로 지정
   const keyword = route.params.searchValue;
 
   // vuex의 state에 router params 저장
   await store.dispatch("cocktailSearch/setSearchInputValue", keyword);
 
+  // 스크롤 이벤트 listen
+  window.addEventListener("scroll", handleScroll);
+
   // keyword로 최초 칵테일정보 불러오기
-  store.dispatch("searchResult/setSearchCocktailAll", keyword);
+  store.dispatch("searchResult/setSearchCocktailAll", { keyword });
   setTimeout(
-    () => store.dispatch("searchResult/setSearchCocktailAll", keyword),
-    200
+    () => store.dispatch("searchResult/setSearchCocktailAll", { keyword }),
+    300
   );
 
   // keyword로 최초 유저정보 불러오기
-  store.dispatch("searchResult/setSearchUser", keyword);
-  setTimeout(() => store.dispatch("searchResult/setSearchUser", keyword), 300);
+  store.dispatch("searchResult/setSearchUser", { keyword });
+  setTimeout(
+    () => store.dispatch("searchResult/setSearchUser", { keyword }),
+    300
+  );
 });
 
 onUnmounted(() => {

@@ -15,5 +15,6 @@ public interface PostInfoVO {
     LocalDateTime getPostLastUpdateTime();
     String getPostDescription();
     Integer getPostCount();
+    String getIntroduce();
 
 }

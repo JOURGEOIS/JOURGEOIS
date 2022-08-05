@@ -19,16 +19,24 @@ public class PostDTO {
     private LocalDateTime createTime;
     private LocalDateTime lastUpdateTime;
     private Integer isUpdated;
-
     private Integer like;
+    private Boolean ilike;
 
     // 커스텀 칵테일
     private String title;
     private Long baseCocktail;
     private String baseCocktailName;
-    private String ingredients;
+    private String[] ingredients;
     private String recipe;
     private Integer type;
+
+    public Boolean getIlike() {
+        return ilike;
+    }
+
+    public void setIlike(Boolean ilike) {
+        this.ilike = ilike;
+    }
 
     public Integer getIsUpdated() {
         return isUpdated;
@@ -133,11 +141,11 @@ public class PostDTO {
         this.baseCocktail = baseCocktail;
     }
 
-    public String getIngredients() {
+    public String[] getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(String ingredients) {
+    public void setIngredients(String[] ingredients) {
         this.ingredients = ingredients;
     }
 

@@ -2,6 +2,7 @@ package com.jourgeois.backend.service;
 
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.post.PostSearchMaterialDTO;
 import com.jourgeois.backend.api.dto.search.SearchCocktailDTO;
 import com.jourgeois.backend.api.dto.search.SearchFilterDTO;
 import com.jourgeois.backend.api.dto.search.SearchKeywordDTO;
@@ -148,5 +149,15 @@ public class SearchService {
     public String searchMaterialName(Long id){
         Material material = materialRepository.findById(id).orElseThrow(() -> new NoSuchElementException("찾는 재료가 없음"));
         return material.getNameKR();
+    }
+
+    public List<PostSearchMaterialDTO> searchMaterialList(String keywrod, Pageable pageable){
+        List<PostSearchMaterialDTO> list = new ArrayList<>();
+        materialRepository.findByNameKRContainingOrNameContaining(keywrod, keywrod, pageable).forEach(data ->{
+            list.add(PostSearchMaterialDTO.builder()
+                    .name(data.getNameKR())
+                    .img(data.getImg()).build());
+        });
+        return list;
     }
 }

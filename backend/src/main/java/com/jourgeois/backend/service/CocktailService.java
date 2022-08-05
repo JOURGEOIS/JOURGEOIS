@@ -213,6 +213,7 @@ public class CocktailService {
             }
 
             followersResponse.add(FollowerDTO.builder()
+                    .introduce(data.getMemberId().getIntroduce())
                     .isFollowed(status)
                     .nickname(member.getNickname())
                     .uid(member.getUid())
@@ -245,12 +246,13 @@ public class CocktailService {
                     .ilike(postBookmarkRepository.findById(key).isPresent())
                     .title(data.getPostTitle())
                     .recipe(data.getPostRecipe())
-                    .ingredients(data.getPostIngredients().split(", "))
+                    .ingredients(data.getPostIngredients()!=null ? data.getPostIngredients().split(", ") : null)
                     .build();
             FollowerDTO profile = FollowerDTO.builder()
                     .uid(data.getUid())
                     .profileImg(s3Url + data.getProfileImg())
                     .nickname(data.getNickname())
+                    .introduce(data.getIntroduce())
                     .build();
             postInfoDTOList.add(PostInfoDTO.builder().followerDTO(profile).customCocktail(post).build());
         });

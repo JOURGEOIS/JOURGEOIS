@@ -1,16 +1,12 @@
 package com.jourgeois.backend.controller;
 
 import com.amazonaws.AmazonClientException;
-import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
-import com.jourgeois.backend.api.dto.post.PostBookmarkDTO;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.api.dto.post.PostReviewDTO;
-import com.jourgeois.backend.domain.cocktail.Cocktail;
-import com.jourgeois.backend.domain.member.Member;
-import com.jourgeois.backend.domain.post.Post;
 import com.jourgeois.backend.service.CocktailService;
 import com.jourgeois.backend.service.MemberService;
 import com.jourgeois.backend.service.PostService;
+import com.jourgeois.backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +14,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -31,14 +26,12 @@ import java.util.NoSuchElementException;
 public class PostController {
 
     private final PostService postService;
-    private final MemberService memberService;
-    private final CocktailService cocktailService;
+    private final SearchService searchService;
 
     @Autowired
-    public PostController(PostService postService, MemberService memberService, CocktailService cocktailService) {
+    public PostController(PostService postService, SearchService searchService) {
         this.postService = postService;
-        this.memberService = memberService;
-        this.cocktailService = cocktailService;
+        this.searchService = searchService;
     }
 
     @PostMapping("/auth")
@@ -298,6 +291,19 @@ public class PostController {
             return new ResponseEntity(postService.getNewsFeed(me, pageable), HttpStatus.OK);
         } catch (Exception e) {
             result.put("fail", "피드를 불러오는 것을 실패했습니다.");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value="/material")
+    public ResponseEntity getMaterialList(@RequestParam(value = "keyword") String keyword,
+                                          @PageableDefault(size=10, page = 0) Pageable pageable){
+        Map<String, String> result = new HashMap<>();
+
+        try{
+            return new ResponseEntity(searchService.searchMaterialList(keyword, pageable), HttpStatus.OK);
+        }catch (Exception e){
+            result.put("fail", "재료 검색을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

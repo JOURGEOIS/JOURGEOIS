@@ -24,15 +24,15 @@
           >
             <button-basic
               :button-style="[buttonColor, '40px']"
-              :disabled="!reviewEditValue"
               class="buttonstyle"
+              @click="clickDeleteReview"
             >
               수정
             </button-basic>
             <button-basic
               :button-style="[buttonColor, '40px']"
-              :disabled="!reviewEditValue"
               class="buttonstyle"
+              @click="clickDeleteReview"
             >
               삭제
             </button-basic>
@@ -52,6 +52,7 @@ import { useStore } from 'vuex'
 import RoundImage from '@/components/basics/RoundImage.vue'
 import ButtonBasic from '@/components/basics/ButtonBasic.vue'
 import { calcDateDelta } from '../../functions/date'
+import { EnumNumberMember } from '@babel/types'
 
 interface cocktailReviewData {
   commentId: number
@@ -78,13 +79,38 @@ const name: string = userInfo.value.nickname
 
 // 칵테일 날짜
 const calc = calcDateDelta(props.data.createdDate)
-// console.log(props.data.createdDate)
+
 // button
 const reviewEditValue = ref('')
+
 // button color
 const buttonColor = computed(() => {
   return 'sub-blank'
 })
+
+// // 후기 수정
+// const reviewEdit = (data: object) =>
+//   store.dispatch('cocktailReview/updateCocktailReview', data)
+
+// const editData = {
+//   commentId: props.data.commentId,
+//   comment: props.data.comment,
+// }
+
+// 후기 삭제
+const reviewDelete = (data: object) =>
+  store.dispatch('cocktailReview/deleteCocktailReview', data)
+const cocktailData = computed(
+  () => store.getters['cocktailDesc/getCurrentCocktailData'],
+)
+const cocktailId = Number(cocktailData.value.id)
+const commentId = props.data.commentId
+
+// console.log(commentId)
+const clickDeleteReview = () => {
+  console.log('실행중')
+  reviewDelete({ cocktailId, commentId })
+}
 </script>
 
 <style scoped lang="scss">

@@ -1,6 +1,5 @@
 <template>
   <the-cocktail-desc-review-item
-    @load="getReview(cocktailId)"
     v-for="(review, id) in cocktailReviewData"
     :key="`main-${id}`"
     :data="review"

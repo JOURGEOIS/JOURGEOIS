@@ -46,5 +46,7 @@ export default {
 
   post: {
     uploadImage: () => HOST + POST + "tmp",
+    toggleBookmark: () => HOST + POST + "bookmark",
+    likedUsers: () => HOST + POST + "like/list",
   },
 };

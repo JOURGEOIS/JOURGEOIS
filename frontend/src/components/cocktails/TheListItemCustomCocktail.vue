@@ -4,23 +4,26 @@
       <div class="user-part">
         <div class="user-info">
           <round-image :round-image="profileImage"></round-image>
-          <div class="user-nickname">칵테일조아</div>
+          <div class="user-nickname">{{ nickname }}</div>
         </div>
-        <div class="created-at">방금 전</div>
+        <div class="created-at">{{ createTimeDelta }}</div>
       </div>
       <div class="cocktail-liked">
-        <span class="material-icons"> favorite </span>
-        82
+        <span class="material-icons unliked" v-if="!ilike"> favorite </span>
+        <span class="material-icons liked" v-if="ilike"> favorite </span>
+        {{ like }}
       </div>
     </div>
     <div class="item-content-container">
-      <div class="item-img-part"></div>
+      <div
+        class="item-img-part"
+        :style="{ backgroundImage: `url(${imgLink})` }"
+      ></div>
       <div class="item-text-part">
-        <h1 class="cocktail-name">마! 가린</h1>
-        <p class="cocktail-ingredients">재료: 데킬라, 라임, 버터</p>
+        <h1 class="cocktail-name">{{ title }}</h1>
+        <p class="cocktail-ingredients">재료: {{ ingredientsString }}</p>
         <p class="cocktail-description">
-          "낮져밤이 마가리타" 빨간색과 파란색이 음양의 조화를 이루는 뭐시기
-          저시기 요시기 호시기
+          {{ description }}
         </p>
       </div>
     </div>
@@ -29,12 +32,26 @@
 
 <script setup lang="ts">
 import RoundImage from "@/components/basics/RoundImage.vue";
+import { CustomCocktail } from "../../interface";
+import { calcDateDelta } from "../../functions/date";
 import { reactive } from "vue";
+
+const props = defineProps<{
+  data: CustomCocktail;
+}>();
+
+const { customCocktail, followerDTO } = props.data;
+const { nickname, profileImg } = followerDTO;
+const { imgLink, description, createTime, like, ilike, title, ingredients } =
+  customCocktail;
+
+// props 후처리
+const createTimeDelta = calcDateDelta(createTime);
+const ingredientsString = ingredients.join(", ");
 
 // 이미지
 const profileImage = reactive({
-  image:
-    "https://file.mk.co.kr/meet/neds/2021/07/image_readmed_2021_659579_16257086594710103.jpg",
+  image: profileImg,
   width: "30px",
 });
 </script>
@@ -58,7 +75,7 @@ const profileImage = reactive({
   .item-header {
     @include flex-xy(space-between, center);
     gap: 10px;
-    margin: 10px 0;
+    margin-bottom: 5px;
 
     .user-part {
       @include flex-xy(flex-start, center);
@@ -80,11 +97,10 @@ const profileImage = reactive({
     .cocktail-liked {
       @include flex-xy(flex-start, center);
       @include font-size-sub(13px);
-      gap: 2px;
+      gap: 4px;
 
       .material-icons {
         @include font(15px);
-        color: $red300;
       }
     }
   }
@@ -120,5 +136,13 @@ const profileImage = reactive({
       }
     }
   }
+}
+
+.unliked {
+  color: $placeholder-color;
+}
+
+.liked {
+  color: $red300;
 }
 </style>

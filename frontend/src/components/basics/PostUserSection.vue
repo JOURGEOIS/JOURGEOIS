@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import RoundImage from "@/components/basics/RoundImage.vue";
-import { CustomCocktailHost } from "../../interface";
+import { User } from "../../interface";
 import { calcDateDelta } from "../../functions/date";
 import { reactive, computed } from "vue";
 import { useStore } from "vuex";
@@ -39,7 +39,7 @@ const route = useRoute();
 const store = useStore();
 
 const props = defineProps<{
-  userInfo: CustomCocktailHost;
+  userInfo: User;
   date: number[];
 }>();
 

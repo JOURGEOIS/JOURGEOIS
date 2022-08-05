@@ -4,11 +4,13 @@ export interface User {
   nickname: string;
   profileImg: string;
   introduce: string | null;
-  isFollowed: number; // 1 : 팔로우중 / 0 : 팔로우X / -1 : me
+  isFollowed: number | null; // 1 : 팔로우중 / 0 : 팔로우X / -1 : me
 }
 
 // 커스텀 칵테일만의 정보
 export interface CustomCocktailOnly {
+  uid: number | null; // 뭐지?
+  img: string | null; // 얘는 또 뭐지?
   postId: number; // 포스트 uid
   imgLink: string; // 칵테일 이미지
   description: string; // 칵테일 설명
@@ -16,11 +18,13 @@ export interface CustomCocktailOnly {
   lastUpdateTime: number[]; // 수정 시간
   isUpdated: number; // 수정되었는지 여부[0,1]
   like: number; // 칵테일 좋아요 개수
+  ilike: boolean; // 내가 좋아요 했는지 여부 [T/F]
   title: string; // 칵테일 이름
   baseCocktail: number; // 베이스 칵테일 번호
   baseCocktailName: string; // 베이스 칵테일 이름
   ingredients: string[]; // 칵테일 설명
   recipe: string; // 칵테일 제작
+  type: string | null; // 칵테일인지 커스텀칵테일인지
 }
 
 // 댓글 작성자

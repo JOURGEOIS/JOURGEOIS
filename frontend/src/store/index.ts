@@ -35,6 +35,11 @@ import {
   CustomCocktailState,
 } from "../store/cocktails/customCocktail";
 
+import {
+  customCocktailInfo,
+  CustomCocktailInfoState,
+} from "../store/cocktails/customCocktailInfo";
+
 // ? Feed
 import { createFeed, CreateFeedState } from "../store/feeds/createFeed";
 
@@ -52,6 +57,7 @@ export interface RootState {
   searchResult: SearchResultState;
   cocktailReview: CocktailReviewState;
   customCocktail: CustomCocktailState;
+  customCocktailInfo: CustomCocktailInfoState;
   createFeed: CreateFeedState;
 }
 
@@ -70,6 +76,7 @@ export default createStore({
     searchResult,
     cocktailReview,
     customCocktail,
+    customCocktailInfo,
     createFeed,
   },
 });

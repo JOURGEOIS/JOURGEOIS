@@ -324,6 +324,7 @@ public class PostService {
                     .followerCount(feed.getFollowerCount())
                     .reviewCount(feed.getReviewCount())
                     .likeCount(feed.getLikeCount())
+                    .isLiked(feed.getIsLiked())
                     .build();
 
             feedResponse.add(feedDTO);

@@ -45,16 +45,16 @@ public class RedisService {
         return  redisTemplate.delete(key);
     }
 
-    public boolean setRecentKeyword(String email, String keyword) throws Exception {
-        String key = RECENT_KEYWORD + email;
+    public boolean setRecentKeyword(Long uid, String keyword) throws Exception {
+        String key = RECENT_KEYWORD + uid;
         redisTemplate.opsForZSet().add(key, keyword, System.nanoTime());
         System.out.println(key + "성공");
         return true;
     }
 
     @Transactional
-    public Object[] getRecentKeyword(String email) throws Exception {
-        String key = RECENT_KEYWORD + email;
+    public Object[] getRecentKeyword(Long uid) throws Exception {
+        String key = RECENT_KEYWORD + uid;
 
         Set<ZSetOperations.TypedTuple<String>> res = redisStringTemplate.opsForZSet().reverseRangeWithScores(key, 0, 4);
         redisTemplate.opsForZSet().removeRange(key, -5, -5);

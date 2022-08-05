@@ -3,17 +3,21 @@
   -------------------------------------------------
   data: input에 대한 정보를 담은 객체
     - button: (boolean) x버튼의 유무를 선택한다. 
+    - required: (boolean) input이 필수인지 아닌지 유무
     - id: (string) 해당 input을 식별할 수 있는 유니크한 id값이다.
     - label: (string): 라벨에 들어가는 값
     - placeholder: (string) placeholder에 들어가는 값. 없을 경우 ""로 표기
     - type(string): input 타입
     - maxlength(number): input maxLength
+    - minLength(number): input minLength
   inputStyle: normal과 error로 나뉘며 normal일 경우, 평범한 input을 가져온다. error일 경우,빨간색 input을 가져온다. 
 -->
 
 <template>
   <div class="label-container">
-    <label :for="data.id"> {{ data.label }}</label>
+    <label :for="data.id">
+      {{ data.label }} <span v-if="data.required">*</span></label
+    >
     <div class="input-container">
       <input
         :type="data.type"
@@ -23,6 +27,7 @@
         :value="modelValue"
         :placeholder="data.placeholder"
         :maxlength="data.maxlength"
+        :minLength="data.minLength"
         @input="emitValue"
         autocapitalize="off"
         autocomplete="off"
@@ -45,11 +50,13 @@ import { computed, ref } from "vue";
 // props.data의 타입을 정의한 인터페이스
 export interface dataObject {
   button: boolean;
+  required: boolean;
   id: string;
   label: string;
   placeholder: string;
   type: string;
   maxlength: number;
+  minLength: number;
   isDisabled: boolean;
 }
 
@@ -93,6 +100,11 @@ label-container {
 label {
   @include font($fs-md, $fw-medium);
   color: $label-color;
+
+  span {
+    @include font($fs-md, $fw-bold);
+    color: $danger-color;
+  }
 }
 
 .input-container {

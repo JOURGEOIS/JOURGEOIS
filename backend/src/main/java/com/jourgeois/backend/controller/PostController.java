@@ -212,7 +212,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/review")
+    @GetMapping("/auth/review")
     public ResponseEntity getReviewAll(@RequestParam(value = "p_id") Long p_id,
                                         @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                         @PageableDefault(size=10, page = 0) Pageable pageable){

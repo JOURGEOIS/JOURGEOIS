@@ -30,6 +30,7 @@ export default {
     getCocktailData: () => HOST + COCKTAIL + "cocktail",
     cocktailList: () => HOST + COCKTAIL + "list",
     cocktailReview: () => HOST + COCKTAIL + "comment",
+    customCocktailList: () => HOST + "/cocktail",
   },
 
   lookups: {

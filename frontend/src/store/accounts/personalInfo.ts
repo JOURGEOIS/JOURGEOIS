@@ -5,7 +5,7 @@ import { clickHome } from "../../functions/clickEvent";
 import { RootState } from "../index";
 
 export interface userInfo {
-  [props: string]: string;
+  [props: string]: string | number;
 }
 
 export interface PersonalInfoState {
@@ -37,6 +37,9 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     },
     getUserInfo: (state) => {
       return state.userInfo;
+    },
+    getUserInfoUserId: (state) => {
+      return state.userInfo.uid;
     },
     getUserInfoId: (state) => {
       return state.userInfo.email;
@@ -75,6 +78,7 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
       commit("SET_REFRESH_TOKEN", "");
     },
     saveUserInfo: ({ commit }, data: object) => {
+      console.log(data);
       const jsonUserInfo = JSON.stringify(data);
       localStorage.setItem("userInfo", jsonUserInfo);
       commit("SET_USER_INFO", data);
@@ -133,7 +137,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           profileImage.image = response.data.url;
         })
         .catch((error) => {

@@ -1,5 +1,5 @@
 <template>
-  <h1>커스텀 칵테일</h1>
+  <div></div>
 </template>
 
 <script setup lang="ts"></script>

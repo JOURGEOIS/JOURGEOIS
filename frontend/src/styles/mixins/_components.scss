@@ -67,3 +67,8 @@
   border: 0;
   border-top: 1px solid $hr-color;
 }
+
+@mixin for-click {
+  cursor: pointer;
+  user-select: none;
+}

@@ -109,6 +109,20 @@ const routes: any[] = [
     name: "TheCocktailDescBookmarkView",
     component: () => import("@/views/TheCocktailDescBookmarkView.vue"),
   },
+
+  // 커스텀 칵테일 제작 페이지
+  {
+    path: "/cocktail/:cocktailId/custom/form",
+    name: "TheCustomCocktailFormView",
+    component: () => import("@/views/TheCustomCocktailFormView.vue"),
+  },
+
+  // 커스텀 칵테일 상세 페이지
+  {
+    path: "/cocktail/:cocktailId/custom/:customCocktailId",
+    name: "TheCustomCocktailDescView",
+    component: () => import("@/views/TheCustomCocktailDescView.vue"),
+  },
 ];
 
 const router = createRouter({

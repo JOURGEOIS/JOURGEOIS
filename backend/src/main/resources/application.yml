@@ -3,10 +3,10 @@ spring:
     static-path-pattern: /img/**
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-#    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#    username: root
-#    password:
+    username: root
+    password: nh0455k8613!
 
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
@@ -26,9 +26,9 @@ spring:
         format_sql: true
         show_sql: true
   redis:
-    host: redis
-#    host: localhost
-#    password: 1q2w3e4r!@#
+#    host: redis
+    host: localhost
+    password: 1q2w3e4r!@#
     port: 6379
 
 jwt:

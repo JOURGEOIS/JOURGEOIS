@@ -1,19 +1,35 @@
 package com.jourgeois.backend.controller;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
 import com.jourgeois.backend.service.MemberService;
+import com.jourgeois.backend.socialLogin.GoogleConfigUtils;
+import com.jourgeois.backend.socialLogin.GoogleLoginDTO;
+import com.jourgeois.backend.socialLogin.GoogleLoginRequest;
+import com.jourgeois.backend.socialLogin.GoogleLoginResponse;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -28,10 +44,11 @@ public class MemberController {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    MemberController(MemberService memberService, S3Util s3Uploader,JwtTokenProvider jwtTokenProvider) {
+    MemberController(MemberService memberService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, GoogleConfigUtils configUtils) {
         this.memberService = memberService;
         this.s3Uploader = s3Uploader;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.configUtils = configUtils;
     }
 
     @PostMapping(value = "/signUp")
@@ -86,18 +103,113 @@ public class MemberController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> loginForm) {
-        String email = loginForm.get("email");
-        String password = loginForm.get("password");
-        System.out.println(email + " " + password);
+   @PostMapping("/login")
+        public ResponseEntity<?> login(@RequestBody Map<String, String> loginForm) {
+            String email = loginForm.get("email");
+            String password = loginForm.get("password");
+            System.out.println(email + " " + password);
 
-        Map<String, Object> data = new HashMap<>();
-        UserDetails userDetails = memberService.loginUser(email, password);
-        data.put("token", memberService.createToken(userDetails));
-        data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
-        return new ResponseEntity<>(data, HttpStatus.OK);
+            Map<String, Object> data = new HashMap<>();
+            UserDetails userDetails = memberService.loginUser(email, password);
+            data.put("token", memberService.createToken(userDetails));
+            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+            return new ResponseEntity<>(data, HttpStatus.OK);
     }
+
+    /*
+    =================================================================== google login
+     */
+    private final GoogleConfigUtils configUtils;
+
+    @GetMapping(value = "/login/google")
+    public ResponseEntity<Object> moveGoogleInitUrl() {
+        String authUrl = configUtils.googleInitUrl();
+        URI redirectUri = null;
+        try {
+            redirectUri = new URI(authUrl);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(redirectUri);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping(value = "/login/google/redirect")
+    public ResponseEntity<?> redirectGoogleLogin(@RequestParam(value = "code") String authCode) {
+        // HTTP 통신을 위해 RestTemplate 활용
+        RestTemplate restTemplate = new RestTemplate();
+        GoogleLoginRequest requestParams = GoogleLoginRequest.builder()
+                .clientId(configUtils.getGoogleClientId())
+                .clientSecret(configUtils.getGoogleSecret())
+                .code(authCode)
+                .redirectUri(configUtils.getGoogleRedirectUri())
+                .grantType("authorization_code")
+                .build();
+
+        try {
+            // Http Header 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<GoogleLoginRequest> httpRequestEntity = new HttpEntity<>(requestParams, headers);
+            ResponseEntity<String> apiResponseJson = restTemplate.postForEntity(configUtils.getGoogleAuthUrl() + "/token", httpRequestEntity, String.class);
+
+            // ObjectMapper를 통해 String to Object로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // NULL이 아닌 값만 응답받기(NULL인 경우는 생략)
+            GoogleLoginResponse googleLoginResponse = objectMapper.readValue(apiResponseJson.getBody(), new TypeReference<GoogleLoginResponse>() {});
+
+            // 사용자의 정보는 JWT Token으로 저장되어 있고, Id_Token에 값을 저장한다.
+            String jwtToken = googleLoginResponse.getIdToken();
+
+            // JWT Token을 전달해 JWT 저장된 사용자 정보 확인
+            String requestUrl = UriComponentsBuilder.fromHttpUrl(configUtils.getGoogleAuthUrl() + "/tokeninfo").queryParam("id_token", jwtToken).toUriString();
+
+            String resultJson = restTemplate.getForObject(requestUrl, String.class);
+
+            if(resultJson != null) {
+                GoogleLoginDTO googleLoginInfo = objectMapper.readValue(resultJson, new TypeReference<GoogleLoginDTO>() {});
+                googleLoginInfo.setEmail("google/"+googleLoginInfo.getEmail());
+
+
+                Map<String, Object> data = new HashMap<>();
+                UserDetails userDetails = memberService.loginUser(googleLoginInfo);
+
+                data.put("token", memberService.createToken(userDetails));
+                data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+
+                return ResponseEntity.ok().body(data);
+            }
+            else {
+                throw new Exception("Google OAuth failed!");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().body(null);
+    }
+
+    @GetMapping(value = "/login/kakao")
+    public ResponseEntity<?> moveKakaoInitUrl() {
+        String authUrl = configUtils.googleInitUrl();
+        URI redirectUri = null;
+        try {
+            redirectUri = new URI(authUrl);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(redirectUri);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
 
     @GetMapping("/auth/logout")
     public HttpStatus logout(HttpServletRequest  request){
@@ -207,12 +319,116 @@ public class MemberController {
     }
 
     // 팔로우
-    @PostMapping("/follow")
-    public ResponseEntity followMember(@RequestBody Map<String, Long> followRequest) {
+    @PostMapping("/auth/follow")
+    public ResponseEntity followMember(HttpServletRequest request, @RequestBody Map<String, Long> followRequest) {
         Map<String, Boolean> data = new HashMap<>();
         try {
-            memberService.followUser(followRequest);
-            data.put("success", true);
+            Long from = Long.valueOf((String) request.getAttribute("uid"));
+            Long to = followRequest.get("to");
+
+            if(to == from) {
+                data.put("success", false);
+                return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+            }
+
+            data.put("success", memberService.followUser(from, to));
+            return new ResponseEntity(data, HttpStatus.CREATED);
+        } catch(JpaObjectRetrievalFailureException e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 다른 유저를 팔로우하는 사람 목록 보기
+    @GetMapping("/auth/follower")
+    public ResponseEntity getFollowerAll(HttpServletRequest request,
+                                         @RequestParam Long uid,
+                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            Long me = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(memberService.getFollowerAll(uid, me, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "uid 형식 오류");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 다른 유저가 팔로우하는 살마 목록 보기
+    @GetMapping("/auth/followee")
+    public ResponseEntity getFolloweeAll(HttpServletRequest request,
+                                         @RequestParam Long uid,
+                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            Long me = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(memberService.getFolloweeAll(uid, me, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "uid 형식 오류");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 나를 팔로우하는 사람 목록 보기
+    @GetMapping("/auth/my-follower")
+    public ResponseEntity getMyFollowerAll(HttpServletRequest request, @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            Long me = uid;
+            return new ResponseEntity(memberService.getFollowerAll(uid, me, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "uid가 이상해요.");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 내가 팔로우하는 살마 목록 보기
+    @GetMapping("/auth/my-followee")
+    public ResponseEntity getMyFolloweeAll(HttpServletRequest request, @PageableDefault(size=10, page = 0) Pageable pageable) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            Long me = uid;
+            return new ResponseEntity(memberService.getFolloweeAll(uid, me, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "uid가 이상해요.");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 팔로우 해제
+    @DeleteMapping("/auth/follow")
+    public ResponseEntity unfollow(HttpServletRequest request, @RequestBody Map<String, Long> followRequest) {
+        Map<String, Boolean> data = new HashMap<>();
+        try {
+            Long from = Long.valueOf((String) request.getAttribute("uid"));
+            Long to = followRequest.get("to");
+            data.put("success", memberService.unfollowUser(from, to));
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch(JpaObjectRetrievalFailureException e) {
             data.put("success", false);

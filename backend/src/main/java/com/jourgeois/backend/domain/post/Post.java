@@ -25,6 +25,9 @@ public class Post {
     @Column(name = "p_id")
     private Long id;
 
+    @Column(name="p_dtype", insertable = false, updatable = false)
+    protected String d_type;
+
     @Column(name = "p_img")
     private String img;
 
@@ -43,7 +46,7 @@ public class Post {
     @JoinColumn(name = "p_writer")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "postId")
     private List<PostBookmark> postBookmarks;
 
     @OneToMany(mappedBy = "post")
@@ -58,8 +61,12 @@ public class Post {
                 ", createTime=" + createTime +
                 ", lastUpdateTime=" + lastUpdateTime +
                 ", member=" + member +
-                ", postBookmarks=" + postBookmarks +
+//                ", postBookmarks=" + postBookmarks +
                 ", reviews=" + reviews +
                 '}';
+    }
+
+    public Post(Long id) {
+        this.id = id;
     }
 }

@@ -109,6 +109,7 @@ header {
 .header-success {
   width: fit-content;
   padding: 0.5em 0 0.5em 0.5em;
+  letter-spacing: $ls-main;
   @include font($fs-main, $fw-medium);
   background-color: white;
 

@@ -6,7 +6,8 @@
       v-model="customCocktailValue"
     ></input-basic>
     <the-custom-cocktail-image-input></the-custom-cocktail-image-input>
-    <the-custom-cocktail-ingredients></the-custom-cocktail-ingredients>
+    <the-custom-cocktail-ingredients-input></the-custom-cocktail-ingredients-input>
+    <the-custom-cocktail-recipe-input></the-custom-cocktail-recipe-input>
     <the-custom-cocktail-textarea
       v-model="customCocktailDescValue"
     ></the-custom-cocktail-textarea>
@@ -18,7 +19,8 @@ import { ref } from "vue";
 import InputBasic from "@/components/basics/InputBasic.vue";
 import TheCustomCocktailImageInput from "@/components/cocktails/TheCustomCocktailImageInput.vue";
 import TheCustomCocktailTextarea from "@/components/cocktails/TheCustomCocktailTextarea.vue";
-import TheCustomCocktailIngredients from "@/components/cocktails/TheCustomCocktailIngredients.vue";
+import TheCustomCocktailIngredientsInput from "@/components/cocktails/TheCustomCocktailIngredientsInput.vue";
+import TheCustomCocktailRecipeInput from "@/components/cocktails/TheCustomCocktailRecipeInput.vue";
 
 // title input
 const customCocktailTitleData = {
@@ -38,7 +40,10 @@ const customCocktailValue = ref("");
 const customCocktailDescValue = ref("");
 
 const submitCustomCocktailForm = () => {
-  console.log("폼 제출");
+  const data = {
+    title: customCocktailValue.value,
+    description: customCocktailDescValue.value,
+  };
 };
 </script>
 

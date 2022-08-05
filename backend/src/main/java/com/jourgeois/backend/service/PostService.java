@@ -3,17 +3,12 @@ package com.jourgeois.backend.service;
 import com.amazonaws.SdkClientException;
 
 
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
-import com.jourgeois.backend.api.dto.post.PostDTO;
-import com.jourgeois.backend.api.dto.post.PostInfoDTO;
-import com.jourgeois.backend.api.dto.post.PostReviewDTO;
-import com.jourgeois.backend.api.dto.post.PostReviewResponseVO;
+import com.jourgeois.backend.api.dto.member.FollowerDTO;
+import com.jourgeois.backend.api.dto.post.*;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
-import com.jourgeois.backend.domain.post.CustomCocktail;
-import com.jourgeois.backend.domain.post.CustomCocktailToCocktail;
-import com.jourgeois.backend.domain.post.Post;
-import com.jourgeois.backend.domain.post.PostReview;
+import com.jourgeois.backend.domain.post.*;
 
 import com.jourgeois.backend.repository.*;
 import com.jourgeois.backend.util.ImgType;
@@ -26,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -38,21 +30,24 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
     private final CocktailRepository cocktailRepository;
-
+    private final PostBookmarkRepository postBookmarkRepository;
     private final PostReviewRepository postReviewRepository;
+    private final FollowRepository followRepository;
     private final S3Util s3Util;
     private final String s3Url;
 
     @Autowired
     public PostService(PostRepository postRepository,
                        MemberRepository memberRepository,
-                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostReviewRepository postReviewRepository, S3Util s3Util,
+                       CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostBookmarkRepository postBookmarkRepository, PostReviewRepository postReviewRepository, FollowRepository followRepository, S3Util s3Util,
                        @Value("${cloud.aws.s3.bucket.path}") String s3Url) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
         this.cocktailRepository = cocktailRepository;
+        this.postBookmarkRepository = postBookmarkRepository;
         this.postReviewRepository = postReviewRepository;
+        this.followRepository = followRepository;
         this.s3Util = s3Util;
         this.s3Url = s3Url;
     }
@@ -87,7 +82,8 @@ public class PostService {
             // 베이스가 있는 커스텀 칵테일이라면
             if(postDTO.getBaseCocktail()!=null){
                 Cocktail ori = cocktailRepository.findById(postDTO.getBaseCocktail()).get();
-                customCocktailToCocktailRepository.findByCustomCocktailAndCocktail(cocktail, ori)
+
+                customCocktailToCocktailRepository.findById(new CustomCocktailId(cocktail.getId(), ori.getId()))
                                 .ifPresentOrElse(data -> {new Exception("BaseCocktail  save Error");},
                                         ()->{customCocktailToCocktailRepository.save(new CustomCocktailToCocktail(cocktail, ori));});
             }
@@ -101,51 +97,25 @@ public class PostService {
         return url;
     }
 
-    // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
-    public List<PostInfoDTO> readCumstomCoctailList(Long id, Pageable pageable){
-        List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
-        customCocktailToCocktailRepository.findByCocktail_Id(id, pageable)
-                .forEach(data ->{
-                    Long p_id = data.getCustomCocktail().getId();
-                    CustomCocktail customCocktail = (CustomCocktail) postRepository.findById(p_id).orElseThrow();
-                    Member member = memberRepository.findById(customCocktail.getMember().getUid()).orElseThrow();
-                    ProfileDTO profile = new ProfileDTO(member.getUid(), null, member.getName(),
-                            member.getNickname(), member.getProfileImg(), null);
-                    PostDTO post = PostDTO.builder()
-                            .postId(customCocktail.getId())
-                            .imgLink(customCocktail.getImg())
-                            .description(customCocktail.getDescription())
-                            .title(customCocktail.getTitle())
-                            .baseCocktail(data.getCocktail().getId())
-                            .createTime(data.getCustomCocktail().getCreateTime())
-                            .lastUpdateTime(data.getCustomCocktail().getLastUpdateTime())
-                            .recipe(customCocktail.getRecipe())
-//                            .ingredients(customCocktail.getIngredients())
-                            .build();
-                    postInfoDTOList.add(new PostInfoDTO(post, profile));
-        });
-        return postInfoDTOList;
-    }
-
     // 위의 커스텀 칵테일 목록에서 상세보기 했을 때 전체 내용 (댓글 포함) 북마크 했을 때 수정 필요
-    public PostInfoDTO readCumstomCoctail(Long p_id){
-        CustomCocktail post = (CustomCocktail) postRepository.findById(p_id).get();
-        Member member = memberRepository.findById(post.getMember().getUid()).get();
-        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
-                member.getNickname(), member.getProfileImg(), member.getIntroduce());
-        PostDTO postpost = PostDTO.builder()
-                .postId(post.getId())
-                .imgLink(post.getImg())
-                .description(post.getDescription())
-                .title(post.getTitle())
-//                    .baseCocktail(data.getCocktail().getId())
-                .ingredients(post.getIngredients())
-                .recipe(post.getRecipe())
-                .ingredients(post.getIngredients()).build();
-        PostInfoDTO result = new PostInfoDTO(postpost, p);
-
-        return result;
-    }
+//    public PostInfoDTO readCumstomCoctail(Long p_id){
+//        CustomCocktail post = (CustomCocktail) postRepository.findById(p_id).get();
+//        Member member = memberRepository.findById(post.getMember().getUid()).get();
+//        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
+//                member.getNickname(), member.getProfileImg(), member.getIntroduce());
+//        PostDTO postpost = PostDTO.builder()
+//                .postId(post.getId())
+//                .imgLink(post.getImg())
+//                .description(post.getDescription())
+//                .title(post.getTitle())
+////                    .baseCocktail(data.getCocktail().getId())
+//                .ingredients(post.getIngredients())
+//                .recipe(post.getRecipe())
+//                .ingredients(post.getIngredients()).build();
+//        PostInfoDTO result = new PostInfoDTO(postpost, p);
+//
+//        return result;
+//    }
 
     @Transactional
     public void editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
@@ -183,13 +153,13 @@ public class PostService {
     public void deletePost(Map<String, Long> postDeleteReq) throws NoSuchElementException, SdkClientException {
         Member member = new Member();
         member.setUid(postDeleteReq.get("uid"));
-        postRepository.findByIdAndMember(postDeleteReq.get("p_id"), member)
+        postRepository.findByIdAndMember(postDeleteReq.get("postId"), member)
                 .ifPresentOrElse((targetPost) -> {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
                     // cascade 적용이 안됨..!!
-                    customCocktailToCocktailRepository.findByCustomCocktail_Id(postDeleteReq.get("p_id"))
-                                    .ifPresent(data -> {customCocktailToCocktailRepository.deleteById(data.getId());});
+                    customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(postDeleteReq.get("p_id")))
+                                    .ifPresent(data -> {customCocktailToCocktailRepository.deleteByCustomCocktailId(new CustomCocktail(data.getCustomCocktailId()));});
                     postRepository.delete(targetPost);
                 },
                 () -> {throw new NoSuchElementException("게시글을 찾을 수 없습니다.");}
@@ -231,12 +201,153 @@ public class PostService {
         postReviewRepository.delete(postReview);
     }
 
-    public List<PostReviewResponseVO> getReviewAll(Long p_id, Boolean asc, Pageable pageable) throws Exception {
+    public List<PostReviewResponseDTO> getReviewAll(Long p_id, Boolean asc, Pageable pageable) throws Exception {
         if(asc) pageable.getSort().ascending();
         else pageable.getSort().descending();
 
         List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(p_id, pageable);
+        List<PostReviewResponseDTO> response = new LinkedList<>();
 
-        return reviews;
+        reviews.forEach((review) -> {
+            PostReviewResponseDTO postReviewResponse = PostReviewResponseDTO.builder()
+                    .uid(review.getUid())
+                    .nickname(review.getNickname())
+                    .review(review.getReview())
+                    .profileImg(s3Url + review.getProfileImg())
+                    .isUpdated(review.getIsUpdated())
+                    .createTime(review.getCreateTime())
+                    .updateTime(review.getUpdateTime())
+                    .build();
+
+            response.add(postReviewResponse);
+
+        });
+
+        return response;
+    }
+
+    @Transactional
+    public boolean pushBookmark(Map<String, Long> bookmark){
+        Long m_id = bookmark.get("uid");
+        Long p_id = bookmark.get("p_id");
+        PostBookmarkId key = new PostBookmarkId(m_id, p_id);
+
+        Member member = new Member();
+        member.setUid(m_id);
+        Post post = new Post();
+        post.setId(p_id);
+
+        postBookmarkRepository.findById(key).ifPresentOrElse(data ->{
+            postBookmarkRepository.deleteById(key);},
+                ()->{postBookmarkRepository.save(new PostBookmark(member, post));});
+
+        return checkUserBookmark(key);
+    }
+
+    public boolean checkUserBookmark(PostBookmarkId key){
+        return postBookmarkRepository.findById(key).isPresent();
+    }
+
+    public boolean checkPostId(Long id){
+        return postRepository.findById(id).isPresent();
+    }
+
+    public Integer countPostBookmark(Long p_id){
+        return postBookmarkRepository.countByPostId(new Post(p_id));
+    }
+
+    public List<FollowerDTO> getLikeList(Long uid, Long p_id, Pageable pageable){
+        List<FollowerDTO> followersResponse = new ArrayList<>();
+
+        // p_id를 북마크한 사람들 목록 가져오기
+        postBookmarkRepository.findByPostId(new Post(p_id), pageable).forEach(data -> {
+            Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
+            FollowPK key = new FollowPK(uid, member.getUid());
+
+            Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+            if(uid.equals(member.getUid())) {
+                status = -1;
+            }
+            
+            followersResponse.add(FollowerDTO.builder()
+                    .isFollowed(status)
+                    .nickname(member.getNickname())
+                    .uid(member.getUid())
+                    .profileImg(s3Url+member.getProfileImg())
+                    .build());
+        });
+        return followersResponse;
+    }
+
+    public PostInfoDTO readCustomCocktail(Long p_id, Long uid){
+        Post post = postRepository.findById(p_id).orElseThrow();
+        PostDTO postDTO = PostDTO.builder().postId(post.getId())
+                .imgLink(s3Url + post.getImg())
+                .description(post.getDescription())
+                .createTime(post.getCreateTime())
+                .lastUpdateTime(post.getLastUpdateTime())
+                .isUpdated(post.getCreateTime().isBefore(post.getLastUpdateTime()) ? 1 : 0) // 수정됐으면 1
+                .like(postBookmarkRepository.countByPostId(new Post(p_id)))
+                .build();
+
+        if(post.getD_type().equals("cocktail")){
+            CustomCocktail cocktail = (CustomCocktail) post;
+            postDTO.setTitle(cocktail.getTitle());
+            postDTO.setIngredients(cocktail.getIngredients());
+            postDTO.setRecipe(cocktail.getRecipe());
+            customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(p_id))
+                    .ifPresent(data -> {
+                        postDTO.setBaseCocktail(data.getCocktailId().getId());
+                        postDTO.setBaseCocktailName(cocktailRepository.findById(data.getCocktailId().getId()).get().getNameKR());
+                    });
+        }
+
+        // uid 는 본인 post의 주인과 비교
+        Member member = memberRepository.findById(post.getMember().getUid()).orElseThrow();
+        FollowPK key = new FollowPK(uid, member.getUid());
+        Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+        if(uid.equals(member.getUid())) {
+            status = -1;
+        }
+
+        FollowerDTO profile = FollowerDTO.builder()
+                .uid(member.getUid())
+                .profileImg(s3Url + member.getProfileImg())
+                .nickname(member.getNickname())
+                .isFollowed(status)
+                .build();
+
+        return PostInfoDTO.builder().followerDTO(profile).customCocktail(postDTO).build();
+    }
+
+    public List<NewsFeedDTO> getNewsFeed(Long me, Pageable pageable) {
+        List<NewsFeedVO> feeds = postRepository.getNewsFeed(me, pageable);
+
+        List<NewsFeedDTO> feedResponse = new ArrayList<>();
+        feeds.forEach((feed) -> {
+            NewsFeedDTO feedDTO = NewsFeedDTO.builder()
+                    .createTime(feed.getCreateTime())
+                    .updateTime(feed.getUpdateTime())
+                    .isUpdated(feed.getIsUpdated())
+                    .pid(feed.getPid())
+                    .type(feed.getType())
+                    .writer(feed.getWriter())
+                    .nickname(feed.getNickname())
+                    .profileImg(s3Url + feed.getProfileImg())
+                    .isSuperCustomCocktail(feed.getIsSuperCustomCocktail())
+                    .baseCocktailId(feed.getBaseCocktailId())
+                    .baseCocktailName(feed.getBaseCocktailName())
+                    .cocktailTitle(feed.getCocktailTitle())
+                    .postImg(s3Url + feed.getPostImg())
+                    .description(feed.getDescription())
+                    .followerCount(feed.getFollowerCount())
+                    .reviewCount(feed.getReviewCount())
+                    .likeCount(feed.getLikeCount())
+                    .build();
+
+            feedResponse.add(feedDTO);
+        });
+
+        return feedResponse;
     }
 }

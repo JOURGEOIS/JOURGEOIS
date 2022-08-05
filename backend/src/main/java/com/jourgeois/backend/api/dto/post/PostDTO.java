@@ -2,6 +2,7 @@ package com.jourgeois.backend.api.dto.post;
 
 import lombok.Builder;
 import lombok.ToString;
+import org.joda.time.DateTime;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -17,12 +18,48 @@ public class PostDTO {
     private String description;
     private LocalDateTime createTime;
     private LocalDateTime lastUpdateTime;
-    
+    private Integer isUpdated;
+
+    private Integer like;
+
     // 커스텀 칵테일
     private String title;
     private Long baseCocktail;
+    private String baseCocktailName;
     private String ingredients;
     private String recipe;
+    private Integer type;
+
+    public Integer getIsUpdated() {
+        return isUpdated;
+    }
+
+    public void setIsUpdated(Integer isUpdated) {
+        this.isUpdated = isUpdated;
+    }
+
+    public String getBaseCocktailName() {
+        return baseCocktailName;
+    }
+
+    public void setBaseCocktailName(String baseCocktailName) {
+        this.baseCocktailName = baseCocktailName;
+    }
+    public Integer getLike() {
+        return like;
+    }
+
+    public void setLike(Integer like) {
+        this.like = like;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public LocalDateTime getCreateTime() {
         return createTime;

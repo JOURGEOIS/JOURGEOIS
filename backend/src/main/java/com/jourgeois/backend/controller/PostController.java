@@ -1,8 +1,15 @@
 package com.jourgeois.backend.controller;
 
 import com.amazonaws.AmazonClientException;
+import com.jourgeois.backend.api.dto.cocktail.CocktailBookmarkDTO;
+import com.jourgeois.backend.api.dto.post.PostBookmarkDTO;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.api.dto.post.PostReviewDTO;
+import com.jourgeois.backend.domain.cocktail.Cocktail;
+import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.domain.post.Post;
+import com.jourgeois.backend.service.CocktailService;
+import com.jourgeois.backend.service.MemberService;
 import com.jourgeois.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +18,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,28 +31,38 @@ import java.util.NoSuchElementException;
 public class PostController {
 
     private final PostService postService;
+    private final MemberService memberService;
+    private final CocktailService cocktailService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, MemberService memberService, CocktailService cocktailService) {
         this.postService = postService;
+        this.memberService = memberService;
+        this.cocktailService = cocktailService;
     }
 
-    @PostMapping
-    public ResponseEntity postPost(@ModelAttribute PostDTO post) {
+    @PostMapping("/auth")
+    public ResponseEntity postPost(HttpServletRequest request, @ModelAttribute PostDTO post) {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
-
         if(post.getImg() == null || post.getImg().isEmpty()) {
             result.put("fail", "이미지를 등록해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }else if(post.getType() != null && post.getType() == 1 && (post.getBaseCocktail() == null || post.getBaseCocktail().equals(null))){
+            result.put("fail", "Base Cocktail이 없습니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
-
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            post.setUid(uid);
             postService.postPost(post);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
-        } catch (IOException e) {
+        } catch(NumberFormatException e){
+            result.put("fail", "uid의 형식이 다릅니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(IOException e) {
             result.put("fail", "파일 업로드 실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NoSuchElementException e) {
@@ -52,8 +71,8 @@ public class PostController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity editPost(@ModelAttribute PostDTO post) {
+    @PutMapping("/auth")
+    public ResponseEntity editPost(HttpServletRequest request, @ModelAttribute PostDTO post) {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
@@ -64,6 +83,8 @@ public class PostController {
         }
         
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            post.setUid(uid);
             postService.editPost(post);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
@@ -76,10 +97,18 @@ public class PostController {
         }
     }
 
-    @PostMapping("/tmp")
-    public ResponseEntity postImageTempStorage(@ModelAttribute PostDTO postDTO){
+    @PostMapping("/auth/tmp")
+    public ResponseEntity postImageTempStorage(HttpServletRequest request, @ModelAttribute PostDTO postDTO){
         Map<String, String> data = new HashMap<>();
+
+        if(postDTO.getImg() == null || postDTO.getImg().isEmpty()) {
+            data.put("fail", "이미지를 등록해주세요.");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        }
+
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postDTO.setUid(uid);
             data.put("url", "http://13.209.206.237/img/" + postService.postImageLocalUpload(postDTO));
             return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
@@ -88,10 +117,13 @@ public class PostController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity deletePost(@RequestBody Map<String, Long> postDeleteReq) {
+    @DeleteMapping("/auth")
+    public ResponseEntity deletePost(HttpServletRequest request, @RequestBody Map<String, Long> postDeleteReq) {
         Map<String, String> result = new HashMap<>();
         try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postDeleteReq.put("uid", uid);
+
             postService.deletePost(postDeleteReq);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.OK);
@@ -106,21 +138,9 @@ public class PostController {
         }
     }
 
-    // 원본칵테일의 커스텀칵테일 탭 (리스트반환)
-    @GetMapping
-    public ResponseEntity readCustomCocktailList(@RequestParam Long id,
-                                   @PageableDefault(size=10) Pageable pageable){
-        try{
-            return  new ResponseEntity(postService.readCumstomCoctailList(id, pageable), HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity("리스트를 불러오지 못했습니다.", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-    }
-
     // 댓글
-    @PostMapping("/review")
-    public ResponseEntity postReview(@RequestBody PostReviewDTO postReviewDTO) {
+    @PostMapping("/auth/review")
+    public ResponseEntity postReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
         System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, String> result = new HashMap<>();
@@ -130,18 +150,25 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
 
+
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postReviewDTO.setUid(uid);
             postService.postReview(postReviewDTO);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            result.put("fail", "실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        catch (Exception e) {
             result.put("fail", "실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/review")
-    public ResponseEntity editReview(@RequestBody PostReviewDTO postReviewDTO) {
+    @PutMapping("/auth/review")
+    public ResponseEntity editReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
         System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, String> result = new HashMap<>();
@@ -149,7 +176,10 @@ public class PostController {
             result.put("fail", "내용을 입력해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
+
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postReviewDTO.setUid(uid);
             postService.editReview(postReviewDTO);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
@@ -162,12 +192,14 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/review")
-    public ResponseEntity deleteReview(@RequestBody Map<String, Long> postDeleteReq) {
+    @DeleteMapping("/auth/review")
+    public ResponseEntity deleteReview(HttpServletRequest request, @RequestBody Map<String, Long> postDeleteReq) {
         System.out.println("Request: " + postDeleteReq.toString());
 
         Map<String, String> result = new HashMap<>();
         try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            postDeleteReq.put("uid", uid);
             postService.deleteReview(postDeleteReq);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
@@ -182,7 +214,7 @@ public class PostController {
 
     @GetMapping("/review")
     public ResponseEntity getReviewAll(@RequestParam(value = "p_id") Long p_id,
-                                        @RequestParam(value = "asc") Boolean asc,
+                                        @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                         @PageableDefault(size=10, page = 0) Pageable pageable){
         System.out.println("p_id: " + p_id);
 
@@ -195,6 +227,73 @@ public class PostController {
             return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.OK);
         } catch (Exception e) {
             result.put("fail", "댓글을 불러오는 것을 실패했습니다.");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 원본 칵테일 북마크 (token 필요) => uid로 전체 바꿀 때 바꾼 후 적용 필요
+    @PostMapping(value = "/bookmark")
+    public ResponseEntity pushPostBookmark(@RequestBody Map<String, Long> bookmark){
+        Map<String, Integer> data = new HashMap<>();
+        if(memberService.checkUserUid(bookmark.get("uid")) && postService.checkPostId(bookmark.get("p_id"))) {
+            if (postService.pushBookmark(bookmark)) {
+                data.put("status", 1);
+            } else {
+                data.put("status", 0);
+            }
+            data.put("count", postService.countPostBookmark(bookmark.get("p_id")));
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("잘못된 회원이거나 게시물입니다.", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping(value="/likelist")
+    public ResponseEntity getLikeList(@RequestParam(value = "uid") Long uid, @RequestParam(value = "p_id") Long p_id,
+                            @PageableDefault(size=10, page=0) Pageable pageable){
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(postService.getLikeList(uid, p_id, pageable), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "잘못된 인풋");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value="/custom")
+    public ResponseEntity readCustomCocktail(@RequestParam(value="p_id") Long p_id, @RequestParam(value = "uid") Long uid){
+        Map<String, String> data = new HashMap<>();
+        try {
+            return new ResponseEntity(postService.readCustomCocktail(p_id, uid), HttpStatus.OK);
+        } catch (NoSuchElementException e){
+            System.out.println(e);
+            data.put("fail", "찾을 수 없음");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        }catch (NumberFormatException e) {
+            System.out.println(e);
+            data.put("fail", "잘못된 인풋");
+            return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("fail", "오류 발생");
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value="/auth/feed")
+    public ResponseEntity getNewsFeed(HttpServletRequest request, @PageableDefault(size=10, page = 0) Pageable pageable){
+        Map<String, String> result = new HashMap<>();
+
+        try {
+            Long me = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(postService.getNewsFeed(me, pageable), HttpStatus.OK);
+        } catch (Exception e) {
+            result.put("fail", "피드를 불러오는 것을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -10,7 +10,7 @@ export interface CustomCocktailOnly {
   title: string; // 칵테일 이름
   baseCocktail: number; // 베이스 칵테일 번호
   baseCocktailName: string; // 베이스 칵테일 이름
-  ingredients: string; // 칵테일 설명
+  ingredients: string[]; // 칵테일 설명
   recipe: string; // 칵테일 제작
 }
 

@@ -72,8 +72,9 @@ const clickFollowBtn = () => {
 
 <style scoped lang="scss">
 .post-user-section {
-  width: 100%;
-  padding: 15px 10px;
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  padding: 15px 16px;
   border-bottom: 1px solid $unchecked-color;
   @include flex-xy(space-between, center);
 

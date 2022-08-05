@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,27 +30,37 @@ public class Member {
     private String name;
     private String nickname;
     private String birthday;
-    private String profileImg ="default/1.png";
+    private String profileImg ="profile/default/1.png";
 
     private String introduce;
     @CreatedDate
     private java.util.Date creationDate;
     private String roles = "ROLE_USER";
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<CocktailBookmark> cocktailBookmarks;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PostBookmark> postBookmarks;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<CocktailComment> cocktailReviews;
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<CocktailComment> cocktailComments;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PostReview> postReviews;
+
+    @OneToMany(mappedBy = "from", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Follow> follower;
+
+    @OneToMany(mappedBy = "to", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Follow> followee;
+
+    @Transient
+    private Date date = new Date();
 
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
@@ -60,6 +71,14 @@ public class Member {
         this.birthday = birthday;
         this.profileImg = profileImg;
         this.introduce = introduce;
+    }
+
+    @Builder
+    public Member(String email, String password, String name, String profileImg) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.profileImg = profileImg;
     }
 
     @Builder
@@ -82,6 +101,13 @@ public class Member {
         this.roles = "ROLE_USER";
     }
 
+    public Member update(String name, String profileImg){
+        this.name = name;
+        this.profileImg = profileImg;
+
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
@@ -94,12 +120,13 @@ public class Member {
                 ", profileImg='" + profileImg + '\'' +
                 ", introduce='" + introduce + '\'' +
                 ", creationDate=" + creationDate +
-                ", roles='" + roles + '\'' +
-                ", posts=" + posts +
-                ", cocktailBookmarks=" + cocktailBookmarks +
-                ", postBookmarks=" + postBookmarks +
-                ", cocktailReviews=" + cocktailReviews +
-                ", postReviews=" + postReviews +
-                '}';
+
+                ", roles='" + roles + '\'' +"}"; //+
+//                ", posts=" + posts +
+//                ", cocktailBookmarks=" + cocktailBookmarks +
+//                ", postBookmarks=" + postBookmarks +
+//                ", cocktailReviews=" + cocktailReviews +
+//                ", postReviews=" + postReviews +
+//                '}';
     }
 }

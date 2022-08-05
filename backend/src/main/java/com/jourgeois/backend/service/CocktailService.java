@@ -2,19 +2,23 @@ package com.jourgeois.backend.service;
 
 
 import com.jourgeois.backend.api.dto.cocktail.*;
-import com.jourgeois.backend.domain.cocktail.Cocktail;
-import com.jourgeois.backend.domain.cocktail.CocktailBookmark;
-import com.jourgeois.backend.domain.cocktail.CocktailComment;
-import com.jourgeois.backend.domain.cocktail.Material;
+import com.jourgeois.backend.api.dto.member.FollowerDTO;
+import com.jourgeois.backend.api.dto.post.PostDTO;
+import com.jourgeois.backend.api.dto.post.PostInfoDTO;
+import com.jourgeois.backend.api.dto.post.PostInfoVO;
+import com.jourgeois.backend.domain.cocktail.*;
+import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -24,15 +28,22 @@ public class CocktailService {
     private final CocktailCommentRepository cocktailCommentRepository;
     private final MemberRepository memberRepository;
     private final CocktailBookmarkRepository cocktailBookmarkRepository;
+    private final FollowRepository followRepository;
+    private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
+    private final String s3Url;
 
     @Autowired
     CocktailService(CocktailRepository cocktailRepository, MaterialRepository materialRepository, CocktailCommentRepository cocktailCommentRepository,
-                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository){
+                    MemberRepository memberRepository, CocktailBookmarkRepository cocktailBookmarkRepository, FollowRepository followRepository,
+                    CustomCocktailToCocktailRepository customCocktailToCocktailRepository, @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.cocktailRepository = cocktailRepository;
         this.materialRepository = materialRepository;
         this.cocktailCommentRepository = cocktailCommentRepository;
         this.memberRepository = memberRepository;
         this.cocktailBookmarkRepository = cocktailBookmarkRepository;
+        this.followRepository = followRepository;
+        this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
+        this.s3Url = s3Url;
     }
 
     // 칵테일 저장 메소드
@@ -112,7 +123,7 @@ public class CocktailService {
 
             for (CocktailCommentVO ccVO : ccVOs) {
                 CocktailCommentDTO ccDTO = CocktailCommentDTO.builder().commentId(ccVO.getCommentId()).nickname(ccVO.getNickname())
-                        .profileImg(ccVO.getProfileImg()).createdDate(ccVO.getCreatedDate()).modifiedDate(ccVO.getModifiedDate())
+                        .profileImg(s3Url + ccVO.getProfileImg()).createdDate(ccVO.getCreatedDate()).modifiedDate(ccVO.getModifiedDate())
                         .comment(ccVO.getComment()).cocktailId(ccVO.getCocktailId()).userId(ccVO.getUserId()).build();
 
                 ccDTOs.add(ccDTO);
@@ -154,17 +165,25 @@ public class CocktailService {
     }
 
     @Transactional
-    public boolean pushBookmark(CocktailBookmarkDTO cocktailBookmark){
-        cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
-                cocktailBookmark.getCocktail()).ifPresentOrElse(data -> {
-                    cocktailBookmarkRepository.deleteById(data.getId());},
-            ()->{cocktailBookmarkRepository.save(new CocktailBookmark(cocktailBookmark.getMember(), cocktailBookmark.getCocktail()));});
-        return checkUserBookmark(cocktailBookmark);
+    public boolean pushBookmark(Map<String, Long> cocktailBookmark){
+        Long m_id = cocktailBookmark.get("uid");
+        Long c_id = cocktailBookmark.get("c_id");
+        CocktailBookmarkId key = new CocktailBookmarkId(m_id, c_id);
+
+        Member member = new Member();
+        member.setUid(m_id);
+        Cocktail cocktail = new Cocktail();
+        cocktail.setId(c_id);
+
+        cocktailBookmarkRepository.findById(key).ifPresentOrElse(data -> {
+            cocktailBookmarkRepository.deleteById(key);},
+                ()->{cocktailBookmarkRepository.save(new CocktailBookmark(member, cocktail));});
+
+        return checkUserBookmark(key);
     }
 
-    public boolean checkUserBookmark(CocktailBookmarkDTO cocktailBookmark){
-        return cocktailBookmarkRepository.findByMemberAndCocktail(cocktailBookmark.getMember(),
-                cocktailBookmark.getCocktail()).isPresent();
+    public boolean checkUserBookmark(CocktailBookmarkId key){
+        return cocktailBookmarkRepository.findById(key).isPresent();
     }
 
     public boolean checkCocktailUid(Long uid){
@@ -172,6 +191,62 @@ public class CocktailService {
     }
 
     public Long countCocktailBookmark(Cocktail cocktail_id){
-        return cocktailBookmarkRepository.countByCocktail(cocktail_id);
+        return cocktailBookmarkRepository.countByCocktailId(cocktail_id);
+    }
+
+    // uid와 칵테일 id로
+    public List<FollowerDTO> getBookmarkList(Long uid, Long c_id, Pageable pageable){
+        List<FollowerDTO> followersResponse = new ArrayList<>();
+
+        // c_id를 북마크 한 사람들 목록 가져오기
+        cocktailBookmarkRepository.findByCocktailId(new Cocktail(c_id), pageable).forEach(data -> {
+            Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
+            FollowPK key = new FollowPK(uid, member.getUid());
+
+            Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+            if(uid.equals(member.getUid())) {
+                status = -1;
+            }
+
+            followersResponse.add(FollowerDTO.builder()
+                    .isFollowed(status)
+                    .nickname(member.getNickname())
+                    .uid(member.getUid())
+                    .profileImg(s3Url+member.getProfileImg())
+                    .build());
+        });
+        return followersResponse;
+    }
+
+    // 원본 칵테일에서 커스텀 칵테일 탭을 눌렀을 때 나오는 목록 반환
+    public List<PostInfoDTO> readCumstomCoctailList(Long id, int type, Pageable pageable){
+        List<PostInfoDTO> postInfoDTOList = new ArrayList<>();
+        // 1은 시간순 정렬, 나머지는 좋아요
+        List<PostInfoVO> result;
+        if(type == 1){
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCreateTime(id);
+        }else{
+            result = customCocktailToCocktailRepository.findByCustomCocktailListOrderbyCount(id);
+        }
+        result.forEach((data) -> {
+            PostDTO post = PostDTO.builder()
+                    .postId(data.getPostId())
+                    .imgLink(s3Url + data.getPostImg())
+                    .description(data.getPostDescription())
+                    .lastUpdateTime(data.getPostLastUpdateTime())
+                    .createTime(data.getPostCreateTime())
+                    .like(data.getPostCount())
+                    .title(data.getPostTitle())
+                    .recipe(data.getPostRecipe())
+                    .ingredients(data.getPostIngredients())
+                    .build();
+            FollowerDTO profile = FollowerDTO.builder()
+                    .uid(data.getUid())
+                    .profileImg(s3Url + data.getProfileImg())
+                    .nickname(data.getNickname())
+                    .build();
+            postInfoDTOList.add(PostInfoDTO.builder().followerDTO(profile).customCocktail(post).build());
+        });
+        return postInfoDTOList;
     }
 }

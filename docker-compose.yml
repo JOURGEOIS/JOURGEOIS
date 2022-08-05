@@ -26,14 +26,14 @@ services:
                         MARIADB_PASSWORD: 1234
                         MARIADB_ROOT_PASSWORD: 1q2w3e4r!@#
                 volumes:
-                        - ./db/data/mysql:/var/lib/mysql
-                        - ./db/cnf:/etc/mysql/conf.d
+                        - /home/ubuntu/cnf/db/data/mysql:/var/lib/mysql
+                        - /home/ubuntu/cnf/db/cnf:/etc/mysql/conf.d
                 ports:
                         - "3306:3306"
         redis:
                 image: redis:alpine
                 volumes:
-                        - ./redis/data:/data
+                        - /home/ubuntu/cnf/redis/data:/data
         springboot:
                 build: ./backend
                 restart: always

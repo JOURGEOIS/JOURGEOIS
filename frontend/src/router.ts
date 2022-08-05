@@ -135,6 +135,11 @@ const routes: any[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+
+  // 스크롤 무조건 맨 위로 이동
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 };
+  },
 });
 
 // Navigation Guard 설정

@@ -368,6 +368,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           commit("SET_ALERT_STATUS", true);
         })
         .catch((error) => {
+          console.log(error);
           if (error.response.status !== 401) {
             // 실패 팝업
             commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");

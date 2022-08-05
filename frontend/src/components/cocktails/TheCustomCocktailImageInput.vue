@@ -25,12 +25,17 @@ const store = useStore();
 const imageUrl = ref("");
 
 // 이미지 input
+const emit = defineEmits<{
+  (event: "changeImage", value: object): void;
+}>();
+
 const changeCustomCocktailImage = (event: Event) => {
   const data = {
     img: (event?.target as HTMLInputElement).files![0],
     imageUrl,
   };
   store.dispatch("customCocktail/uploadImage", data);
+  emit("changeImage", data.img);
 };
 </script>
 

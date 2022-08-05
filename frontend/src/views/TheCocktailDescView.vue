@@ -32,13 +32,21 @@
     </section>
   </div>
   <nav-bar></nav-bar>
+  <success-pop-up v-if="successStatus"> {{ successMessage }}</success-pop-up>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import TheCocktailDescDetail from "@/components/cocktails/TheCocktailDescDetail.vue";
-import { onMounted, defineAsyncComponent, computed, watch } from "vue";
+import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
+import {
+  onMounted,
+  defineAsyncComponent,
+  computed,
+  watch,
+  onBeforeMount,
+} from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
@@ -77,6 +85,24 @@ watch(
 // 동적 라우팅
 onMounted(() => {
   store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
+});
+
+// 성공 팝업 =======================================
+const successMessage = computed(
+  () => store.getters["customCocktail/getSuccessMessage"]
+);
+
+const successStatus = computed(
+  () => store.getters["customCocktail/getAlertStatus"]
+);
+
+// 시간제 모달
+watch(successStatus, () => {
+  if (successStatus.value) {
+    setTimeout(() => {
+      store.dispatch("customCocktail/changeAlertStatus", false);
+    }, 2000);
+  }
 });
 </script>
 

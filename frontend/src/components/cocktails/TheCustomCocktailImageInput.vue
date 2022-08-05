@@ -30,6 +30,10 @@ const emit = defineEmits<{
 }>();
 
 const changeCustomCocktailImage = (event: Event) => {
+  // 취소 버튼 누르는 경우 바로 return
+  if (!(event?.target as HTMLInputElement).files![0]) {
+    return;
+  }
   const data = {
     img: (event?.target as HTMLInputElement).files![0],
     imageUrl,
@@ -55,12 +59,14 @@ label[for="custom-cocktail-image-input"] {
   }
   > div {
     position: relative;
-    width: 100%;
+    width: calc(100% + 32px);
+    margin: 10px -16px;
     padding-bottom: 100%;
     background-color: $white150;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    aspect-ratio: 1/1;
 
     .custom-cocktail-image-input-desc {
       @include flex-center;
@@ -68,7 +74,7 @@ label[for="custom-cocktail-image-input"] {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      @include font($fs-main, $fw-regular);
+      @include font(16px, $fw-regular);
       color: $white400;
     }
   }

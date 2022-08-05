@@ -130,11 +130,37 @@ const routes: any[] = [
     name: "TheLikedUserListView",
     component: () => import("@/views/TheLikedUserListView.vue"),
   },
+
+  // 뉴스피드 리스트
+  {
+    path: "/feeds",
+    name: "",
+    component: () => import(""),
+  },
+
+  // 뉴스피드 상세 페이지 (커칵, 일반 )
+  {
+    path: "/feeds/:feedId",
+    name: "",
+    component: () => import(""),
+  },
+
+  // 뉴스피드 상세 페이지 form
+  {
+    path: "feeds/form",
+    name: "",
+    component: () => import(""),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+
+  // 스크롤 무조건 맨 위로 이동
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 };
+  },
 });
 
 // Navigation Guard 설정

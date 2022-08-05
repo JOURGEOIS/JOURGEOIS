@@ -42,7 +42,6 @@
 <script setup lang="ts">
 import PostUserSection from "@/components/basics/PostUserSection.vue";
 import { CustomCocktail } from "../../interface";
-import { toRefs } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
@@ -63,19 +62,19 @@ const {
   baseCocktailName,
   ingredients,
   recipe,
-} = toRefs(props.data.customCocktail);
+} = props.data.customCocktail;
 
 // 레시피 string -> string[]
-const recipeList = recipe.value.split(" <> ");
+const recipeList = recipe.split(" <> ");
 
 // 재료 ingredients string[] -> string
-const ingredientString = ingredients.value.join(", ");
+const ingredientString = ingredients.join(", ");
 
 // 베이스칵테일 구역 누르면 베이스칵테일로 이동
 const clickBaseCocktail = () => {
   router.push({
     name: "TheCocktailDescView",
-    params: { cocktailId: baseCocktail.value },
+    params: { cocktailId: baseCocktail },
   });
 };
 </script>

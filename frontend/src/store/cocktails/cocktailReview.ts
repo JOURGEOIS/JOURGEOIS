@@ -10,6 +10,8 @@ export interface cocktailReviewData {
 export interface CocktailReviewState {
   currentCocktailReview: cocktailReviewData[]
   reviewCocktailPage: number
+  deleteModalStatus: boolean
+  reviewChangeSuccess: boolean
 }
 
 export const cocktailReview: Module<CocktailReviewState, RootState> = {
@@ -18,12 +20,21 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
   state: {
     currentCocktailReview: [],
     reviewCocktailPage: 0,
+    deleteModalStatus: false,
+    reviewChangeSuccess: false,
   },
   getters: {
     getCurrentCocktailReview: (state) => {
       return state.currentCocktailReview
     },
     getReviewCocktailPage: (state) => state.reviewCocktailPage,
+    getDeleteModalStatus: (state) => {
+      return state.deleteModalStatus
+    },
+    getReviewChangeSuccess: (state) => {
+      console.log('팝업', state.reviewChangeSuccess)
+      return state.reviewChangeSuccess
+    },
   },
   mutations: {
     SET_CURRENT_COCKTAIL_REVIEW: (state, value: cocktailReviewData[]) => {
@@ -34,6 +45,13 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     },
     RESET_CURRENT_COCKTAIL_REVIEW: (state) => {
       state.currentCocktailReview = []
+    },
+    SET_DELETE_MODAL: (state, value) => {
+      state.deleteModalStatus = value
+    },
+    SET_REVIEW_SUCCESS: (state, value) => {
+      console.log('5', value)
+      state.reviewChangeSuccess = value
     },
   },
 
@@ -82,20 +100,28 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log(err.res)
         })
     },
-    updateCocktailReview: ({ commit }, { commentId, comment }) => {
+    updateCocktailReview: (
+      { commit, dispatch },
+      { cocktailId, commentId, comment },
+    ) => {
+      const editData = { commentId, comment }
+      console.log(editData.commentId)
+      console.log(editData.comment)
       axios({
         url: api.cocktail.cocktailReview(),
         method: 'PUT',
         headers: {},
-        data: {
-          commentId,
-          comment,
-        },
+        data: editData,
       })
         .then((res) => {
-          commit('SET_CURRENT_COCKTAIL_REVIEW', res.data)
+          console.log('수정')
           console.log(res.data)
-          console.log('보냄')
+          commit('SET_REVIEW_SUCCESS', true)
+          commit('RESET_CURRENT_COCKTAIL_REVIEW')
+          commit('SET_REVIEW_COCKTAIL_PAGE', 0)
+          dispatch('getCocktailReview', cocktailId)
+          console.log('3')
+          console.log('4')
         })
         .catch((err) => {
           console.log(err.res)
@@ -127,6 +153,12 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log(err.data)
           console.log('에러')
         })
+    },
+    toggleDeleteModal: ({ commit }, value: boolean) => {
+      commit('SET_DELETE_MODAL', value)
+    },
+    toggleReviewChangeSuccess: ({ commit }, value) => {
+      commit('SET_REVIEW_SUCCESS', value)
     },
   },
 }

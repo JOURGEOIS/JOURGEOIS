@@ -9,7 +9,10 @@
       :data="customCocktailInfo"
     ></the-custom-cocktail-desc-body>
     <!-- 댓글 좋아요 공유 부분 -->
-    <like-comment-share></like-comment-share>
+    <like-comment-share>
+      <template #like>888</template>
+      <template #comment>777</template>
+    </like-comment-share>
     <!-- 댓글 부분 -->
     <comment-form></comment-form>
   </div>
@@ -49,6 +52,7 @@ const customCocktailInfo: CustomCocktail = {
   followerDTO: {
     uid: 2,
     nickname: "우영우김밥하나요",
+    introduce: "꿀맛탱",
     profileImg:
       "https://t1.daumcdn.net/news/202206/14/SPORTSSEOUL/20220614092528280afnr.jpg",
     isFollowed: 1,

@@ -31,7 +31,7 @@
 import RoundImage from "@/components/basics/RoundImage.vue";
 import { CustomCocktailHost } from "../../interface";
 import { calcDateDelta } from "../../functions/date";
-import { toRefs, reactive, computed } from "vue";
+import { reactive, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
@@ -43,7 +43,7 @@ const props = defineProps<{
   date: number[];
 }>();
 
-const { uid, nickname, profileImg, isFollowed } = toRefs(props.userInfo);
+const { uid, nickname, profileImg, isFollowed } = props.userInfo;
 const timeDelta = calcDateDelta(props.date);
 
 // 프로필 사진에 넣을 props
@@ -60,7 +60,7 @@ const goProfile = () => {
 };
 
 // 팔로우/팔로잉 텍스트
-const followBtnText = computed(() => (isFollowed.value ? "팔로잉" : "팔로우"));
+const followBtnText = computed(() => (isFollowed ? "팔로잉" : "팔로우"));
 
 // 팔로우/팔로잉 버튼 클릭
 const clickFollowBtn = () => {

@@ -14,6 +14,7 @@
       <template #comment>777</template>
     </like-comment-share>
     <!-- 댓글 부분 -->
+    <comment-form></comment-form>
   </div>
 
   <!-- navbar -->
@@ -23,7 +24,8 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCustomCocktailDescBody from "@/components/cocktails/TheCustomCocktailDescBody.vue";
-import LikeCommentShare from "@/components/basics/LikeCommentShare.vue";
+import TheLikeCommentShare from "@/components/basics/LikeCommentShare.vue";
+import CommentForm from "@/components/basics/CommentForm.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import { reactive, computed, onBeforeMount } from "vue";
 import { useStore } from "vuex";

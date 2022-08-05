@@ -250,6 +250,7 @@ public class PostService {
             }
             
             followersResponse.add(FollowerDTO.builder()
+                    .introduce(member.getIntroduce())
                     .isFollowed(status)
                     .nickname(member.getNickname())
                     .uid(member.getUid())
@@ -274,7 +275,7 @@ public class PostService {
         if(post.getD_type().equals("cocktail")){
             CustomCocktail cocktail = (CustomCocktail) post;
             postDTO.setTitle(cocktail.getTitle());
-            postDTO.setIngredients(cocktail.getIngredients().split(", "));
+            postDTO.setIngredients(cocktail.getIngredients()!=null ? cocktail.getIngredients().split(", ") : null);
             postDTO.setRecipe(cocktail.getRecipe());
             customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(p_id))
                     .ifPresent(data -> {
@@ -296,6 +297,7 @@ public class PostService {
                 .profileImg(s3Url + member.getProfileImg())
                 .nickname(member.getNickname())
                 .isFollowed(status)
+                .introduce(member.getIntroduce())
                 .build();
 
         return PostInfoDTO.builder().followerDTO(profile).customCocktail(postDTO).build();

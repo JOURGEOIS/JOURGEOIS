@@ -26,7 +26,7 @@ public interface CustomCocktailToCocktailRepository extends JpaRepository<Custom
             ",result.cc_cocktail_ingredients as postIngredients, result.cc_cocktail_recipe as postRecipe, result.cc_cocktail_title as postTitle,\n" +
             "result.p_id as postId, result.p_img as postImg, result.p_create_time as postCreateTime,\n" +
             "result.p_last_update_time as postLastUpdateTime, result.p_description as postDescription,\n" +
-            "ifnull(result.count, 0) as postCount\n" +
+            "ifnull(result.count, 0) as postCount, m.introduce as introduce\n" +
             "from member as m join\n" +
             "(select test1.*, test2.* from \n" +
             "(select c.*, p.p_img, p.p_create_time, p.p_last_update_time, p.p_description, p.p_writer from custom_cocktail c left join post p\n" +
@@ -41,7 +41,7 @@ public interface CustomCocktailToCocktailRepository extends JpaRepository<Custom
             ",result.cc_cocktail_ingredients as postIngredients, result.cc_cocktail_recipe as postRecipe, result.cc_cocktail_title as postTitle,\n" +
             "result.p_id as postId, result.p_img as postImg, result.p_create_time as postCreateTime,\n" +
             "result.p_last_update_time as postLastUpdateTime, result.p_description as postDescription,\n" +
-            "ifnull(result.count, 0) as postCount\n" +
+            "ifnull(result.count, 0) as postCount, m.introduce as introduce\n" +
             "from member as m join\n" +
             "(select test1.*, test2.* from \n" +
             "(select c.*, p.p_img, p.p_create_time, p.p_last_update_time, p.p_description, p.p_writer from custom_cocktail c left join post p\n" +

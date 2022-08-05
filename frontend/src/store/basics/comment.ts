@@ -3,9 +3,9 @@ import api from "../../api/api";
 import { Module } from "vuex";
 import { RootState } from "../index";
 
-export interface CustomCocktailDescState {}
+export interface Comment {}
 
-export const customCocktailDesc: Module<CustomCocktailDescState, RootState> = {
+export const comment: Module<Comment, RootState> = {
   namespaced: true,
 
   state: {},
@@ -30,7 +30,7 @@ export const customCocktailDesc: Module<CustomCocktailDescState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "customCocktailDesc/createCustomCocktailComment",
+              func: "comment/createCustomCocktailComment",
               params: data,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });

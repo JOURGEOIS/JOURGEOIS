@@ -35,10 +35,7 @@ import {
   CustomCocktailState,
 } from "../store/cocktails/customCocktail";
 
-import {
-  customCocktailDesc,
-  CustomCocktailDescState,
-} from "../store/cocktails/customCocktailDesc";
+import { comment, Comment } from "./basics/comment";
 
 // 모듈의 state를 공유한다.
 export interface RootState {
@@ -54,7 +51,7 @@ export interface RootState {
   searchResult: SearchResultState;
   cocktailReview: CocktailReviewState;
   customCocktail: CustomCocktailState;
-  customCocktailDesc: CustomCocktailDescState;
+  comment: Comment;
 }
 
 // store를 생성한다.
@@ -72,6 +69,6 @@ export default createStore({
     searchResult,
     cocktailReview,
     customCocktail,
-    customCocktailDesc,
+    comment,
   },
 });

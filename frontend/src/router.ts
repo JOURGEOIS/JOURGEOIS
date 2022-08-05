@@ -130,6 +130,27 @@ const routes: any[] = [
     name: "TheLikedUserListView",
     component: () => import("@/views/TheLikedUserListView.vue"),
   },
+
+  // 뉴스피드 리스트
+  {
+    path: "/feeds",
+    name: "",
+    component: () => import(""),
+  },
+
+  // 뉴스피드 상세 페이지 (커칵, 일반 )
+  {
+    path: "/feeds/:feedId",
+    name: "",
+    component: () => import(""),
+  },
+
+  // 뉴스피드 상세 페이지 form
+  {
+    path: "feeds/form",
+    name: "",
+    component: () => import(""),
+  },
 ];
 
 const router = createRouter({

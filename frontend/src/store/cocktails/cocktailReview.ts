@@ -2,7 +2,6 @@ import axios from 'axios'
 import api from '../../api/api'
 import { Module } from 'vuex'
 import { RootState } from '../index'
-import { validate } from 'json-schema'
 
 export interface cocktailReviewData {
   [key: string]: string | number | number[] | null
@@ -33,6 +32,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       return state.deleteModalStatus
     },
     getReviewChangeSuccess: (state) => {
+      console.log('팝업', state.reviewChangeSuccess)
       return state.reviewChangeSuccess
     },
   },
@@ -50,6 +50,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       state.deleteModalStatus = value
     },
     SET_REVIEW_SUCCESS: (state, value) => {
+      console.log('5', value)
       state.reviewChangeSuccess = value
     },
   },
@@ -115,10 +116,12 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
         .then((res) => {
           console.log('수정')
           console.log(res.data)
+          commit('SET_REVIEW_SUCCESS', true)
           commit('RESET_CURRENT_COCKTAIL_REVIEW')
           commit('SET_REVIEW_COCKTAIL_PAGE', 0)
           dispatch('getCocktailReview', cocktailId)
-          commit('SET_REVIEW_SUCCESS', true)
+          console.log('3')
+          console.log('4')
         })
         .catch((err) => {
           console.log(err.res)

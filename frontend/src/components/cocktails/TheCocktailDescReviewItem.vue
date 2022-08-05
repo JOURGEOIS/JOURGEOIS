@@ -70,7 +70,7 @@
         </p>
       </div>
       <form
-        @submit.prevent="clickEditReview"
+        @submit.prevent=""
         v-else-if="isEditing"
         class="cocktail-desc-review-content"
       >
@@ -89,15 +89,14 @@
               :button-style="[buttonColor, '40px']"
               :disabled="!reviewInputValue"
               class="buttonstyle"
+              @click="clickEditReview"
             >
               완료
             </button-basic>
-            <success-pop-up v-if="successPopUpStatus">
-              성공적으로 저장되었습니다
-            </success-pop-up>
             <button-basic
               :button-style="[buttonColor, '40px']"
               class="buttonstyle"
+              @click="clickCancel"
             >
               취소
             </button-basic>
@@ -114,6 +113,9 @@
           </failure-pop-up>
         </div>
       </form>
+      <success-pop-up v-if="successPopUpStatus">
+        성공적으로 변경되었습니다
+      </success-pop-up>
     </div>
   </div>
 </template>
@@ -178,7 +180,7 @@ const cocktailId = Number(cocktailData.value.id)
 // 후기 수정
 const reviewEdit = (data: object) =>
   store.dispatch('cocktailReview/updateCocktailReview', data)
-const oldData = {
+let oldData = {
   cocktailId,
   commentId: props.data.commentId,
   comment: props.data.comment,
@@ -199,7 +201,7 @@ const reviewInputValue = ref(oldData.comment)
 const reviewInputStyle = ref('normal')
 
 // 에러 처리
-const reviewConditionErrorMessage: string = '후기에 부적절한 표현이 있습니다.'
+const reviewConditionErrorMessage: string = '부적절한 단어가 포함되어 있습니다.'
 const errorMessage: string[] = reactive([])
 const occurredError = ref(false)
 
@@ -231,11 +233,13 @@ const toggleDeleteModal = (value: boolean) =>
 const successPopUpStatus = computed(
   () => store.getters['cocktailReview/getReviewChangeSuccess'],
 )
-const toggleSuccessPopUp = (value: boolean) =>
+const toggleSuccessPopUp = (value: boolean) => {
   store.dispatch('cocktailReview/toggleReviewChangeSuccess', value)
+}
 
 watch(successPopUpStatus, () => {
   if (successPopUpStatus.value) {
+    console.log('dd')
     setTimeout(() => {
       toggleSuccessPopUp(false)
     }, 2000)
@@ -246,7 +250,6 @@ watch(successPopUpStatus, () => {
 onMounted(() => {
   toggleFailPopUp(false)
   toggleDeleteModal(false)
-  toggleSuccessPopUp(false)
 })
 
 const clickEditReview = () => {
@@ -268,12 +271,11 @@ const clickEditReview = () => {
   } else {
     console.log('data2:', editData)
     reviewEdit(editData)
-    toggleSuccessPopUp(true)
   }
-
-  const clickCancel = () => {
-    const reviewInputValue = oldData.comment
-  }
+}
+const clickCancel = () => {
+  reviewInputValue.value = oldData.comment
+  isEditing.value = !isEditing
 }
 
 // 후기 삭제

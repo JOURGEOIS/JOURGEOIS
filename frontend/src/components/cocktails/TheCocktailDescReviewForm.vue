@@ -76,7 +76,7 @@ const buttonColor = computed(() => {
 })
 
 // 에러 처리
-const reviewConditionErrorMessage: string = '후기에 부적절한 표현이 있습니다.'
+const reviewConditionErrorMessage: string = '부적절한 단어가 포함되어 있습니다.'
 const errorMessage: string[] = reactive([])
 const occurredError = ref(false)
 

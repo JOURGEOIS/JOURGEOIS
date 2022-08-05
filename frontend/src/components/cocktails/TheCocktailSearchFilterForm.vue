@@ -309,7 +309,7 @@ form {
   position: absolute;
   border-radius: 1em;
   padding: 12px;
-  bottom: 80px;
+  bottom: 70px;
   @include font(13px, $fw-bold);
 
   @media (min-height: 750px) {

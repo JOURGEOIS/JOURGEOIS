@@ -1,5 +1,5 @@
 <!-- 
-  부모에서 보내는 props => profile-image
+  부모에서 보내는 props => round-image
   -----------------------------------------------------
   round-image: 프로필 이미지에 대한 정보를 담은 객체
   - image (string): 이미지 url
@@ -18,22 +18,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 
 export interface roundImage {
-  image: string
-  width: string
+  image: string;
+  width?: string;
 }
 
 const props = defineProps<{
-  roundImage: roundImage
-}>()
+  roundImage: roundImage;
+}>();
 
 const imageUrl = computed(() => {
-  return `url(${props.roundImage.image})`
-})
+  return `url(${props.roundImage.image})`;
+});
 
-const imageWidth = ref(props.roundImage.width)
+const imageWidth = ref(props.roundImage.width);
 </script>
 
 <style scoped lang="scss">

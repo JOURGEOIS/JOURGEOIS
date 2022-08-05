@@ -1,8 +1,21 @@
 <template>
   <router-view />
+  <the-create-post-modal v-if="createFeedModalStatus"></the-create-post-modal>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TheCreatePostModal from "@/components/feeds/TheCreatePostModal.vue";
+import { useRoute, useRouter } from "vue-router";
+import { computed } from "vue";
+import { useStore } from "vuex";
+const router = useRouter();
+const route = useRoute();
+const store = useStore();
+
+const createFeedModalStatus = computed(
+  () => store.getters["createFeed/getCreateFeedModalStatus"]
+);
+</script>
 
 <style lang="scss">
 #app {

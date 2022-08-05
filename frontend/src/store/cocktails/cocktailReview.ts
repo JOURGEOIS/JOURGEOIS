@@ -39,7 +39,6 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
 
   actions: {
     getCocktailReview: ({ commit, getters }, cocktailId: number) => {
-      console.log('d')
       axios({
         url: api.cocktail.cocktailReview(),
         method: 'GET',
@@ -53,11 +52,9 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           commit('SET_REVIEW_COCKTAIL_PAGE', getters.reviewCocktailPage + 1)
           // 최대 10개 리뷰 정보 리스트에 추가
           commit('SET_CURRENT_COCKTAIL_REVIEW', res.data)
-          console.log('받음')
         })
         .catch((err) => {
           console.log(err.response)
-          console.log('에러')
         })
     },
     createCocktailReview: (
@@ -77,14 +74,12 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       })
         .then((res) => {
           console.log(res.data)
-          console.log('보냄')
           commit('RESET_CURRENT_COCKTAIL_REVIEW')
           commit('SET_REVIEW_COCKTAIL_PAGE', 0)
           dispatch('getCocktailReview', cocktailId)
         })
         .catch((err) => {
           console.log(err.res)
-          console.log('에러')
         })
     },
     updateCocktailReview: ({ commit }, { commentId, comment }) => {
@@ -107,23 +102,31 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log('에러')
         })
     },
-    deleteCocktailReview: ({ commit }, { userId, commentId }) => {
-      if (confirm('정말 삭제하시겠습니까?')) {
-        axios({
-          url: api.cocktail.cocktailReview(),
-          method: 'DELETE',
-          headers: {},
-          data: {},
+    deleteCocktailReview: (
+      { commit, dispatch, rootGetters },
+      { cocktailId, commentId },
+    ) => {
+      const userId = rootGetters['personalInfo/getUserInfoUserId']
+      const deleteData = { userId, commentId }
+      console.log(deleteData.userId)
+      console.log(deleteData.commentId)
+      axios({
+        url: api.cocktail.cocktailReview(),
+        method: 'DELETE',
+        headers: {},
+        data: deleteData,
+      })
+        .then((res) => {
+          console.log('삭제')
+          commit('RESET_CURRENT_COCKTAIL_REVIEW')
+          commit('SET_REVIEW_COCKTAIL_PAGE', 0)
+          dispatch('getCocktailReview', cocktailId)
         })
-          .then((res) => {
-            commit('SET_CURRENT_COCKTAIL_REVIEW', res.data)
-            console.log('삭제')
-          })
-          .catch((err) => {
-            console.log(err.res)
-            console.log('에러')
-          })
-      }
+        .catch((err) => {
+          console.log(err.res)
+          console.log(err.data)
+          console.log('에러')
+        })
     },
   },
 }

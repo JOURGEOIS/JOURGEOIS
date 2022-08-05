@@ -42,7 +42,6 @@ import { checkBadWord } from '../../functions/checkText'
 // 유저 정보 불러오기
 const store = useStore()
 const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
-const userId = computed(() => store.getters['personalInfo/getUserInfoUserId'])
 
 const text = ref('')
 
@@ -106,22 +105,21 @@ onMounted(() => {
 
 // 데이터 전송
 const createReview = (data: object) =>
-  store.dispatch("cocktailReview/createCocktailReview", data)
+  store.dispatch('cocktailReview/createCocktailReview', data)
 
-const cocktailData = computed(() => store.getters['cocktailDesc/getCurrentCocktailData'])
+const cocktailData = computed(
+  () => store.getters['cocktailDesc/getCurrentCocktailData'],
+)
 const cocktailId = Number(cocktailData.value.id)
-// console.log(cocktailId)
-// console.log(userId.value)
-const getReview = (cocktailId: number) => store.dispatch("cocktailReview/getCocktailReview", cocktailId)
+const getReview = (cocktailId: number) =>
+  store.dispatch('cocktailReview/getCocktailReview', cocktailId)
 
 // 제출
 const submitCreateReviewForm = () => {
-
   // 유효성 검사
   const reviewCondition = checkBadWord(reviewInputValue.value)
   // 전달할 데이터
   const data: object = {
-    userId: userId.value,
     cocktailId: cocktailId,
     comment: reviewInputValue.value,
   }
@@ -131,8 +129,6 @@ const submitCreateReviewForm = () => {
     reviewInputStyle.value = 'error'
     occurredError.value = true
     toggleFailPopUp(true)
-    // console.log(data)
-
   } else {
     console.log('data:', data)
     createReview(data)

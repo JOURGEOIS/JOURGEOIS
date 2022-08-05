@@ -63,6 +63,15 @@ public class Member {
     private Date date = new Date();
 
     @Builder
+    public Member(Long uid, String email, String nickname, String name, String profileImg){
+        this.uid = uid;
+        this.email = email;
+        this.nickname = nickname;
+        this.name = name;
+        this.profileImg = profileImg;
+    }
+
+    @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {
         this.email = email;
         this.password = password;

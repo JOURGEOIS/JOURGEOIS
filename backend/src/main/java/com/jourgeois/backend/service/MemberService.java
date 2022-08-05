@@ -154,15 +154,15 @@ public class MemberService {
         Member member = memberRepository.findByEmail(googleLoginDTO.getEmail()).orElse(null) ;
         UserDetails userDetails = null;
 
-        // 찾는 멤버가 없으면 리턴
-        if(member == null){
-            member = signUpSocialUser(googleLoginDTO);
+        if(member == null){ // 찾는 멤버가 없으면 리턴
+            member = signUpGoogleUser(googleLoginDTO);
         }
 
         userDetails = myUserDetailsService.loadUserByUsername(member.getUid().toString());
 
         System.out.println("member.getPassword() : "+member.getPassword());
         System.out.println("googleLoginDTO.getSub() : "+googleLoginDTO.getSub());
+
         // DB에 있는 sub(password)와 들어온 sub와 일치하는 지 확인
         if(member.getPassword().equals(googleLoginDTO.getSub())){
             return userDetails;
@@ -172,11 +172,10 @@ public class MemberService {
         }
     }
 
-    public Member signUpSocialUser(GoogleLoginDTO gDTO){
+    public Member signUpGoogleUser(GoogleLoginDTO gDTO){
         String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now());
-
-        Member m = Member.builder().email(gDTO.getEmail()).password(gDTO.getSub()).name(gDTO.getName())
-                .profileImg("profile/default/1.png").nickname("유저"+gDTO.getSub().substring(3,10) + date).build();
+        Member m = Member.builder().uid(Long.parseLong(gDTO.getSub())).email(gDTO.getEmail()).name(gDTO.getName())
+                .nickname("유저"+gDTO.getSub().substring(3,10) + date).profileImg("profile/default/1.png").build();
         try{
             memberRepository.save(m);
             memberRepository.flush();
@@ -186,7 +185,6 @@ public class MemberService {
             e.printStackTrace();
             return null;
         }
-
     }
 
     public UserDetails loginUser(Map<String, Object> kakaoUserInfo){
@@ -221,7 +219,7 @@ public class MemberService {
     public Member signUpKakaoUser(String email, Long id){
         String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now());
 
-        Member m = Member.builder().email(email).password(id.toString())
+        Member m = Member.builder().email(email).uid(id)
                 .profileImg("profile/default/1.png").nickname("유저" + date + Math.random() * 10000).build();
         try{
             memberRepository.save(m);

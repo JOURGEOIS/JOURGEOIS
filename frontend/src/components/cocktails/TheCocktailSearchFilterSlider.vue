@@ -59,9 +59,11 @@ const sliderLeftValue = ref(sliderValue.value[0]);
 const sliderRightValue = ref(sliderValue.value[1]);
 
 // 슬라이더 값이 변경될 때, 값을 저장한다. (디바운스 사용하여 요청을 적당히...ㅎㅎ)
-let debounce: any;
+let debounce: ReturnType<typeof setTimeout>;
 watch([sliderLeftValue, sliderRightValue], () => {
-  clearTimeout(debounce);
+  if (debounce) {
+    clearTimeout(debounce);
+  }
   debounce = setTimeout(
     () =>
       store.dispatch("cocktailSearch/changeFilterAlcoholStrength", [

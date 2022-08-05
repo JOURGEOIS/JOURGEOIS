@@ -78,6 +78,7 @@ watch(successPopUpStatus, () => {
 onMounted(() => {
   toggleSuccessPopUp(false);
   toggleFailPopUp(false);
+  toggleLogOutModal(false);
 });
 </script>
 

@@ -33,7 +33,7 @@ spring:
 
 jwt:
   secret-key: secret-key-ssafy-daejeon-jourgeois-service-HS512-algorithm
-  token-validity-in-sec: 5
+  token-validity-in-sec: 30
   refresh-token-validity-in-sec: 604800
 server:
   port: 8080

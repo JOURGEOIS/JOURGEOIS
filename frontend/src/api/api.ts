@@ -4,7 +4,7 @@ const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";
 const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
-const POST = "posts/auth/";
+const POST = "posts/";
 
 export default {
   token: {
@@ -45,6 +45,7 @@ export default {
   },
 
   post: {
-    uploadImage: () => HOST + POST + "tmp",
+    postCocktail: () => HOST + POST + "auth",
+    uploadImage: () => HOST + POST + "auth/tmp",
   },
 };

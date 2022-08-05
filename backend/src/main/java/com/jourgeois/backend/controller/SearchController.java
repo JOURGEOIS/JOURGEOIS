@@ -69,12 +69,12 @@ public class SearchController {
     }
 
     @GetMapping(value="/user")
-    public ResponseEntity searchByUsers(@RequestHeader(value = "email") String email, @RequestParam(value = "keyword") String keyword,
+    public ResponseEntity searchByUsers(@RequestHeader(value = "uid", defaultValue = "0") Long uid, @RequestParam(value = "keyword") String keyword,
                               @PageableDefault(size=10, sort="name", direction = Sort.Direction.ASC) Pageable pageable){
         System.out.println(keyword);
         if (keyword.isEmpty())
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        return new ResponseEntity(searchService.searchByMember(keyword, pageable), HttpStatus.CREATED);
+        return new ResponseEntity(searchService.searchByMember(uid, keyword, pageable), HttpStatus.CREATED);
     }
 
     @GetMapping(value="/cocktailwhole")

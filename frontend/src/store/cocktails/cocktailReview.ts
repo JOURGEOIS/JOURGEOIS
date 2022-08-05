@@ -2,6 +2,7 @@ import axios from 'axios'
 import api from '../../api/api'
 import { Module } from 'vuex'
 import { RootState } from '../index'
+import { validate } from 'json-schema'
 
 export interface cocktailReviewData {
   [key: string]: string | number | number[] | null
@@ -10,6 +11,8 @@ export interface cocktailReviewData {
 export interface CocktailReviewState {
   currentCocktailReview: cocktailReviewData[]
   reviewCocktailPage: number
+  deleteModalStatus: boolean
+  reviewChangeSuccess: boolean
 }
 
 export const cocktailReview: Module<CocktailReviewState, RootState> = {
@@ -18,12 +21,20 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
   state: {
     currentCocktailReview: [],
     reviewCocktailPage: 0,
+    deleteModalStatus: false,
+    reviewChangeSuccess: false,
   },
   getters: {
     getCurrentCocktailReview: (state) => {
       return state.currentCocktailReview
     },
     getReviewCocktailPage: (state) => state.reviewCocktailPage,
+    getDeleteModalStatus: (state) => {
+      return state.deleteModalStatus
+    },
+    getReviewChangeSuccess: (state) => {
+      return state.reviewChangeSuccess
+    },
   },
   mutations: {
     SET_CURRENT_COCKTAIL_REVIEW: (state, value: cocktailReviewData[]) => {
@@ -34,6 +45,12 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     },
     RESET_CURRENT_COCKTAIL_REVIEW: (state) => {
       state.currentCocktailReview = []
+    },
+    SET_DELETE_MODAL: (state, value) => {
+      state.deleteModalStatus = value
+    },
+    SET_REVIEW_SUCCESS: (state, value) => {
+      state.reviewChangeSuccess = value
     },
   },
 
@@ -99,11 +116,9 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log('수정')
           console.log(res.data)
           commit('RESET_CURRENT_COCKTAIL_REVIEW')
-          console.log('1')
           commit('SET_REVIEW_COCKTAIL_PAGE', 0)
-          console.log('2')
           dispatch('getCocktailReview', cocktailId)
-          console.log('3')
+          commit('SET_REVIEW_SUCCESS', true)
         })
         .catch((err) => {
           console.log(err.res)
@@ -135,6 +150,12 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log(err.data)
           console.log('에러')
         })
+    },
+    toggleDeleteModal: ({ commit }, value: boolean) => {
+      commit('SET_DELETE_MODAL', value)
+    },
+    toggleReviewChangeSuccess: ({ commit }, value) => {
+      commit('SET_REVIEW_SUCCESS', value)
     },
   },
 }

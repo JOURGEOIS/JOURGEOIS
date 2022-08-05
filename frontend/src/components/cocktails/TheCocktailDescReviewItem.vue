@@ -33,10 +33,36 @@
             <button-basic
               :button-style="[buttonColor, '40px']"
               class="buttonstyle"
-              @click="clickDeleteReview"
+              @click="toggleDeleteModal(true)"
             >
               삭제
             </button-basic>
+            <modal-basic
+              modal-color="white"
+              @offModal="toggleDeleteModal(false)"
+              v-if="deleteModalStatus"
+              class="modal-basic"
+            >
+              <div class="delete-modal-content">
+                <p>정말 삭제 하시겠어요?</p>
+                <div class="delete-modal-button">
+                  <!-- 취소 버튼 -->
+                  <button-basic
+                    :button-style="['main-blank', '50%', 'small']"
+                    @click="toggleDeleteModal(false)"
+                  >
+                    취소
+                  </button-basic>
+                  <!-- 삭제 버튼 -->
+                  <button-basic
+                    :button-style="['primary', '50%', 'small']"
+                    @click="clickDeleteReview"
+                  >
+                    삭제
+                  </button-basic>
+                </div>
+              </div>
+            </modal-basic>
           </div>
         </div>
         <p>
@@ -66,6 +92,9 @@
             >
               완료
             </button-basic>
+            <success-pop-up v-if="successPopUpStatus">
+              성공적으로 저장되었습니다
+            </success-pop-up>
             <button-basic
               :button-style="[buttonColor, '40px']"
               class="buttonstyle"
@@ -93,8 +122,10 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import RoundImage from '@/components/basics/RoundImage.vue'
+import ModalBasic from '@/components/basics/ModalBasic.vue'
 import ButtonBasic from '@/components/basics/ButtonBasic.vue'
 import TextareaBasic from '@/components/basics/TextareaBasic.vue'
+import SuccessPopUp from '@/components/modals/SuccessPopUp.vue'
 import FailurePopUp from '@/components/modals/FailurePopUp.vue'
 import { calcDateDelta, compareDate } from '../../functions/date'
 import { checkBadWord } from '../../functions/checkText'
@@ -189,9 +220,33 @@ watch(failModalStatus, () => {
   }
 })
 
+// 삭제 모달
+const deleteModalStatus = computed(
+  () => store.getters['cocktailReview/getDeleteModalStatus'],
+)
+const toggleDeleteModal = (value: boolean) =>
+  store.dispatch('cocktailReview/toggleDeleteModal', value)
+
+// 리뷰 수정 성공 팝업
+const successPopUpStatus = computed(
+  () => store.getters['cocktailReview/getReviewChangeSuccess'],
+)
+const toggleSuccessPopUp = (value: boolean) =>
+  store.dispatch('cocktailReview/toggleReviewChangeSuccess', value)
+
+watch(successPopUpStatus, () => {
+  if (successPopUpStatus.value) {
+    setTimeout(() => {
+      toggleSuccessPopUp(false)
+    }, 2000)
+  }
+})
+
 // 리셋
 onMounted(() => {
   toggleFailPopUp(false)
+  toggleDeleteModal(false)
+  toggleSuccessPopUp(false)
 })
 
 const clickEditReview = () => {
@@ -213,6 +268,7 @@ const clickEditReview = () => {
   } else {
     console.log('data2:', editData)
     reviewEdit(editData)
+    toggleSuccessPopUp(true)
   }
 
   const clickCancel = () => {
@@ -221,6 +277,7 @@ const clickEditReview = () => {
 }
 
 // 후기 삭제
+
 const reviewDelete = (data: object) =>
   store.dispatch('cocktailReview/deleteCocktailReview', data)
 
@@ -262,12 +319,11 @@ const clickDeleteReview = () => {
           gap: 8px;
           .cocktail-desc-review-time {
             @include font($fs-sm, $fw-regular);
-            color: $navy600
+            color: $navy600;
           }
           .cocktail-desc-review-time-compare {
             @include font($fs-sm, $fw-regular);
-            color: $navy600
-
+            color: $navy600;
           }
         }
         .cocktail-desc-review-button {
@@ -280,6 +336,35 @@ const clickDeleteReview = () => {
           }
         }
       }
+    }
+  }
+}
+.modal-basic {
+  .delete-modal-content {
+    @include flex(column);
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    width: 300px;
+
+    @media (max-width: 300px) {
+      width: 80vw;
+    }
+
+    p {
+      @include font($fs-lg, $fw-medium);
+      text-align: center;
+    }
+  }
+
+  .delete-modal-button {
+    @include flex-xy(center, center);
+    gap: 20px;
+    width: 100%;
+
+    button {
+      @include p-component(md);
+      @include shadow-modal;
     }
   }
 }

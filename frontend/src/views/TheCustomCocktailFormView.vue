@@ -63,6 +63,7 @@ onBeforeMount(() => {
   @include flex(column);
   justify-content: flex-start;
   align-items: center;
+  position: relative;
   @include accountLayOut;
 
   section {

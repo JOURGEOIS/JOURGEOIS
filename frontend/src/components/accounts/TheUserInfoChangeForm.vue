@@ -131,6 +131,11 @@ const nickNameDuplicateError = ref(false);
 // 이미지 업로드
 let presentImage: object;
 const changeProfileImage = (event: Event) => {
+  // 취소 버튼 누르는 경우 바로 return
+  if (!(event?.target as HTMLInputElement).files![0]) {
+    return;
+  }
+
   const data = {
     imageFile: (event.target as HTMLInputElement).files![0],
     profileImage,

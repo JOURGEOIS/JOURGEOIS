@@ -1,7 +1,3 @@
-<!-- props: func
-  func: string으로 form을 제출할 때 사용하는 함수를 제출한다.  
--->
-
 <template>
   <form class="comment-form" @submit.prevent="submitCommentForm">
     <RoundImage :round-image="imageData"></RoundImage>
@@ -28,10 +24,6 @@ import { checkBadWord } from "../../functions/checkText";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
-
-const props = defineProps<{
-  func: "string";
-}>();
 
 // 본인 프로필 사진
 const profileImage = computed(
@@ -67,7 +59,7 @@ const submitCommentForm = () => {
 
   const conditionA = checkBadWord(commentInputValue.value);
   if (!conditionA) {
-    store.dispatch(props.func, commentInputValue);
+    store.dispatch("comment/createCustomCocktailComment", commentInputValue);
   } else {
     commentErrorStatus.value = true;
     commentErrorClass.value = "error";

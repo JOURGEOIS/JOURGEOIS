@@ -82,20 +82,28 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log(err.res)
         })
     },
-    updateCocktailReview: ({ commit }, { commentId, comment }) => {
+    updateCocktailReview: (
+      { commit, dispatch },
+      { cocktailId, commentId, comment },
+    ) => {
+      const editData = { commentId, comment }
+      console.log(editData.commentId)
+      console.log(editData.comment)
       axios({
         url: api.cocktail.cocktailReview(),
         method: 'PUT',
         headers: {},
-        data: {
-          commentId,
-          comment,
-        },
+        data: editData,
       })
         .then((res) => {
-          commit('SET_CURRENT_COCKTAIL_REVIEW', res.data)
+          console.log('수정')
           console.log(res.data)
-          console.log('보냄')
+          commit('RESET_CURRENT_COCKTAIL_REVIEW')
+          console.log('1')
+          commit('SET_REVIEW_COCKTAIL_PAGE', 0)
+          console.log('2')
+          dispatch('getCocktailReview', cocktailId)
+          console.log('3')
         })
         .catch((err) => {
           console.log(err.res)

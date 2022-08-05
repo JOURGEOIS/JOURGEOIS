@@ -34,7 +34,20 @@ function calcDateDelta(date: number[]): string {
   return `${ret}년 전`;
 }
 
+const compareDate = (create: number[], modify: number[]) => {
+  const [Y1, M1, D1, hour1, min1, sec1, nanoSec1] = create;
+  const [Y2, M2, D2, hour2, min2, sec2, nanoSec2] = modify;
+  const date1: number = new Date(Y1, M1 - 1, D1, hour1, min1, sec1).getTime();
+  const date2: number = new Date(Y2, M2 - 1, D2, hour2, min2, sec2).getTime();
+
+  let ret: boolean = date2 - date1 > 0;
+  if (ret) {
+    return '수정됨';
+  }
+};
+
 export {
   // * 현재 일시를 기준으로 한글로 얼마 전인지 표시
   calcDateDelta,
+  compareDate,
 };

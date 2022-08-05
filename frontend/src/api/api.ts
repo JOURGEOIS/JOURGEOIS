@@ -44,7 +44,7 @@ export default {
     filterResult: () => HOST + LOOKUP + "filter/list",
   },
 
-  POST: {
+  post: {
     uploadImage: () => HOST + POST + "tmp",
   },
 };

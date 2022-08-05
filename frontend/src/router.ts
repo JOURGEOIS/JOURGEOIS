@@ -123,6 +123,13 @@ const routes: any[] = [
     name: "TheCustomCocktailDescView",
     component: () => import("@/views/TheCustomCocktailDescView.vue"),
   },
+
+  // 좋아요한 유저 리스트 페이지
+  {
+    path: "/cocktail/:cocktailId/custom/:customCocktailId/liked",
+    name: "TheLikedUserListView",
+    component: () => import("@/views/TheLikedUserListView.vue"),
+  },
 ];
 
 const router = createRouter({

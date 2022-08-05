@@ -1,3 +1,12 @@
+// 검색 유저 정보
+export interface User {
+  uid: number;
+  nickname: string;
+  profileImg: string;
+  introduce: string | null;
+  isFollowed: number; // 1 : 팔로우중 / 0 : 팔로우X / -1 : me
+}
+
 // 커스텀 칵테일만의 정보
 export interface CustomCocktailOnly {
   postId: number; // 포스트 uid
@@ -12,14 +21,6 @@ export interface CustomCocktailOnly {
   baseCocktailName: string; // 베이스 칵테일 이름
   ingredients: string[]; // 칵테일 설명
   recipe: string; // 칵테일 제작
-}
-
-// 커스텀 칵테일 작성자
-export interface CustomCocktailHost {
-  uid: number; // 작성자 uid
-  nickname: string; // 작성자 닉네임
-  profileImg: string; // 작성자 프로필 이미지
-  isFollowed: number; // 본인과 팔로우 여부 [0,1,-1] 0: 팔로우 x, 1: 팔로우, -1: 본인
 }
 
 // 댓글 작성자
@@ -38,5 +39,5 @@ export interface Comment {
 // 커스텀칵테일 상세정보
 export interface CustomCocktail {
   customCocktail: CustomCocktailOnly;
-  followerDTO: CustomCocktailHost;
+  followerDTO: User;
 }

@@ -19,80 +19,120 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
   namespaced: true,
 
   state: {
+    // 엑세스 토큰
     accessToken: localStorage.getItem("accessToken") || "",
+
+    // 리프레스 토큰
     refreshToken: localStorage.getItem("refreshToken") || "",
+
+    // 유저 정보
     userInfo: JSON.parse(localStorage.getItem("userInfo") || "{}"),
+
+    // 리프레시 팝업
     refreshFailPopupStatus: false,
   },
 
   getters: {
+    // 로그인 여부
     isLoggedIn: (state) => {
       return !!state.accessToken;
     },
+    // 엑세스 토큰
     getAccessToken: (state) => {
       return state.accessToken;
     },
+    // 리프레시 토큰
     getRefreshToken: (state) => {
       return state.refreshToken;
     },
+
+    // 유저 정보
     getUserInfo: (state) => {
       return state.userInfo;
     },
+
+    // 프로필 본인 이미지
+    getProfileImage: (state) => {
+      return state.userInfo.profileImg;
+    },
+    // uid
     getUserInfoUserId: (state) => {
       return state.userInfo.uid;
     },
+
+    // 이메일
     getUserInfoId: (state) => {
       return state.userInfo.email;
     },
+
+    // 리프레시 실패 팝업
     getRefreshFailPopupStatus: (state) => {
       return state.refreshFailPopupStatus;
     },
   },
 
   mutations: {
+    // 엑세스 토큰
     SET_ACCESS_TOKEN: (state, token) => {
       state.accessToken = token;
     },
+
+    // 리프레시 토큰
     SET_REFRESH_TOKEN: (state, token) => {
       state.refreshToken = token;
     },
+
+    // 유저 정보
     SET_USER_INFO: (state, data) => {
       state.userInfo = data;
     },
+
+    // 리프레시 실패 팝업
     SET_REFRESH_FAIL: (state, value) => {
       state.refreshFailPopupStatus = value;
     },
   },
 
   actions: {
+    // 토큰 저장
     saveToken: ({ commit }, { accessToken, refreshToken }) => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       commit("SET_ACCESS_TOKEN", accessToken);
       commit("SET_REFRESH_TOKEN", refreshToken);
     },
+
+    // 토큰 제거
     removeToken: ({ commit }) => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       commit("SET_ACCESS_TOKEN", "");
       commit("SET_REFRESH_TOKEN", "");
     },
+
+    // 유저 정보 저장
     saveUserInfo: ({ commit }, data: object) => {
       console.log(data);
       const jsonUserInfo = JSON.stringify(data);
       localStorage.setItem("userInfo", jsonUserInfo);
       commit("SET_USER_INFO", data);
     },
+
+    // 유저 정보 삭제
     removeUserInfo: ({ commit }) => {
       localStorage.removeItem("userInfo");
       commit("SET_USER_INFO", {});
     },
+
+    // vuex 및 로컬스토리지 리셋 (초기화)
     resetUserInfo: ({ dispatch }) => {
       dispatch("removeToken");
       dispatch("removeUserInfo");
       dispatch("cocktailSearch/removeRecentSearchWords", {}, { root: true });
       dispatch("cocktailSearch/setSearchFilterData", {}, { root: true });
     },
+
+    // 레프레시 실패 팝업
     toggleRefreshFailPopup: ({ commit }, value) => {
       commit("SET_REFRESH_FAIL", value);
     },

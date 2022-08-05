@@ -44,7 +44,9 @@ export default {
     filterResult: () => HOST + LOOKUP + "filter/list",
   },
 
-  POST: {
+  post: {
     uploadImage: () => HOST + POST + "tmp",
+    toggleBookmark: () => HOST + POST + "bookmark",
+    likedUsers: () => HOST + POST + "like/list",
   },
 };

@@ -107,7 +107,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
     uploadImage: ({ rootGetters, dispatch }, data) => {
       const { img, imageUrl } = data;
       axios({
-        url: api.POST.uploadImage(),
+        url: api.post.uploadImage(),
         method: "post",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],

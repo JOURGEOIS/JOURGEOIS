@@ -2,6 +2,7 @@ package com.jourgeois.backend.repository;
 
 import com.jourgeois.backend.api.dto.post.PostReviewResponseVO;
 import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.domain.post.Post;
 import com.jourgeois.backend.domain.post.PostReview;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,6 @@ public interface PostReviewRepository extends JpaRepository<PostReview, Long> {
             + "order by createTime ASC "
             , nativeQuery = true)
     List<PostReviewResponseVO> getAllPostReviewsAsc(@Param("uid") Long uid, @Param("p_id") Long p_id, Pageable pageable);
+
+    Integer countByPost(Post post);
 }

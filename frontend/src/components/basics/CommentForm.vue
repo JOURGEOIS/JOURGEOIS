@@ -67,7 +67,7 @@ const submitCommentForm = () => {
 
   // 보낼 데이터
   const data = {
-    p_id: props.pageId,
+    postId: props.pageId,
     review: commentInputValue.value,
   };
   if (!conditionA) {

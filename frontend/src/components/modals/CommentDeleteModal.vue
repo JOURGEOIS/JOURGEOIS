@@ -47,7 +47,7 @@ const toggleDeleteModalStatus = (value: boolean) => {
 
 const clickDeleteComment = () => {
   toggleDeleteModalStatus(false);
-  store.dispatch("comment/commentDelete", { p_id: props.pageId });
+  store.dispatch("comment/commentDelete", { postId: props.pageId });
 };
 </script>
 

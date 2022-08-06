@@ -50,6 +50,7 @@ export default {
     uploadImage: () => HOST + POST + "auth/tmp",
     comment: () => HOST + POST + "auth/review",
     toggleBookmark: () => HOST + POST + "auth/bookmark",
+    toggleLike: () => HOST + POST + "auth/like",
     likedUsers: () => HOST + POST + "auth/like/list",
     listFeed: () => HOST + POST + "auth/feed",
   },

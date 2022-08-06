@@ -428,7 +428,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
-        params: {
+        data: {
           postId: id,
         },
       })

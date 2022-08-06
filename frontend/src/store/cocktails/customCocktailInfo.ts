@@ -38,6 +38,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         baseCocktailName: "",
         ingredients: [],
         recipe: "",
+        reviewCount: 0,
       },
       followerDTO: {
         uid: 0,
@@ -65,6 +66,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         baseCocktailName: "",
         ingredients: [],
         recipe: "",
+        reviewCount: 0,
       },
       followerDTO: {
         uid: 0,

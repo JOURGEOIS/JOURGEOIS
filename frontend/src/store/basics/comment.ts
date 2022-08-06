@@ -188,7 +188,7 @@ export const comment: Module<Comment, RootState> = {
 
     // 댓글 수정하기
     updateComment: ({ rootGetters, dispatch, commit }, data) => {
-      const { pr_id, postId, review } = data;
+      const { postReviewId, postId, review } = data;
       axios({
         url: api.post.comment(),
         method: "put",
@@ -196,7 +196,7 @@ export const comment: Module<Comment, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          pr_id,
+          postReviewId,
           review,
         },
       })
@@ -229,7 +229,7 @@ export const comment: Module<Comment, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          pr_id: getters["getDeleteCommentId"],
+          postReviewId: getters["getDeleteCommentId"],
         },
       })
         .then(() => {

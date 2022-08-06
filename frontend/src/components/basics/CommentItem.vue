@@ -16,11 +16,13 @@
           v-if="comment.isMine && !updateComment"
         >
           <span
-            @click="clickUpdate({ review: comment.review, id: comment.pr_id })"
+            @click="
+              clickUpdate({ review: comment.review, id: comment.postReviewId })
+            "
           >
             수정
           </span>
-          <span @click="clickDelete(comment.pr_id)"> 삭제</span>
+          <span @click="clickDelete(comment.postReviewId)"> 삭제</span>
         </div>
 
         <!-- 완료, 취소 버튼 (수정을 누르면 수정, 삭제 버튼 자리에 생성된다.) -->
@@ -76,7 +78,7 @@ interface comment {
   isMine: number;
   isUpdated: number;
   nickname: string;
-  pr_id: number;
+  postReviewId: number;
   profileImg: string;
   review: string;
   uid: number;
@@ -143,7 +145,7 @@ const submitUpdate = () => {
   if (!conditionA && !conditionB) {
     // 제출
     const data = {
-      pr_id: commentId.value,
+      postReviewId: commentId.value,
       postId: props.pageId,
       review: commentInputValue.value,
     };

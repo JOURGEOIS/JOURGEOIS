@@ -1,13 +1,22 @@
 <template>
   <section class="like-comment-share">
-    <div class="like tab" @click="clickLike">
-      <span class="material-icons like-icon" v-if="isLiked"> favorite </span>
-      <span class="material-icons like-icon" v-if="!isLiked">
+    <div class="like tab">
+      <span
+        class="material-icons like-icon"
+        v-if="data.isLiked"
+        @click="clickLikeInner"
+      >
+        favorite
+      </span>
+      <span
+        class="material-icons like-icon"
+        v-if="!data.isLiked"
+        @click="clickLikeInner"
+      >
         favorite_border
       </span>
       <span class="button-text" @click="clickLikedUsers">
-        <slot name="like" v-if="!isCalledLike"></slot>
-        <p v-if="isCalledLike">{{ likeCnt }}</p>
+        <slot name="like"></slot>
       </span>
     </div>
     <div class="comment tab">
@@ -35,39 +44,17 @@ const store = useStore();
 
 const props = defineProps<{
   data: {
-    isLiked: number;
-    postId: number;
+    isLiked: boolean;
   };
 }>();
 
-// 좋아요 버튼
-const isLiked = ref(1);
-const likeCnt = ref(-1);
-const isCalledLike = ref(0);
-// 좋아요 버튼을 누른 경우
-const clickLike = () => {
-  axios({
-    url: api.post.toggleBookmark(),
-    method: "POST",
-    headers: {
-      // uid:
-    },
-    data: {
-      postId: props.data.postId,
-    },
-  })
-    .then((res) => {
-      const data = res.data;
-      console.log(data);
-      const { count, status } = data;
-      isCalledLike.value = 1;
-      isLiked.value = status;
-      likeCnt.value = count;
-    })
-    .catch((err) => {
-      console.error(err.response);
-      alert("오류 떴으니까 이따 해라");
-    });
+const emit = defineEmits<{
+  (e: "clickLike"): void;
+}>();
+
+// 좋아요 버튼을 누른 경우 Emit
+const clickLikeInner = () => {
+  emit("clickLike");
 };
 
 // 좋아요 숫자(좋아요한 유저 목록) 클릭

@@ -16,7 +16,7 @@
         type="text"
         :id="`recipe-input-${index}`"
         maxlength="40"
-        v-model="customCocktailRecipeList[index]"
+        v-model.trim="customCocktailRecipeList[index]"
       />
     </div>
   </form>

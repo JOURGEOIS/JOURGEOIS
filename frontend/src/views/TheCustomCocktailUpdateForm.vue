@@ -26,7 +26,7 @@ import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCustomCocktailForm from "@/components/cocktails/TheCustomCocktailForm.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { useStore } from "vuex";
-import { onBeforeMount, computed, watch } from "vue";
+import { onBeforeMount, computed, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 const store = useStore();
@@ -52,6 +52,10 @@ watch(errorStatus, () => {
 onBeforeMount(() => {
   store.dispatch("customCocktail/getCustomCocktailData", route.params.feedId);
   store.dispatch("customCocktail/changeAlertStatus", false);
+});
+
+onUnmounted(() => {
+  store.dispatch("customCocktail/resetCocktailData");
 });
 </script>
 

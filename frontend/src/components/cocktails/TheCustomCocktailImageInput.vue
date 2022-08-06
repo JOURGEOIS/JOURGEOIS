@@ -17,12 +17,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
 // 이미지 연결
-const imageUrl = ref("");
+const imageUrl = computed(() => store.getters["customCocktail/getImgLink"]);
 
 // 이미지 input
 const emit = defineEmits<{
@@ -36,7 +36,6 @@ const changeCustomCocktailImage = (event: Event) => {
   }
   const data = {
     img: (event?.target as HTMLInputElement).files![0],
-    imageUrl,
   };
   store.dispatch("customCocktail/uploadImage", data);
   emit("changeImage", data.img);

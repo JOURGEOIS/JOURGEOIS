@@ -215,22 +215,13 @@ public class MemberController {
 
         System.out.println("Kakao Code : " + code);
         try {
-//            System.out.println("1111111111111");
             String accessToken = memberService.getKakaoAccessToken(code, "kakao");
-//            System.out.println("222222222222");
-            Map<String, Object> kakaoUserInfo = memberService.getKakaoUserInfo(accessToken);
-//            System.out.println("233333333333");
-            UserDetails userDetails = memberService.loginUser(kakaoUserInfo);
-            System.out.println("USERDTAEIRAED : "+userDetails.toString());
-//            System.out.println("444444444444444");
+            Map<String, Object> kakaoUserInfo = memberService.getSocialUserInfo(accessToken, "kakao");
+            UserDetails userDetails = memberService.loginSocialUser(kakaoUserInfo, "kakao");
             Map<String, Object> data = new HashMap<>();
 
-//            System.out.println("ddddddd여기는나와야한다 ㅡ");
             data.put("token", memberService.createToken(userDetails));
-//            System.out.println("이거안뜨면 앞에놈이문젱미 ");
             data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
-
-            String value = data.entrySet().stream().map(param -> param.getKey() + " : " + param.getValue()).collect(Collectors.joining("/"));
 
             return ResponseEntity.ok().body(data);
 
@@ -239,7 +230,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/login/naver")
+    @RequestMapping(value = "/login/naver", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<?> moveNaverInitUrl() {
         String authUrl = configUtils.naverInitUrl();
         try {
@@ -260,18 +251,16 @@ public class MemberController {
         System.out.println("Naver Code : " + code);
         try {
             String accessToken = memberService.getKakaoAccessToken(code, "naver");
-//            Map<String, Object> kakaoUserInfo = memberService.getKakaoUserInfo(accessToken);
-//            UserDetails userDetails = memberService.loginUser(kakaoUserInfo);
-//
+            Map<String, Object> naverUserInfo = memberService.getSocialUserInfo(accessToken, "naver");
+            System.out.println(naverUserInfo.get("email"));
+            UserDetails userDetails = memberService.loginSocialUser(naverUserInfo, "naver");
+
             Map<String, Object> data = new HashMap<>();
-//
-//            data.put("token", memberService.createToken(userDetails));
-//            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
-//
-//            String value = data.entrySet().stream().map(param -> param.getKey() + " : " + param.getValue()).collect(Collectors.joining("/"));
+
+            data.put("token", memberService.createToken(userDetails));
+            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
 
             return ResponseEntity.ok().body(data);
-
         } catch (Exception e){
             return ResponseEntity.badRequest().body(null);
         }

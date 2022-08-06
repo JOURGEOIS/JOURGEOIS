@@ -17,9 +17,6 @@
     <the-community-textarea
       v-model="communityDescValue"
     ></the-community-textarea>
-    {{(!!communityDescValue)}}
-    {{communityDescValue.trim().length}}
-    {{ $data }}
   </form>
 </template>
 

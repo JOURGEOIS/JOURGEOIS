@@ -111,7 +111,7 @@ const clickEdit = () => {
     //   name: "TheCustomCocktailFormView",
     //   params: {
     //     cocktailId: route.params.cocktailId,
-    //     customCocktailId: route.params.customCocktailId,
+    //     feedId: route.params.feedId,
     //   },
     // });
   }

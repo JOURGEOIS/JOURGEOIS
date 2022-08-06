@@ -1,3 +1,4 @@
+<!-- comment 작성 form: 공란, 비속어 유효성 검사를 진행한다.  -->
 <template>
   <form class="comment-form" @submit.prevent="submitCommentForm">
     <RoundImage :round-image="imageData" class="round-image"></RoundImage>
@@ -42,7 +43,7 @@ const imageData = {
 // comment input value
 const commentInputValue = ref("");
 
-// disabled status
+// disabled status: 공란일 경우, 제출하는 버튼이 활성화되지 않는다. (제출 불가능)
 const commentDisabled = computed(() => {
   if (!commentInputValue.value) {
     return true;
@@ -69,7 +70,6 @@ const submitCommentForm = () => {
     p_id: props.pageId,
     review: commentInputValue.value,
   };
-  console.log(data);
   if (!conditionA) {
     store.dispatch("comment/createComment", data);
     commentInputValue.value = "";

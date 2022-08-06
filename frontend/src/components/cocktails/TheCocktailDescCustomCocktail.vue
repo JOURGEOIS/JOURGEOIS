@@ -45,7 +45,7 @@ const addCustomCocktail = () => {
 const clickCustomCocktail = (item: CustomCocktail) => {
   const params = {
     cocktailId: originalCocktailId,
-    customCocktailId: item.customCocktail.postId,
+    feedId: item.customCocktail.postId,
   };
   router.push({ name: "TheCustomCocktailDescView", params });
 };

@@ -48,6 +48,7 @@ export default {
   post: {
     postCocktail: () => HOST + POST + "auth",
     uploadImage: () => HOST + POST + "auth/tmp",
+    comment: () => HOST + POST + "auth/review",
     toggleBookmark: () => HOST + POST + "auth/bookmark",
     likedUsers: () => HOST + POST + "auth/like/list",
   },

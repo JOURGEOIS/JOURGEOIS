@@ -14,12 +14,9 @@
       <template #comment>777</template>
     </like-comment-share>
     <!-- 댓글 부분 -->
-    <comment-form
-      func="customCocktailDesc/createCustomCocktailComment"
-    ></comment-form>
-    <the-custom-cocktail-comment-list></the-custom-cocktail-comment-list>
+    <comment-form :page-id="customCocktailId"></comment-form>
+    <comment-list :page-id="customCocktailId"></comment-list>
   </div>
-
   <!-- navbar -->
   <nav-bar></nav-bar>
 </template>
@@ -28,8 +25,8 @@
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCustomCocktailDescBody from "@/components/cocktails/TheCustomCocktailDescBody.vue";
 import TheLikeCommentShare from "@/components/basics/LikeCommentShare.vue";
-import TheCustomCocktailCommentList from "@/components/cocktail/TheCustomCocktailCommentList.vue";
 import CommentForm from "@/components/basics/CommentForm.vue";
+import CommentList from "@/components/basics/CommentList.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import { reactive, computed, onBeforeMount } from "vue";
 import { useRoute } from "vue-router";
@@ -67,8 +64,10 @@ const customCocktailInfo: CustomCocktail = {
 
 // 게시글 id
 const customCocktailId = computed(() => {
-  route.params.customCocktailId;
+  return Number(route.params.customCocktailId);
 });
+
+console.log(customCocktailId);
 
 // 게시글 id를 vuex에 저장한다.
 </script>

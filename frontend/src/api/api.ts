@@ -20,6 +20,9 @@ export default {
     changePassword: () => HOST + ACCOUNTS + "auth/password",
     signOut: () => HOST + ACCOUNTS + "auth/signOut",
     profile: () => HOST + ACCOUNTS + "auth/profile",
+    googleLogin: () => HOST + ACCOUNTS + "login/google",
+    kakaoLogin: () => HOST + ACCOUNTS + "login/kakao",
+    naverLogin: () => HOST + ACCOUNTS + "login/naver"
   },
   email: {
     emailCert: () => HOST + "email/cert",

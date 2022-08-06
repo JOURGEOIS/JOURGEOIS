@@ -247,6 +247,7 @@ public class PostController {
         Map<String, Integer> data = new HashMap<>();
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
+
             bookmark.put("uid", uid);
             if(postService.checkPostId(bookmark.get("postId"))) {
                 if (postService.pushBookmark(bookmark)) {

@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface PostBookmarkRepository extends JpaRepository<PostBookmark, PostBookmarkId> {
     Integer countByPostId(Post p_id);
     List<PostBookmark> findByPostId(Post p_id, Pageable pageable);
+
+    Boolean findBymemberId(Long id);
 }

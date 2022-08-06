@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 public class PostService {
@@ -240,7 +241,8 @@ public class PostService {
     @Transactional
     public boolean pushBookmark(Map<String, Long> bookmark){
         Long m_id = bookmark.get("uid");
-        Long p_id = bookmark.get("p_id");
+        Long p_id = bookmark.get("postId");
+
         PostBookmarkId key = new PostBookmarkId(m_id, p_id);
 
         Member member = new Member();

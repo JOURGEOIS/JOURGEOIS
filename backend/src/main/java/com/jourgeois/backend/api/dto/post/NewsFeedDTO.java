@@ -14,7 +14,7 @@ public class NewsFeedDTO {
     LocalDateTime createTime;
     LocalDateTime updateTime;
     Integer isUpdated;
-    Long pid;
+    Long postId;
     String type;
     Long writer;
     String nickname;
@@ -30,4 +30,6 @@ public class NewsFeedDTO {
     Long baseCocktailId;
 
     String baseCocktailName;
+
+    Integer isLiked;
 }

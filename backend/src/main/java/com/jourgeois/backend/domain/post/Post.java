@@ -46,10 +46,10 @@ public class Post {
     @JoinColumn(name = "p_writer")
     private Member member;
 
-    @OneToMany(mappedBy = "postId")
+    @OneToMany(mappedBy = "postId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PostBookmark> postBookmarks;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PostReview> reviews;
 
     @Override

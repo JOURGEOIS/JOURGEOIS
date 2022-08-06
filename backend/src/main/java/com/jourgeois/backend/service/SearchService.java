@@ -1,14 +1,14 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.post.PostSearchMaterialDTO;
 import com.jourgeois.backend.api.dto.search.SearchCocktailDTO;
 import com.jourgeois.backend.api.dto.search.SearchFilterDTO;
 import com.jourgeois.backend.api.dto.search.SearchKeywordDTO;
 import com.jourgeois.backend.domain.cocktail.Material;
-import com.jourgeois.backend.repository.CocktailRepository;
-import com.jourgeois.backend.repository.MaterialRepository;
-import com.jourgeois.backend.repository.MemberRepository;
-import com.jourgeois.backend.repository.SearchKeywordRepository;
+import com.jourgeois.backend.domain.member.FollowPK;
+import com.jourgeois.backend.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,16 @@ public class SearchService {
     private final CocktailRepository cocktailRepository;
     private final MemberRepository memberRepository;
     private final MaterialRepository materialRepository;
+    private final FollowRepository followRepository;
     private final String s3Url;
     SearchService(SearchKeywordRepository searchKeywordRepository, CocktailRepository cocktailRepository,
                   MemberRepository memberRepository, MaterialRepository materialRepository,
-                  @Value("${cloud.aws.s3.bucket.path}") String s3Url){
+                  FollowRepository followRepository, @Value("${cloud.aws.s3.bucket.path}") String s3Url){
         this.searchKeywordRepository = searchKeywordRepository;
         this.cocktailRepository = cocktailRepository;
         this.memberRepository = memberRepository;
         this.materialRepository = materialRepository;
+        this.followRepository = followRepository;
         this.s3Url = s3Url;
     }
 
@@ -57,21 +59,26 @@ public class SearchService {
         return list;
     }
 
-    public List<ProfileDTO> searchByMember(String name, Pageable pageable){
-            List<ProfileDTO> list = new ArrayList<>();
+    public List<FollowerDTO> searchByMember(Long uid, String name, Pageable pageable){
+            List<FollowerDTO> list = new ArrayList<>();
             memberRepository.findByNicknameContainingIgnoreCaseOrderByNickname(name, pageable)
                 .forEach(data ->{
+                    FollowPK key = new FollowPK(uid, data.getUid());
+                    Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+                    if(uid.equals(data.getUid())) {
+                        status = -1;
+                    }
+
+                    FollowerDTO f = FollowerDTO.builder()
+                            .isFollowed(status)
+                            .nickname(data.getNickname())
+                            .uid(data.getUid())
+                            .profileImg(s3Url + data.getProfileImg())
+                            .introduce(data.getIntroduce()).build();
                             ProfileDTO p = new ProfileDTO(data.getUid(), data.getEmail(), data.getName(),
                                     data.getNickname(), s3Url + data.getProfileImg(), data.getIntroduce());
-                            list.add(p);
+                            list.add(f);
                         });
-
-//        list.add(ProfileDTO.builder()
-//                .uid(data.getUid())
-//                .email(data.getEmail())
-//                .nickname(data.getNickname())
-//                .profileImg(s3Url+data.getProfileImg())
-//                .introduce(data.getIntroduce()).build())
         return list;
     }
 
@@ -142,5 +149,15 @@ public class SearchService {
     public String searchMaterialName(Long id){
         Material material = materialRepository.findById(id).orElseThrow(() -> new NoSuchElementException("찾는 재료가 없음"));
         return material.getNameKR();
+    }
+
+    public List<PostSearchMaterialDTO> searchMaterialList(String keywrod, Pageable pageable){
+        List<PostSearchMaterialDTO> list = new ArrayList<>();
+        materialRepository.findByNameKRContainingOrNameContaining(keywrod, keywrod, pageable).forEach(data ->{
+            list.add(PostSearchMaterialDTO.builder()
+                    .name(data.getNameKR())
+                    .img(data.getImg()).build());
+        });
+        return list;
     }
 }

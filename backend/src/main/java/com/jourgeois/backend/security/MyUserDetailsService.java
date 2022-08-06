@@ -26,15 +26,19 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("여긴가 ? ??!? ?!");
         Member member = memberRepository.findById(Long.parseLong(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Member uid : " + username + " was not found"));
 
+        System.out.println("여기에서 문제생김 !!!!ㄹㅇ!!");
+        System.out.println(member.getEmail());
         return createUserDetails(member);
     }
 
     private UserDetails createUserDetails(Member member) {
         // 권한 관리 테이블로 만든 깃
         // -> https://github.com/szerhusenBC/jwt-spring-security-demo/blob/master/src/main/java/org/zerhusen/security/model/User.java
+        System.out.println("!!!!!!야!!!!!!!");
         List<SimpleGrantedAuthority> grantedAuthorities = member.getRoleList().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority))
                 .collect(Collectors.toList());

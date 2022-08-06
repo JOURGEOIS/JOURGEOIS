@@ -25,6 +25,7 @@ export interface CustomCocktailOnly {
   ingredients: string[]; // 칵테일 설명
   recipe: string; // 칵테일 제작
   type: string | null; // 칵테일인지 커스텀칵테일인지
+  reviewCount: number; // 댓글 개수
 }
 
 // 댓글 작성자

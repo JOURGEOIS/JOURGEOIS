@@ -55,9 +55,6 @@ const profileImg = computed(
   () => customCocktailInfo?.value?.followerDTO?.profileImg
 );
 
-console.log(profileImg.value);
-setTimeout(() => console.log(profileImg.value), 1000);
-
 const isFollowed = computed(
   () => customCocktailInfo?.value?.followerDTO?.isFollowed
 );

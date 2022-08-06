@@ -415,7 +415,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          p_id: id,
+          postId: id,
         },
       }).then((response) => {
         const data = response.data;

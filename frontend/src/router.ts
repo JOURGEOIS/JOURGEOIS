@@ -119,14 +119,14 @@ const routes: any[] = [
 
   // 커스텀 칵테일 상세 페이지
   {
-    path: "/cocktail/:cocktailId/custom/:customCocktailId",
+    path: "/cocktail/:cocktailId/custom/:feedId",
     name: "TheCustomCocktailDescView",
     component: () => import("@/views/TheCustomCocktailDescView.vue"),
   },
 
   // 좋아요한 유저 리스트 페이지
   {
-    path: "/cocktail/:cocktailId/custom/:customCocktailId/liked",
+    path: "/cocktail/:cocktailId/custom/:feedId/liked",
     name: "TheLikedUserListView",
     component: () => import("@/views/TheLikedUserListView.vue"),
   },

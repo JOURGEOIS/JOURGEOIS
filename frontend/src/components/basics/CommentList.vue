@@ -1,7 +1,7 @@
 <template>
   <div v-if="commentList" class="the-comment-list">
     <div v-for="item in commentList" :key="item.pr_id">
-      <comment-item :comment="item"></comment-item>
+      <comment-item :comment="item" :page-id="pageId"></comment-item>
     </div>
   </div>
   <div v-else class="the-comment-none">
@@ -11,13 +11,19 @@
   <success-pop-up v-if="successPopUpStatus">
     성공적으로 수정되었습니다
   </success-pop-up>
+  <comment-delete-modal
+    v-if="deleteModalStatus"
+    :page-id="pageId"
+  ></comment-delete-modal>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, computed } from "vue";
+import { onBeforeMount, computed, watch } from "vue";
 import CommentItem from "@/components/basics/CommentItem.vue";
+import CommentDeleteModal from "@/components/modals/CommentDeleteModal.vue";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 const store = useStore();
 
 // 프롭스
@@ -41,6 +47,13 @@ const handleScroll = (event: any) => {
 // 댓글 정보 받기
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
+
+  // 리셋
+  store.dispatch("comment/resetCommentData");
+  store.dispatch("comment/toggleSuccessPopUpStatus", false);
+  store.dispatch("comment/toggleDeleteModalStatus", false);
+
+  // 데이터 받기
   store.dispatch("comment/saveCommentList", props.pageId);
 });
 
@@ -49,9 +62,18 @@ const successPopUpStatus = computed(
   () => store.getters["comment/getSuccessPopUpStatus"]
 );
 
-const deletePopUpStatus = computed(
-  () => store.getters["comment/deletePopUpStatus"]
+const deleteModalStatus = computed(
+  () => store.getters["comment/getDeleteModalStatus"]
 );
+
+watch(successPopUpStatus, () => {
+  if (successPopUpStatus) {
+    setTimeout(
+      () => store.dispatch("comment/toggleSuccessPopUpStatus", false),
+      2000
+    );
+  }
+});
 </script>
 
 <style scoped lang="scss">

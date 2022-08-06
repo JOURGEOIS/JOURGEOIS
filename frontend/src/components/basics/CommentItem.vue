@@ -1,28 +1,46 @@
 <template>
   <article class="the-comment-article">
+    <!-- 프로필 이미지  -->
     <round-image :round-image="{ image: comment.profileImg }"></round-image>
+
+    <!-- 댓글 컨텐츠 -->
     <div class="the-comment-item">
       <div class="the-comment-item-header">
+        <!-- 이름 -->
         <p class="the-comment-item-name">{{ comment.nickname }}</p>
+
+        <!-- 수정, 삭제 버튼 (본인 일 때에만 보인다. ) -->
         <div
           class="the-comment-item-button"
           v-if="comment.isMine && !updateComment"
         >
-          <span @click="clickUpdate(comment.review)"> 수정</span>
-          <span @click="clickDelete"> 삭제</span>
+          <span
+            @click="clickUpdate({ review: comment.review, id: comment.pr_id })"
+          >
+            수정
+          </span>
+          <span @click="clickDelete(comment.pr_id)"> 삭제</span>
         </div>
+
+        <!-- 완료, 취소 버튼 (수정을 누르면 수정, 삭제 버튼 자리에 생성된다.) -->
         <div class="the-comment-item-button" v-if="updateComment">
           <span @click="submitUpdate"> 완료</span>
           <span @click="clickCancel"> 취소</span>
         </div>
       </div>
-      <div class="the-comment-item-date">
+
+      <!-- 날짜와 수정됨(수정이 되면 수정됨이 보인다) -->
+      <div class="the-comment-item-date" v-if="!updateComment">
         <p>{{ calcDateDelta(comment.createTime) }}</p>
         <p class="the-comment-item-update" v-if="comment.isUpdated">수정됨</p>
       </div>
+
+      <!-- 댓글 내용 -->
       <div class="the-comment-item-content" v-if="!updateComment">
         {{ comment.review }}
       </div>
+
+      <!-- 댓글 수정 form -->
       <form v-else @submit.prevent="submitUpdate">
         <textarea-basic
           :data="commentInputData"
@@ -30,6 +48,8 @@
           v-model.trim="commentInputValue"
         ></textarea-basic>
       </form>
+
+      <!-- 댓글 수정 에러 메시지 -->
       <p class="error-message" v-if="badWordTest">
         부적절한 언어가 포함되었습니다.
       </p>
@@ -63,15 +83,18 @@ interface comment {
 
 const props = defineProps<{
   comment: comment;
+  pageId: number;
 }>();
 
 // 에러 메시지
 const badWordTest = ref(false);
 const blankWordTest = ref(false);
 
-// 수정버튼
-const clickUpdate = (data: string) => {
-  commentInputValue.value = data;
+// 수정 ===================================================
+const clickUpdate = (data: { review: string; id: number }) => {
+  const { review, id } = data;
+  commentInputValue.value = review;
+  commentId.value = id;
   updateComment.value = true;
 };
 
@@ -83,8 +106,15 @@ const commentInputData: object = reactive({
   type: "text",
   maxlength: 200,
 });
+
+// form 스타일
 const commentInputStyle = ref("normal");
+
+// comment value
 const commentInputValue = ref("");
+
+// comment id
+const commentId = ref(0);
 
 // 수정 취소 버튼
 const clickCancel = () => {
@@ -98,7 +128,6 @@ const clickCancel = () => {
 
 // 수정 제출 버튼
 const submitUpdate = () => {
-  console.log(commentInputValue.value);
   // 리셋
   commentInputStyle.value = "normal";
   badWordTest.value = false;
@@ -112,7 +141,12 @@ const submitUpdate = () => {
 
   if (!conditionA && !conditionB) {
     // 제출
-    console.log("제출");
+    const data = {
+      pr_id: commentId.value,
+      p_id: props.pageId,
+      review: commentInputValue.value,
+    };
+    store.dispatch("comment/updateComment", data);
     updateComment.value = false;
   } else {
     // 유효성 검사 실패
@@ -126,8 +160,12 @@ const submitUpdate = () => {
   }
 };
 
+// 삭제 ===================================================
 // 삭제 버튼
-const clickDelete = () => {};
+const clickDelete = (id: number) => {
+  store.dispatch("comment/toggleDeleteModalStatus", true);
+  store.dispatch("comment/setDeleteCommentId", id);
+};
 </script>
 
 <style scoped lang="scss">

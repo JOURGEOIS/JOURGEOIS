@@ -74,10 +74,10 @@ const clickLike = () => {
 const clickLikedUsers = () => {
   alert("커스텀 칵테일 좋아요 유저 목록으로 이동");
   const cocktailId = route.params.cocktailId;
-  const customCocktailId = route.params.customCocktailId;
+  const feedId = route.params.feedId;
   router.push({
     name: "TheLikedUserListView",
-    params: { cocktailId, customCocktailId },
+    params: { cocktailId, feedId },
   });
 };
 

@@ -137,7 +137,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     // * 커스텀 칵테일 세부 페이지 정보
     setCustomCocktailDetail: (
       { commit, rootGetters, dispatch },
-      params: { customCocktailId: number }
+      params: { feedId: number }
     ) => {
       axios({
         url: api.post.postCocktail(),
@@ -146,7 +146,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
-          p_id: params.customCocktailId,
+          p_id: params.feedId,
         },
       })
         .then((res) => {

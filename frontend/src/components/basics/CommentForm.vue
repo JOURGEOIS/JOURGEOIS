@@ -69,7 +69,6 @@ const submitCommentForm = () => {
     p_id: props.pageId,
     review: commentInputValue.value,
   };
-  console.log(data);
   if (!conditionA) {
     store.dispatch("comment/createComment", data);
     commentInputValue.value = "";

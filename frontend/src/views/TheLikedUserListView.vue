@@ -26,9 +26,20 @@ import { useStore } from "vuex";
 import { computed, onBeforeMount } from "vue";
 import { User } from "../interface";
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
-// 좋아요
+const feedId = route.params.feedId;
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    action: "post/setLikedUsers",
+    data: { postId: feedId },
+  };
+  store.dispatch("scroll/handleScroll", data);
+};
+
+// 좋아요한 유저들 리스트
 const likedUsers = computed(() => store.getters["post/getLikedUsers"]);
 
 // 유저 아이템을 누른 경우 유저 페이지로 이동
@@ -38,24 +49,16 @@ const clickUser = (item: User) => {
   // router.push({ name: "TheProfileView", params: { userId: item.uid } });
 };
 
-const handleScroll = (event: any) => {
-  const data = {
-    event,
-    action: "post/setLikedUsers",
-  };
-  store.dispatch("scroll/handleScroll", data);
-};
-
-// 전체 칵테일 추가 함수
-const setLikedUsers = () => {
-  store.dispatch("post/setLikedUsers");
+// 전체 좋아요 유저 추가 함수
+const setLikedUsers = (data: object) => {
+  store.dispatch("post/setLikedUsers", data);
 };
 
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
-  setLikedUsers();
+  setLikedUsers({ postId: feedId });
   setTimeout(() => {
-    setLikedUsers();
+    setLikedUsers({ postId: feedId });
   }, 100);
 });
 </script>

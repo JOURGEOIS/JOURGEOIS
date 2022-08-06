@@ -61,9 +61,7 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
-            postService.postPost(post);
-            result.put("success", "성공");
-            return new ResponseEntity(result, HttpStatus.CREATED);
+            return new ResponseEntity(postService.postPost(post), HttpStatus.CREATED);
         } catch(NumberFormatException e){
             result.put("fail", "uid의 형식이 다릅니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
@@ -100,9 +98,7 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
-            postService.editPost(post);
-            result.put("success", "성공");
-            return new ResponseEntity(result, HttpStatus.CREATED);
+            return new ResponseEntity(postService.editPost(post), HttpStatus.CREATED);
         } catch(IllegalArgumentException e){
             result.put("fail", "커스텀 칵테일 필수 입력 정보(재료, 레시피)를 기입해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
@@ -198,7 +194,6 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             postReviewDTO.setUid(uid);
-            postService.editReview(postReviewDTO);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {

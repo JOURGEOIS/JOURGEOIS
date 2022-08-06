@@ -182,15 +182,16 @@ public class PostService {
         postReviewRepository.delete(postReview);
     }
 
-    public List<PostReviewResponseDTO> getReviewAll(Long p_id, Boolean asc, Pageable pageable) throws Exception {
+    public List<PostReviewResponseDTO> getReviewAll(Long uid, Long p_id, Boolean asc, Pageable pageable) throws Exception {
         if(asc) pageable.getSort().ascending();
         else pageable.getSort().descending();
 
-        List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(p_id, pageable);
+        List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(uid, p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(uid, p_id, pageable);
         List<PostReviewResponseDTO> response = new LinkedList<>();
 
         reviews.forEach((review) -> {
             PostReviewResponseDTO postReviewResponse = PostReviewResponseDTO.builder()
+                    .pr_id(review.getPr_id())
                     .uid(review.getUid())
                     .nickname(review.getNickname())
                     .review(review.getReview())
@@ -198,6 +199,7 @@ public class PostService {
                     .isUpdated(review.getIsUpdated())
                     .createTime(review.getCreateTime())
                     .updateTime(review.getUpdateTime())
+                    .isMine(review.getIsMine())
                     .build();
 
             response.add(postReviewResponse);

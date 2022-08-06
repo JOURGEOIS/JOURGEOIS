@@ -46,6 +46,13 @@ public class PostController {
             result.put("fail", "Base Cocktail이 없습니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
+
+        // 공백 처리
+        if(post.getTitle().trim().isEmpty()) {
+            result.put("fail", "제목을 입력해주세요");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
@@ -206,7 +213,7 @@ public class PostController {
     }
 
     @GetMapping("/auth/review")
-    public ResponseEntity getReviewAll(@RequestParam(value = "p_id") Long p_id,
+    public ResponseEntity getReviewAll(HttpServletRequest request, @RequestParam(value = "p_id") Long p_id,
                                         @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                         @PageableDefault(size=10, page = 0) Pageable pageable){
         System.out.println("p_id: " + p_id);
@@ -216,8 +223,11 @@ public class PostController {
             result.put("fail", "잘못된 입력");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
+
+        Long uid = Long.valueOf((String) request.getAttribute("uid"));
+
         try {
-            return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.OK);
+            return new ResponseEntity(postService.getReviewAll(uid, p_id, asc, pageable), HttpStatus.OK);
         } catch (Exception e) {
             result.put("fail", "댓글을 불러오는 것을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);

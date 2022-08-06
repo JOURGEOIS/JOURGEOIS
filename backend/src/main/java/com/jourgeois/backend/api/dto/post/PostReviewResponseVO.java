@@ -9,4 +9,6 @@ public interface PostReviewResponseVO {
     Long getUid();
     String getNickname();
     String getProfileImg();
+    Integer getIsMine();
+    Long getPr_id();
 }

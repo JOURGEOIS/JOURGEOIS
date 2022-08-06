@@ -19,5 +19,5 @@ public class PostReviewResponseDTO {
     String profileImg;
     Integer reviewCount;
     Integer isMine;
-    Long pr_id;
+    Long postReviewId;
 }

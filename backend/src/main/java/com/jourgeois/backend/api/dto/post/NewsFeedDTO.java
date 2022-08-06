@@ -14,7 +14,7 @@ public class NewsFeedDTO {
     LocalDateTime createTime;
     LocalDateTime updateTime;
     Integer isUpdated;
-    Long p_id;
+    Long postId;
     String type;
     Long writer;
     String nickname;

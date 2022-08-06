@@ -170,7 +170,7 @@ public class CocktailService {
     @Transactional
     public boolean pushBookmark(Map<String, Long> cocktailBookmark){
         Long m_id = cocktailBookmark.get("uid");
-        Long c_id = cocktailBookmark.get("c_id");
+        Long c_id = cocktailBookmark.get("cocktailId");
         CocktailBookmarkId key = new CocktailBookmarkId(m_id, c_id);
 
         Member member = new Member();
@@ -236,7 +236,7 @@ public class CocktailService {
         result.forEach((data) -> {
             PostBookmarkId key = new PostBookmarkId(uid, data.getPostId());
             PostDTO post = PostDTO.builder()
-                    .p_id(data.getPostId())
+                    .postId(data.getPostId())
                     .imgLink(s3Url + data.getPostImg())
                     .description(data.getPostDescription())
                     .lastUpdateTime(data.getPostLastUpdateTime())

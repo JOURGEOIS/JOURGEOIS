@@ -113,7 +113,8 @@ public class PostService {
 
     @Transactional
     public Long editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
-        Long postId = postDTO.getP_id();
+        Long postId = postDTO.getPostId();
+
         Member member = new Member();
         member.setUid(postDTO.getUid());
 
@@ -161,7 +162,7 @@ public class PostService {
     public void deletePost(Map<String, Long> postDeleteReq) throws NoSuchElementException, SdkClientException {
         Member member = new Member();
         member.setUid(postDeleteReq.get("uid"));
-        postRepository.findByIdAndMember(postDeleteReq.get("p_id"), member)
+        postRepository.findByIdAndMember(postDeleteReq.get("postId"), member)
                 .ifPresentOrElse((targetPost) -> {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
@@ -180,7 +181,7 @@ public class PostService {
         member.setUid(postReviewDTO.getUid());
 
         Post post = new Post();
-        post.setId(postReviewDTO.getP_id());
+        post.setId(postReviewDTO.getPostId());
 
         PostReview postReview = new PostReview();
         postReview.setMember(member);
@@ -195,7 +196,7 @@ public class PostService {
         Member member = new Member();
         member.setUid(postReviewDTO.getUid());
 
-        PostReview postReview = postReviewRepository.findByIdAndMember(postReviewDTO.getPr_id(), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
+        PostReview postReview = postReviewRepository.findByIdAndMember(postReviewDTO.getPostReviewId(), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReview.setReview(postReviewDTO.getReview());
         postReviewRepository.save(postReview);
     }
@@ -205,7 +206,7 @@ public class PostService {
         Member member = new Member();
         member.setUid(reviewDeleteReq.get("uid"));
 
-        PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("pr_id"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
+        PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("postReveiwId"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReviewRepository.delete(postReview);
     }
 
@@ -218,7 +219,7 @@ public class PostService {
 
         reviews.forEach((review) -> {
             PostReviewResponseDTO postReviewResponse = PostReviewResponseDTO.builder()
-                    .pr_id(review.getPr_id())
+                    .postReviewId(review.getPr_id())
                     .uid(review.getUid())
                     .nickname(review.getNickname())
                     .review(review.getReview())
@@ -292,7 +293,7 @@ public class PostService {
 
     public PostInfoDTO readCustomCocktail(Long p_id, Long uid){
         Post post = postRepository.findById(p_id).orElseThrow();
-        PostDTO postDTO = PostDTO.builder().p_id(post.getId())
+        PostDTO postDTO = PostDTO.builder().postId(post.getId())
                 .imgLink(s3Url + post.getImg())
                 .description(post.getDescription())
                 .createTime(post.getCreateTime())
@@ -343,7 +344,7 @@ public class PostService {
                     .createTime(feed.getCreateTime())
                     .updateTime(feed.getUpdateTime())
                     .isUpdated(feed.getIsUpdated())
-                    .p_id(feed.getPid())
+                    .postId(feed.getPid())
                     .type(feed.getType())
                     .writer(feed.getWriter())
                     .nickname(feed.getNickname())

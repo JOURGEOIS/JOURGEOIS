@@ -1,3 +1,4 @@
+<!-- commentList를 이루는 comment item -->
 <template>
   <article class="the-comment-article">
     <!-- 프로필 이미지  -->

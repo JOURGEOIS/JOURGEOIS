@@ -7,10 +7,10 @@
     <!-- 제목, 사진, 제조법, 설명 등 커스텀 칵테일 내용 -->
     <the-custom-cocktail-desc-body></the-custom-cocktail-desc-body>
     <!-- 댓글 좋아요 공유 부분 -->
-    <!-- <like-comment-share>
+    <like-comment-share>
       <template #like>888</template>
       <template #comment>777</template>
-    </like-comment-share> -->
+    </like-comment-share>
     <!-- 댓글 부분 -->
     <section class="the-custom-cocktail-desc-comment">
       <comment-form :page-id="customCocktailId"></comment-form>

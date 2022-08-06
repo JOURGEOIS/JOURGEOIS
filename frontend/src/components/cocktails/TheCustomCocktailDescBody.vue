@@ -18,8 +18,8 @@
     ></article>
     <!-- 작성자 정보 섹션 -->
     <post-user-section
-      :userInfo="customCocktailInfo.followerDTO"
-      :date="customCocktailInfo.customCocktail.createTime"
+      :userInfo="customCocktailInfo?.followerDTO"
+      :date="customCocktailInfo?.customCocktail?.createTime"
     ></post-user-section>
     <!-- 칵테일 설명 섹션 -->
     <article class="cocktail-description">

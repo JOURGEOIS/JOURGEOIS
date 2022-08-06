@@ -11,9 +11,9 @@
       커스텀 칵테일 수정
     </header-basic>
     <section>
-      <the-custom-cocktail-form
+      <the-custom-cocktail-update-form
         id="custom-cocktail-form"
-      ></the-custom-cocktail-form>
+      ></the-custom-cocktail-update-form>
     </section>
   </div>
   <failure-pop-up v-if="errorStatus">
@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import TheCustomCocktailForm from "@/components/cocktails/TheCustomCocktailForm.vue";
+import TheCustomCocktailUpdateForm from "@/components/cocktails/TheCustomCocktailUpdateForm.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { useStore } from "vuex";
 import { onBeforeMount, computed, watch, onUnmounted } from "vue";

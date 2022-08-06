@@ -4,6 +4,7 @@ import axios from "axios";
 import api from "../../api/api";
 import { checkBadWord } from "../../functions/checkText";
 import router from "../../router";
+import { title } from "process";
 
 // ! main State
 export interface CustomCocktailState {
@@ -175,6 +176,16 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
       commit("SET_TITLE", "");
       commit("SET_DESCRIPTION", "");
       commit("SET_IMG_LINK", "");
+    },
+
+    // description
+    setDescription: ({ commit }, value: string) => {
+      commit("SET_DESCRIPTION", value);
+    },
+
+    // Title
+    setTitle: ({ commit }, value: string) => {
+      commit("SET_TITLE", value);
     },
 
     // 알럿 팝업
@@ -393,19 +404,17 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           type: 1,
         },
       })
-        .then(() => {
+        .then((response) => {
           // 상세 페이지로 이동
           router.push({
-            name: "TheCocktailDescView",
-            params: { cocktailId: getters["getOriginalCocktailId"] },
+            name: "TheCustomCocktailDescView",
+            params: {
+              cocktailId: getters["getOriginalCocktailId"],
+              feedId: response.data,
+            },
           });
-
-          // 성공 알림
-          commit("SET_SUCCESS_MESSAGE", "성공적으로 등록되었습니다");
-          commit("SET_ALERT_STATUS", true);
         })
         .catch((error) => {
-          console.log(error);
           if (error.response.status !== 401) {
             // 실패 팝업
             commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
@@ -420,6 +429,8 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           }
         });
     },
+
+    // ========================== 커스텀 칵테일 수정
     // 커스텀 칵테일 db 불러오기
     getCustomCocktailData: ({ rootGetters, commit, dispatch }, id) => {
       axios({
@@ -428,7 +439,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
-        data: {
+        params: {
           postId: id,
         },
       })
@@ -436,12 +447,6 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           console.log(response.data.customCocktail);
           const data = response.data.customCocktail;
           const recipe = data.recipe.split(" <> ");
-          console.log(recipe);
-          const customCocktailData = {
-            title: data.title,
-            description: data.description,
-            imgLink: data.imgLink,
-          };
 
           commit("SET_ORIGINAL_COCKTAIL_NAME", data.baseCocktailName);
           commit("SET_ORIGINAL_COCKTAIL_ID", data.baseCocktail);
@@ -462,6 +467,55 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
             const obj = {
               func: "customCocktail/getCustomCocktailData",
               params: id,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+    updateCustomCocktail: (
+      { rootGetters, getters, commit, dispatch },
+      params
+    ) => {
+      const { title, description, img, postId } = params;
+      const data: any = {
+        title,
+        description,
+        postId,
+        ingredients: getters["getOriginalCocktailIngredients"].join(),
+        recipe: getters["getOriginalCocktailRecipe"].join(" <> "),
+      };
+      if (img) {
+        data.img = img;
+      }
+
+      axios({
+        url: api.post.postCocktail(),
+        method: "put",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+          "Content-Type": "multipart/form-data",
+        },
+        data,
+      })
+        .then((response) => {
+          router.push({
+            name: "TheCustomCocktailDescView",
+            params: {
+              cocktailId: getters["getOriginalCocktailId"],
+              feedId: response.data,
+            },
+          });
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            // 실패 팝업
+            commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            commit("SET_ALERT_STATUS", true);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "customCocktail/updateCustomCocktail",
+              params,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }

@@ -257,7 +257,7 @@ public class PostController {
                 }
                 data.put("count", postService.countPostBookmark(bookmark.get("postId")));
                 return new ResponseEntity<>(data, HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>("Not Found" ,  HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){

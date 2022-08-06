@@ -168,10 +168,11 @@ export const createFeed: Module<CreateFeedState, RootState> = {
         },
       })
         .then((res) => {
+          console.log(res)
           // 상세 페이지로 이동
           router.push({
             name: "TheCommunityDescView",
-            // params: 
+            params: { feedId: res.data }
           });
 
           // 성공 알림

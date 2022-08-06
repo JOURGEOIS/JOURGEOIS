@@ -98,7 +98,7 @@ public class PostDTO {
         return postId;
     }
 
-    public void setPid(Long postId) {
+    public void setPostId(Long postId) {
         this.postId = postId;
     }
 

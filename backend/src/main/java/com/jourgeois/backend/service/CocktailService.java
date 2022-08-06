@@ -170,7 +170,7 @@ public class CocktailService {
     @Transactional
     public boolean pushBookmark(Map<String, Long> cocktailBookmark){
         Long m_id = cocktailBookmark.get("uid");
-        Long c_id = cocktailBookmark.get("c_id");
+        Long c_id = cocktailBookmark.get("cocktailId");
         CocktailBookmarkId key = new CocktailBookmarkId(m_id, c_id);
 
         Member member = new Member();

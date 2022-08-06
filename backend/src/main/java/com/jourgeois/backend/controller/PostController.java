@@ -39,21 +39,34 @@ public class PostController {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
+
+        // 사진 필수 입력
         if(post.getImg() == null || post.getImg().isEmpty()) {
             result.put("fail", "이미지를 등록해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
-        }else if(post.getType() != null && post.getType() == 1 && (post.getBaseCocktail() == null || post.getBaseCocktail().equals(null))){
+        }
+
+        // 공백 처리
+        if(post.getDescription() == null || post.getDescription().trim().isEmpty()) {
+            result.put("fail", "설명은 필수 입력 정보입니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
+        // 커스텀 칵테일의 경우 베이스 칵테일 필수 입력
+        if(post.getType() != null && post.getType() == 1 && (post.getBaseCocktail() == null || post.getBaseCocktail().equals(null))){
             result.put("fail", "Base Cocktail이 없습니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
+
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
-            postService.postPost(post);
-            result.put("success", "성공");
-            return new ResponseEntity(result, HttpStatus.CREATED);
+            return new ResponseEntity(postService.postPost(post), HttpStatus.CREATED);
         } catch(NumberFormatException e){
             result.put("fail", "uid의 형식이 다릅니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(IllegalArgumentException e){
+            result.put("fail", "커스텀 칵테일 필수 입력 정보(재료, 레시피)를 기입해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         } catch(IOException e) {
             result.put("fail", "파일 업로드 실패");
@@ -70,17 +83,25 @@ public class PostController {
 
         Map<String, String> result = new HashMap<>();
 
+        // 사진 필수 입력
         if(post.getImg() == null || post.getImg().isEmpty()) {
             result.put("fail", "이미지를 등록해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
+        // 공백 처리
+        if(post.getDescription() == null || post.getDescription().trim().isEmpty()) {
+            result.put("fail", "설명은 필수 입력 정보입니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
         
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
-            postService.editPost(post);
-            result.put("success", "성공");
-            return new ResponseEntity(result, HttpStatus.CREATED);
+            return new ResponseEntity(postService.editPost(post), HttpStatus.CREATED);
+        } catch(IllegalArgumentException e){
+            result.put("fail", "커스텀 칵테일 필수 입력 정보(재료, 레시피)를 기입해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
             result.put("fail", "파일 업로드 실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -206,7 +227,7 @@ public class PostController {
     }
 
     @GetMapping("/auth/review")
-    public ResponseEntity getReviewAll(@RequestParam(value = "p_id") Long p_id,
+    public ResponseEntity getReviewAll(HttpServletRequest request, @RequestParam(value = "p_id") Long p_id,
                                         @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                         @PageableDefault(size=10, page = 0) Pageable pageable){
         System.out.println("p_id: " + p_id);
@@ -216,8 +237,11 @@ public class PostController {
             result.put("fail", "잘못된 입력");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
+
+        Long uid = Long.valueOf((String) request.getAttribute("uid"));
+
         try {
-            return new ResponseEntity(postService.getReviewAll(p_id, asc, pageable), HttpStatus.OK);
+            return new ResponseEntity(postService.getReviewAll(uid, p_id, asc, pageable), HttpStatus.OK);
         } catch (Exception e) {
             result.put("fail", "댓글을 불러오는 것을 실패했습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -21,6 +21,7 @@ public class PostDTO {
     private Integer isUpdated;
     private Integer like;
     private Boolean ilike;
+    private Integer reviewCount;
 
     // 커스텀 칵테일
     private String title;
@@ -29,6 +30,14 @@ public class PostDTO {
     private String[] ingredients;
     private String recipe;
     private Integer type;
+
+    public Integer getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(Integer reviewCount) {
+        this.reviewCount = reviewCount;
+    }
 
     public Boolean getIlike() {
         return ilike;

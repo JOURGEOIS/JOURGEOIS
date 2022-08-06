@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,28 +56,38 @@ public class PostService {
     }
 
     @Transactional
-    public void postPost(PostDTO postDTO) throws IOException, NoSuchElementException {
+    public Long postPost(PostDTO postDTO) throws IOException, NoSuchElementException {
         Long writerId = postDTO.getUid();
 
         Member member = memberRepository.findById(writerId)
                             .orElseThrow(()->new NoSuchElementException("유저를 찾을 수 없습니다."));
-        // post 이미지 업로드
-        String uploadURL = s3Util.upload(postDTO.getImg(), member.getUid(), ImgType.POST);
         if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
+
             Post post = new Post();
             post.setDescription(postDTO.getDescription());
             post.setMember(member);
+            // post 이미지 업로드
+            String uploadURL = s3Util.upload(postDTO.getImg(), member.getUid(), ImgType.POST);
+
             post.setImg(uploadURL);
 
             // post 저장
-            postRepository.save(post);
+            return postRepository.save(post).getId();
         }else{
+            // 제목, 커스텀 칵테일의 경우 재료, 레시피 공백 예외 처리
+            if(postDTO.getTitle().trim().isEmpty() || postDTO.getIngredients() == null || postDTO.getIngredients().length == 0 || postDTO.getRecipe().trim().isEmpty()){
+                throw  new IllegalArgumentException("필수 정보 누락");
+            }
+
             CustomCocktail cc = new CustomCocktail();
-            cc.setTitle(postDTO.getTitle());
-            cc.setDescription(postDTO.getDescription());
+            cc.setTitle(postDTO.getTitle().trim());
+            cc.setDescription(postDTO.getDescription().trim());
             cc.setMember(member);
             cc.setIngredients(Arrays.toString(postDTO.getIngredients()).replace("[","").replace("]",""));
             cc.setRecipe(postDTO.getRecipe());
+            // post 이미지 업로드
+            String uploadURL = s3Util.upload(postDTO.getImg(), member.getUid(), ImgType.POST);
+
             cc.setImg(uploadURL);
             // post 저장
             CustomCocktail cocktail = postRepository.save(cc);
@@ -88,8 +100,9 @@ public class PostService {
                                 .ifPresentOrElse(data -> {new Exception("BaseCocktail  save Error");},
                                         ()->{customCocktailToCocktailRepository.save(new CustomCocktailToCocktail(cocktail, ori));});
             }
-        }
 
+            return cocktail.getId();
+        }
     }
 
     public String postImageLocalUpload(PostDTO postDTO) throws IOException {
@@ -99,10 +112,8 @@ public class PostService {
     }
 
     @Transactional
-    public void editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
+    public Long editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
         Long postId = postDTO.getPostId();
-        // post 이미지 업로드
-        String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
 
         Member member = new Member();
         member.setUid(postDTO.getUid());
@@ -112,20 +123,32 @@ public class PostService {
             Post targetPost = postRepository.findByIdAndMember(postId, member).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
             targetPost.setDescription(postDTO.getDescription());
 
+            // post 이미지 업로드
+            String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
+
             targetPost.setImg(uploadURL);
             s3Util.deleteFile(targetPost.getImg());
             // post 저장
-            postRepository.save(targetPost);
+            return postRepository.save(targetPost).getId();
         }else{
+            // 커스텀 칵테일의 경우 재료, 레시피 공백 예외 처리
+            if(postDTO.getTitle().trim().isEmpty() || postDTO.getIngredients() == null || postDTO.getIngredients().length == 0 || postDTO.getRecipe().trim().isEmpty()){
+                throw  new IllegalArgumentException("필수 정보 누락");
+            }
+
             CustomCocktail targetCustomCocktail = (CustomCocktail) postRepository.findByIdAndMember(postId, member).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
             targetCustomCocktail.setDescription(postDTO.getDescription());
+
+            // post 이미지 업로드
+            String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
+
             targetCustomCocktail.setImg(uploadURL);
             s3Util.deleteFile(targetCustomCocktail.getImg());
-            targetCustomCocktail.setTitle(postDTO.getTitle());
-            targetCustomCocktail.setRecipe(postDTO.getRecipe());
+            targetCustomCocktail.setTitle(postDTO.getTitle().trim());
+            targetCustomCocktail.setRecipe(postDTO.getRecipe().trim());
             targetCustomCocktail.setIngredients(Arrays.toString(postDTO.getIngredients()).replace("[","").replace("]",""));
             // post 저장
-            postRepository.save(targetCustomCocktail);
+            return postRepository.save(targetCustomCocktail).getId();
         }
 
     }
@@ -182,15 +205,16 @@ public class PostService {
         postReviewRepository.delete(postReview);
     }
 
-    public List<PostReviewResponseDTO> getReviewAll(Long p_id, Boolean asc, Pageable pageable) throws Exception {
+    public List<PostReviewResponseDTO> getReviewAll(Long uid, Long p_id, Boolean asc, Pageable pageable) throws Exception {
         if(asc) pageable.getSort().ascending();
         else pageable.getSort().descending();
 
-        List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(p_id, pageable);
+        List<PostReviewResponseVO> reviews = asc ? postReviewRepository.getAllPostReviewsAsc(uid, p_id, pageable) : postReviewRepository.getAllPostReviewsDesc(uid, p_id, pageable);
         List<PostReviewResponseDTO> response = new LinkedList<>();
 
         reviews.forEach((review) -> {
             PostReviewResponseDTO postReviewResponse = PostReviewResponseDTO.builder()
+                    .pr_id(review.getPr_id())
                     .uid(review.getUid())
                     .nickname(review.getNickname())
                     .review(review.getReview())
@@ -198,6 +222,7 @@ public class PostService {
                     .isUpdated(review.getIsUpdated())
                     .createTime(review.getCreateTime())
                     .updateTime(review.getUpdateTime())
+                    .isMine(review.getIsMine())
                     .build();
 
             response.add(postReviewResponse);
@@ -271,6 +296,7 @@ public class PostService {
                 .isUpdated(post.getCreateTime().isBefore(post.getLastUpdateTime()) ? 1 : 0) // 수정됐으면 1
                 .like(postBookmarkRepository.countByPostId(new Post(p_id)))
                 .ilike(postBookmarkRepository.findById(new PostBookmarkId(uid, post.getId())).isPresent())
+                .reviewCount(postReviewRepository.countByPost(new Post(p_id)))
                 .build();
 
         if(post.getD_type().equals("cocktail")){

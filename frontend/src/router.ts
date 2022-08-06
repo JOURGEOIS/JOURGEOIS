@@ -124,6 +124,13 @@ const routes: any[] = [
     component: () => import("@/views/TheCustomCocktailDescView.vue"),
   },
 
+  // 커스텀 칵테일 수정
+  {
+    path: "/cocktail/:cocktailId/custom/:feedId/update",
+    name: "TheCustomCocktailUpdateForm",
+    component: () => import("@/views/TheCustomCocktailUpdateForm.vue"),
+  },
+  ,
   // 좋아요한 유저 리스트 페이지
   {
     path: "/cocktail/:cocktailId/custom/:feedId/liked",

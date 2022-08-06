@@ -14,6 +14,7 @@
     <div class="part-right">
       <!-- 팔로우/팔로잉 버튼 -->
       <span
+        v-if="isFollowed !== -1"
         class="follow-btn"
         :class="{ following: isFollowed, follow: !isFollowed }"
         @click="clickFollowBtn"
@@ -33,22 +34,33 @@ import { User } from "../../interface";
 import { calcDateDelta } from "../../functions/date";
 import { reactive, computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
-const route = useRoute();
+// import { useRouter, useRoute } from "vue-router";
+// const router = useRouter();
+// const route = useRoute();
 const store = useStore();
 
-const props = defineProps<{
-  userInfo: User;
-  date: number[];
-}>();
+const customCocktailInfo = computed(() => {
+  return store.getters["customCocktailInfo/getCustomCocktailDetail"];
+});
 
-const { uid, nickname, profileImg, isFollowed } = props.userInfo;
-const timeDelta = calcDateDelta(props.date);
+const uid = computed(() => customCocktailInfo?.value?.followerDTO?.uid);
+const nickname = computed(
+  () => customCocktailInfo?.value?.followerDTO?.nickname
+);
+const profileImg = computed(
+  () => customCocktailInfo?.value?.followerDTO?.profileImg
+);
+const isFollowed = computed(
+  () => customCocktailInfo?.value?.followerDTO?.isFollowed
+);
+const createTime = computed(
+  () => customCocktailInfo?.value?.customCocktail?.createTime
+);
+const timeDelta = computed(() => calcDateDelta(createTime.value));
 
 // 프로필 사진에 넣을 props
 const profileImage = reactive({
-  image: profileImg,
+  image: profileImg.value,
   width: "45px",
 });
 

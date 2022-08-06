@@ -296,6 +296,7 @@ public class PostService {
                 .isUpdated(post.getCreateTime().isBefore(post.getLastUpdateTime()) ? 1 : 0) // 수정됐으면 1
                 .like(postBookmarkRepository.countByPostId(new Post(p_id)))
                 .ilike(postBookmarkRepository.findById(new PostBookmarkId(uid, post.getId())).isPresent())
+                .reviewCount(postReviewRepository.countByPost(new Post(p_id)))
                 .build();
 
         if(post.getD_type().equals("cocktail")){

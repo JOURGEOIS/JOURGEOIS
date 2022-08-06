@@ -51,6 +51,6 @@ export default {
     comment: () => HOST + POST + "auth/review",
     toggleBookmark: () => HOST + POST + "auth/bookmark",
     likedUsers: () => HOST + POST + "auth/like/list",
-    listFeed: () => HOST + POST + "auth/feed"
+    listFeed: () => HOST + POST + "auth/feed",
   },
 };

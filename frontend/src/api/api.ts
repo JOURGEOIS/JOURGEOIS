@@ -30,6 +30,7 @@ export default {
     getCocktailData: () => HOST + COCKTAIL + "cocktail",
     cocktailList: () => HOST + COCKTAIL + "list",
     cocktailReview: () => HOST + COCKTAIL + "comment",
+    customCocktailList: () => HOST + "/cocktail",
   },
 
   lookups: {
@@ -47,6 +48,7 @@ export default {
   post: {
     postCocktail: () => HOST + POST + "auth",
     uploadImage: () => HOST + POST + "auth/tmp",
+    comment: () => HOST + POST + "auth/review",
     toggleBookmark: () => HOST + POST + "auth/bookmark",
     likedUsers: () => HOST + POST + "auth/like/list",
     listFeed: () => HOST + POST + "auth/feed"

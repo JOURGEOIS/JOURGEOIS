@@ -35,8 +35,15 @@ import {
   CustomCocktailState,
 } from "../store/cocktails/customCocktail";
 
+import {
+  customCocktailInfo,
+  CustomCocktailInfoState,
+} from "../store/cocktails/customCocktailInfo";
+
 // ? Feed
 import { createFeed, CreateFeedState } from "../store/feeds/createFeed";
+
+import { comment, Comment } from "../store/basics/comment";
 
 // 모듈의 state를 공유한다.
 export interface RootState {
@@ -52,7 +59,9 @@ export interface RootState {
   searchResult: SearchResultState;
   cocktailReview: CocktailReviewState;
   customCocktail: CustomCocktailState;
+  customCocktailInfo: CustomCocktailInfoState;
   createFeed: CreateFeedState;
+  comment: Comment;
 }
 
 // store를 생성한다.
@@ -70,6 +79,8 @@ export default createStore({
     searchResult,
     cocktailReview,
     customCocktail,
+    customCocktailInfo,
     createFeed,
+    comment,
   },
 });

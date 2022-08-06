@@ -5,7 +5,7 @@
     </label>
     <the-search-input
       :data="customCocktailSearchData"
-      v-model="customCocktailSearchValue"
+      v-model.trim="customCocktailSearchValue"
       @click-close-icon="resetInputValue"
     ></the-search-input>
     <div class="custom-cocktail-search-list">

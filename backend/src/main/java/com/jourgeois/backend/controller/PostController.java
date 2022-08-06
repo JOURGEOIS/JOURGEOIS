@@ -194,6 +194,7 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             postReviewDTO.setUid(uid);
+            postService.editReview(postReviewDTO);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {

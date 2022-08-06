@@ -13,8 +13,8 @@
     </like-comment-share>
     <!-- 댓글 부분 -->
     <section class="the-custom-cocktail-desc-comment">
-      <comment-form :page-id="customCocktailId"></comment-form>
-      <comment-list :page-id="customCocktailId"></comment-list>
+      <comment-form :page-id="feedId"></comment-form>
+      <comment-list :page-id="feedId"></comment-list>
     </section>
   </div>
   <!-- navbar -->
@@ -37,10 +37,11 @@ const route = useRoute();
 const store = useStore();
 
 const originalCocktailId = Number(route.params.cocktailId);
-const customCocktailId = Number(route.params.customCocktailId);
+const feedId = Number(route.params.feedId);
+
 onMounted(() => {
   store.dispatch("customCocktailInfo/setCustomCocktailDetail", {
-    customCocktailId,
+    feedId,
   });
 });
 

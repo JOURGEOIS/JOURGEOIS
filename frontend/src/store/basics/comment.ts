@@ -17,7 +17,10 @@ export interface Comment {
   successPopUpStatus: boolean;
 
   // 삭제 팝업
-  deletePopUpStatus: boolean;
+  deleteModalStatus: boolean;
+
+  // 삭제 comment
+  deleteCommentId: number;
 }
 
 export const comment: Module<Comment, RootState> = {
@@ -37,7 +40,10 @@ export const comment: Module<Comment, RootState> = {
     successPopUpStatus: false,
 
     // 삭제 팝업
-    deletePopUpStatus: false,
+    deleteModalStatus: false,
+
+    // 삭제 comment
+    deleteCommentId: 0,
   },
   getters: {
     // 댓글 리스트
@@ -49,11 +55,14 @@ export const comment: Module<Comment, RootState> = {
     // 댓글 정렬
     getCommentSort: (state) => state.commentSort,
 
-    // 수정 팝업
+    // 수정 성공 팝업
     getSuccessPopUpStatus: (state) => state.successPopUpStatus,
 
-    // 삭제 팝업
-    getDeletePopUpStatus: (state) => state.deletePopUpStatus,
+    // 삭제 Modal
+    getDeleteModalStatus: (state) => state.deleteModalStatus,
+
+    // 삭제 comment
+    getDeleteCommentId: (state) => state.deleteCommentId,
   },
   mutations: {
     // 댓글 리스트 리셋
@@ -82,19 +91,36 @@ export const comment: Module<Comment, RootState> = {
     },
 
     // 삭제 팝업 세팅
-    SET_DELETE_POPUP_STATUS: (state, value: boolean) => {
-      state.deletePopUpStatus = value;
+    SET_DELETE_MODAL_STATUS: (state, value: boolean) => {
+      state.deleteModalStatus = value;
+    },
+
+    // 삭제 코멘트 id
+    SET_DELETE_COMMENT_ID: (state, value: number) => {
+      state.deleteCommentId = value;
     },
   },
   actions: {
     // 수정 팝업 세팅
-    changeSuccessPopUpStatus: ({ commit }, value: boolean) => {
+    toggleSuccessPopUpStatus: ({ commit }, value: boolean) => {
       commit("SET_SUCCESS_POPUP_STATUS", value);
     },
+
     // 삭제 팝업 세팅
-    changeDeletePopUpStatus: ({ commit }, value: boolean) => {
-      commit("SET_DELETE_POPUP_STATUS", value);
+    toggleDeleteModalStatus: ({ commit }, value: boolean) => {
+      commit("SET_DELETE_MODAL_STATUS", value);
     },
+
+    // 삭제 코멘트 id 세팅
+    setDeleteCommentId: ({ commit }, value: number) => {
+      commit("SET_DELETE_COMMENT_ID", value);
+    },
+    // 리스트와 페이지 리셋
+    resetCommentData: ({ commit }) => {
+      commit("REMOVE_COMMENT_LIST");
+      commit("SET_COMMENT_PAGE", 0);
+    },
+
     // 댓글 작성
     createComment: ({ rootGetters, dispatch, commit }, data) => {
       const { p_id } = data;
@@ -107,8 +133,7 @@ export const comment: Module<Comment, RootState> = {
         data,
       })
         .then(() => {
-          commit("REMOVE_COMMENT_LIST");
-          commit("SET_COMMENT_PAGE", 0);
+          dispatch("resetCommentData");
           dispatch("saveCommentList", p_id);
         })
         .catch((error) => {
@@ -128,6 +153,7 @@ export const comment: Module<Comment, RootState> = {
 
     // 리스트 받아오기
     saveCommentList: ({ getters, dispatch, rootGetters, commit }, id) => {
+      console.log("데이터!");
       axios({
         url: api.post.comment(),
         method: "get",
@@ -153,6 +179,71 @@ export const comment: Module<Comment, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "comment/saveCommentList",
+              params: id,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+
+    // 댓글 수정하기
+    updateComment: ({ rootGetters, dispatch, commit }, data) => {
+      const { pr_id, p_id, review } = data;
+      axios({
+        url: api.post.comment(),
+        method: "put",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          pr_id,
+          review,
+        },
+      })
+        .then(() => {
+          dispatch("resetCommentData");
+          dispatch("saveCommentList", p_id);
+          commit("SET_SUCCESS_POPUP_STATUS", true);
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            // 실패 팝업
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "comment/updateComment",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+
+    // 댓글 삭제
+    commentDelete: ({ commit, getters, rootGetters, dispatch }, id) => {
+      axios({
+        url: api.post.comment(),
+        method: "delete",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          pr_id: getters["getDeleteCommentId"],
+        },
+      })
+        .then(() => {
+          dispatch("resetCommentData");
+          dispatch("saveCommentList", id);
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            // 실패 팝업
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "comment/commentDelete",
               params: id,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });

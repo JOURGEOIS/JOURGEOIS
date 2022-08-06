@@ -36,7 +36,7 @@ const store = useStore();
 const props = defineProps<{
   data: {
     isLiked: number;
-    p_id: number;
+    postId: number;
   };
 }>();
 
@@ -53,7 +53,7 @@ const clickLike = () => {
       // uid:
     },
     data: {
-      p_id: props.data.p_id,
+      postId: props.data.postId,
     },
   })
     .then((res) => {

@@ -146,7 +146,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
-          p_id: params.feedId,
+          postId: params.feedId,
         },
       })
         .then((res) => {

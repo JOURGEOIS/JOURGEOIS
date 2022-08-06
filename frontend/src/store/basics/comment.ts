@@ -123,7 +123,7 @@ export const comment: Module<Comment, RootState> = {
 
     // 댓글 작성
     createComment: ({ rootGetters, dispatch, commit }, data) => {
-      const { p_id } = data;
+      const { postId } = data;
       axios({
         url: api.post.comment(),
         method: "post",
@@ -134,7 +134,7 @@ export const comment: Module<Comment, RootState> = {
       })
         .then(() => {
           dispatch("resetCommentData");
-          dispatch("saveCommentList", p_id);
+          dispatch("saveCommentList", postId);
         })
         .catch((error) => {
           if (error.response.status !== 401) {
@@ -161,7 +161,7 @@ export const comment: Module<Comment, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
-          p_id: id,
+          postId: id,
           asc: getters["getCommentSort"],
           page: getters["getCommentPage"],
         },
@@ -188,7 +188,7 @@ export const comment: Module<Comment, RootState> = {
 
     // 댓글 수정하기
     updateComment: ({ rootGetters, dispatch, commit }, data) => {
-      const { pr_id, p_id, review } = data;
+      const { pr_id, postId, review } = data;
       axios({
         url: api.post.comment(),
         method: "put",
@@ -202,7 +202,7 @@ export const comment: Module<Comment, RootState> = {
       })
         .then(() => {
           dispatch("resetCommentData");
-          dispatch("saveCommentList", p_id);
+          dispatch("saveCommentList", postId);
           commit("SET_SUCCESS_POPUP_STATUS", true);
         })
         .catch((error) => {

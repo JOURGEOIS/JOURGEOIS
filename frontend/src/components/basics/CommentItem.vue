@@ -144,7 +144,7 @@ const submitUpdate = () => {
     // 제출
     const data = {
       pr_id: commentId.value,
-      p_id: props.pageId,
+      postId: props.pageId,
       review: commentInputValue.value,
     };
     store.dispatch("comment/updateComment", data);

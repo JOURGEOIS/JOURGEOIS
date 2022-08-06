@@ -65,7 +65,7 @@ const setSearchFilter = () => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   store.dispatch("cocktailSearch/submitSearchFilter");
-  store.dispatch("searchResult/setSearchFilter");
+  setSearchFilter();
   setTimeout(() => {
     setSearchFilter();
   }, 1000);

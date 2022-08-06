@@ -131,12 +131,12 @@ const routes: any[] = [
     component: () => import("@/views/TheLikedUserListView.vue"),
   },
 
-  // // 뉴스피드 리스트
-  // {
-  //   path: "/feeds",
-  //   name: "",
-  //   component: () => import(""),
-  // },
+  // 뉴스피드 리스트
+  {
+    path: "/feeds",
+    name: "TheFeedsListView",
+    component: () => import("@/views/TheFeedsListView.vue"),
+  },
 
   // 뉴스피드 상세 페이지 (커칵, 일반 )
   {
@@ -145,7 +145,7 @@ const routes: any[] = [
     component: () => import("@/views/TheCommunityDescView.vue"),
   },
 
-  // 뉴스피드 상세 페이지 form
+  // 뉴스피드 게시글 form
   {
     path: "/feeds/form",
     name: "TheCommunityFormView",

@@ -8,8 +8,10 @@ export interface cocktailReviewData {
 }
 
 export interface CocktailReviewState {
+  // 현재 칵테일에 달린 리뷰
   currentCocktailReview: cocktailReviewData[]
   reviewCocktailPage: number
+  // 모달
   deleteModalStatus: boolean
   reviewChangeSuccess: boolean
 }
@@ -18,16 +20,21 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
   namespaced: true,
 
   state: {
+    // 현재 칵테일에 달린 리뷰
     currentCocktailReview: [],
     reviewCocktailPage: 0,
+    // 모달
     deleteModalStatus: false,
     reviewChangeSuccess: false,
   },
+
   getters: {
+    // 현재 칵테일에 달린 리뷰 정보
     getCurrentCocktailReview: (state) => {
       return state.currentCocktailReview
     },
     getReviewCocktailPage: (state) => state.reviewCocktailPage,
+    // 모달
     getDeleteModalStatus: (state) => {
       return state.deleteModalStatus
     },
@@ -36,26 +43,32 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       return state.reviewChangeSuccess
     },
   },
+
   mutations: {
-    SET_CURRENT_COCKTAIL_REVIEW: (state, value: cocktailReviewData[]) => {
-      state.currentCocktailReview.push(...value)
+    // 현재 칵테일에 달린 리뷰 저장
+    SET_CURRENT_COCKTAIL_REVIEW: (state, newReviews: cocktailReviewData[]) => {
+      newReviews.forEach((newReview) => {
+        state.currentCocktailReview.push(newReview)
+      })
     },
     SET_REVIEW_COCKTAIL_PAGE: (state, value) => {
       state.reviewCocktailPage = value
     },
+    // 리뷰 리스트 리셋
     RESET_CURRENT_COCKTAIL_REVIEW: (state) => {
       state.currentCocktailReview = []
     },
+    // 모달
     SET_DELETE_MODAL: (state, value) => {
       state.deleteModalStatus = value
     },
     SET_REVIEW_SUCCESS: (state, value) => {
-      console.log('5', value)
       state.reviewChangeSuccess = value
     },
   },
 
   actions: {
+    // 후기 불러오기
     getCocktailReview: ({ commit, getters }, cocktailId: number) => {
       axios({
         url: api.cocktail.cocktailReview(),
@@ -67,23 +80,23 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       })
         .then((res) => {
           console.log('data: ', res.data)
-          commit('SET_REVIEW_COCKTAIL_PAGE', getters.reviewCocktailPage + 1)
-          // 최대 10개 리뷰 정보 리스트에 추가
-          commit('SET_CURRENT_COCKTAIL_REVIEW', res.data)
+          const newCocktailReview = res.data;
+          commit('SET_CURRENT_COCKTAIL_REVIEW', newCocktailReview)
+          const page = getters.getReviewCocktailPage
+          commit('SET_REVIEW_COCKTAIL_PAGE', page + 1)
         })
         .catch((err) => {
           console.log(err.response)
         })
     },
+    // 후기 생성
     createCocktailReview: (
       { commit, dispatch, rootGetters, getters },
       { cocktailId, comment },
     ) => {
       const userId = rootGetters['personalInfo/getUserInfoUserId']
       const reviewData = { userId, cocktailId, comment }
-      console.log(reviewData.userId)
-      console.log(reviewData.cocktailId)
-      console.log(reviewData.comment)
+
       axios({
         url: api.cocktail.cocktailReview(),
         method: 'POST',
@@ -100,6 +113,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log(err.res)
         })
     },
+    // 후기 수정
     updateCocktailReview: (
       { commit, dispatch },
       { cocktailId, commentId, comment },
@@ -128,6 +142,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log('에러')
         })
     },
+    // 후기 삭제
     deleteCocktailReview: (
       { commit, dispatch, rootGetters },
       { cocktailId, commentId },

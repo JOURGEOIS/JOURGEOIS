@@ -12,13 +12,13 @@ import axios from "axios";
 import { computed, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 
-const store = useStore()
+const store = useStore();
 
 // 칵테일 id
 const cocktailData = computed(
-  () => store.getters['cocktailDesc/getCurrentCocktailData'],
-)
-const cocktailId = Number(cocktailData.value.id)
+  () => store.getters["cocktailDesc/getCurrentCocktailData"]
+);
+const cocktailId = Number(cocktailData.value.id);
 
 // 칵테일 후기 정보 불러오기
 const cocktailReviewData = computed(

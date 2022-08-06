@@ -6,7 +6,7 @@
       :class="commentErrorClass"
       type="text"
       maxlength="200"
-      v-model="commentInputValue"
+      v-model.trim="commentInputValue"
       placeholder="댓글 추가..."
     />
     <button class="comment-button" :disabled="commentDisabled">
@@ -132,7 +132,7 @@ const submitCommentForm = () => {
 
 .comment-error {
   align-self: flex-start;
-  margin-top: 8px;
+  margin-top: -36px;
   margin-left: 40px;
   color: $danger-color;
   @include font($fs-md, $fw-regular);

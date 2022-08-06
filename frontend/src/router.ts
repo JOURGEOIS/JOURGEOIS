@@ -138,19 +138,19 @@ const routes: any[] = [
   //   component: () => import(""),
   // },
 
-  // // 뉴스피드 상세 페이지 (커칵, 일반 )
-  // {
-  //   path: "/feeds/:feedId",
-  //   name: "",
-  //   component: () => import(""),
-  // },
+  // 뉴스피드 상세 페이지 (커칵, 일반 )
+  {
+    path: "/feeds/:feedId",
+    name: "TheCommunityDescView",
+    component: () => import("@/views/TheCommunityDescView.vue"),
+  },
 
-  // // 뉴스피드 상세 페이지 form
-  // {
-  //   path: "feeds/form",
-  //   name: "",
-  //   component: () => import(""),
-  // },
+  // 뉴스피드 상세 페이지 form
+  {
+    path: "/feeds/form",
+    name: "TheCommunityFormView",
+    component: () => import("@/views/TheCommunityFormView.vue"),
+  },
 ];
 
 const router = createRouter({

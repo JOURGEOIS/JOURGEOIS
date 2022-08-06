@@ -22,10 +22,6 @@ import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,9 +29,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -55,7 +48,6 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final S3Util s3Util;
     private final String s3Url;
-
     private final SocialLoginConfigUtils socialLoginConfigUtils;
 
 
@@ -164,7 +156,7 @@ public class MemberService {
         System.out.println("googleLoginDTO.getSub() : "+googleLoginDTO.getSub());
 
         // DB에 있는 sub(password)와 들어온 sub와 일치하는 지 확인
-        if(member.getPassword().equals(googleLoginDTO.getSub())){
+        if(member.getSSOId().equals(googleLoginDTO.getSub())){
             return userDetails;
         }
         else {
@@ -174,8 +166,8 @@ public class MemberService {
 
     public Member signUpGoogleUser(GoogleLoginDTO gDTO){
         String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now());
-        Member m = Member.builder().uid(Long.parseLong(gDTO.getSub())).email(gDTO.getEmail()).name(gDTO.getName())
-                .nickname("유저"+gDTO.getSub().substring(3,10) + date).profileImg("profile/default/1.png").build();
+        Member m = Member.builder().email(gDTO.getEmail()).name(gDTO.getName()).SSOId(gDTO.getSub()).password("1q2w3e4r")
+                .nickname("유저" + date + Math.round((Math.random() * 100000))).profileImg("profile/default/1.png").build();
         try{
             memberRepository.save(m);
             memberRepository.flush();
@@ -186,28 +178,29 @@ public class MemberService {
             return null;
         }
     }
+    public UserDetails loginSocialUser(Map<String, Object> socialUserInfo, String domain){
+        String email = (String) socialUserInfo.get("email");
+        String id = (String) socialUserInfo.get("id");
 
-    public UserDetails loginUser(Map<String, Object> kakaoUserInfo){
-        String email = (String) kakaoUserInfo.get("email");
-        Long id = (Long) kakaoUserInfo.get("id");
+        System.out.println("=============================");
+        System.out.println("[loginSocialUser] 도메인명 : " + domain + " 이메일 : " + email + " 아이디 : " + id);
+        System.out.println("=============================");
 
-        System.out.println("KAKAO EMAIL : " + email);
         Member member = memberRepository.findByEmail(email).orElse(null) ;
 
-        System.out.println(" ㅇ아이니ㅣㅣ여기 인가 ?");
         // 찾는 멤버가 없으면 리턴
         if(member == null){
-            member = signUpKakaoUser(email, id);
-            System.out.println("멤버는 null 값 임니다 ");
+            member = signUpSocialUser(email, id);
         }
 
+        System.out.println("member uid : " + member.getUid());
 
         UserDetails userDetails = myUserDetailsService.loadUserByUsername(member.getUid().toString());
-
-        System.out.println("member.getPassword() : "+member.getPassword());
-        System.out.println("kakao id : "+member.getPassword());
-        // DB에 있는 sub(password)와 들어온 sub와 일치하는 지 확인
-        if(member.getPassword().equals(id.toString())){
+        System.out.println(userDetails.getUsername());
+        System.out.println(domain+" SSOId : " + id);
+        System.out.println("member.getSSOId : " + member.getSSOId());
+        // DB에 있는 sso id와 들어온 sub와 일치하는 지 확인
+        if(member.getSSOId().equals(id)){
             System.out.println("여ㅣ서 리턴");
             return userDetails;
         }
@@ -216,16 +209,21 @@ public class MemberService {
         }
     }
 
-    public Member signUpKakaoUser(String email, Long id){
-        String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now());
+    public Member signUpSocialUser(String email, String id){
+        System.out.println("=============================");
+        System.out.println("[SignUpSocialUser] : "+ email.split("/")[0] + "로 가입된 " + id + " 사용자가 없어 회원가입 절차로 넘어갑니다.");
+        System.out.println("=============================");
 
-        Member m = Member.builder().email(email).uid(id)
-                .profileImg("profile/default/1.png").nickname("유저" + date + Math.random() * 10000).build();
+        String date = DateTimeFormatter.ofPattern("yyMMdd").format(LocalDate.now());
+
+        // 유저 이름은 난수 생성. yyMMdd+ 0 < n < 100000 사이의 값을 더해 만들어짐
+        Member m = Member.builder().email(email).SSOId(id).password("1q2w3e4r")
+                .profileImg("profile/default/1.png").nickname("유저" + date + Math.round((Math.random() * 100000))).build();
         try{
             memberRepository.save(m);
             memberRepository.flush();
 
-            return memberRepository.findByEmail(m.getEmail()).orElseThrow(()-> new Exception("signUpKakaoUser"));
+            return memberRepository.findByEmail(m.getEmail()).orElseThrow(()-> new Exception("signUpSocialUser"));
         } catch(Exception e) {
             e.printStackTrace();
             return null;
@@ -242,14 +240,16 @@ public class MemberService {
         if(domain == "kakao") reqURL = "https://kauth.kakao.com/oauth/token";
         else if(domain == "naver") reqURL = "https://nid.naver.com/oauth2.0/token";
 
+        System.out.println("=======================");
         System.out.println("Now Domain : " + domain);
+        System.out.println("Now Code : " + code);
 
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("GET");
             conn.setDoOutput(true);
 
             //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
@@ -265,8 +265,8 @@ public class MemberService {
             } else if (domain == "naver"){
                 sb.append("grant_type=authorization_code");
                 sb.append("&client_id=" + socialLoginConfigUtils.getNaverClientId());
-                sb.append("&client_secret=" + socialLoginConfigUtils.getKakaoClientSecret());
-//                sb.append("&state=" + "state");
+                sb.append("&client_secret=" + socialLoginConfigUtils.getNaverClientSecret());
+                sb.append("&state=" + "9kgsGTfH4j7IyAkg");
                 sb.append("&code=" + code);
             }
 
@@ -295,6 +295,7 @@ public class MemberService {
 
             System.out.println("access_token : " + access_Token);
             System.out.println("refresh_token : " + refresh_Token);
+            System.out.println("=======================");
 
             br.close();
             bw.close();
@@ -307,8 +308,12 @@ public class MemberService {
 
     }
 
-    public Map<String, Object> getKakaoUserInfo(String accessToken){
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
+    public Map<String, Object> getSocialUserInfo(String accessToken, String domain){
+        String reqURL = "";
+        if(domain == "kakao") reqURL = "https://kapi.kakao.com/v2/user/me";
+        if(domain == "naver") reqURL = "https://openapi.naver.com/v1/nid/me";
+
+        System.out.println("[getSocialUserInfo] Now Domain : " + domain);
         Map<String, Object> res = new HashMap<>();
 
         try {
@@ -335,21 +340,54 @@ public class MemberService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            Long id = element.getAsJsonObject().get("id").getAsLong();
-            boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-            String email = "";
-            if(hasEmail){
-                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+            if(domain == "kakao") {
+                String id = element.getAsJsonObject().get("id").getAsString();
+                boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
+                String email = "";
+                if (hasEmail) {
+                    email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+                }
+
+                // kakao 로그인은 앞에 kakao/ 를 붙임
+                email = "kakao/" + email;
+
+                System.out.println("getKakaoUserInfo id : " + id);
+                System.out.println("getKakaoUserInfo email : " + email);
+
+                res.put("id", id);
+                res.put("email", email);
             }
+            else if(domain == "naver"){
+                String resultCode = element.getAsJsonObject().get("resultcode").getAsString();
+                String message = element.getAsJsonObject().get("message").getAsString();
 
-            // kakao 로그인은 앞에 kakao/ 를 붙임
-            email = "kakao/" + email;
+                System.out.println("naver 도메인 들어옴");
+                System.out.println("resultCode : "+ resultCode);
+                res.put("message", message);
 
-            System.out.println("getKakaoUserInfo id : " + id);
-            System.out.println("getKakaoUserInfo email : " + email);
+                if(resultCode == "00" || message == "success" || true){
+                    String id = element.getAsJsonObject().get("response").getAsJsonObject().get("id").getAsString();
+                    String profileImage = element.getAsJsonObject().get("response").getAsJsonObject().get("profile_image").getAsString();
+                    String email = element.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();
+                    String name = element.getAsJsonObject().get("response").getAsJsonObject().get("name").getAsString();
 
-            res.put("id", id);
-            res.put("email", email);
+//                    오류발생 이유 무엇 ?
+//                    String resp = element.getAsJsonObject().get("response").getAsString();
+//                    System.out.println("response : " + resp);
+
+                    email = "naver/" + email;
+
+                    System.out.println("id" + id);
+                    System.out.println("profileImage" + profileImage);
+                    System.out.println("name" + name);
+                    System.out.println("email" + email);
+
+                    res.put("id", id);
+                    res.put("profileImage", profileImage);
+                    res.put("email", email);
+                    res.put("name", name);
+                }
+            }
 
             br.close();
         } catch (Exception e){

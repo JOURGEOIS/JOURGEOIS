@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostDTO {
     // 게시글 공통
-    private Long p_id;
+    private Long postId;
     private Long uid;
     private MultipartFile img;
     private String imgLink;
@@ -94,12 +94,12 @@ public class PostDTO {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-    public Long getP_id() {
-        return p_id;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setP_id(Long postId) {
-        this.p_id = p_id;
+    public void setPid(Long postId) {
+        this.postId = postId;
     }
 
     public Long getUid() {

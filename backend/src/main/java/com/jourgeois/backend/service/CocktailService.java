@@ -236,7 +236,7 @@ public class CocktailService {
         result.forEach((data) -> {
             PostBookmarkId key = new PostBookmarkId(uid, data.getPostId());
             PostDTO post = PostDTO.builder()
-                    .p_id(data.getPostId())
+                    .postId(data.getPostId())
                     .imgLink(s3Url + data.getPostImg())
                     .description(data.getPostDescription())
                     .lastUpdateTime(data.getPostLastUpdateTime())

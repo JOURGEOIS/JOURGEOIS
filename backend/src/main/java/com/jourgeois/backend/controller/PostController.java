@@ -227,7 +227,7 @@ public class PostController {
     }
 
     @GetMapping("/auth/review")
-    public ResponseEntity getReviewAll(HttpServletRequest request, @RequestParam(value = "p_id") Long p_id,
+    public ResponseEntity getReviewAll(HttpServletRequest request, @RequestParam(value = "postId") Long p_id,
                                         @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                         @PageableDefault(size=10, page = 0) Pageable pageable){
         System.out.println("p_id: " + p_id);
@@ -254,13 +254,13 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             bookmark.put("uid", uid);
-            if(postService.checkPostId(bookmark.get("p_id"))) {
+            if(postService.checkPostId(bookmark.get("postId"))) {
                 if (postService.pushBookmark(bookmark)) {
                     data.put("status", 1);
                 } else {
                     data.put("status", 0);
                 }
-                data.put("count", postService.countPostBookmark(bookmark.get("p_id")));
+                data.put("count", postService.countPostBookmark(bookmark.get("postId")));
                 return new ResponseEntity<>(data, HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("Not Found" ,  HttpStatus.NOT_FOUND);
@@ -272,7 +272,7 @@ public class PostController {
     }
 
     @GetMapping(value="/auth/like/list")
-    public ResponseEntity getLikeList(HttpServletRequest request, @RequestParam(value = "p_id") Long p_id,
+    public ResponseEntity getLikeList(HttpServletRequest request, @RequestParam(value = "postId") Long p_id,
                             @PageableDefault(size=10, page=0) Pageable pageable){
         Map<String, String> data = new HashMap<>();
         try {
@@ -286,7 +286,7 @@ public class PostController {
     }
 
     @GetMapping(value="/auth")
-    public ResponseEntity readCustomCocktail(HttpServletRequest request, @RequestParam(value="p_id") Long p_id){
+    public ResponseEntity readCustomCocktail(HttpServletRequest request, @RequestParam(value="postId") Long p_id){
         Map<String, String> data = new HashMap<>();
         try {
             Long uid = Long.valueOf((String) request.getAttribute("uid"));

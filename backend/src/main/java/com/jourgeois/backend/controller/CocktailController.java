@@ -169,13 +169,13 @@ public class CocktailController {
             Map<String, Long> data = new HashMap<>();
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             bookmark.put("uid", uid);
-            if(cocktailService.checkCocktailUid(bookmark.get("c_id"))){
+            if(cocktailService.checkCocktailUid(bookmark.get("cocktailId"))){
                 if(cocktailService.pushBookmark(bookmark)){
                     data.put("status", 1L);
                 }else{
                     data.put("status", 0L);
                 }
-                data.put("count", cocktailService.countCocktailBookmark(new Cocktail(bookmark.get("c_id"))));
+                data.put("count", cocktailService.countCocktailBookmark(new Cocktail(bookmark.get("cocktailId"))));
                 return new ResponseEntity<>(data, HttpStatus.CREATED);
             }else{
                 return new ResponseEntity<>("Not Found" ,  HttpStatus.NOT_FOUND);
@@ -187,7 +187,7 @@ public class CocktailController {
     }
 
     @GetMapping(value="/auth/bookmarklist")
-    public ResponseEntity getBookmarkList(HttpServletRequest request, @RequestParam(value = "c_id") Long c_id,
+    public ResponseEntity getBookmarkList(HttpServletRequest request, @RequestParam(value = "cocktailId") Long c_id,
                                 @PageableDefault(size=10, page=0) Pageable pageable){
         Map<String, String> data = new HashMap<>();
         try {

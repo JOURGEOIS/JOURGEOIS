@@ -14,8 +14,10 @@
       <template #comment>777</template>
     </like-comment-share>
     <!-- 댓글 부분 -->
-    <comment-form :page-id="customCocktailId"></comment-form>
-    <comment-list :page-id="customCocktailId"></comment-list>
+    <section class="the-custom-cocktail-desc-comment">
+      <comment-form :page-id="customCocktailId"></comment-form>
+      <comment-list :page-id="customCocktailId"></comment-list>
+    </section>
   </div>
   <!-- navbar -->
   <nav-bar></nav-bar>
@@ -78,5 +80,11 @@ console.log(customCocktailId);
   justify-content: flex-start;
   align-items: center;
   @include accountLayOut;
+
+  .the-custom-cocktail-desc-comment {
+    @include flex(column);
+    gap: 40px;
+    width: 100%;
+  }
 }
 </style>

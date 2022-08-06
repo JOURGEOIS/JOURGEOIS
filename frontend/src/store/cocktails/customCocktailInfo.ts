@@ -137,7 +137,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     // * 커스텀 칵테일 세부 페이지 정보
     setCustomCocktailDetail: (
       { commit, rootGetters, dispatch },
-      data: { customCocktailId: number }
+      params: { customCocktailId: number }
     ) => {
       axios({
         url: api.post.postCocktail(),
@@ -146,7 +146,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
-          p_id: data.customCocktailId,
+          p_id: params.customCocktailId,
         },
       })
         .then((res) => {
@@ -159,9 +159,9 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "customCocktailInfo/setCustomCocktailDetail",
-              data,
+              params,
             };
-            dispatch("personalInfo/requestRefreshToken", data, {
+            dispatch("personalInfo/requestRefreshToken", obj, {
               root: true,
             });
           }
@@ -173,7 +173,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     },
 
     // * 커스텀칵테일 게시물 제거
-    removeCustomCocktailPost: ({ rootGetters }, { postId }) => {
+    removeCustomCocktailPost: ({ dispatch, rootGetters }, params) => {
+      const { postId } = params;
       axios({
         url: api.post.postCocktail(),
         method: "DELETE",
@@ -191,7 +192,19 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           }
         })
         .catch((err) => {
-          console.error(err.response);
+          if (err.response.status !== 401) {
+            alert("에러 떴다!");
+            console.error(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "customCocktailInfo/removeCustomCocktailPost",
+              params,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, {
+              root: true,
+            });
+          }
         });
     },
   },

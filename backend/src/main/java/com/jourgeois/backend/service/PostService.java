@@ -114,9 +114,9 @@ public class PostService {
     @Transactional
     public Long editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
         Long postId = postDTO.getP_id();
-
         Member member = new Member();
         member.setUid(postDTO.getUid());
+
         // 커스텀 칵테일 제목이 Empty라면 일반 게시물이라는 의미
         // postDTO.getTitle().isEmpty() 가끔씩 됨... 이유를 알고 싶다.
         if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
@@ -124,10 +124,12 @@ public class PostService {
             targetPost.setDescription(postDTO.getDescription());
 
             // post 이미지 업로드
-            String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
+            if(postDTO.getImg() != null && !postDTO.getImg().getOriginalFilename().isEmpty()){
+                String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
+                targetPost.setImg(uploadURL);
+                s3Util.deleteFile(targetPost.getImg());
+            }
 
-            targetPost.setImg(uploadURL);
-            s3Util.deleteFile(targetPost.getImg());
             // post 저장
             return postRepository.save(targetPost).getId();
         }else{
@@ -140,10 +142,12 @@ public class PostService {
             targetCustomCocktail.setDescription(postDTO.getDescription());
 
             // post 이미지 업로드
-            String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
+            if(postDTO.getImg() != null && !postDTO.getImg().getOriginalFilename().isEmpty()){
+                String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
+                targetCustomCocktail.setImg(uploadURL);
+                s3Util.deleteFile(targetCustomCocktail.getImg());
+            }
 
-            targetCustomCocktail.setImg(uploadURL);
-            s3Util.deleteFile(targetCustomCocktail.getImg());
             targetCustomCocktail.setTitle(postDTO.getTitle().trim());
             targetCustomCocktail.setRecipe(postDTO.getRecipe().trim());
             targetCustomCocktail.setIngredients(Arrays.toString(postDTO.getIngredients()).replace("[","").replace("]",""));

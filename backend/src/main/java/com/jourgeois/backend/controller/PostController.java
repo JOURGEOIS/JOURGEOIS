@@ -83,11 +83,11 @@ public class PostController {
 
         Map<String, String> result = new HashMap<>();
 
-        // 사진 필수 입력
-        if(post.getImg() == null || post.getImg().isEmpty()) {
-            result.put("fail", "이미지를 등록해주세요.");
-            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
-        }
+//        // 사진 필수 입력
+//        if(post.getImg() == null || post.getImg().isEmpty()) {
+//            result.put("fail", "이미지를 등록해주세요.");
+//            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+//        }
 
         // 공백 처리
         if(post.getDescription() == null || post.getDescription().trim().isEmpty()) {

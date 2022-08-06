@@ -5,6 +5,12 @@ import api from "../../api/api";
 import { checkBadWord } from "../../functions/checkText";
 import router from "../../router";
 
+interface customCocktail {
+  title: string;
+  description: string;
+  imgLink: string;
+}
+
 // ! main State
 export interface CustomCocktailState {
   // 원본 칵테일 번호
@@ -30,6 +36,9 @@ export interface CustomCocktailState {
 
   // 성공 메시지
   successMessage: string;
+
+  // 커스텀 칵테일
+  customCocktailData: customCocktail;
 }
 
 export const customCocktail: Module<CustomCocktailState, RootState> = {
@@ -59,6 +68,13 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
 
     // 성공 메시지
     successMessage: "",
+
+    // 커스텀 칵테일 정보
+    customCocktailData: {
+      title: "",
+      description: "",
+      imgLink: "",
+    },
   },
 
   getters: {
@@ -86,6 +102,9 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
 
     // 성공 메시지
     getSuccessMessage: (state) => state.successMessage,
+
+    // 커스텀 칵테일 세팅
+    getCustomCocktailData: (state) => state.customCocktailData,
   },
 
   mutations: {
@@ -133,6 +152,11 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
     // 성공 메시지
     SET_SUCCESS_MESSAGE: (state, value: string) => {
       state.successMessage = value;
+    },
+
+    // 커스텀 칵테일 정보
+    SET_CUSTOM_COCKTAIL_DATA: (state, value: customCocktail) => {
+      state.customCocktailData = value;
     },
   },
 
@@ -382,6 +406,36 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
         });
+    },
+    // 커스텀 칵테일 db 불러오기
+    getCustomCocktailData: ({ rootGetters, commit }, id) => {
+      axios({
+        url: api.post.postCocktail(),
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          p_id: id,
+        },
+      }).then((response) => {
+        const data = response.data;
+        const ingredients = data.materials.map(
+          (item: string) => item.split(",")[0]
+        );
+        const recipe = data.recipe.split(" <> ");
+
+        const customCocktailData = {
+          title: data.title,
+          description: data.description,
+          imgLink: data.imgLink,
+        };
+
+        commit("SET_ORIGINAL_COCKTAIL_NAME", data.baseCocktailName);
+        commit("SET_ORIGINAL_COCKTAIL_ID", data.baseCocktail);
+        commit("SET_ORIGINAL_COCKTAIL_INGREDIENTS", ingredients);
+        commit("SET_ORIGINAL_COCKTAIL_RECIPE", recipe);
+        commit("SET_CUSTOM_COCKTAIL_DATA", customCocktailData);
+      });
     },
   },
 };

@@ -113,7 +113,7 @@ public class PostService {
 
     @Transactional
     public Long editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
-        Long postId = postDTO.getPostId();
+        Long postId = postDTO.getP_id();
 
         Member member = new Member();
         member.setUid(postDTO.getUid());
@@ -157,7 +157,7 @@ public class PostService {
     public void deletePost(Map<String, Long> postDeleteReq) throws NoSuchElementException, SdkClientException {
         Member member = new Member();
         member.setUid(postDeleteReq.get("uid"));
-        postRepository.findByIdAndMember(postDeleteReq.get("postId"), member)
+        postRepository.findByIdAndMember(postDeleteReq.get("p_id"), member)
                 .ifPresentOrElse((targetPost) -> {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
@@ -288,7 +288,7 @@ public class PostService {
 
     public PostInfoDTO readCustomCocktail(Long p_id, Long uid){
         Post post = postRepository.findById(p_id).orElseThrow();
-        PostDTO postDTO = PostDTO.builder().postId(post.getId())
+        PostDTO postDTO = PostDTO.builder().p_id(post.getId())
                 .imgLink(s3Url + post.getImg())
                 .description(post.getDescription())
                 .createTime(post.getCreateTime())
@@ -339,7 +339,7 @@ public class PostService {
                     .createTime(feed.getCreateTime())
                     .updateTime(feed.getUpdateTime())
                     .isUpdated(feed.getIsUpdated())
-                    .pid(feed.getPid())
+                    .p_id(feed.getPid())
                     .type(feed.getType())
                     .writer(feed.getWriter())
                     .nickname(feed.getNickname())

@@ -39,6 +39,8 @@
 <script setup lang="ts">
 import { computed, ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const store = useStore();
 
 // 애니메이션 상태
@@ -57,14 +59,15 @@ const clickXIcon = () => {
 
 // 슈퍼커스텀칵테일 업로드
 const createCustomCocktail = () => {
+  store.dispatch("createFeed/toggleCreateFeedModal", false);
   alert("슈커칵 게시물 작성 화면으로 이동");
   // router.push({ name: ""})
 };
 
 // 일반게시물 업로드
 const createNormal = () => {
-  alert("일반 게시물 작성 화면으로 이동");
-  // router.push({ name: ""})
+  store.dispatch("createFeed/toggleCreateFeedModal", false);
+  router.push({ name: "TheCommunityFormView"})
 };
 </script>
 

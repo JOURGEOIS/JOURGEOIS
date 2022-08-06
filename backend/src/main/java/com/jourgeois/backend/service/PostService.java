@@ -56,9 +56,7 @@ public class PostService {
     }
 
     @Transactional
-    public void postPost(PostDTO postDTO) throws IOException, NoSuchElementException {
-
-
+    public Long postPost(PostDTO postDTO) throws IOException, NoSuchElementException {
         Long writerId = postDTO.getUid();
 
         Member member = memberRepository.findById(writerId)
@@ -74,7 +72,7 @@ public class PostService {
             post.setImg(uploadURL);
 
             // post 저장
-            postRepository.save(post);
+            return postRepository.save(post).getId();
         }else{
             // 제목, 커스텀 칵테일의 경우 재료, 레시피 공백 예외 처리
             if(postDTO.getTitle().trim().isEmpty() || postDTO.getIngredients() == null || postDTO.getIngredients().length == 0 || postDTO.getRecipe().trim().isEmpty()){
@@ -82,8 +80,8 @@ public class PostService {
             }
 
             CustomCocktail cc = new CustomCocktail();
-            cc.setTitle(postDTO.getTitle());
-            cc.setDescription(postDTO.getDescription());
+            cc.setTitle(postDTO.getTitle().trim());
+            cc.setDescription(postDTO.getDescription().trim());
             cc.setMember(member);
             cc.setIngredients(Arrays.toString(postDTO.getIngredients()).replace("[","").replace("]",""));
             cc.setRecipe(postDTO.getRecipe());
@@ -102,8 +100,9 @@ public class PostService {
                                 .ifPresentOrElse(data -> {new Exception("BaseCocktail  save Error");},
                                         ()->{customCocktailToCocktailRepository.save(new CustomCocktailToCocktail(cocktail, ori));});
             }
-        }
 
+            return cocktail.getId();
+        }
     }
 
     public String postImageLocalUpload(PostDTO postDTO) throws IOException {
@@ -113,7 +112,7 @@ public class PostService {
     }
 
     @Transactional
-    public void editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
+    public Long editPost(PostDTO postDTO) throws IOException, NoSuchElementException {
         Long postId = postDTO.getPostId();
 
         Member member = new Member();
@@ -130,7 +129,7 @@ public class PostService {
             targetPost.setImg(uploadURL);
             s3Util.deleteFile(targetPost.getImg());
             // post 저장
-            postRepository.save(targetPost);
+            return postRepository.save(targetPost).getId();
         }else{
             // 커스텀 칵테일의 경우 재료, 레시피 공백 예외 처리
             if(postDTO.getTitle().trim().isEmpty() || postDTO.getIngredients() == null || postDTO.getIngredients().length == 0 || postDTO.getRecipe().trim().isEmpty()){
@@ -145,11 +144,11 @@ public class PostService {
 
             targetCustomCocktail.setImg(uploadURL);
             s3Util.deleteFile(targetCustomCocktail.getImg());
-            targetCustomCocktail.setTitle(postDTO.getTitle());
-            targetCustomCocktail.setRecipe(postDTO.getRecipe());
+            targetCustomCocktail.setTitle(postDTO.getTitle().trim());
+            targetCustomCocktail.setRecipe(postDTO.getRecipe().trim());
             targetCustomCocktail.setIngredients(Arrays.toString(postDTO.getIngredients()).replace("[","").replace("]",""));
             // post 저장
-            postRepository.save(targetCustomCocktail);
+            return postRepository.save(targetCustomCocktail).getId();
         }
 
     }

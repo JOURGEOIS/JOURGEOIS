@@ -39,17 +39,22 @@ public class PostController {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
+
+        // 사진 필수 입력
         if(post.getImg() == null || post.getImg().isEmpty()) {
             result.put("fail", "이미지를 등록해주세요.");
-            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
-        }else if(post.getType() != null && post.getType() == 1 && (post.getBaseCocktail() == null || post.getBaseCocktail().equals(null))){
-            result.put("fail", "Base Cocktail이 없습니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
 
         // 공백 처리
-        if(post.getTitle().trim().isEmpty()) {
-            result.put("fail", "제목을 입력해주세요");
+        if(post.getDescription() == null || post.getDescription().trim().isEmpty()) {
+            result.put("fail", "설명은 필수 입력 정보입니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
+        // 커스텀 칵테일의 경우 베이스 칵테일 필수 입력
+        if(post.getType() != null && post.getType() == 1 && (post.getBaseCocktail() == null || post.getBaseCocktail().equals(null))){
+            result.put("fail", "Base Cocktail이 없습니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
 
@@ -61,6 +66,9 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.CREATED);
         } catch(NumberFormatException e){
             result.put("fail", "uid의 형식이 다릅니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(IllegalArgumentException e){
+            result.put("fail", "커스텀 칵테일 필수 입력 정보(재료, 레시피)를 기입해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         } catch(IOException e) {
             result.put("fail", "파일 업로드 실패");
@@ -77,8 +85,15 @@ public class PostController {
 
         Map<String, String> result = new HashMap<>();
 
+        // 사진 필수 입력
         if(post.getImg() == null || post.getImg().isEmpty()) {
             result.put("fail", "이미지를 등록해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
+        // 공백 처리
+        if(post.getDescription() == null || post.getDescription().trim().isEmpty()) {
+            result.put("fail", "설명은 필수 입력 정보입니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
         
@@ -88,6 +103,9 @@ public class PostController {
             postService.editPost(post);
             result.put("success", "성공");
             return new ResponseEntity(result, HttpStatus.CREATED);
+        } catch(IllegalArgumentException e){
+            result.put("fail", "커스텀 칵테일 필수 입력 정보(재료, 레시피)를 기입해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
             result.put("fail", "파일 업로드 실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);

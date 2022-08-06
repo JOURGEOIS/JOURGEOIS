@@ -167,13 +167,16 @@ export const createFeed: Module<CreateFeedState, RootState> = {
           description,
         },
       })
-        .then(() => {
+        .then((res) => {
+          console.log(res)
           // 상세 페이지로 이동
           router.push({
-            name: "TheCommunityDescView"
+            name: "TheCommunityDescView",
+            params: { feedId: res.data }
           });
 
           // 성공 알림
+          console.log(res)
           commit("SET_SUCCESS_MESSAGE", "성공적으로 등록되었습니다");
           commit("SET_ALERT_STATUS", true);
         })

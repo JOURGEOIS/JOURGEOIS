@@ -1,6 +1,7 @@
 <template>
   <div class="cocktail-desc-review">
     <div class="cocktail-desc-review-profile-content">
+      <!-- 프로필 이미지 -->
       <div class="cocktail-desc-review-profile">
         <round-image
           :round-image="{
@@ -10,6 +11,7 @@
           }"
         ></round-image>
       </div>
+      <!-- 수정하지 않을 때 -->
       <div v-if="!isEditing" class="cocktail-desc-review-content">
         <div class="cocktail-decs-review-front">
           <div class="cocktail-desc-review-name-time">
@@ -69,6 +71,7 @@
           {{ data.comment }}
         </p>
       </div>
+      <!-- 수정 버튼 누르면 수정폼으로 변환됨. -->
       <form
         @submit.prevent=""
         v-else-if="isEditing"
@@ -113,6 +116,7 @@
           </failure-pop-up>
         </div>
       </form>
+      <!-- 수정이 완료되면 팝업 알림 -->
       <success-pop-up v-if="successPopUpStatus">
         성공적으로 변경되었습니다
       </success-pop-up>
@@ -172,6 +176,7 @@ const buttonColor = computed(() => {
   return "sub-blank";
 });
 
+// 칵테일 아이디 가져오기
 const cocktailData = computed(
   () => store.getters["cocktailDesc/getCurrentCocktailData"]
 );
@@ -240,7 +245,6 @@ const toggleSuccessPopUp = (value: boolean) => {
 
 watch(successPopUpStatus, () => {
   if (successPopUpStatus.value) {
-    console.log("dd");
     setTimeout(() => {
       toggleSuccessPopUp(false);
     }, 2000);
@@ -254,7 +258,6 @@ onMounted(() => {
 });
 
 const clickEditReview = () => {
-  console.log("실행중");
   // 유효성 검사
   const reviewCondition = checkBadWord(reviewInputValue.value);
   // 전달할 데이터
@@ -262,16 +265,14 @@ const clickEditReview = () => {
     cocktailId,
     commentId: props.data.commentId,
     comment: reviewInputValue.value,
-  };
-  console.log("data1", editData);
+  }
   // 제출
   if (reviewCondition) {
     reviewInputStyle.value = "error";
     occurredError.value = true;
     toggleFailPopUp(true);
   } else {
-    console.log("data2:", editData);
-    reviewEdit(editData);
+    reviewEdit(editData)
   }
 };
 const clickCancel = () => {
@@ -280,17 +281,14 @@ const clickCancel = () => {
 };
 
 // 후기 삭제
-
 const reviewDelete = (data: object) =>
   store.dispatch("cocktailReview/deleteCocktailReview", data);
 
 const commentId = props.data.commentId;
 
-// console.log(commentId)
 const clickDeleteReview = () => {
-  console.log("실행중");
-  reviewDelete({ cocktailId, commentId });
-};
+  reviewDelete({ cocktailId, commentId })
+}
 </script>
 
 <style scoped lang="scss">

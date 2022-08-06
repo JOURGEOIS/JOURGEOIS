@@ -9,8 +9,8 @@ export interface User {
 
 // 커스텀 칵테일만의 정보
 export interface CustomCocktailOnly {
-  uid: number | null; // 뭐지?
-  img: string | null; // 얘는 또 뭐지?
+  uid: number | null; // 유저 id
+  img: string | null; //
   postId: number; // 포스트 uid
   imgLink: string; // 칵테일 이미지
   description: string; // 칵테일 설명

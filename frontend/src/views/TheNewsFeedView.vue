@@ -17,7 +17,7 @@ import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import TheNewsFeedList from "@/components/feeds/TheNewsFeedList.vue";
 import { useStore } from "vuex";
-import { onBeforeMount, onUnmounted, onMounted, computed } from "vue";
+import { onBeforeMount, onBeforeUnmount, onMounted, computed } from "vue";
 const store = useStore();
 
 const handleScroll = (event: any) => {
@@ -28,6 +28,7 @@ const handleScroll = (event: any) => {
   store.dispatch("scroll/handleScroll", data);
 };
 
+// db 받아오기
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   store.dispatch("newsFeed/getNewsFeedListData");
@@ -37,12 +38,13 @@ onBeforeMount(() => {
 onMounted(() => {
   const scrollY = computed(() => store.getters["newsFeed/getNewsFeedScrollY"]);
   setTimeout(() => {
-    window.scrollTo(0, scrollY.value);
-  }, 1000);
+    window.scrollTo({ left: 0, top: scrollY.value, behavior: "smooth" });
+  }, 500);
 });
 
 // 스크롤 높이 저장
-onUnmounted(() => {
+onBeforeUnmount(() => {
+  console.log(window.scrollY);
   store.dispatch("newsFeed/setNewsFeedScrollY", window.scrollY);
   // store.dispatch("newsFeed/removeNewsFeedListData");
 });

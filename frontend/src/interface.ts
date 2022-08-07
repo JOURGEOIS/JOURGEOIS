@@ -63,4 +63,5 @@ export interface NewsFeed {
   isLiked: number; // 좋아요
   isSuperCustomCocktail: number;
   cocktailTitle: string;
+  postId: number;
 }

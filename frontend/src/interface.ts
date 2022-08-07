@@ -46,3 +46,21 @@ export interface CustomCocktail {
   customCocktail: CustomCocktailOnly;
   followerDTO: User;
 }
+
+export interface NewsFeed {
+  createTime: number[]; // 생성 시간
+  updateTime: number[]; // 수정 시간
+  type: string; // 타입
+  writer: number; // 작성자
+  nickname: string; // 닉네임
+  profileImg: string; // 프로필 이미지
+  postImg: string; // 게시한 사진
+  description: string; // 글 내용
+  reviewCount: number; // 댓글 수
+  likeCount: number; // 좋아요 수
+  baseCocktailId: number | null; // 베이스 칵테일
+  baseCocktailName: string | null; // 베이스 칵테일 이름
+  isLiked: number; // 좋아요
+  isSuperCustomCocktail: number;
+  cocktailTitle: string;
+}

@@ -71,7 +71,6 @@ public class SocialLoginConfigUtils {
     public String kakaoInitUrl(){
         Map<String, Object> params = new HashMap<>();
         params.put("redirect_uri", getKakaoRedirectUrl());
-        params.put("client_secret", getKakaoClientSecret());
         params.put("response_type", "code");
         params.put("scope", getKakaoAuthScope());
 

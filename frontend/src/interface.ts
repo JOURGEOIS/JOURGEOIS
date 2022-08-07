@@ -46,3 +46,25 @@ export interface CustomCocktail {
   customCocktail: CustomCocktailOnly;
   followerDTO: User;
 }
+
+// 구글 유저 정보
+export interface GoogleUser {
+  uid: number;
+  email: string;
+  name: string;
+  nickname: string;
+  profileImg: string;
+  profileLink: string | null;
+  introduce: string | null;
+}
+// 구글 토큰 정보
+export interface GoogleToken {
+  accessToken: string;
+  refreshToken: string
+}
+
+// 구글로그인 유저 상세정보
+export interface GoogleUserInfo {
+  userInfo: GoogleUser
+  token: GoogleToken
+}

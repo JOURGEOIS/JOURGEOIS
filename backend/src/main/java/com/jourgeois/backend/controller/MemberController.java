@@ -193,7 +193,7 @@ public class MemberController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping(value = "/login/kakao")

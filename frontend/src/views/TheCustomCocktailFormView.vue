@@ -16,22 +16,50 @@
       ></the-custom-cocktail-form>
     </section>
   </div>
+  <failure-pop-up v-if="errorStatus">
+    {{ errorMessage }}
+  </failure-pop-up>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCustomCocktailForm from "@/components/cocktails/TheCustomCocktailForm.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { useStore } from "vuex";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, computed, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 const store = useStore();
 
+const errorStatus = computed(
+  () => store.getters["customCocktail/getAlertStatus"]
+);
+
+const errorMessage = computed(
+  () => store.getters["customCocktail/getErrorMessage"]
+);
+
+// 시간제 모달
+watch(errorStatus, () => {
+  if (errorStatus.value) {
+    setTimeout(() => {
+      store.dispatch("customCocktail/changeAlertStatus", false);
+    }, 2000);
+  }
+});
+
+// 모달 초기화
 onBeforeMount(() => {
   store.dispatch(
     "customCocktail/getOriginalCocktailData",
     route.params.cocktailId
   );
+  store.dispatch("customCocktail/changeAlertStatus", false);
+});
+
+// vuex 초기화
+onUnmounted(() => {
+  store.dispatch("customCocktail/resetCocktailData");
 });
 </script>
 
@@ -40,6 +68,7 @@ onBeforeMount(() => {
   @include flex(column);
   justify-content: flex-start;
   align-items: center;
+  position: relative;
   @include accountLayOut;
 
   section {

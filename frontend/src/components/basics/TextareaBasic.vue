@@ -20,6 +20,7 @@
       @input="emitValue"
       autocapitalize="off"
       autocomplete="off"
+      class="textarea"
     ></textarea>
     <div
       class="textarea-icon"
@@ -46,7 +47,7 @@ export interface dataObject {
 
 const props = defineProps<{
   data: dataObject
-  textareaStyle: string
+  textareaStyle?: string
   modelValue: string
 }>()
 
@@ -62,8 +63,10 @@ const buttonVisibility = computed(() => {
 const textareaColor = computed(() => {
   if (props.textareaStyle === 'normal') {
     return 'normal-textarea'
-  } else {
+  } else if (props.textareaStyle === 'error') {
     return 'error-textarea'
+  } else {
+    return ''
   }
 })
 

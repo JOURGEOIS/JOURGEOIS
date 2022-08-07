@@ -46,11 +46,6 @@ public class PostController {
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         }
 
-        // 공백 처리
-        if(post.getDescription() == null || post.getDescription().trim().isEmpty()) {
-            result.put("fail", "설명은 필수 입력 정보입니다.");
-            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
-        }
 
         // 커스텀 칵테일의 경우 베이스 칵테일 필수 입력
         if(post.getType() != null && post.getType() == 1 && (post.getBaseCocktail() == null || post.getBaseCocktail().equals(null))){
@@ -66,7 +61,7 @@ public class PostController {
             result.put("fail", "uid의 형식이 다릅니다.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         } catch(IllegalArgumentException e){
-            result.put("fail", "커스텀 칵테일 필수 입력 정보(재료, 레시피)를 기입해주세요.");
+            result.put("fail", "필수 입력 정보를 기입해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         } catch(IOException e) {
             result.put("fail", "파일 업로드 실패");
@@ -83,18 +78,13 @@ public class PostController {
 
         Map<String, String> result = new HashMap<>();
 
-        // 공백 처리
-        if(post.getDescription() == null || post.getDescription().trim().isEmpty()) {
-            result.put("fail", "설명은 필수 입력 정보입니다.");
-            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
-        }
         
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
             return new ResponseEntity(postService.editPost(post), HttpStatus.CREATED);
         } catch(IllegalArgumentException e){
-            result.put("fail", "커스텀 칵테일 필수 입력 정보(재료, 레시피)를 기입해주세요.");
+            result.put("fail", "필수 입력 정보를 기입해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
             result.put("fail", "파일 업로드 실패");
@@ -247,6 +237,7 @@ public class PostController {
         Map<String, Integer> data = new HashMap<>();
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
+
             bookmark.put("uid", uid);
             if(postService.checkPostId(bookmark.get("postId"))) {
                 if (postService.pushBookmark(bookmark)) {
@@ -256,7 +247,7 @@ public class PostController {
                 }
                 data.put("count", postService.countPostBookmark(bookmark.get("postId")));
                 return new ResponseEntity<>(data, HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>("Not Found" ,  HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){

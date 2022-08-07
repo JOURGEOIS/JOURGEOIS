@@ -119,15 +119,55 @@ const routes: any[] = [
 
   // 커스텀 칵테일 상세 페이지
   {
-    path: "/cocktail/:cocktailId/custom/:customCocktailId",
+    path: "/cocktail/:cocktailId/custom/:feedId",
     name: "TheCustomCocktailDescView",
     component: () => import("@/views/TheCustomCocktailDescView.vue"),
+  },
+
+  // 커스텀 칵테일 수정
+  {
+    path: "/cocktail/:cocktailId/custom/:feedId/update",
+    name: "TheCustomCocktailUpdateForm",
+    component: () => import("@/views/TheCustomCocktailUpdateForm.vue"),
+  },
+  ,
+  // 좋아요한 유저 리스트 페이지
+  {
+    path: "/cocktail/:cocktailId/custom/:feedId/liked",
+    name: "TheLikedUserListView",
+    component: () => import("@/views/TheLikedUserListView.vue"),
+  },
+
+  // 뉴스피드 리스트
+  {
+    path: "/feeds",
+    name: "TheFeedsListView",
+    component: () => import("@/views/TheFeedsListView.vue"),
+  },
+
+  // 뉴스피드 상세 페이지 (커칵, 일반 )
+  {
+    path: "/feeds/:feedId",
+    name: "TheCommunityDescView",
+    component: () => import("@/views/TheCommunityDescView.vue"),
+  },
+
+  // 뉴스피드 게시글 form
+  {
+    path: "/feeds/form",
+    name: "TheCommunityFormView",
+    component: () => import("@/views/TheCommunityFormView.vue"),
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+
+  // 스크롤 무조건 맨 위로 이동
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 };
+  },
 });
 
 // Navigation Guard 설정

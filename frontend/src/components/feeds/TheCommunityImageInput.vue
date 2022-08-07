@@ -1,8 +1,8 @@
 <template>
-  <label for="custom-cocktail-image-input">
-    <p>칵테일 이미지 <span> *</span></p>
+  <label for="community-image-input">
+    <p>이미지 <span> *</span></p>
     <div :style="{ backgroundImage: `url(${imageUrl})` }">
-      <div class="custom-cocktail-image-input-desc" v-if="!imageUrl">
+      <div class="community-image-input-desc" v-if="!imageUrl">
         <span class="material-icons"> add_photo_alternate </span>
         <p>이미지를 삽입해주세요</p>
       </div>
@@ -10,43 +10,42 @@
   </label>
   <input
     type="file"
-    id="custom-cocktail-image-input"
+    id="community-image-input"
     accept="image/*"
-    @change="changeCustomCocktailImage"
+    @change="changeCommunityImage"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
 // 이미지 연결
-const imageUrl = computed(() => store.getters["customCocktail/getImgLink"]);
+const imageUrl = ref("");
 
 // 이미지 input
 const emit = defineEmits<{
   (event: "changeImage", value: object): void;
 }>();
 
-const changeCustomCocktailImage = (event: Event) => {
+const changeCommunityImage = (event: Event) => {
   // 취소 버튼 누르는 경우 바로 return
   if (!(event?.target as HTMLInputElement).files![0]) {
     return;
   }
   const data = {
     img: (event?.target as HTMLInputElement).files![0],
+    imageUrl,
   };
-  store.dispatch("customCocktail/uploadImage", data);
+  store.dispatch("createFeed/uploadImage", data);
   emit("changeImage", data.img);
 };
 </script>
 
 <style scoped lang="scss">
-label[for="custom-cocktail-image-input"] {
+label[for="community-image-input"] {
   @include flex(column);
-  gap: 16px;
-
   > p {
     @include font($fs-md, $fw-medium);
     color: $label-color;
@@ -67,7 +66,7 @@ label[for="custom-cocktail-image-input"] {
     background-size: cover;
     aspect-ratio: 1/1;
 
-    .custom-cocktail-image-input-desc {
+    .community-image-input-desc {
       @include flex-center;
       position: absolute;
       top: 50%;

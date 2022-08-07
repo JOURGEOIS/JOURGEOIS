@@ -2,7 +2,7 @@
   <hr />
   <div class="social-login">
     <p>or</p>
-    <button-basic :button-style="['google-login', 'long', 'small']">
+    <button-basic @click="clickGoogle" :button-style="['google-login', 'long', 'small']">
       <div class="button-content">
         <img
           src="https://raw.githubusercontent.com/JaeKP/image_repo/main/img/google.png"
@@ -10,7 +10,7 @@
         Google 로 로그인
       </div>
     </button-basic>
-    <button-basic :button-style="['kakao-login', 'long', 'small']">
+    <button-basic @click="clickKakao" :button-style="['kakao-login', 'long', 'small']">
       <div class="button-content">
         <img
           src="https://raw.githubusercontent.com/JaeKP/image_repo/main/img/kakao.png"
@@ -18,7 +18,7 @@
         KaKao 로 로그인
       </div>
     </button-basic>
-    <button-basic :button-style="['naver-login', 'long', 'small']">
+    <button-basic @click="clickNaver" :button-style="['naver-login', 'long', 'small']">
       <div class="button-content">
         <img
           src="https://raw.githubusercontent.com/JaeKP/image_repo/main/img/naver.png"
@@ -30,8 +30,55 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
+import api from "../../api/api";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { reactive } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+// 구글 로그인 클릭
+const clickGoogle = () => {
+  axios({
+    url: api.accounts.googleLogin(),
+    method: "GET",
+  })
+    .then((res) => {
+      const data = res.data;
+      console.log(data);
+    })
+    .catch((err) => {
+      console.error(err.response);
+    });
+};
+
+const clickKakao = () => {
+  axios({
+    url: api.accounts.kakaoLogin(),
+    method: "GET",
+  })
+    .then((res) => {
+      const data = res.data;
+      console.log(data);
+    })
+    .catch((err) => {
+      console.error(err.response);
+    });
+}
+
+const clickNaver = () => {
+  axios({
+    url: api.accounts.naverLogin(),
+    method: "GET",
+  })
+    .then((res) => {
+      const data = res.data;
+      console.log(data);
+    })
+    .catch((err) => {
+      console.error(err.response);
+    });
+}
 </script>
 
 <style scoped lang="scss">

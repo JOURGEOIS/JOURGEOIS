@@ -2,18 +2,23 @@
   <section class="post-user-section">
     <div class="part-left">
       <round-image
-        :round-image="profileImage"
+        :round-image="{ image: profileImg }"
         class="user-info-profile"
         @click="goProfile"
       ></round-image>
       <div class="user-info-text">
         <div class="user-nickname" @click="goProfile">{{ nickname }}</div>
-        <div class="create-at">{{ timeDelta }}</div>
+        <div class="date-line">
+          <span>{{ createTimeDelta }}</span>
+          <span v-if="isUpdated">/</span>
+          <span v-if="isUpdated">수정 {{ updateTimeDelta }}</span>
+        </div>
       </div>
     </div>
     <div class="part-right">
       <!-- 팔로우/팔로잉 버튼 -->
       <span
+        v-if="isFollowed !== -1"
         class="follow-btn"
         :class="{ following: isFollowed, follow: !isFollowed }"
         @click="clickFollowBtn"
@@ -29,28 +34,41 @@
 
 <script setup lang="ts">
 import RoundImage from "@/components/basics/RoundImage.vue";
-import { CustomCocktailHost } from "../../interface";
+import { User } from "../../interface";
 import { calcDateDelta } from "../../functions/date";
-import { toRefs, reactive, computed } from "vue";
+import { reactive, computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
-const route = useRoute();
+// import { useRouter, useRoute } from "vue-router";
+// const router = useRouter();
+// const route = useRoute();
 const store = useStore();
 
-const props = defineProps<{
-  userInfo: CustomCocktailHost;
-  date: number[];
-}>();
-
-const { uid, nickname, profileImg, isFollowed } = toRefs(props.userInfo);
-const timeDelta = calcDateDelta(props.date);
-
-// 프로필 사진에 넣을 props
-const profileImage = reactive({
-  image: profileImg,
-  width: "45px",
+const customCocktailInfo = computed(() => {
+  return store.getters["customCocktailInfo/getCustomCocktailDetail"];
 });
+
+const uid = computed(() => customCocktailInfo?.value?.followerDTO?.uid);
+const nickname = computed(
+  () => customCocktailInfo?.value?.followerDTO?.nickname
+);
+const profileImg = computed(
+  () => customCocktailInfo?.value?.followerDTO?.profileImg
+);
+
+const isFollowed = computed(
+  () => customCocktailInfo?.value?.followerDTO?.isFollowed
+);
+const createTime = computed(
+  () => customCocktailInfo?.value?.customCocktail?.createTime
+);
+const createTimeDelta = computed(() => calcDateDelta(createTime.value));
+const updateTime = computed(
+  () => customCocktailInfo?.value?.customCocktail?.lastUpdateTime
+);
+const updateTimeDelta = computed(() => calcDateDelta(updateTime.value));
+const isUpdated = computed(
+  () => customCocktailInfo?.value?.customCocktail?.lastUpdateTimeUpdate
+);
 
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
@@ -81,6 +99,11 @@ const clickFollowBtn = () => {
   .part-left {
     @include flex-xy(flex-start, center);
     gap: 10px;
+
+    .round-image {
+      width: 45px;
+      height: 45px;
+    }
     .user-info-text {
       @include for-click;
       @include flex(column);
@@ -88,7 +111,9 @@ const clickFollowBtn = () => {
       .user-nickname {
         @include font(15px, $fw-medium);
       }
-      .create-at {
+      .date-line {
+        @include flex;
+        gap: 5px;
         @include font-size-sub(12px);
       }
     }

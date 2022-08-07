@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,13 +46,14 @@ public class S3Util {
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         upload(uploadFile, dirName, imgType);
         System.out.println(uploadFile.getName());
-        return imgType.getValue() + "/" + dirName + "/" + uploadFile.getName();
+        return URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName(), "UTF-8");
     }
 
     public String localUpload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
         File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        return imgType.getValue() + "/" + dirName + "/" + uploadFile.getName();
+        String url = URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName(), "UTF-8");
+        return url;
     }
 
     // S3로 파일 업로드하기

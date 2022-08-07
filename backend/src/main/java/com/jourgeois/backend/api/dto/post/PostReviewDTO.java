@@ -6,8 +6,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PostReviewDTO {
-    Long pr_id;
+    Long postReviewId;
     Long uid;
-    Long p_id;
+    Long postId;
     String review;
 }

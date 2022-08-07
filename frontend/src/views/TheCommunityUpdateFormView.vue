@@ -31,40 +31,42 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from '@/components/basics/HeaderBasic.vue'
-import ButtonBasic from '@/components/basics/ButtonBasic.vue'
-import FailurePopUp from '@/components/modals/FailurePopUp.vue'
-import TheCommunityUpdateForm from '@/components/feeds/TheCommunityUpdateForm.vue'
-import TheCommunityNoticeButton from '@/components/feeds/TheCommunityNoticeButton.vue'
-import { onBeforeMount, onUnmounted, computed, watch } from 'vue'
-import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-const store = useStore()
+import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import ButtonBasic from "@/components/basics/ButtonBasic.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
+import TheCommunityUpdateForm from "@/components/feeds/TheCommunityUpdateForm.vue";
+import TheCommunityNoticeButton from "@/components/feeds/TheCommunityNoticeButton.vue";
+import { onBeforeMount, onUnmounted, computed, watch } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const store = useStore();
 
-const errorStatus = computed(() => store.getters['createFeed/getAlertStatus'])
-const errorMessage = computed(() => store.getters['createFeed/getErrorMessage'])
+const errorStatus = computed(() => store.getters["createFeed/getAlertStatus"]);
+const errorMessage = computed(
+  () => store.getters["createFeed/getErrorMessage"]
+);
 // 시간제 모달
 watch(errorStatus, () => {
   if (errorStatus.value) {
     setTimeout(() => {
-      store.dispatch('createFeed/changeAlertStatus', false)
-    }, 2000)
+      store.dispatch("createFeed/changeAlertStatus", false);
+    }, 2000);
   }
-})
+});
 
 // 모달 초기화 및 db 요청
 onBeforeMount(() => {
-  console.log(route.params.feedId)
-  store.dispatch('feedDescInfo/getCommunityDetail', {
+  console.log(route.params.feedId);
+  store.dispatch("feedDescInfo/getCommunityDetail", {
     feedId: route.params.feedId,
-  })
-  store.dispatch('createFeed/changeAlertStatus', false)
-})
+  });
+  store.dispatch("createFeed/changeAlertStatus", false);
+});
 
 onUnmounted(() => {
-  store.dispatch('createFeed/resetCommunityData')
-})
+  store.dispatch("createFeed/resetCommunityData");
+});
 </script>
 
 <style scoped lang="scss">

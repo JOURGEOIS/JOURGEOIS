@@ -25,7 +25,6 @@ const handleScroll = (event: Event) => {
     clearTimeout(debounce);
   }
   debounce = setTimeout(() => {
-    console.log("hello");
     const top = document.documentElement.scrollTop;
     const st = window.pageYOffset || document.documentElement.scrollTop;
     // scroll up

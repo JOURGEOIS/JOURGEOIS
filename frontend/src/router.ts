@@ -127,8 +127,8 @@ const routes: any[] = [
   // 커스텀 칵테일 수정
   {
     path: "/cocktail/:cocktailId/custom/:feedId/update",
-    name: "TheCustomCocktailUpdateForm",
-    component: () => import("@/views/TheCustomCocktailUpdateForm.vue"),
+    name: "TheCustomCocktailUpdateFormView",
+    component: () => import("@/views/TheCustomCocktailUpdateFormView.vue"),
   },
   ,
   // 좋아요한 유저 리스트 페이지

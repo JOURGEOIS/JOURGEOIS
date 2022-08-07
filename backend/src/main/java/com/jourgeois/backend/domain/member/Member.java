@@ -36,6 +36,9 @@ public class Member {
     @CreatedDate
     private java.util.Date creationDate;
     private String roles = "ROLE_USER";
+    @Column(name = "sso_id")
+    private String SSOId;
+
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Post> posts;
@@ -61,6 +64,17 @@ public class Member {
 
     @Transient
     private Date date = new Date();
+
+    @Builder
+    public Member(Long uid, String email, String password, String nickname, String name, String profileImg, String SSOId){
+        this.uid = uid;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.profileImg = profileImg;
+        this.SSOId = SSOId;
+    }
 
     @Builder
     public Member(String email, String password, String name, String nickname,  String birthday, String profileImg, String introduce) {

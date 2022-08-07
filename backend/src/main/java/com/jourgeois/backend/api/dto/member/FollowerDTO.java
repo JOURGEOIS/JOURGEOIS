@@ -11,4 +11,5 @@ public class FollowerDTO {
     private String nickname;
     private String profileImg;
     private Integer isFollowed;
+    private String introduce;
 }

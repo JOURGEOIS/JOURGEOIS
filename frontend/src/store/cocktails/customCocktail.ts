@@ -406,7 +406,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
       })
         .then((response) => {
           // 상세 페이지로 이동
-          router.push({
+          router.replace({
             name: "TheCustomCocktailDescView",
             params: {
               cocktailId: getters["getOriginalCocktailId"],
@@ -415,9 +415,14 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           });
         })
         .catch((error) => {
+          console.log(error);
           if (error.response.status !== 401) {
             // 실패 팝업
-            commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            if (error.response.data.fail) {
+              commit("SET_ERROR_MESSAGE", error.response.data.fail);
+            } else {
+              commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            }
             commit("SET_ALERT_STATUS", true);
           } else {
             // refreshToken 재발급
@@ -457,7 +462,6 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           commit("SET_IMG_LINK", data.imgLink);
         })
         .catch((error) => {
-          console.log(error);
           if (error.response.status !== 401) {
             // 실패 팝업
             commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
@@ -472,22 +476,60 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           }
         });
     },
+
+    // 업데이트 전 유효성 검사
     updateCustomCocktail: (
       { rootGetters, getters, commit, dispatch },
       params
     ) => {
       const { title, description, img, postId } = params;
+      const recipe = getters["getOriginalCocktailRecipe"];
+      const ingredients = getters["getOriginalCocktailIngredients"];
+
+      // 빈 필드 유효성 검사
+      const titleRequired = !title;
+      const recipeRequired = !(ingredients.length > 0);
+      const ingredientsRequired = !(recipe.length > 0);
+
+      if (titleRequired || recipeRequired || ingredientsRequired) {
+        commit(
+          "SET_ERROR_MESSAGE",
+          "이름, 이미지, 재료, 제작 항목은 필수 입력입니다"
+        );
+        commit("SET_ALERT_STATUS", true);
+        return;
+      }
+
+      // 비속어 유효성 검사
+      const titleCheck = checkBadWord(title);
+      const descriptionCheck = checkBadWord(description);
+      if (titleCheck || descriptionCheck) {
+        commit("SET_ERROR_MESSAGE", "부적절한 언어가 포함되었습니다");
+        commit("SET_ALERT_STATUS", true);
+        return;
+      }
+
+      // 요청 보낼 데이터
       const data: any = {
         title,
         description,
         postId,
-        ingredients: getters["getOriginalCocktailIngredients"].join(),
-        recipe: getters["getOriginalCocktailRecipe"].join(" <> "),
+        ingredients: ingredients.join(),
+        recipe: recipe.join(" <> "),
       };
       if (img) {
         data.img = img;
       }
 
+      // 빈 문자 확인
+      const recipeNull = !recipe.some((item: string) => item === "");
+      if (!recipeNull) {
+        commit("SET_ERROR_MESSAGE", "제작 항목에는 빈 값을 입력할 수 없습니다");
+        commit("SET_ALERT_STATUS", true);
+        return;
+      }
+
+      // 요청 보내기
       axios({
         url: api.post.postCocktail(),
         method: "put",
@@ -498,7 +540,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         data,
       })
         .then((response) => {
-          router.push({
+          router.replace({
             name: "TheCustomCocktailDescView",
             params: {
               cocktailId: getters["getOriginalCocktailId"],
@@ -508,8 +550,11 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            // 실패 팝업
-            commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            if (error.response.data.fail) {
+              commit("SET_ERROR_MESSAGE", error.response.data.fail);
+            } else {
+              commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            }
             commit("SET_ALERT_STATUS", true);
           } else {
             // refreshToken 재발급

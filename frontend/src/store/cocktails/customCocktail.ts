@@ -4,8 +4,6 @@ import axios from "axios";
 import api from "../../api/api";
 import { checkBadWord } from "../../functions/checkText";
 import router from "../../router";
-import { title } from "process";
-import { BlockList } from "net";
 
 // ! main State
 export interface CustomCocktailState {

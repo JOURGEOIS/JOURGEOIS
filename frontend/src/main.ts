@@ -12,3 +12,9 @@ app.config.globalProperties.$store = store;
 
 app.use(store).use(router);
 app.mount("#app");
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}

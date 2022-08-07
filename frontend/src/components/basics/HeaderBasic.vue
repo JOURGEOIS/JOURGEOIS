@@ -35,8 +35,8 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { computed } from "vue";
 
 const props = defineProps<{
-  prev: boolean;
-  success: boolean;
+  prev?: boolean;
+  success?: boolean;
   formId?: string;
 }>();
 

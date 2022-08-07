@@ -1,4 +1,4 @@
-const HOST: string = "http://13.209.206.237/api/";
+const HOST: string = "http://www.jourgeois.com/api/";
 
 const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";
@@ -53,6 +53,7 @@ export default {
     uploadImage: () => HOST + POST + "auth/tmp",
     comment: () => HOST + POST + "auth/review",
     toggleBookmark: () => HOST + POST + "auth/bookmark",
+    toggleLike: () => HOST + POST + "auth/like",
     likedUsers: () => HOST + POST + "auth/like/list",
     listFeed: () => HOST + POST + "auth/feed",
   },

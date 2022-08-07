@@ -23,8 +23,10 @@ import TheCustomCocktailImageInput from "@/components/cocktails/TheCustomCocktai
 import TheCustomCocktailTextarea from "@/components/cocktails/TheCustomCocktailTextarea.vue";
 import TheCustomCocktailIngredientsInput from "@/components/cocktails/TheCustomCocktailIngredientsInput.vue";
 import TheCustomCocktailRecipeInput from "@/components/cocktails/TheCustomCocktailRecipeInput.vue";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
+const route = useRoute();
 
 // title input
 const customCocktailTitleData = {
@@ -58,12 +60,23 @@ const changeCocktailImage = (data: object) => {
 };
 
 const submitCustomCocktailForm = () => {
-  const data = {
-    title: customCocktailValue.value,
-    description: customCocktailDescValue.value,
-    img: customCocktailImageValue,
-  };
-  store.dispatch("customCocktail/submitCustomCocktailForm", data);
+  if (!(customCocktailImageValue instanceof File)) {
+    const data = {
+      title: customCocktailValue.value,
+      description: customCocktailDescValue.value,
+      img: "",
+      postId: route.params.feedId,
+    };
+    store.dispatch("customCocktail/updateCustomCocktail", data);
+  } else {
+    const data = {
+      title: customCocktailValue.value,
+      description: customCocktailDescValue.value,
+      img: customCocktailImageValue,
+      postId: route.params.feedId,
+    };
+    store.dispatch("customCocktail/updateCustomCocktail", data);
+  }
 };
 </script>
 

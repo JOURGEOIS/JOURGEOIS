@@ -127,13 +127,13 @@ const routes: any[] = [
   // 커스텀 칵테일 수정
   {
     path: "/cocktail/:cocktailId/custom/:feedId/update",
-    name: "TheCustomCocktailUpdateForm",
-    component: () => import("@/views/TheCustomCocktailUpdateForm.vue"),
+    name: "TheCustomCocktailUpdateFormView",
+    component: () => import("@/views/TheCustomCocktailUpdateFormView.vue"),
   },
   ,
   // 좋아요한 유저 리스트 페이지
   {
-    path: "/cocktail/:cocktailId/custom/:feedId/liked",
+    path: "/feeds/:feedId/liked",
     name: "TheLikedUserListView",
     component: () => import("@/views/TheLikedUserListView.vue"),
   },
@@ -141,8 +141,8 @@ const routes: any[] = [
   // 뉴스피드 리스트
   {
     path: "/feeds",
-    name: "TheFeedsListView",
-    component: () => import("@/views/TheFeedsListView.vue"),
+    name: "TheNewsFeedView",
+    component: () => import("@/views/TheNewsFeedView.vue"),
   },
 
   // 뉴스피드 상세 페이지 (커칵, 일반 )
@@ -157,6 +157,34 @@ const routes: any[] = [
     path: "/feeds/form",
     name: "TheCommunityFormView",
     component: () => import("@/views/TheCommunityFormView.vue"),
+  },
+
+  // 뉴스피드 게시글 form 수정
+  {
+    path: "/feeds/:feedId/update",
+    name: "TheCommunityUpdateFormView",
+    component: () => import("@/views/TheCommunityUpdateFormView.vue"),
+  },
+
+  // 뉴스피드 상세 페이지 (커칵)
+  {
+    path: "/feeds/:feedId/custom",
+    name: "TheSuperCustomCocktailDescView",
+    component: () => import("@/views/TheSuperCustomCocktailDescView.vue"),
+  },
+
+  // 슈커칵 게시글 form
+  {
+    path: "/feeds/custom/form",
+    name: "TheSuperCustomCocktailFormView",
+    component: () => import("@/views/TheSuperCustomCocktailFormView.vue"),
+  },
+
+  // 슈커칵 게시글 수정 form
+  {
+    path: "/feeds/:feedId/custom/update",
+    name: "TheSuperCustomCocktailUpdateFormView",
+    component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
   },
 ];
 

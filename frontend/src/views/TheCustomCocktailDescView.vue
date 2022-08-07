@@ -7,12 +7,8 @@
     <!-- 제목, 사진, 제조법, 설명 등 커스텀 칵테일 내용 -->
     <the-custom-cocktail-desc-body></the-custom-cocktail-desc-body>
     <!-- 댓글 좋아요 공유 부분 -->
-    <like-comment-share
-      @click="setCustomCocktailDetail"
-      @clickLike="clickLike"
-      :data="isLiked"
-    >
-      <template #like>888</template>
+    <like-comment-share @clickLike="clickLike" :data="{ isLiked: isLiked }">
+      <template #like>{{ likeCount }}</template>
       <template #comment>{{ reviewCount }}</template>
     </like-comment-share>
     <!-- 댓글 부분 -->
@@ -61,6 +57,11 @@ const customCocktailInfo = computed(() => {
   return store.getters["customCocktailInfo/getCustomCocktailDetail"];
 });
 
+// 좋아요 개수
+const likeCount = computed(
+  () => customCocktailInfo?.value?.customCocktail?.like
+);
+
 // 좋아요 상태 확인
 const isLiked = computed(
   () => customCocktailInfo?.value?.customCocktail?.ilike
@@ -68,7 +69,12 @@ const isLiked = computed(
 
 // 좋아요를 누른 경우
 const clickLike = () => {
-  alert("좋아요 버튼");
+  const params = {
+    postId: feedId,
+    func: "customCocktailInfo/setCustomCocktailDetail",
+    data: { feedId },
+  };
+  store.dispatch("post/toggleLike", params);
 };
 
 // 댓글 개수

@@ -63,7 +63,7 @@ const submitCustomCocktailForm = () => {
     description: customCocktailDescValue.value,
     img: customCocktailImageValue,
   };
-  store.dispatch("customCocktail/submitCustomCocktailForm", data);
+  store.dispatch("customCocktail/submitSuperCustomCocktail", data);
 };
 </script>
 

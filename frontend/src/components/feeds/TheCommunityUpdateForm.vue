@@ -23,10 +23,12 @@
 <script setup lang="ts">
 import RoundImage from '@/components/basics/RoundImage.vue'
 import TextareaBasic from '@/components/basics/TextareaBasic.vue'
-import TheCommunityImageInput from '@/components/feeds/TheCommunityImageInput.vue';
-import TheCommunityTextarea from '@/components/feeds/TheCommunityTextarea.vue';
+import TheCommunityImageInput from '@/components/feeds/TheCommunityImageInput.vue'
+import TheCommunityTextarea from '@/components/feeds/TheCommunityTextarea.vue'
 import { ref, reactive, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+const route = useRoute()
 const store = useStore()
 
 // 유저 정보 불러오기
@@ -40,34 +42,47 @@ const profileInfo = reactive({
 })
 
 // image input
-let communityImageValue = reactive({});
+let communityImageValue = reactive({})
 const communityImage = (data: object) => {
-  communityImageValue = data;
-};
+  communityImageValue = data
+}
+
+// const communityInfo = computed(() => {
+//   return store.getters['feedDescInfo/getCommunityDetail']
+// })
 
 // description input
 const communityDescValue = computed({
-  get: () => store.getters["createFeed/getDescription"],
-  set: (newValue) => store.dispatch("createFeed/setDescription", newValue),
-});
+  get: () =>
+    store.getters['feedDescInfo/getCommunityDetail'].customCocktail.description,
+  set: (newValue) => store.dispatch('createFeed/setDescription', newValue),
+})
 
 const submitCommunityForm = () => {
-  const data = {
-    description: communityDescValue.value,
-    img: communityImageValue,
-  };
-  store.dispatch("createFeed/submitCommunityForm", data);
-};
-
+  if (!(communityImageValue instanceof File)) {
+    const data = {
+      description: communityDescValue.value,
+      img: '',
+      postId: route.params.feedId,
+    }
+    store.dispatch('createFeed/updateCommunityForm', data)
+  } else {
+    const data = {
+      description: communityDescValue.value,
+      img: communityImageValue,
+      postId: route.params.feedId,
+    }
+    store.dispatch('createFeed/updateCommunityForm', data)
+  }
+}
 </script>
 
 <style scoped lang="scss">
-.the-list-item-user{
+.the-list-item-user {
   @include flex(row);
   @include font($fs-sm, $fw-regular);
   align-items: center;
   gap: 7px;
   margin-bottom: 15px;
 }
-
 </style>

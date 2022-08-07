@@ -247,6 +247,7 @@ public class PostController {
         Map<String, Integer> data = new HashMap<>();
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
+
             bookmark.put("uid", uid);
             if(postService.checkPostId(bookmark.get("postId"))) {
                 if (postService.pushBookmark(bookmark)) {
@@ -256,7 +257,7 @@ public class PostController {
                 }
                 data.put("count", postService.countPostBookmark(bookmark.get("postId")));
                 return new ResponseEntity<>(data, HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>("Not Found" ,  HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){

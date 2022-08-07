@@ -4,14 +4,16 @@
     <header-basic
       :prev="true"
       :success="true"
-      formId="the-community-form"
+      formId="the-community-update-form"
       @prevClicked="$router.go(-1)"
     >
-      글쓰기
+      글수정
     </header-basic>
     <section>
       <!-- 폼 풀러오기 -->
-      <the-community-form id="the-community-form"></the-community-form>
+      <the-community-update-form
+        id="the-community-update-form"
+      ></the-community-update-form>
       <!-- 이용규칙 -->
       <div class="the-community-notice">
         <the-community-notice-button></the-community-notice-button>
@@ -32,9 +34,9 @@
 import HeaderBasic from '@/components/basics/HeaderBasic.vue'
 import ButtonBasic from '@/components/basics/ButtonBasic.vue'
 import FailurePopUp from '@/components/modals/FailurePopUp.vue'
-import TheCommunityForm from '@/components/feeds/TheCommunityForm.vue'
+import TheCommunityUpdateForm from '@/components/feeds/TheCommunityUpdateForm.vue'
 import TheCommunityNoticeButton from '@/components/feeds/TheCommunityNoticeButton.vue'
-import { onBeforeMount, computed, watch, onUnmounted } from 'vue'
+import { onBeforeMount, onUnmounted, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 const route = useRoute()
@@ -51,12 +53,15 @@ watch(errorStatus, () => {
   }
 })
 
-// 모달 초기화
+// 모달 초기화 및 db 요청
 onBeforeMount(() => {
+  console.log(route.params.feedId)
+  store.dispatch('feedDescInfo/getCommunityDetail', {
+    feedId: route.params.feedId,
+  })
   store.dispatch('createFeed/changeAlertStatus', false)
 })
 
-// vuex 초기화
 onUnmounted(() => {
   store.dispatch('createFeed/resetCommunityData')
 })

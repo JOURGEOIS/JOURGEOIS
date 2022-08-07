@@ -129,7 +129,7 @@ public class MemberController {
 //            HttpHeaders httpHeaders = new HttpHeaders();
 //            httpHeaders.setLocation(redirectUri);
 //            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-            return new ResponseEntity<>(redirectUri, HttpStatus.SEE_OTHER);
+            return new ResponseEntity<>(redirectUri, HttpStatus.OK);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -202,9 +202,10 @@ public class MemberController {
         String authUrl = configUtils.kakaoInitUrl();
         try {
             URI redirectUri = new URI(authUrl);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(redirectUri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.setLocation(redirectUri);
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+            return new ResponseEntity<>(authUrl, HttpStatus.OK);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

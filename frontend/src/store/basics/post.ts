@@ -40,12 +40,11 @@ export const post: Module<PostState, RootState> = {
   actions: {
     // * 좋아요 누른 유저리스트 추가
     setLikedUsers: ({ commit, getters, rootGetters }, data) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.post.likedUsers(),
         method: "GET",
         headers: {
-          email,
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
           page: getters["getLikedUserPage"],

@@ -23,44 +23,44 @@
 </template>
 
 <script setup lang="ts">
-import TheCommunityPostUserSection from '@/components/feeds/TheCommunityPostUserSection.vue'
-import { CustomCocktail } from '../../interface'
-import { useRoute, useRouter } from 'vue-router'
-import { computed } from 'vue'
-import { useStore } from 'vuex'
-const store = useStore()
-const router = useRouter()
-const route = useRoute()
+import TheCommunityPostUserSection from "@/components/feeds/TheCommunityPostUserSection.vue";
+import { CustomCocktail } from "../../interface";
+import { useRoute, useRouter } from "vue-router";
+import { computed } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
 
 const feedDescInfo = computed(() => {
-  return store.getters['feedDescInfo/getCommunityDetail']
-})
+  return store.getters["feedDescInfo/getCommunityDetail"];
+});
 
-const postId = computed(() => feedDescInfo?.value?.customCocktail?.postId)
-const imgLink = computed(() => feedDescInfo?.value?.customCocktail?.imgLink)
+const postId = computed(() => feedDescInfo?.value?.customCocktail?.postId);
+const imgLink = computed(() => feedDescInfo?.value?.customCocktail?.imgLink);
 const description = computed(
-  () => feedDescInfo?.value?.customCocktail?.description,
-)
-const isFollowed = computed(() => feedDescInfo?.value?.followerDTO?.isFollowed)
+  () => feedDescInfo?.value?.customCocktail?.description
+);
+const isFollowed = computed(() => feedDescInfo?.value?.followerDTO?.isFollowed);
 const isMine = computed(() => {
-  return isFollowed.value === -1
-})
+  return isFollowed.value === -1;
+});
 
 // 수정 클릭
 const clickEdit = () => {
   router.push({
-    name: 'TheCommunityUpdateFormView',
+    name: "TheCommunityUpdateFormView",
     params: {
       feedId: route.params.feedId,
     },
-  })
-}
+  });
+};
 
 // 삭제 클릭
 const clickDelete = () => {
-  console.log(postId)
-  store.dispatch('feedDescInfo/deleteCommunityPost', postId.value)
-}
+  console.log(postId);
+  store.dispatch("feedDescInfo/deleteCommunityPost", postId.value);
+};
 </script>
 
 <style scoped lang="scss">

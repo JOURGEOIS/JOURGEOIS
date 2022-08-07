@@ -140,8 +140,6 @@ const submitUpdate = () => {
   const conditionA = checkBadWord(commentInputValue.value);
   const conditionB = !commentInputValue.value;
 
-  console.log(conditionA, conditionB);
-
   if (!conditionA && !conditionB) {
     // 제출
     const data = {

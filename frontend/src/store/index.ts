@@ -42,6 +42,8 @@ import {
   CustomCocktailInfoState,
 } from "../store/cocktails/customCocktailInfo";
 
+import { newsFeed, NewsFeedState } from "../store/feeds/newsFeed";
+
 // ? Feed
 import { createFeed, CreateFeedState } from "../store/feeds/createFeed";
 
@@ -69,6 +71,7 @@ export interface RootState {
   createFeed: CreateFeedState;
   feedDescInfo: FeedDescState;
   comment: Comment;
+  newsFeed: NewsFeedState;
 }
 
 // store를 생성한다.
@@ -92,5 +95,6 @@ export default createStore({
     createFeed,
     feedDescInfo,
     comment,
+    newsFeed,
   },
 });

@@ -29,7 +29,7 @@ public class SearchController {
     }
 
     @GetMapping(value="/cocktail")
-    public ResponseEntity searchByKeyword(@RequestHeader(value = "email") String email, @RequestParam(value = "id") Long id,
+    public ResponseEntity searchByKeyword(@RequestHeader(value = "uid", defaultValue = "-1") Long uid, @RequestParam(value = "id") Long id,
                                           @RequestParam(value="page") int page) {
         if (id==0) {
             return ResponseEntity.status(HttpStatus.OK).body(null);
@@ -37,9 +37,9 @@ public class SearchController {
         try {
             // id로 바껴서 로직 하나 추가했습니다..
             String keyword = searchService.searchMaterialName(id);
-            if (!email.equals("null") && !email.isEmpty()) {
-                this.redisService.setRecentKeyword(email, keyword);
-            }
+
+            this.redisService.setRecentKeyword(uid, keyword);
+
             System.out.println("keyword:"+keyword);
             if(!keyword.isEmpty() || keyword != null) {
                 this.searchHistoryService.writeSearchHistory(keyword);
@@ -51,16 +51,16 @@ public class SearchController {
     }
 
     @GetMapping(value="/cocktailall")
-    public ResponseEntity searchByKeywordAll(@RequestHeader(value = "email") String email, @RequestParam(value = "keyword") String keyword,
+    public ResponseEntity searchByKeywordAll(@RequestHeader(value = "uid", defaultValue = "-1") Long uid, @RequestParam(value = "keyword") String keyword,
                                              @RequestParam(value = "page") int page) {
         System.out.println(keyword);
         if (keyword.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         try {
-            if (!email.equals("null") && !email.isEmpty()) {
-                this.redisService.setRecentKeyword(email, keyword);
-            }
+
+            this.redisService.setRecentKeyword(uid, keyword);
+
             this.searchHistoryService.writeSearchHistory(keyword);
         } catch (Exception e) {
             System.out.println("검색 로그 기록 실패");
@@ -69,12 +69,12 @@ public class SearchController {
     }
 
     @GetMapping(value="/user")
-    public ResponseEntity searchByUsers(@RequestHeader(value = "email") String email, @RequestParam(value = "keyword") String keyword,
+    public ResponseEntity searchByUsers(@RequestHeader(value = "uid", defaultValue = "0") Long uid, @RequestParam(value = "keyword") String keyword,
                               @PageableDefault(size=10, sort="name", direction = Sort.Direction.ASC) Pageable pageable){
         System.out.println(keyword);
         if (keyword.isEmpty())
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        return new ResponseEntity(searchService.searchByMember(keyword, pageable), HttpStatus.CREATED);
+        return new ResponseEntity(searchService.searchByMember(uid, keyword, pageable), HttpStatus.CREATED);
     }
 
     @GetMapping(value="/cocktailwhole")
@@ -103,11 +103,11 @@ public class SearchController {
     }
 
     @GetMapping({"recentkeyword"})
-    public ResponseEntity recentKeywordList(@RequestHeader("email") String email) {
-        if (email.equals("null") || email.isEmpty())
+    public ResponseEntity recentKeywordList(@RequestHeader(value = "uid", defaultValue = "-1") Long uid) {
+        if (uid == -1)
             return ResponseEntity.status(HttpStatus.OK).body(null);
         try {
-            return new ResponseEntity(this.redisService.getRecentKeyword(email), HttpStatus.OK);
+            return new ResponseEntity(this.redisService.getRecentKeyword(uid), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("데이터를 불러오는데 실패함", HttpStatus.INTERNAL_SERVER_ERROR);
         }

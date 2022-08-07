@@ -6,4 +6,4 @@ COPY ./build/libs/*SNAPSHOT.jar application.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "application.jar"]
+CMD ["java", "-jar", "-Duser.timezone=Asia/Seoul", "application.jar"]

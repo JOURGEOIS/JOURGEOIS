@@ -63,6 +63,11 @@ public class PostService {
         Member member = memberRepository.findById(writerId)
                             .orElseThrow(()->new NoSuchElementException("유저를 찾을 수 없습니다."));
         if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
+            // 공백 처리
+            if(postDTO.getDescription() == null || postDTO.getDescription().trim().isEmpty()) {
+                throw  new IllegalArgumentException("필수 정보 누락");
+            }
+
 
             Post post = new Post();
             post.setDescription(postDTO.getDescription());
@@ -124,6 +129,10 @@ public class PostService {
         if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
             Post targetPost = postRepository.findByIdAndMember(postId, member).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
             targetPost.setDescription(postDTO.getDescription());
+
+            if(postDTO.getDescription() == null || postDTO.getDescription().trim().isEmpty()) {
+                throw  new IllegalArgumentException("필수 정보 누락");
+            }
 
             // post 이미지 업로드
             if(postDTO.getImg() != null && !postDTO.getImg().getOriginalFilename().isEmpty()){

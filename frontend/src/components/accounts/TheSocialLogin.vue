@@ -52,9 +52,9 @@ const router = useRouter()
   const googleAPI = computed(() => store.getters['socialLogin/getGoogleLoginApi'])
 
 const clickGoogle = () => {
-  console.log(googleAPI.value)
-  store.dispatch('socialLogin/getGoogleLoginApi', googleAPI)
-  // window.open("http://jourgeois.com/api/member/login/google", "_blank");
+  // console.log(googleAPI.value)
+  // store.dispatch('socialLogin/getGoogleLoginApi', googleAPI)
+  window.open("http://jourgeois.com/api/member/login/google", "_blank");
 
 }
 

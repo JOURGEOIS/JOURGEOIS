@@ -133,7 +133,7 @@ const routes: any[] = [
   ,
   // 좋아요한 유저 리스트 페이지
   {
-    path: "/cocktail/:cocktailId/custom/:feedId/liked",
+    path: "/feeds/:feedId/liked",
     name: "TheLikedUserListView",
     component: () => import("@/views/TheLikedUserListView.vue"),
   },

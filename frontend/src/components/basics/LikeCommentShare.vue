@@ -25,9 +25,9 @@
         favorite_border
       </span>
     </div>
-    <div class="liked-users tab">
+    <div class="liked-users tab" @click="clickLikedUsers">
       <span class="material-icons liked-users-icon"> diversity_1 </span>
-      <span class="button-text" @click="clickLikedUsers">
+      <span class="button-text">
         <slot name="like"></slot>
       </span>
     </div>
@@ -71,12 +71,10 @@ const clickLikeInner = () => {
 
 // 좋아요 숫자(좋아요한 유저 목록) 클릭
 const clickLikedUsers = () => {
-  alert("커스텀 칵테일 좋아요 유저 목록으로 이동");
-  const cocktailId = route.params.cocktailId;
   const feedId = route.params.feedId;
   router.push({
     name: "TheLikedUserListView",
-    params: { cocktailId, feedId },
+    params: { feedId },
   });
 };
 

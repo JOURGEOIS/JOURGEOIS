@@ -397,6 +397,7 @@ public class MemberService {
         return res;
     }
 
+
     @Transactional
     public TokenResponseDTO createToken(UserDetails userDetails) {
         Authentication authentication =  new UsernamePasswordAuthenticationToken(

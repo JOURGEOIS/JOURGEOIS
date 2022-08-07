@@ -4,7 +4,7 @@ const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";
 const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
-const POST = "posts/auth/";
+const POST = "posts/";
 
 export default {
   token: {
@@ -20,6 +20,9 @@ export default {
     changePassword: () => HOST + ACCOUNTS + "auth/password",
     signOut: () => HOST + ACCOUNTS + "auth/signOut",
     profile: () => HOST + ACCOUNTS + "auth/profile",
+    googleLogin: () => HOST + ACCOUNTS + "login/google",
+    kakaoLogin: () => HOST + ACCOUNTS + "login/kakao",
+    naverLogin: () => HOST + ACCOUNTS + "login/naver"
   },
   email: {
     emailCert: () => HOST + "email/cert",
@@ -30,6 +33,7 @@ export default {
     getCocktailData: () => HOST + COCKTAIL + "cocktail",
     cocktailList: () => HOST + COCKTAIL + "list",
     cocktailReview: () => HOST + COCKTAIL + "comment",
+    customCocktailList: () => HOST + "/cocktail",
   },
 
   lookups: {
@@ -44,7 +48,13 @@ export default {
     filterResult: () => HOST + LOOKUP + "filter/list",
   },
 
-  POST: {
-    uploadImage: () => HOST + POST + "tmp",
+  post: {
+    postCocktail: () => HOST + POST + "auth",
+    uploadImage: () => HOST + POST + "auth/tmp",
+    comment: () => HOST + POST + "auth/review",
+    toggleBookmark: () => HOST + POST + "auth/bookmark",
+    toggleLike: () => HOST + POST + "auth/like",
+    likedUsers: () => HOST + POST + "auth/like/list",
+    listFeed: () => HOST + POST + "auth/feed",
   },
 };

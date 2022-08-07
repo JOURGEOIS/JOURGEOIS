@@ -18,8 +18,8 @@
     ></article>
     <!-- 작성자 정보 섹션 -->
     <post-user-section
-      :userInfo="data.followerDTO"
-      :date="data.customCocktail.createTime"
+      :userInfo="customCocktailInfo?.followerDTO"
+      :date="customCocktailInfo?.customCocktail?.createTime"
     ></post-user-section>
     <!-- 칵테일 설명 섹션 -->
     <article class="cocktail-description">
@@ -36,40 +36,64 @@
         <p class="normal-paragraph">{{ txt }}</p>
       </div>
     </article>
+    <!-- 수정 삭제 섹션 -->
+    <article class="cocktail-host-section" v-if="isMine">
+      <div class="btn edit-btn" @click="clickEdit">수정</div>
+      <div class="btn delete-btn" @click="clickDelete">삭제</div>
+    </article>
   </section>
 </template>
 
 <script setup lang="ts">
 import PostUserSection from "@/components/basics/PostUserSection.vue";
 import { CustomCocktail } from "../../interface";
-import { toRefs } from "vue";
+import { reactive, computed, toRefs, onBeforeMount, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-const props = defineProps<{
-  data: CustomCocktail;
-}>();
+const customCocktailInfo = computed(() => {
+  return store.getters["customCocktailInfo/getCustomCocktailDetail"];
+});
 
-const {
-  postId,
-  imgLink,
-  description,
-  like,
-  title,
-  baseCocktail,
-  baseCocktailName,
-  ingredients,
-  recipe,
-} = toRefs(props.data.customCocktail);
+const postId = computed(
+  () => customCocktailInfo?.value?.customCocktail?.postId
+);
+const imgLink = computed(
+  () => customCocktailInfo?.value?.customCocktail?.imgLink
+);
+const description = computed(
+  () => customCocktailInfo?.value?.customCocktail?.description
+);
+const like = computed(() => customCocktailInfo?.value?.customCocktail?.like);
+const title = computed(() => customCocktailInfo?.value?.customCocktail?.title);
+const baseCocktail = computed(
+  () => customCocktailInfo?.value?.customCocktail?.baseCocktail
+);
+const baseCocktailName = computed(
+  () => customCocktailInfo?.value?.customCocktail?.baseCocktailName
+);
+const ingredients = computed(
+  () => customCocktailInfo?.value?.customCocktail?.ingredients
+);
+const recipe = computed(
+  () => customCocktailInfo?.value?.customCocktail?.recipe
+);
+
+const isFollowed = computed(
+  () => customCocktailInfo?.value?.followerDTO?.isFollowed
+);
+const isMine = computed(() => {
+  return isFollowed.value === -1;
+});
 
 // 레시피 string -> string[]
-const recipeList = recipe.value.split(" <> ");
+const recipeList = computed(() => recipe.value.split(" <> "));
 
 // 재료 ingredients string[] -> string
-const ingredientString = ingredients.value.join(", ");
+const ingredientString = computed(() => ingredients.value.join(", "));
 
 // 베이스칵테일 구역 누르면 베이스칵테일로 이동
 const clickBaseCocktail = () => {
@@ -77,6 +101,27 @@ const clickBaseCocktail = () => {
     name: "TheCocktailDescView",
     params: { cocktailId: baseCocktail.value },
   });
+};
+
+// 수정 클릭
+const clickEdit = () => {
+  if (confirm("수정하시겠습니까?")) {
+    alert("수정 폼으로 이동");
+    // router.push({
+    //   name: "TheCustomCocktailFormView",
+    //   params: {
+    //     cocktailId: route.params.cocktailId,
+    //     feedId: route.params.feedId,
+    //   },
+    // });
+  }
+};
+
+// 삭제 클릭
+const clickDelete = () => {
+  if (confirm("삭제하시겠습니까?")) {
+    store.dispatch("customCocktailInfo/removeCustomCocktailPost", { postId });
+  }
 };
 </script>
 
@@ -121,6 +166,17 @@ const clickBaseCocktail = () => {
       position: center center;
     }
   }
+
+  .cocktail-host-section {
+    width: 100%;
+    @include flex-xy(flex-end, center);
+    @include font-size-sub(15px);
+
+    .btn {
+      padding: 10px;
+      @include for-click;
+    }
+  }
 }
 
 .recipe-line {
@@ -145,7 +201,7 @@ const clickBaseCocktail = () => {
   color: $navy600;
 }
 
-.normarl-paragraph {
+.normal-paragraph {
   @include font-size-sub(15px);
 }
 </style>

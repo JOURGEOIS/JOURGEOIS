@@ -2,24 +2,15 @@
   <div class="the-list-item-user">
     <round-image :round-image="userImage"></round-image>
     <div class="user-info-text">
-      <h1 class="user-nickname">{{ data.nickname }}</h1>
-      <p class="user-introduce">{{ data.introduce }}</p>
+      <h1 class="user-nickname">{{ data?.nickname }}</h1>
+      <p class="user-introduce">{{ data?.introduce }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import RoundImage from "@/components/basics/RoundImage.vue";
-
-interface User {
-  id: number;
-  email: string | null;
-  name: string | null;
-  nickname: string;
-  profileImg: string;
-  profileLink: string | null;
-  introduce: string | null;
-}
+import { User } from "../../interface";
 
 const props = defineProps<{
   data: User;

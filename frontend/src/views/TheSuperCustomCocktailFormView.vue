@@ -1,19 +1,19 @@
-<!--칵테일 상세 페이지:  커스텀 칵테일 수정 페이지 -->
+<!-- 뉴스피드:  커스텀 칵테일 제작 페이지 -->
 <template>
   <div class="the-custom-cocktail-form-view">
     <!-- 헤더 -->
     <header-basic
       :prev="true"
       :success="true"
-      formId="custom-cocktail-update-form"
+      formId="super-custom-cocktail-form"
       @prevClicked="$router.go(-1)"
     >
-      커스텀 칵테일 수정
+      커스텀 칵테일 제작
     </header-basic>
     <section>
-      <the-custom-cocktail-update-form
-        id="custom-cocktail-update-form"
-      ></the-custom-cocktail-update-form>
+      <the-super-custom-cocktail-form
+        id="super-custom-cocktail-form"
+      ></the-super-custom-cocktail-form>
     </section>
   </div>
   <failure-pop-up v-if="errorStatus">
@@ -24,13 +24,11 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import TheCustomCocktailUpdateForm from "@/components/cocktails/TheCustomCocktailUpdateForm.vue";
+import TheSuperCustomCocktailForm from "@/components/feeds/TheSuperCustomCocktailForm.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import LoadingBasic from "@/components/basics/LoadingBasic.vue";
 import { useStore } from "vuex";
 import { onBeforeMount, computed, watch, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
-const route = useRoute();
 const store = useStore();
 
 const errorStatus = computed(
@@ -54,13 +52,13 @@ watch(errorStatus, () => {
   }
 });
 
-// 모달 초기화 및 db 요청
+// 모달 초기화
 onBeforeMount(() => {
-  store.dispatch("customCocktail/getCustomCocktailData", route.params.feedId);
   store.dispatch("customCocktail/changeAlertStatus", false);
   store.dispatch("customCocktail/toggleLoadingStatus", false);
 });
 
+// vuex 초기화
 onUnmounted(() => {
   store.dispatch("customCocktail/resetCocktailData");
 });

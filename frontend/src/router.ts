@@ -158,11 +158,33 @@ const routes: any[] = [
     name: "TheCommunityFormView",
     component: () => import("@/views/TheCommunityFormView.vue"),
   },
+
   // 뉴스피드 게시글 form 수정
   {
     path: "/feeds/:feedId/update",
     name: "TheCommunityUpdateFormView",
     component: () => import("@/views/TheCommunityUpdateFormView.vue"),
+  },
+
+  // 뉴스피드 상세 페이지 (커칵)
+  {
+    path: "/feeds/:feedId/custom",
+    name: "TheSuperCustomCocktailDescView",
+    component: () => import("@/views/TheSuperCustomCocktailDescView.vue"),
+  },
+
+  // 슈커칵 게시글 form
+  {
+    path: "/feeds/custom/form",
+    name: "TheSuperCustomCocktailFormView",
+    component: () => import("@/views/TheSuperCustomCocktailFormView.vue"),
+  },
+
+  // 슈커칵 게시글 수정 form
+  {
+    path: "/feeds/:feedId/custom/update",
+    name: "TheSuperCustomCocktailUpdateFormView",
+    component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
   },
 ];
 

@@ -49,25 +49,28 @@ const store = useStore()
 const router = useRouter()
 
 // 구글 로그인 클릭
-const googleAPI = computed(() => store.getters['socialLogin/getGoogleLoginApi'])
+  const googleAPI = computed(() => store.getters['socialLogin/getGoogleLoginApi'])
 
 const clickGoogle = () => {
+  console.log(googleAPI.value)
   store.dispatch('socialLogin/getGoogleLoginApi', googleAPI)
-  // window.open("https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?scope=profile%20email%20openid&response_type=code&redirect_uri=http%3A%2F%2Fjourgeois.com%2Fapi%2Fmember%2Flogin%2Fgoogle%2Fredirect&client_id=217608233279-k2op58rvkdtbbteakk7ag0tp5ia54mij.apps.googleusercontent.com&flowName=GeneralOAuthFlow", "_blank");
+  // window.open("http://jourgeois.com/api/member/login/google", "_blank");
+
 }
 
 const clickKakao = () => {
-  axios({
-    url: api.accounts.kakaoLogin(),
-    method: 'GET',
-  })
-    .then((res) => {
-      const data = res.data
-      console.log(data)
-    })
-    .catch((err) => {
-      console.error(err.response)
-    })
+  // axios({
+  //   url: api.accounts.kakaoLogin(),
+  //   method: 'GET',
+  // })
+  //   .then((res) => {
+  //     const data = res.data
+  //     console.log(data)
+  //   })
+  //   .catch((err) => {
+  //     console.error(err.response)
+  //   })
+  window.open("https://kauth.kakao.com/oauth/authorize?client_id=f1c36f65322c75f1f28caf1560a306d1&redirect_uri=http://jourgeois.com/api/member/login/kakao/redirect&response_type=code")
 }
 
 const clickNaver = () => {

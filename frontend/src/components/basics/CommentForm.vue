@@ -85,6 +85,7 @@ const submitCommentForm = () => {
   @include flex-xy(flex-start, center);
   gap: 4px;
   width: 100%;
+  padding: 30px 0;
 
   > .round-image {
     flex-shrink: 0;

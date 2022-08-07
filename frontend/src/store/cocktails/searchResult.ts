@@ -184,7 +184,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 검색어 자동완성 재료 Cocktail 검색결과
     setSearchCocktail: (
-      { commit, state, rootGetters },
+      { commit, state, rootGetters, getters },
       ingredientId: number
     ) => {
       // 오류 처리
@@ -201,9 +201,11 @@ export const searchResult: Module<SearchResultState, RootState> = {
         },
       })
         .then((res) => {
-          commit("SET_SEARCH_COCKTAIL_PAGE", state.searchCocktailPage + 1);
+          const newSearchCocktails = res.data;
           // 최대 10개 칵테일 정보 리스트에 추가
-          commit("SET_SEARCH_COCKTAILS", res.data);
+          commit("SET_SEARCH_COCKTAILS", newSearchCocktails);
+          const page = getters.getSearchCocktailPage;
+          commit("SET_SEARCH_COCKTAIL_PAGE", page + 1);
         })
         .catch((err) => {
           console.error(err.response);
@@ -211,7 +213,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 Cocktail 검색결과
-    setSearchCocktailAll: ({ commit, state, rootGetters }, data) => {
+    setSearchCocktailAll: ({ commit, state, getters, rootGetters }, data) => {
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
@@ -224,12 +226,11 @@ export const searchResult: Module<SearchResultState, RootState> = {
         },
       })
         .then((res) => {
-          commit(
-            "SET_SEARCH_COCKTAIL_ALL_PAGE",
-            state.searchCocktailAllPage + 1
-          );
+          const newSearchCocktailAlls = res.data;
           // 최대 10개 칵테일 정보 리스트에 추가
-          commit("SET_SEARCH_COCKTAIL_ALLS", res.data);
+          commit("SET_SEARCH_COCKTAIL_ALLS", newSearchCocktailAlls);
+          const page = getters.getSearchCocktailAllPage;
+          commit("SET_SEARCH_COCKTAIL_ALL_PAGE", page + 1);
         })
         .catch((err) => {
           console.error(err.response);

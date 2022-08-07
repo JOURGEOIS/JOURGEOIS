@@ -92,7 +92,6 @@ const reviewCount = computed(
 
   .the-custom-cocktail-desc-comment {
     @include flex(column);
-    gap: 40px;
     width: 100%;
   }
 }

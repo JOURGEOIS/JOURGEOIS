@@ -27,9 +27,9 @@ import TheCommunityImageInput from '@/components/feeds/TheCommunityImageInput.vu
 import TheCommunityTextarea from '@/components/feeds/TheCommunityTextarea.vue';
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
+const store = useStore()
 
 // 유저 정보 불러오기
-const store = useStore()
 const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
 
 const profileImg = userInfo.value.profileImg
@@ -46,7 +46,10 @@ const communityImage = (data: object) => {
 };
 
 // description input
-const communityDescValue = ref("");
+const communityDescValue = computed({
+  get: () => store.getters["createFeed/getDescription"],
+  set: (newValue) => store.dispatch("createFeed/setDescription", newValue),
+});
 
 const submitCommunityForm = () => {
   const data = {

@@ -1,21 +1,21 @@
-import { Module } from "vuex";
-import { RootState } from "../index";
-import axios from "axios";
-import api from "../../api/api";
-import router from "../../router";
-import { CustomCocktail } from "../../interface";
+import { Module } from 'vuex'
+import { RootState } from '../index'
+import axios from 'axios'
+import api from '../../api/api'
+import router from '../../router'
+import { CustomCocktail } from '../../interface'
 
 // ! main State
 export interface FeedDescState {
   // 일반게시글 상세정보
-  communityDetail: CustomCocktail;
-  communityDetailDefault: CustomCocktail;
+  communityDetail: CustomCocktail
+  communityDetailDefault: CustomCocktail
   // 팝업 알림
-  alertStatus: boolean;
+  alertStatus: boolean
   // 오류 메시지
-  errorMessage: string;
+  errorMessage: string
   // 성공 메시지
-  successMessage: string;
+  successMessage: string
 }
 
 export const feedDescInfo: Module<FeedDescState, RootState> = {
@@ -30,24 +30,24 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         ilike: false,
         type: null,
         postId: 0,
-        imgLink: "",
-        description: "",
+        imgLink: '',
+        description: '',
         createTime: [0],
         lastUpdateTime: [0],
         isUpdated: 0,
         like: 0,
-        title: "",
+        title: '',
         baseCocktail: 0,
-        baseCocktailName: "",
+        baseCocktailName: '',
         ingredients: [],
-        recipe: "",
+        recipe: '',
         reviewCount: 0,
       },
       followerDTO: {
         uid: 0,
-        nickname: "",
-        introduce: "",
-        profileImg: "",
+        nickname: '',
+        introduce: '',
+        profileImg: '',
         isFollowed: -2,
       },
     },
@@ -58,33 +58,33 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         ilike: false,
         type: null,
         postId: 0,
-        imgLink: "",
-        description: "",
+        imgLink: '',
+        description: '',
         createTime: [0],
         lastUpdateTime: [0],
         isUpdated: 0,
         like: 0,
-        title: "",
+        title: '',
         baseCocktail: 0,
-        baseCocktailName: "",
+        baseCocktailName: '',
         ingredients: [],
-        recipe: "",
+        recipe: '',
         reviewCount: 0,
       },
       followerDTO: {
         uid: 0,
-        nickname: "",
-        introduce: "",
-        profileImg: "",
+        nickname: '',
+        introduce: '',
+        profileImg: '',
         isFollowed: -2,
       },
     },
     // 팝업 알림
     alertStatus: false,
     // 오류 메시지
-    errorMessage: "",
+    errorMessage: '',
     // 성공 메시지
-    successMessage: "",
+    successMessage: '',
   },
 
   getters: {
@@ -102,78 +102,78 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
   mutations: {
     // 일반게시글 상세정보
     SET_COMMUNITY_DETAIL: (state, value: CustomCocktail) => {
-      state.communityDetail = value;
+      state.communityDetail = value
     },
     // * state에 일반게시글 정보 제거
     REMOVE_COMMUNITY_DETAIL: (state) => {
-      state.communityDetail = state.communityDetailDefault;
+      state.communityDetail = state.communityDetailDefault
     },
     // 에러 팝업
     SET_ALERT_STATUS: (state, value: boolean) => {
-      state.alertStatus = value;
+      state.alertStatus = value
     },
     // 에러 메시지
     SET_ERROR_MESSAGE: (state, value: string) => {
-      state.errorMessage = value;
+      state.errorMessage = value
     },
     // 성공 메시지
     SET_SUCCESS_MESSAGE: (state, value: string) => {
-      state.successMessage = value;
+      state.successMessage = value
     },
   },
 
   actions: {
     // vuex 리셋
     resetCocktailData: ({ commit }) => {
-      commit("SET_ALERT_STATUS", false);
-      commit("SET_ERROR_MESSAGE", "");
-      commit("SET_SUCCESS_MESSAGE", "");
-      commit("SET_IMG_LINK", "");
-      commit("SET_DESCRIPTION", "");
+      commit('SET_ALERT_STATUS', false)
+      commit('SET_ERROR_MESSAGE', '')
+      commit('SET_SUCCESS_MESSAGE', '')
+      commit('SET_IMG_LINK', '')
+      commit('SET_DESCRIPTION', '')
     },
     // description
     setDescription: ({ commit }, value: string) => {
-      commit("SET_DESCRIPTION", value);
+      commit('SET_DESCRIPTION', value)
     },
 
     // 일반게시글 상세정보 불러오기
     getCommunityDetail: (
       { commit, dispatch, rootGetters },
-      params: { feedId: number }
+      params: { feedId: number },
     ) => {
       axios({
         url: api.post.postCocktail(),
-        method: "GET",
+        method: 'GET',
         headers: {
-          Authorization: rootGetters["personalInfo/getAccessToken"],
+          Authorization: rootGetters['personalInfo/getAccessToken'],
         },
-        params: {
-          postId: params.feedId,
-        },
+        params: { postId: params.feedId },
       })
         .then((res) => {
           console.log(res.data)
-          commit("SET_COMMUNITY_DETAIL", res.data);
+          commit('SET_COMMUNITY_DETAIL', res.data)
         })
         .catch((err) => {
           if (err.response.status !== 401) {
-            console.error(err.response);
+            console.log(params.feedId)
+
+            console.log(err)
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "feedInfo/getCommunityDetail",
+              func: 'feedDescInfo/getCommunityDetail',
               params,
-            };
-            dispatch("personalInfo/requestRefreshToken", obj, {
+            }
+            dispatch('personalInfo/requestRefreshToken', obj, {
               root: true,
-            });
+            })
           }
-        });
+        })
     },
-    
+
     // * state에 일반게시글 정보 제거
     removeCommunityDetail: ({ commit }) => {
-      commit("REMOVE_COMMUNITY_DETAIL");
+      commit('REMOVE_COMMUNITY_DETAIL')
     },
     // 일반게시글 삭제
     deleteCommunityPost: ({ commit, dispatch, rootGetters }, postId) => {
@@ -183,7 +183,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         headers: {
           Authorization: rootGetters['personalInfo/getAccessToken'],
         },
-        data: {postId: postId},
+        data: { postId: postId },
       })
         .then((res) => {
           alert('삭제성공^0^')
@@ -217,7 +217,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
 
     // 알럿 팝업
     changeAlertStatus: ({ commit }, value: boolean) => {
-      commit("SET_ALERT_STATUS", value);
+      commit('SET_ALERT_STATUS', value)
     },
   },
-};
+}

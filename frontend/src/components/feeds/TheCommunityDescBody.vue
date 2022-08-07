@@ -25,12 +25,12 @@
 <script setup lang="ts">
 import TheCommunityPostUserSection from '@/components/feeds/TheCommunityPostUserSection.vue'
 import { CustomCocktail } from '../../interface'
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter } from 'vue-router'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore()
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
 const feedDescInfo = computed(() => {
   return store.getters['feedDescInfo/getCommunityDetail']
@@ -48,19 +48,18 @@ const isMine = computed(() => {
 
 // 수정 클릭
 const clickEdit = () => {
-  router.push({ name: 'TheCommunityUpdateFormView',
-      params: {
-        feedId: route.params.feedId
+  router.push({
+    name: 'TheCommunityUpdateFormView',
+    params: {
+      feedId: route.params.feedId,
     },
   })
-  
 }
 
 // 삭제 클릭
 const clickDelete = () => {
   console.log(postId)
-  store.dispatch('feedDescInfo/deleteCommunityPost', postId.value )
-  
+  store.dispatch('feedDescInfo/deleteCommunityPost', postId.value)
 }
 </script>
 

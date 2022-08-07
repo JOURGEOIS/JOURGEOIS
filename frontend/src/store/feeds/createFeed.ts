@@ -90,13 +90,17 @@ export const createFeed: Module<CreateFeedState, RootState> = {
       commit("SET_IMG_LINK", "");
       commit("SET_DESCRIPTION", "");
     },
+    // description
+    setDescription: ({ commit }, value: string) => {
+      commit("SET_DESCRIPTION", value);
+    },
+
     // 알럿 팝업
     changeAlertStatus: ({ commit }, value: boolean) => {
       commit('SET_ALERT_STATUS', value)
     },
     // 사진 업로드 임시 저장
     uploadImage: ({ rootGetters, dispatch, commit }, data) => {
-      const { img, imageUrl } = data
       axios({
         url: api.post.uploadImage(),
         method: 'post',
@@ -104,12 +108,10 @@ export const createFeed: Module<CreateFeedState, RootState> = {
           Authorization: rootGetters['personalInfo/getAccessToken'],
           'Content-Type': 'multipart/form-data',
         },
-        data: {
-          img,
-        },
+        data,
       })
         .then((response) => {
-          imageUrl.value = response.data.url
+          commit("SET_IMG_LINK", response.data.url);
         })
         .catch((error) => {
           if (error.response.status !== 401) {
@@ -126,7 +128,8 @@ export const createFeed: Module<CreateFeedState, RootState> = {
         })
     },
 
-    // 일반 게시글 제출전 유효성 검사 (빈 필드가 있는지 확인한다.)
+    //============== 제출
+    // 일반 게시글 제출 전 유효성 검사 (빈 필드가 있는지 확인한다.)
     submitCommunityForm: ({ commit, dispatch }, data) => {
       const { description, img } = data
 
@@ -145,7 +148,7 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     },
 
     checkTextInput: ({ dispatch, commit }, data) => {
-      const { description, img } = data
+      const { description } = data
       // 내용 중 빈 문자만 제출했는지 확인 (빈문자열이 있으면 false)
       const descriptionNull = description.trim().length
       console.log('type: ', descriptionNull)
@@ -185,7 +188,7 @@ export const createFeed: Module<CreateFeedState, RootState> = {
         .then((res) => {
           console.log(res)
           // 상세 페이지로 이동
-          router.push({
+          router.replace({
             name: 'TheCommunityDescView',
             params: { feedId: res.data },
           })
@@ -212,47 +215,30 @@ export const createFeed: Module<CreateFeedState, RootState> = {
         })
     },
     // ================== 일반게시글 수정
-    // 일반게시글 db 불러오기
-
     // 일반게시글 수정 시 유효성 검사
-    // submitCommunityForm: ({ commit, dispatch }, data) => {
-    //   const { description, img } = data
+    updateCommunityForm: ({ commit, dispatch }, data) => {
+      const { description, img, postId } = data
 
-    //   // 빈필드 확인 (빈 필드가 있으면 false)
-    //   const imgRequired = img instanceof File
-    //   const descriptionRequired = !!description
+      // 내용 중 빈 문자만 제출했는지 확인 (빈문자열이 있으면 false)
+      const descriptionNull = description.trim().length
+      console.log('type: ', descriptionNull)
+      if (descriptionNull === 0) {
+        commit('SET_ERROR_MESSAGE', '내용에는 빈 값을 입력할 수 없습니다')
+        commit('SET_ALERT_STATUS', true)
+        return
+      }
+      // 비속어 확인 (비속어가 있으면 true)
+      const descriptionCheck = checkBadWord(description)
 
-    //   // 전부 true면 유효성 검사 통과!
-    //   if (imgRequired && descriptionRequired) {
-    //     // 비속어 유효성 검사, 공백으로 이뤄진 내용 유효성 검사
-    //     dispatch('checkTextInput', data)
-    //   } else {
-    //     commit('SET_ERROR_MESSAGE', '이미지와 내용은 필수 입력입니다')
-    //     commit('SET_ALERT_STATUS', true)
-    //   }
-    // },
+      if (descriptionCheck) {
+        commit('SET_ERROR_MESSAGE', '부적절한 언어가 포함되었습니다')
+        commit('SET_ALERT_STATUS', true)
+        return
+      }
+      // 저장
+      dispatch('updateSaveCommunity', data)
+    },
 
-    // checkTextInput: ({ dispatch, commit }, data) => {
-    //   const { description, img } = data
-    //   // 내용 중 빈 문자만 제출했는지 확인 (빈문자열이 있으면 false)
-    //   const descriptionNull = description.trim().length
-    //   console.log('type: ', descriptionNull)
-    //   if (descriptionNull === 0) {
-    //     commit('SET_ERROR_MESSAGE', '내용에는 빈 값을 입력할 수 없습니다')
-    //     commit('SET_ALERT_STATUS', true)
-    //     return
-    //   }
-    //   // 비속어 확인 (비속어가 있으면 true)
-    //   const descriptionCheck = checkBadWord(description)
-
-    //   if (descriptionCheck) {
-    //     commit('SET_ERROR_MESSAGE', '부적절한 언어가 포함되었습니다')
-    //     commit('SET_ALERT_STATUS', true)
-    //     return
-    //   }
-    //   // 저장
-    //   dispatch('saveCommunity', data)
-    // },
     // 일반게시글 수정
     updateSaveCommunity: (
       { commit, dispatch, rootGetters },
@@ -270,8 +256,9 @@ export const createFeed: Module<CreateFeedState, RootState> = {
       })
         .then((res) => {
           console.log(res.data)
-          router.push({
+          router.replace({
             name: 'TheCommunityDescView',
+            params: { feedId: res.data },
           })
 
           // 성공 알림

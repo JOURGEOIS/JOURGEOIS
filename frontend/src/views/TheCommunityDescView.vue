@@ -26,21 +26,15 @@ import HeaderBasic from '@/components/basics/HeaderBasic.vue'
 import CommentForm from '@/components/basics/CommentForm.vue'
 import CommentList from '@/components/basics/CommentList.vue'
 import NavBar from '@/components/basics/NavBar.vue'
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { CustomCocktail } from '../interface'
 const route = useRoute()
 const store = useStore()
 
-const feedDescInfo = computed(() => {
-  return store.getters['feedDescInfo/getCommunityDetail']
-})
-
-// 게시글 id
 const feedId = Number(route.params.feedId)
 const nickname = computed(() => feedDescInfo?.value?.followerDTO?.nickname)
-const postId = computed(() => feedDescInfo?.value?.customCocktail?.postId)
 
 const getCommunityDetail = () => {
   store.dispatch('feedDescInfo/getCommunityDetail', {
@@ -51,6 +45,17 @@ const getCommunityDetail = () => {
 onMounted(() => {
   getCommunityDetail()
 })
+
+onUnmounted(() => {
+  store.dispatch('feedDescInfo/removeCommunityDetail')
+})
+
+const feedDescInfo = computed(() => {
+  return store.getters['feedDescInfo/getCommunityDetail']
+})
+
+// 좋아요 개수
+const likeCount = computed(() => feedDescInfo?.value?.customCocktail?.like)
 
 // 좋아요 상태 확인
 const isLiked = computed(() => feedDescInfo?.value?.customCocktail?.ilike)
@@ -64,9 +69,6 @@ const clickLike = () => {
   }
   store.dispatch('post/toggleLike', params)
 }
-
-// 좋아요 개수
-const likeCount = computed(() => feedDescInfo?.value?.customCocktail?.like)
 
 // 댓글 개수
 const commentCount = computed(

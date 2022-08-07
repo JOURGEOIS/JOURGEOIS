@@ -58,9 +58,9 @@ const clickEdit = () => {
 
 // 삭제 클릭
 const clickDelete = () => {
-  if (confirm('삭제하시겠습니까?')) {
-    store.dispatch('createFeed/deleteCommunity', postId )
-  }
+  console.log(postId)
+  store.dispatch('feedDescInfo/deleteCommunityPost', postId.value )
+  
 }
 </script>
 

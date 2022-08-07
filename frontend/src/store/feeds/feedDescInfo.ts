@@ -9,6 +9,7 @@ import { CustomCocktail } from "../../interface";
 export interface FeedDescState {
   // 일반게시글 상세정보
   communityDetail: CustomCocktail;
+  communityDetailDefault: CustomCocktail;
   // 팝업 알림
   alertStatus: boolean;
   // 오류 메시지
@@ -50,6 +51,34 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         isFollowed: -2,
       },
     },
+    communityDetailDefault: {
+      customCocktail: {
+        uid: null,
+        img: null,
+        ilike: false,
+        type: null,
+        postId: 0,
+        imgLink: "",
+        description: "",
+        createTime: [0],
+        lastUpdateTime: [0],
+        isUpdated: 0,
+        like: 0,
+        title: "",
+        baseCocktail: 0,
+        baseCocktailName: "",
+        ingredients: [],
+        recipe: "",
+        reviewCount: 0,
+      },
+      followerDTO: {
+        uid: 0,
+        nickname: "",
+        introduce: "",
+        profileImg: "",
+        isFollowed: -2,
+      },
+    },
     // 팝업 알림
     alertStatus: false,
     // 오류 메시지
@@ -61,6 +90,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
   getters: {
     // 일반게시물 상세정보
     getCommunityDetail: (state) => state.communityDetail,
+    getCommunityDetailDefault: (state) => state.communityDetailDefault,
     // 알럿 팝업 상태
     getAlertStatus: (state) => state.alertStatus,
     // 에러 메시지
@@ -73,6 +103,10 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     // 일반게시글 상세정보
     SET_COMMUNITY_DETAIL: (state, value: CustomCocktail) => {
       state.communityDetail = value;
+    },
+    // * state에 일반게시글 정보 제거
+    REMOVE_COMMUNITY_DETAIL: (state) => {
+      state.communityDetail = state.communityDetailDefault;
     },
     // 에러 팝업
     SET_ALERT_STATUS: (state, value: boolean) => {
@@ -136,6 +170,51 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
           }
         });
     },
+    
+    // * state에 일반게시글 정보 제거
+    removeCommunityDetail: ({ commit }) => {
+      commit("REMOVE_COMMUNITY_DETAIL");
+    },
+    // 일반게시글 삭제
+    deleteCommunityPost: ({ commit, dispatch, rootGetters }, postId) => {
+      axios({
+        url: api.post.postCocktail(),
+        method: 'DELETE',
+        headers: {
+          Authorization: rootGetters['personalInfo/getAccessToken'],
+        },
+        data: {postId: postId},
+      })
+        .then((res) => {
+          alert('삭제성공^0^')
+          router.push({
+            name: 'TheNewsFeedView',
+          })
+
+          // 성공 알림
+          console.log(res)
+          commit('SET_SUCCESS_MESSAGE', '성공적으로 삭제되었습니다')
+          commit('SET_ALERT_STATUS', true)
+          commit('SET_REVIEW_SUCCESS', true)
+        })
+        .catch((err) => {
+          console.log(err)
+          if (err.res.status !== 401) {
+            console.log(err.res)
+            // 실패 팝업
+            commit('SET_ERROR_MESSAGE', '잠시 후에 시도해주세요')
+            commit('SET_ALERT_STATUS', true)
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: 'createFeed/deleteCommunity',
+              params: postId,
+            }
+            dispatch('personalInfo/requestRefreshToken', obj, { root: true })
+          }
+        })
+    },
+
     // 알럿 팝업
     changeAlertStatus: ({ commit }, value: boolean) => {
       commit("SET_ALERT_STATUS", value);

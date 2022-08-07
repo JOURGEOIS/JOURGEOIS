@@ -57,8 +57,7 @@ const clickHome = () => {
 // 뉴스피드 버튼 클릭
 const clickNewsFeed = () => {
   setNavIconStatus(1);
-  alert("뉴스피드 페이지로 이동시켜라");
-  // router.push({ name: "TheNewsFeedView" });
+  router.push({ name: "TheNewsFeedView" });
 };
 
 // 게시 버튼 클릭

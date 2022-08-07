@@ -129,7 +129,6 @@ public class MemberController {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);
             // 그냥 추가해봄
-            httpHeaders.setAccessControlAllowOrigin("*");
             return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
         } catch (URISyntaxException e) {
             e.printStackTrace();

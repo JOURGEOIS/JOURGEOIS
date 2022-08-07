@@ -161,12 +161,11 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 검색어 User 검색결과
     setSearchUser: ({ commit, state, rootGetters }, data) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.user(),
         method: "GET",
         headers: {
-          email,
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
           keyword: data.keyword,
@@ -190,11 +189,12 @@ export const searchResult: Module<SearchResultState, RootState> = {
     ) => {
       // 오류 처리
       if (typeof ingredientId !== "number") return;
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.cocktail(),
         method: "GET",
-        headers: { email },
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         params: {
           id: ingredientId,
           page: state.searchCocktailPage,
@@ -212,11 +212,12 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 검색어 Cocktail 검색결과
     setSearchCocktailAll: ({ commit, state, rootGetters }, data) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
-        headers: { email },
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         params: {
           keyword: data.keyword,
           page: state.searchCocktailAllPage,
@@ -248,12 +249,11 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 전체 칵테일 추가
     setWholeCocktail: ({ commit, getters, rootGetters }) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.wholeCocktail(),
         method: "GET",
         headers: {
-          email,
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
           page: getters["getWholeCocktailPage"],

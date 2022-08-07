@@ -76,8 +76,14 @@ const clickXIcon = () => {
   setTimeout(() => store.dispatch("share/toggleShareModal", false), 200);
 };
 
+// 개발환경 URL
+const url = encodeURI(window.location.href);
+// 서비스 환경 URL
+// const originUrl = encodeURI(window.location.href);
+// const path = originUrl.split("http://127.0.0.1:5173").splice(1).pop();
+// const url = "http://jourgeois.com" + path;
+
 // 링크 복사 클릭
-const url = encodeURIComponent(window.location.href);
 const clickShareLink = () => {
   navigator.clipboard.writeText(window.location.href);
   alert("링크가 복사되었습니다.");
@@ -85,7 +91,28 @@ const clickShareLink = () => {
 
 // 카카오톡 공유 클릭
 const clickShareKakao = () => {
-  alert("카카오톡 공유");
+  window.Kakao.Link.sendDefault({
+    objectType: "feed",
+    content: {
+      title: "주류주아",
+      description: "당신을 위한 칵테일 지침서",
+      imageUrl:
+        "https://user-images.githubusercontent.com/86189596/183279153-91bfcbef-fa3f-4639-b93d-bfc7e4bcea26.png",
+      link: {
+        webUrl: url,
+        mobileWebUrl: url,
+      },
+    },
+    buttons: [
+      {
+        title: "웹으로 이동",
+        link: {
+          webUrl: url,
+          mobileWebUrl: url,
+        },
+      },
+    ],
+  });
 };
 
 // 페이스북 공유 클릭

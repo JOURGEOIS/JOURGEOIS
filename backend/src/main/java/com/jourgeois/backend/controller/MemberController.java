@@ -205,7 +205,7 @@ public class MemberController {
 //            HttpHeaders httpHeaders = new HttpHeaders();
 //            httpHeaders.setLocation(redirectUri);
 //            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-            return new ResponseEntity<>(authUrl, HttpStatus.SEE_OTHER);
+            return new ResponseEntity<>(authUrl, HttpStatus.OK);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

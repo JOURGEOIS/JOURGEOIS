@@ -177,7 +177,7 @@ public class PostService {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
                     // cascade 적용이 안됨..!!
-                    customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(postDeleteReq.get("p_id")))
+                    customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(postDeleteReq.get("postId")))
                                     .ifPresent(data -> {customCocktailToCocktailRepository.deleteByCustomCocktailId(new CustomCocktail(data.getCustomCocktailId()));});
                     postRepository.delete(targetPost);
                 },
@@ -216,7 +216,7 @@ public class PostService {
         Member member = new Member();
         member.setUid(reviewDeleteReq.get("uid"));
 
-        PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("postReveiwId"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
+        PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("postReviewId"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReviewRepository.delete(postReview);
     }
 

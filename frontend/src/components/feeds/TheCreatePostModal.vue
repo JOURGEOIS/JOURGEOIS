@@ -60,14 +60,13 @@ const clickXIcon = () => {
 // 슈퍼커스텀칵테일 업로드
 const createCustomCocktail = () => {
   store.dispatch("createFeed/toggleCreateFeedModal", false);
-  alert("슈커칵 게시물 작성 화면으로 이동");
-  // router.push({ name: ""})
+  router.push({ name: "TheSuperCustomCocktailFormView" });
 };
 
 // 일반게시물 업로드
 const createNormal = () => {
   store.dispatch("createFeed/toggleCreateFeedModal", false);
-  router.push({ name: "TheCommunityFormView"})
+  router.push({ name: "TheCommunityFormView" });
 };
 </script>
 

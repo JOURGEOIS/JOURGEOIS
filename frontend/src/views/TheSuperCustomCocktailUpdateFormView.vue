@@ -1,19 +1,19 @@
-<!--칵테일 상세 페이지:  커스텀 칵테일 수정 페이지 -->
+<!-- 뉴스피드:  커스텀 칵테일 수정 페이지 -->
 <template>
   <div class="the-custom-cocktail-form-view">
     <!-- 헤더 -->
     <header-basic
       :prev="true"
       :success="true"
-      formId="custom-cocktail-update-form"
+      formId="super-custom-cocktail-update-form"
       @prevClicked="$router.go(-1)"
     >
       커스텀 칵테일 수정
     </header-basic>
     <section>
-      <the-custom-cocktail-update-form
-        id="custom-cocktail-update-form"
-      ></the-custom-cocktail-update-form>
+      <the-super-custom-cocktail-update-form
+        id="super-custom-cocktail-update-form"
+      ></the-super-custom-cocktail-update-form>
     </section>
   </div>
   <failure-pop-up v-if="errorStatus">
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import TheCustomCocktailUpdateForm from "@/components/cocktails/TheCustomCocktailUpdateForm.vue";
+import TheSuperCustomCocktailUpdateForm from "@/components/feeds/TheSuperCustomCocktailUpdateForm.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import LoadingBasic from "@/components/basics/LoadingBasic.vue";
 import { useStore } from "vuex";

@@ -5,7 +5,7 @@
     </label>
     <the-search-input
       :data="customCocktailSearchData"
-      v-model="customCocktailSearchValue"
+      v-model.trim="customCocktailSearchValue"
       @click-close-icon="resetInputValue"
     ></the-search-input>
     <div class="custom-cocktail-search-list">
@@ -94,6 +94,9 @@ const deleteSearchIngredients = (item: string) =>
 
 // 검색어 제출
 const submitSearchValue = () => {
+  if (!customCocktailSearchValue.value) {
+    return;
+  }
   store.dispatch(
     "customCocktail/addIngredients",
     customCocktailSearchValue.value

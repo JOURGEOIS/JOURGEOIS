@@ -1,10 +1,9 @@
 <template>
-  <div class="custom-cocktail-textarea">
-    <label for="custom-cocktail-textarea-input"> 칵테일 설명</label>
+  <div class="community-textarea">
     <textarea
-      id="custom-cocktail-textarea-input"
+      id="community-textarea-input"
       cols="10"
-      rows="5"
+      rows="10"
       maxlength="500"
       placeholder="광고 및 욕설, 비속어나 타인을 비방하는 문구를 사용하면 비공개 될 수 있습니다"
       @input="emitValue"
@@ -31,7 +30,7 @@ const emitValue = (event: Event) => {
 </script>
 
 <style scoped lang="scss">
-.custom-cocktail-textarea {
+.community-textarea {
   @include flex(column);
   gap: 16px;
 
@@ -40,10 +39,10 @@ const emitValue = (event: Event) => {
     color: $label-color;
   }
   textarea {
-    background-color: $white150;
-    border: 0;
-    border-radius: 10px;
-    padding: 16px 24px;
+    background-color: none;
+    border: none;
+    padding-top: 16px;
+    padding-bottom: 16px;
     font-family: $ff-main;
     resize: none;
 

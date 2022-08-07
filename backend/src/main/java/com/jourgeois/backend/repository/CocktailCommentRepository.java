@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface CocktailCommentRepository extends JpaRepository<CocktailComment, Long> {
 
-    @Query("SELECT COUNT(cr) AS counts, cr.commentId AS commentId, cr.member.uid AS userId, cr.member.nickname AS nickname, cr.member.profileImg AS profileImg," +
+    @Query("SELECT cr.commentId AS commentId, cr.member.uid AS userId, cr.member.nickname AS nickname, cr.member.profileImg AS profileImg," +
             " cr.cocktail.id AS cocktailId, cr.createdDate AS createdDate, cr.modifiedDate AS modifiedDate, cr.comment AS comment " +
             "FROM CocktailComment AS cr WHERE cr.cocktail.id = :id ORDER BY cr.createdDate DESC")
     Optional<ArrayList<CocktailCommentVO>> findCommentsByCocktailId(@Param("id") Long id, Pageable pageable);

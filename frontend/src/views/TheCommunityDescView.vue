@@ -1,19 +1,19 @@
 <template>
   <div class="community-desc-view">
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-      도시라솔파미레몬
+      {{ nickname }}
     </header-basic>
     <!-- 포스트 내용 불러오기 -->
     <the-community-desc-body></the-community-desc-body>
-    <!-- 좋아요/댓글/공유기능추가 -->
-    <!-- <like-comment-share>
-        <template #like>888</template>
-        <template #comment>777</template>
-      </like-comment-share> -->
+    <!-- 댓글 좋아요 공유 부분 -->
+    <like-comment-share @clickLike="clickLike" :data="{ isLiked: isLiked }">
+      <template #like>{{ likeCount }}</template>
+      <template #comment>{{ commentCount }}</template>
+    </like-comment-share>
     <section class="the-community-desc-comment">
       <!-- 댓글 불러오기 -->
-      <comment-form :page-id="communityPostId"></comment-form>
-      <comment-list :page-id="communityPostId"></comment-list>
+      <comment-form :page-id="feedId"></comment-form>
+      <comment-list :page-id="feedId"></comment-list>
     </section>
   </div>
   <nav-bar></nav-bar>
@@ -21,25 +21,57 @@
 
 <script setup lang="ts">
 import TheCommunityDescBody from '@/components/feeds/TheCommunityDescBody.vue'
+import LikeCommentShare from '@/components/basics/LikeCommentShare.vue'
+import HeaderBasic from '@/components/basics/HeaderBasic.vue'
 import CommentForm from '@/components/basics/CommentForm.vue'
 import CommentList from '@/components/basics/CommentList.vue'
-import HeaderBasic from '@/components/basics/HeaderBasic.vue'
 import NavBar from '@/components/basics/NavBar.vue'
-import { reactive, computed, onBeforeMount } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { CustomCocktail } from '../interface'
 const route = useRoute()
-
-// 유저 정보 불러오기
 const store = useStore()
 
-// 게시글 id
-const communityPostId = Number(route.params.feedId)
-
 const feedDescInfo = computed(() => {
-  return store.getters['feedInfo/getCommunityDetail']
+  return store.getters['feedDescInfo/getCommunityDetail']
 })
+
+// 게시글 id
+const feedId = Number(route.params.feedId)
+const nickname = computed(() => feedDescInfo?.value?.followerDTO?.nickname)
+const postId = computed(() => feedDescInfo?.value?.customCocktail?.postId)
+
+const getCommunityDetail = () => {
+  store.dispatch('feedDescInfo/getCommunityDetail', {
+    feedId,
+  })
+}
+
+onMounted(() => {
+  getCommunityDetail()
+})
+
+// 좋아요 상태 확인
+const isLiked = computed(() => feedDescInfo?.value?.customCocktail?.ilike)
+
+// 좋아요를 누른 경우
+const clickLike = () => {
+  const params = {
+    postId: feedId,
+    func: 'feedDescInfo/getCommunityDetail',
+    data: { feedId },
+  }
+  store.dispatch('post/toggleLike', params)
+}
+
+// 좋아요 개수
+const likeCount = computed(() => feedDescInfo?.value?.customCocktail?.like)
+
+// 댓글 개수
+const commentCount = computed(
+  () => feedDescInfo?.value?.customCocktail?.reviewCount,
+)
 </script>
 
 <style scoped lang="scss">
@@ -53,6 +85,7 @@ const feedDescInfo = computed(() => {
     @include flex(column);
     gap: 40px;
     width: 100%;
+    margin-top: 20px;
   }
 }
 </style>

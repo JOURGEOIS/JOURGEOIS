@@ -59,7 +59,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
   },
 
   getters: {
-    // 커스텀 칵테일 상세정보
+    // 일반게시물 상세정보
     getCommunityDetail: (state) => state.communityDetail,
     // 알럿 팝업 상태
     getAlertStatus: (state) => state.alertStatus,
@@ -70,7 +70,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
   },
 
   mutations: {
-    // 커스텀 칵테일 상세정보
+    // 일반게시글 상세정보
     SET_COMMUNITY_DETAIL: (state, value: CustomCocktail) => {
       state.communityDetail = value;
     },
@@ -89,8 +89,21 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
   },
 
   actions: {
-    // 커스텀 칵테일 상세정보 불러오기
-    setCommunityDetail: (
+    // vuex 리셋
+    resetCocktailData: ({ commit }) => {
+      commit("SET_ALERT_STATUS", false);
+      commit("SET_ERROR_MESSAGE", "");
+      commit("SET_SUCCESS_MESSAGE", "");
+      commit("SET_IMG_LINK", "");
+      commit("SET_DESCRIPTION", "");
+    },
+    // description
+    setDescription: ({ commit }, value: string) => {
+      commit("SET_DESCRIPTION", value);
+    },
+
+    // 일반게시글 상세정보 불러오기
+    getCommunityDetail: (
       { commit, dispatch, rootGetters },
       params: { feedId: number }
     ) => {
@@ -105,6 +118,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         },
       })
         .then((res) => {
+          console.log(res.data)
           commit("SET_COMMUNITY_DETAIL", res.data);
         })
         .catch((err) => {
@@ -113,7 +127,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "feedInfo/setCommunityDetail",
+              func: "feedInfo/getCommunityDetail",
               params,
             };
             dispatch("personalInfo/requestRefreshToken", obj, {

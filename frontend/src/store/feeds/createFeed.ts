@@ -74,7 +74,7 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     SET_SUCCESS_MESSAGE: (state, value: string) => {
       state.successMessage = value
     },
-    // 커스텀 칵테일 정보
+    // 일반 게시글 정보
     SET_IMG_LINK: (state, value: string) => state.imgLink = value,
     SET_DESCRIPTION: (state, value: string) => {
       state.description = value;
@@ -290,46 +290,6 @@ export const createFeed: Module<CreateFeedState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: 'createFeed/updateSaveCommunity',
-              params: postId,
-            }
-            dispatch('personalInfo/requestRefreshToken', obj, { root: true })
-          }
-        })
-    },
-
-    // 일반게시글 삭제
-    deleteCommunity: ({ commit, dispatch, rootGetters }, postId) => {
-      axios({
-        url: api.post.postCocktail(),
-        method: 'DELETE',
-        headers: {
-          Authorization: rootGetters['personalInfo/getAccessToken'],
-          'Content-Type': 'multipart/form-data',
-        },
-        data: postId,
-      })
-        .then((res) => {
-          alert('삭제성공^0^')
-          router.push({
-            name: 'TheNewsFeedView',
-          })
-
-          // 성공 알림
-          console.log(res)
-          commit('SET_SUCCESS_MESSAGE', '성공적으로 삭제되었습니다')
-          commit('SET_ALERT_STATUS', true)
-          commit('SET_REVIEW_SUCCESS', true)
-        })
-        .catch((err) => {
-          console.log(err.res)
-          if (err.response.status !== 401) {
-            // 실패 팝업
-            commit('SET_ERROR_MESSAGE', '잠시 후에 시도해주세요')
-            commit('SET_ALERT_STATUS', true)
-          } else {
-            // refreshToken 재발급
-            const obj = {
-              func: 'createFeed/deleteCommunity',
               params: postId,
             }
             dispatch('personalInfo/requestRefreshToken', obj, { root: true })

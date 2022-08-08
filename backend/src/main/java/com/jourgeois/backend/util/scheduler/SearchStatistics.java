@@ -32,7 +32,7 @@ public class SearchStatistics {
 
     private final RedisService redisService;
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */30 * * * *")
     public void getHotKeywordEveryTenMinutes() {
         // 현재 시간 마지막 집계 시간 기록
         LocalDateTime to = LocalDateTime.now();

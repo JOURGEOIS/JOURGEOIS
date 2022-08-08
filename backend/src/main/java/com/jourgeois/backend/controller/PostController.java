@@ -141,7 +141,7 @@ public class PostController {
     public ResponseEntity postReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
         System.out.println("Request: " + postReviewDTO.toString());
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
         if(postReviewDTO.getReview() == null || postReviewDTO.getReview().isEmpty()) {
             result.put("fail", "내용을 입력해주세요.");
@@ -152,9 +152,7 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             postReviewDTO.setUid(uid);
-            postService.postReview(postReviewDTO);
-            result.put("success", "성공");
-            return new ResponseEntity(result, HttpStatus.CREATED);
+            return new ResponseEntity(postService.postReview(postReviewDTO), HttpStatus.CREATED);
         } catch (NumberFormatException e) {
             result.put("fail", "실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -169,7 +167,7 @@ public class PostController {
     public ResponseEntity editReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
         System.out.println("Request: " + postReviewDTO.toString());
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         if(postReviewDTO.getReview() == null || postReviewDTO.getReview().isEmpty()) {
             result.put("fail", "내용을 입력해주세요.");
             return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
@@ -178,9 +176,8 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             postReviewDTO.setUid(uid);
-            postService.editReview(postReviewDTO);
-            result.put("success", "성공");
-            return new ResponseEntity(result, HttpStatus.CREATED);
+
+            return new ResponseEntity(postService.editReview(postReviewDTO), HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
             result.put("fail", "유저가 작성한 댓글이 없습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -194,13 +191,11 @@ public class PostController {
     public ResponseEntity deleteReview(HttpServletRequest request, @RequestBody Map<String, Long> postDeleteReq) {
         System.out.println("Request: " + postDeleteReq.toString());
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             postDeleteReq.put("uid", uid);
-            postService.deleteReview(postDeleteReq);
-            result.put("success", "성공");
-            return new ResponseEntity(result, HttpStatus.CREATED);
+            return new ResponseEntity(postService.deleteReview(postDeleteReq), HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
             result.put("fail", "유저가 작성한 댓글이 없습니다.");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);

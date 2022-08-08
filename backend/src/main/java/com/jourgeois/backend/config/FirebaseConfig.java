@@ -1,3 +1,4 @@
+/*
 package com.jourgeois.backend.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
@@ -31,3 +32,4 @@ public class FirebaseConfig {
         }
     }
 }
+*/

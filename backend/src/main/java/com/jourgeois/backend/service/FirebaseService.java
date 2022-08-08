@@ -1,3 +1,4 @@
+/*
 package com.jourgeois.backend.service;
 
 import com.google.api.core.ApiFuture;
@@ -46,3 +47,4 @@ public class FirebaseService {
         System.out.println("Update time : " + result.get().getUpdateTime());
     }
 }
+*/

@@ -46,20 +46,20 @@ public class S3Util {
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         upload(uploadFile, dirName, imgType);
         System.out.println(uploadFile.getName());
-        return URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName(), "UTF-8");
+        return URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_"), "UTF-8");
     }
 
     public String localUpload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
         File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        String url = URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName(), "UTF-8");
+        String url = URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_"), "UTF-8");
         return url;
     }
 
     // S3로 파일 업로드하기
     private void upload(File uploadFile, Long dirName, ImgType imgType) {
 
-        String fileName = imgType.getValue() + "/" + dirName + "/" + uploadFile.getName();   // S3에 저장된 파일 이름
+        String fileName = imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_");   // S3에 저장된 파일 이름
         putS3(uploadFile, fileName); // s3로 업로드
         try {
             File tmp_img = new File(IMG_TMP + "/" + imgType.getValue() + "/" + dirName);

@@ -52,7 +52,7 @@ public class S3Util {
     public String localUpload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
         File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        String url = URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_"), "UTF-8");
+        String url = imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_");
         return url;
     }
 

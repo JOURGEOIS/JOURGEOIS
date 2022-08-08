@@ -154,6 +154,7 @@ public class MemberController {
             // Http Header 설정
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccessControlAllowOrigin("*");
             HttpEntity<GoogleLoginRequest> httpRequestEntity = new HttpEntity<>(requestParams, headers);
             ResponseEntity<String> apiResponseJson = restTemplate.postForEntity(configUtils.getGoogleAuthUrl() + "/token", httpRequestEntity, String.class);
 
@@ -192,7 +193,7 @@ public class MemberController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping(value = "/login/kakao")
@@ -202,7 +203,7 @@ public class MemberController {
             URI redirectUri = new URI(authUrl);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

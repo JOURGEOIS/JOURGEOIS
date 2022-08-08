@@ -3,7 +3,11 @@
     <!-- 칵테일 제목 섹션 -->
     <article class="cocktail-title-section">
       <h1 class="cocktail-title">{{ title }}</h1>
-      <div class="base-cocktail-line" @click="clickBaseCocktail">
+      <div
+        class="base-cocktail-line"
+        v-if="baseCocktail"
+        @click="clickBaseCocktail"
+      >
         <span class="base-cocktail-title">
           <span class="material-icons-outlined cocktail-icon"> local_bar </span>
           <span class="base-cocktail">베이스 칵테일</span>
@@ -30,7 +34,9 @@
     <article class="cocktail-recipe">
       <h1 class="title1">제작</h1>
       <h2 class="title2 ingredients-title">재료</h2>
-      <p class="normal-paragraph">{{ ingredientString }}</p>
+      <p class="normal-paragraph ingredients-description">
+        {{ ingredientString }}
+      </p>
       <div class="recipe-line" v-for="(txt, idx) in recipeList" :key="idx">
         <h2 class="title2">{{ idx + 1 }}단계</h2>
         <p class="normal-paragraph">{{ txt }}</p>
@@ -106,14 +112,25 @@ const clickBaseCocktail = () => {
 // 수정 클릭
 const clickEdit = () => {
   if (confirm("수정하시겠습니까?")) {
-    alert("수정 폼으로 이동");
-    // router.push({
-    //   name: "TheCustomCocktailFormView",
-    //   params: {
-    //     cocktailId: route.params.cocktailId,
-    //     feedId: route.params.feedId,
-    //   },
-    // });
+    // 커스텀 칵테일인 경우
+    if (baseCocktail.value) {
+      router.push({
+        name: "TheCustomCocktailUpdateFormView",
+        params: {
+          cocktailId: route.params.cocktailId,
+          feedId: route.params.feedId,
+        },
+      });
+    }
+    // 슈퍼 커스텀 칵테일인 경우
+    else {
+      router.push({
+        name: "TheSuperCustomCocktailUpdateFormView",
+        params: {
+          feedId: route.params.feedId,
+        },
+      });
+    }
   }
 };
 
@@ -129,37 +146,38 @@ const clickDelete = () => {
 .the-custom-cocktail-desc-body {
   @include flex(column);
   width: 100%;
-  gap: 10px;
+  // gap: 10px;
 
   .cocktail-title-section {
     .cocktail-title {
-      margin: 10px 0;
-      @include font(25px, $fw-medium);
+      // margin: 10px 0;
+      @include font(20px, $fw-medium);
     }
     .base-cocktail-line {
       @include flex-xy(flex-start, center);
       gap: 10px;
+      margin: 5px 0;
       @include for-click;
 
       .base-cocktail-title {
         @include flex-xy(flex-start, flex-end);
         gap: 2px;
         .cocktail-icon {
-          @include font-size-navy(19px);
+          @include font-size-navy(15px);
         }
         .base-cocktail {
-          @include font-size-navy(15px);
+          @include font-size-navy(12px);
         }
       }
       .base-cocktail-name {
-        @include font(15px);
+        @include font(12px);
       }
     }
   }
 
   .cocktail-image {
     width: calc(100% + 32px);
-    margin: 10px -16px;
+    margin: 0 -16px;
     aspect-ratio: 1/1;
     background : {
       size: cover;
@@ -201,7 +219,15 @@ const clickDelete = () => {
   color: $navy600;
 }
 
+.ingredients-description {
+  @include font(15px, $fw-medium);
+}
+
 .normal-paragraph {
   @include font-size-sub(15px);
+}
+
+article {
+  margin: 20px 0;
 }
 </style>

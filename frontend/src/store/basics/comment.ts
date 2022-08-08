@@ -153,7 +153,6 @@ export const comment: Module<Comment, RootState> = {
 
     // 리스트 받아오기
     saveCommentList: ({ getters, dispatch, rootGetters, commit }, id) => {
-      console.log("데이터!");
       axios({
         url: api.post.comment(),
         method: "get",

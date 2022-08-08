@@ -161,12 +161,11 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 검색어 User 검색결과
     setSearchUser: ({ commit, state, rootGetters }, data) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.user(),
         method: "GET",
         headers: {
-          email,
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
           keyword: data.keyword,
@@ -185,25 +184,28 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 검색어 자동완성 재료 Cocktail 검색결과
     setSearchCocktail: (
-      { commit, state, rootGetters },
+      { commit, state, rootGetters, getters },
       ingredientId: number
     ) => {
       // 오류 처리
       if (typeof ingredientId !== "number") return;
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.cocktail(),
         method: "GET",
-        headers: { email },
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         params: {
           id: ingredientId,
           page: state.searchCocktailPage,
         },
       })
         .then((res) => {
-          commit("SET_SEARCH_COCKTAIL_PAGE", state.searchCocktailPage + 1);
+          const newSearchCocktails = res.data;
           // 최대 10개 칵테일 정보 리스트에 추가
-          commit("SET_SEARCH_COCKTAILS", res.data);
+          commit("SET_SEARCH_COCKTAILS", newSearchCocktails);
+          const page = getters.getSearchCocktailPage;
+          commit("SET_SEARCH_COCKTAIL_PAGE", page + 1);
         })
         .catch((err) => {
           console.error(err.response);
@@ -211,24 +213,24 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 Cocktail 검색결과
-    setSearchCocktailAll: ({ commit, state, rootGetters }, data) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
+    setSearchCocktailAll: ({ commit, state, getters, rootGetters }, data) => {
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
-        headers: { email },
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         params: {
           keyword: data.keyword,
           page: state.searchCocktailAllPage,
         },
       })
         .then((res) => {
-          commit(
-            "SET_SEARCH_COCKTAIL_ALL_PAGE",
-            state.searchCocktailAllPage + 1
-          );
+          const newSearchCocktailAlls = res.data;
           // 최대 10개 칵테일 정보 리스트에 추가
-          commit("SET_SEARCH_COCKTAIL_ALLS", res.data);
+          commit("SET_SEARCH_COCKTAIL_ALLS", newSearchCocktailAlls);
+          const page = getters.getSearchCocktailAllPage;
+          commit("SET_SEARCH_COCKTAIL_ALL_PAGE", page + 1);
         })
         .catch((err) => {
           console.error(err.response);
@@ -248,12 +250,11 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 전체 칵테일 추가
     setWholeCocktail: ({ commit, getters, rootGetters }) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.wholeCocktail(),
         method: "GET",
         headers: {
-          email,
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
           page: getters["getWholeCocktailPage"],

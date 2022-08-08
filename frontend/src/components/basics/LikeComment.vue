@@ -37,10 +37,6 @@
         <slot name="comment"></slot>
       </span>
     </div>
-    <div class="share tab" @click="clickShare">
-      <span class="material-icons share-icon"> ios_share </span>
-      <span class="button-text">공유</span>
-    </div>
   </section>
 </template>
 
@@ -49,7 +45,6 @@ import axios from "axios";
 import api from "../../api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { ref } from "vue";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -76,12 +71,6 @@ const clickLikedUsers = () => {
     name: "TheLikedUserListView",
     params: { feedId },
   });
-};
-
-// 공유 버튼 클릭
-const clickShare = () => {
-  store.dispatch("share/changeShareModalClass", "start");
-  store.dispatch("share/toggleShareModal", true);
 };
 </script>
 

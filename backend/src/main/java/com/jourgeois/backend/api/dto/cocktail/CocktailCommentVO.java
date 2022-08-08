@@ -13,5 +13,4 @@ public interface CocktailCommentVO {
     LocalDateTime getCreatedDate();
     LocalDateTime getModifiedDate();
     String getComment();
-    Long getCounts();
 }

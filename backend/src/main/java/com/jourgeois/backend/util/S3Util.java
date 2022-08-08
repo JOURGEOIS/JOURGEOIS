@@ -97,7 +97,7 @@ public class S3Util {
             System.out.println("폴더 만들었음");
         }
 
-        File convertFile = new File(folderPath + Long.toString(System.nanoTime()) + "_" +file.getOriginalFilename());
+        File convertFile = new File(folderPath + Long.toString(System.nanoTime()) + "_" +file.getOriginalFilename().replaceAll(" ", "_"));
         System.out.println(convertFile.getAbsolutePath());
         URL url = ResourceUtils.getURL(folderPath);
         System.out.println("url임" + url);

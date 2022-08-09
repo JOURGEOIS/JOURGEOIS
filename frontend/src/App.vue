@@ -54,4 +54,12 @@ onMounted(() => {
     margin-top: 152px !important;
   }
 }
+
+.top-view-no-margin {
+  margin-top: 74px !important;
+
+  @media #{$tablet} {
+    margin-top: 98px !important;
+  }
+}
 </style>

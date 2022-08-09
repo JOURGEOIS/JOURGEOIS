@@ -109,7 +109,7 @@
           <textarea-basic
             :data="reviewInputData"
             :textarea-style="reviewInputStyle"
-            v-model="reviewInputValue"
+            v-model.trim="reviewInputValue"
           ></textarea-basic>
           <failure-pop-up v-if="failModalStatus">
             {{ reviewConditionErrorMessage }}
@@ -265,14 +265,14 @@ const clickEditReview = () => {
     cocktailId,
     commentId: props.data.commentId,
     comment: reviewInputValue.value,
-  }
+  };
   // 제출
   if (reviewCondition) {
     reviewInputStyle.value = "error";
     occurredError.value = true;
     toggleFailPopUp(true);
   } else {
-    reviewEdit(editData)
+    reviewEdit(editData);
   }
 };
 const clickCancel = () => {
@@ -287,8 +287,8 @@ const reviewDelete = (data: object) =>
 const commentId = props.data.commentId;
 
 const clickDeleteReview = () => {
-  reviewDelete({ cocktailId, commentId })
-}
+  reviewDelete({ cocktailId, commentId });
+};
 </script>
 
 <style scoped lang="scss">

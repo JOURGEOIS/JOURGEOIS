@@ -79,7 +79,7 @@ const successVisibility = computed(() => {
   position: fixed;
   height: 74px;
   background-color: $white !important;
-  z-index: 100;
+  z-index: 5;
 
   @media #{$tablet} {
     height: 98px;

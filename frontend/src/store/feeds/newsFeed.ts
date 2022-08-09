@@ -55,7 +55,6 @@ export const newsFeed: Module<NewsFeedState, RootState> = {
 
     // 뉴스피드 정보 받아 오기
     getNewsFeedListData: ({ rootGetters, dispatch, getters, commit }) => {
-      console.log("dp 받는다!!!");
       axios({
         url: api.post.listFeed(),
         method: "get",
@@ -67,7 +66,6 @@ export const newsFeed: Module<NewsFeedState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           const page = getters["getNewsFeedListPage"];
           commit("ADD_NEWS_FEED_LIST_DATA", response.data);
           commit("SET_NEWS_FEED_LIST_PAGE", page + 1);
@@ -75,7 +73,6 @@ export const newsFeed: Module<NewsFeedState, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.log(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

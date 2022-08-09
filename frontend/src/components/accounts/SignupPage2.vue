@@ -6,7 +6,7 @@
         <input-basic
           :data="emailInputData"
           :input-style="emailInputStyle"
-          v-model="emailInputValue"
+          v-model.trim="emailInputValue"
         ></input-basic>
         <section class="condition-checker-section" v-if="showDuplicateAlert">
           <condition-checker :props="emailDuplicateCheckerProps" />

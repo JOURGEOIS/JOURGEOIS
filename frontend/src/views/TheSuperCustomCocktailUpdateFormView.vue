@@ -10,7 +10,7 @@
     >
       커스텀 칵테일 수정
     </header-basic>
-    <section>
+    <section class="top-view">
       <the-super-custom-cocktail-update-form
         id="super-custom-cocktail-update-form"
       ></the-super-custom-cocktail-update-form>

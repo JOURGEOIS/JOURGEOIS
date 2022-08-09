@@ -77,7 +77,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p.description AS description " +
             "FROM Member AS m JOIN Post p ON p.member.uid = m.uid AND p.d_type = :postType " +
             "WHERE m.uid = :id")
-    Optional<List<MemberVO>> findCocktailOrPostByUid(Long id, String postType);
+    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long id, String postType);
 
 //    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p1.description AS description " +
 //            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid and p.d_type = :postType WHERE m.uid = :id")

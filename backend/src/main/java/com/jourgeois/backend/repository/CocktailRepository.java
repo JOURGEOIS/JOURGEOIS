@@ -70,6 +70,6 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
     @Query("SELECT c.id AS id, c.nameKR AS nameKR, c.img AS img, c.category AS category, c.tag AS tag " +
             "FROM Member AS m JOIN CocktailBookmark AS cb ON cb.memberId.uid = m.uid JOIN Cocktail AS c ON cb.cocktailId.id = c.id " +
             "WHERE m.uid = :id")
-    Optional<List<CocktailVO>> findBookmarkByUid(Long id);
+    Optional<List<CocktailVO>> findBookmarkInProfilePageByUid(Long id);
 
 }

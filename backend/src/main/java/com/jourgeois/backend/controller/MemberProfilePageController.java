@@ -25,19 +25,20 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth")
-    public ResponseEntity<?> readProfile(HttpServletRequest request, @ModelAttribute MemberDTO memberDto){
+    public ResponseEntity<?> readProfile(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
+            System.out.println("1212123123");
+            memberDTO.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
+            MemberDTO result = memberProfilePageService.readMemberProfile(memberDTO);
 
-//            memberDto.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
-//            memberService.changeProfile(memberDto);
-//            return new ResponseEntity(memberService.findUserInfo(memberDto.getUid()), HttpStatus.CREATED);
-        }catch (Exception e) {
+            return ResponseEntity.ok().body(result);
+
+        } catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
-        return null;
     }
 }

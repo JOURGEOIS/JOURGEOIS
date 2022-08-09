@@ -39,7 +39,6 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             }else {
                 request.setAttribute("exception", "Exception");
             }
-//            }
         } catch(ExpiredJwtException e){
             request.setAttribute("exception", "ExpiredJwt");
             log.info("ExpiredJwtException {}", e.getMessage());

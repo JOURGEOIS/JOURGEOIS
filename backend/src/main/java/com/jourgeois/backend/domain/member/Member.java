@@ -31,6 +31,7 @@ public class Member {
     private String nickname;
     private String birthday;
     private String profileImg ="profile/default/1.png";
+    @Column(length = 25)
     private String introduce;
     @CreatedDate
     private java.util.Date creationDate;

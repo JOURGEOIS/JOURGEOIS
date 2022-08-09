@@ -405,14 +405,15 @@ public class MemberService {
 
         // refresh token 발급 및 저장
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
-        RefreshToken token = RefreshToken.createToken(Long.valueOf(userDetails.getUsername()), refreshToken);
+        RefreshToken token = RefreshToken.createToken(new Member(Long.valueOf(userDetails.getUsername())), refreshToken);
         System.out.println(refreshToken + " " + token);
 
         // 기존 토큰이 있으면 수정, 없으면 생성
-        refreshTokenRepository.findByUid(Long.valueOf(userDetails.getUsername()))
+        refreshTokenRepository.findById(Long.valueOf(userDetails.getUsername()))
                 .ifPresentOrElse(
-                        (tokenEntity)->tokenEntity.changeToken(refreshToken),
-                        ()->refreshTokenRepository.save(RefreshToken.createToken(Long.valueOf(userDetails.getUsername()), refreshToken))
+                        (tokenEntity)->{tokenEntity.changeToken(refreshToken);},
+                        ()->{refreshTokenRepository.save(RefreshToken.createToken(memberRepository.findById(Long.valueOf(userDetails.getUsername())).get(), refreshToken));
+                            }
                 );
 
         return TokenResponseDTO.builder()
@@ -432,7 +433,7 @@ public class MemberService {
 
     @Transactional
     public void logout(Long uid){
-        refreshTokenRepository.deleteByUid(uid);
+        refreshTokenRepository.deleteById(uid);
         System.out.println("토큰 삭제 완료");
     }
 
@@ -449,7 +450,7 @@ public class MemberService {
     public void signOut(Long uid, String email) throws NoSuchElementException{
         Optional<Member> member = memberRepository.findByUidAndEmail(uid, email);
         member.ifPresentOrElse(selectMember -> {
-            refreshTokenRepository.deleteByUid(selectMember.getUid());
+            refreshTokenRepository.deleteById(selectMember.getUid());
             String userProfile = selectMember.getProfileImg();
             if(!userProfile.equals("default/1.png"))
                 s3Util.deleteFile(userProfile);

@@ -1,8 +1,6 @@
 package com.jourgeois.backend.api.dto.member;
 
 
-import com.jourgeois.backend.domain.member.Member;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 //@Builder
 @Getter @Setter
 @ToString
-public class ProfileDTO {
+public class MemberDTO {
     private Long uid;
     private String email;
     private String name;
@@ -20,9 +18,9 @@ public class ProfileDTO {
     private MultipartFile profileLink;
     private String introduce;
 
-    public ProfileDTO(){}
+    public MemberDTO(){}
 
-    public ProfileDTO(Long uid, String email, String name, String nickname, String profileImg, String introduce) {
+    public MemberDTO(Long uid, String email, String name, String nickname, String profileImg, String introduce) {
         this.uid = uid;
         this.email = email;
         this.name = name;
@@ -31,7 +29,7 @@ public class ProfileDTO {
         this.introduce = introduce;
     }
 
-    public ProfileDTO(Long uid, String nickname, String profileImg) {
+    public MemberDTO(Long uid, String nickname, String profileImg) {
         this.uid = uid;
         this.nickname = nickname;
         this.profileImg = profileImg;

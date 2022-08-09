@@ -1,7 +1,7 @@
 package com.jourgeois.backend.service;
 
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.api.dto.post.PostSearchMaterialDTO;
 import com.jourgeois.backend.api.dto.search.SearchCocktailDTO;
 import com.jourgeois.backend.api.dto.search.SearchFilterDTO;
@@ -75,7 +75,7 @@ public class SearchService {
                             .uid(data.getUid())
                             .profileImg(s3Url + data.getProfileImg())
                             .introduce(data.getIntroduce()).build();
-                            ProfileDTO p = new ProfileDTO(data.getUid(), data.getEmail(), data.getName(),
+                            MemberDTO p = new MemberDTO(data.getUid(), data.getEmail(), data.getName(),
                                     data.getNickname(), s3Url + data.getProfileImg(), data.getIntroduce());
                             list.add(f);
                         });

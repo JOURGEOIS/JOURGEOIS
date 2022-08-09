@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 const router = useRouter();
 const store = useStore();
 const navIconStatus = computed(() => store.getters["navbar/getNavIconStatus"]);
@@ -80,6 +80,22 @@ const clickProfile = () => {
   alert("프로필 페이지로 이동시켜라");
   // router.push({ name: "TheProfileView" });
 };
+
+const createFeedModalStatus = computed(
+  () => store.getters["createFeed/getCreateFeedModalStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  if (createFeedModalStatus.value) {
+    store.dispatch("createFeed/changeCreateFeedModalClass", "end");
+    setTimeout(
+      () => store.dispatch("createFeed/toggleCreateFeedModal", false),
+      200
+    );
+  } else {
+    next();
+  }
+});
 </script>
 
 <style scoped lang="scss">

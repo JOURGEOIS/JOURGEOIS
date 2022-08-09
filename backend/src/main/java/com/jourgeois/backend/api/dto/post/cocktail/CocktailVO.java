@@ -1,4 +1,4 @@
-package com.jourgeois.backend.api.dto.cocktail;
+package com.jourgeois.backend.api.dto.post.cocktail;
 
 
 public interface CocktailVO {

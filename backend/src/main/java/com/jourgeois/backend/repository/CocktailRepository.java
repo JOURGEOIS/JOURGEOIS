@@ -1,6 +1,6 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.api.dto.cocktail.CocktailVO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailVO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

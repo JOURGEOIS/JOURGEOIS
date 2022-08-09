@@ -31,11 +31,12 @@ public class Member {
     private String nickname;
     private String birthday;
     private String profileImg ="profile/default/1.png";
-
     private String introduce;
     @CreatedDate
     private java.util.Date creationDate;
     private String roles = "ROLE_USER";
+    @Column(name = "is_public")
+    private String isPublic = "1";
     @Column(name = "sso_id")
     private String SSOId;
 

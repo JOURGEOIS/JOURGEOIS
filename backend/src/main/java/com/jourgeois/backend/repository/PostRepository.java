@@ -72,4 +72,48 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "group by cocktail.c_id order by bookmarked DESC", nativeQuery = true)
     List<HomeCocktailItemVO> findCocktailOrderByBookmarked(Pageable pageable);
 
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title from\n" +
+            "(select (likes + comments) as score, pid from\n" +
+            "(select likes, IFNULL(comments, 0) as comments, IFNULL(p_id, pr_p_id) as pid, IFNULL(pr_p_id, p_id) from\n" +
+            "(select count(*) as likes, p_id from post_bookmark where date_add(now(), interval -7 day) <= b_timestamp AND b_timestamp < now() group by p_id) as likeTable\n" +
+            "left join\n" +
+            "(select count(*) as comments, pr_p_id from post_review where date_add(now(), interval -7 day) <= pr_create_time AND pr_create_time < now() group by pr_p_id) as commentTable\n" +
+            "on likeTable.p_id = commentTable.pr_p_id) as LeftJoin\n" +
+            "union\n" +
+            "select (likes + comments) as score, pid from\n" +
+            "(select IFNULL(likes, 0) as likes, IFNULL(comments, 0) as comments, IFNULL(p_id, pr_p_id) as pid, IFNULL(pr_p_id, p_id) from\n" +
+            "(select count(*) as likes, p_id from post_bookmark where date_add(now(), interval -7 day) <= b_timestamp AND b_timestamp < now() group by p_id) as likeTable\n" +
+            "right join\n" +
+            "(select count(*) as comments, pr_p_id from post_review where date_add(now(), interval -7 day) <= pr_create_time AND pr_create_time < now() group by pr_p_id) as commentTable\n" +
+            "on likeTable.p_id = commentTable.pr_p_id) as RightJoin) as scoreInfo\n" +
+            "left join custom_cocktail\n" +
+            "on custom_cocktail.p_id = pid\n" +
+            "left join post\n" +
+            "on pid = post.p_id\n" +
+            "where p_dtype = 'cocktail'\n" +
+            "order by score desc", nativeQuery = true)
+    List<HomeCocktailItemVO> getWeeklyHotCustomCocktail(Pageable pageable);
+
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title from\n" +
+            "(select (likes + comments) as score, pid from\n" +
+            "(select likes, IFNULL(comments, 0) as comments, IFNULL(p_id, pr_p_id) as pid, IFNULL(pr_p_id, p_id) from\n" +
+            "(select count(*) as likes, p_id from post_bookmark where date_add(now(), interval -7 day) <= b_timestamp AND b_timestamp < now() group by p_id) as likeTable\n" +
+            "left join\n" +
+            "(select count(*) as comments, pr_p_id from post_review where date_add(now(), interval -7 day) <= pr_create_time AND pr_create_time < now() group by pr_p_id) as commentTable\n" +
+            "on likeTable.p_id = commentTable.pr_p_id) as LeftJoin\n" +
+            "union\n" +
+            "select (likes + comments) as score, pid from\n" +
+            "(select IFNULL(likes, 0) as likes, IFNULL(comments, 0) as comments, IFNULL(p_id, pr_p_id) as pid, IFNULL(pr_p_id, p_id) from\n" +
+            "(select count(*) as likes, p_id from post_bookmark where date_add(now(), interval -7 day) <= b_timestamp AND b_timestamp < now() group by p_id) as likeTable\n" +
+            "right join\n" +
+            "(select count(*) as comments, pr_p_id from post_review where date_add(now(), interval -7 day) <= pr_create_time AND pr_create_time < now() group by pr_p_id) as commentTable\n" +
+            "on likeTable.p_id = commentTable.pr_p_id) as RightJoin) as scoreInfo\n" +
+            "left join custom_cocktail\n" +
+            "on custom_cocktail.p_id = pid\n" +
+            "left join post\n" +
+            "on pid = post.p_id\n" +
+            "where p_dtype = 'cocktail'\n" +
+            "order by score desc limit 5", nativeQuery = true)
+    List<HomeCocktailItemVO> getWeeklyHot5CustomCocktail();
+
 }

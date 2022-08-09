@@ -65,9 +65,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 const router = useRouter();
 const store = useStore();
 
@@ -76,6 +76,7 @@ const animation = computed(() => store.getters["share/getShareModalClass"]);
 
 // 필터 off
 const clickXIcon = () => {
+  console.log("hi");
   store.dispatch("share/changeShareModalClass", "end");
   setTimeout(() => store.dispatch("share/toggleShareModal", false), 200);
 };
@@ -134,6 +135,20 @@ const clickShareTwitter = () => {
 const deviceType: string = store.getters["navbar/getDeviceType"];
 const isIphone = computed(() => {
   return deviceType === "iphone";
+});
+
+const shareModalStatus = computed(
+  () => store.getters["share/getShareModalStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  console.log(shareModalStatus);
+  console.log(shareModalStatus.value);
+  if (shareModalStatus.value) {
+    clickXIcon();
+  } else {
+    // next();
+  }
 });
 </script>
 

@@ -1,6 +1,7 @@
 package com.jourgeois.backend.service;
 
 import com.jourgeois.backend.api.dto.post.CocktailAwardsDTO;
+import com.jourgeois.backend.api.dto.post.CocktailAwardsVO;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.Member;
@@ -94,5 +95,18 @@ public class CocktailAwardsService {
                             .percentage(data.getPercentage()).build());
                 });
         return list;
+    }
+
+    public CocktailAwardsDTO getCocktailAwardsPostInfo(Long memberId, Long postId){
+        CocktailAwardsVO data = postRepository.getCocktailAwardsPostInfo(memberId, postId).get();
+        CocktailAwardsDTO result =
+                CocktailAwardsDTO.builder()
+                        .postId(data.getPostId())
+                        .imgLink(s3Url + data.getImgLink())
+                        .title(data.getTitle())
+                        .like(data.getLike())
+                        .description(data.getDescription())
+                        .percentage(data.getPercentage()).build();
+        return result;
     }
 }

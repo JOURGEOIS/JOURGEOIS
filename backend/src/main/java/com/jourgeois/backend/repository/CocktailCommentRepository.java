@@ -1,6 +1,7 @@
 package com.jourgeois.backend.repository;
 
 import com.jourgeois.backend.api.dto.post.cocktail.CocktailCommentVO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailVO;
 import com.jourgeois.backend.domain.cocktail.CocktailComment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public interface CocktailCommentRepository extends JpaRepository<CocktailComment, Long> {
@@ -21,4 +23,9 @@ public interface CocktailCommentRepository extends JpaRepository<CocktailComment
 
     @Query("SELECT cm FROM CocktailComment cm WHERE cm.member.uid = :uId AND cm.commentId = :commentId")
     Optional<CocktailComment> findByUidAndCommentId(@Param("uId") Long uId, @Param("commentId") Long commentId);
+
+    @Query("SELECT c.id AS id, c.nameKR AS nameKR, c.img AS img, c.category AS category, c.tag AS tag, cc.comment AS comment " +
+            "FROM Member AS m JOIN CocktailComment AS cc ON cc.member.uid = m.uid JOIN Cocktail AS c ON cc.cocktail.id = c.id " +
+            "WHERE m.uid = :id")
+    Optional<List<CocktailVO>> findCocktailCommentsInProfilePageByUid(Long id);
 }

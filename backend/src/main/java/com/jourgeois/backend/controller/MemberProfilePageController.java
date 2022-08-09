@@ -96,7 +96,7 @@ public class MemberProfilePageController {
 
         try {
             Long uid = Long.parseLong(((String) request.getAttribute("uid")));
-            MemberDTO result = memberProfilePageService.readMemberCocktailComment(uid);
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailComment(uid);
 
             return ResponseEntity.ok().body(result);
 

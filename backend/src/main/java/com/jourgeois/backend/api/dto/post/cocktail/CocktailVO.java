@@ -12,4 +12,5 @@ public interface CocktailVO {
     String getCategory();
     String getRecipe();
     String getImg();
+    String getComment();
 }

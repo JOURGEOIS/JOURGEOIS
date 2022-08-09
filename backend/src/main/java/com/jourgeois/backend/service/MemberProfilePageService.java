@@ -17,7 +17,6 @@ public class MemberProfilePageService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final CocktailRepository cocktailRepository;
-    private final CocktailBookmarkRepository cocktailBookmarkRepository;
     private final CocktailCommentRepository cocktailCommentRepository;
     private final String s3Url;
 
@@ -25,14 +24,13 @@ public class MemberProfilePageService {
     @Autowired
     public MemberProfilePageService(MemberRepository memberRepository,
                                     PostRepository postRepository,
-                                    CocktailRepository cocktailRepository, CocktailBookmarkRepository cocktailBookmarkRepository,
+                                    CocktailRepository cocktailRepository,
                                     CocktailCommentRepository cocktailCommentRepository,
                                     @Value("${cloud.aws.s3.bucket.path}") String s3Url) {
 
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
         this.cocktailRepository = cocktailRepository;
-        this.cocktailBookmarkRepository = cocktailBookmarkRepository;
         this.cocktailCommentRepository = cocktailCommentRepository;
         this.s3Url = s3Url;
     }
@@ -50,7 +48,7 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberCocktailOrPost(Long uid, String postType){
         List<Map<String, String>> resArr = new ArrayList<>();
 
-        postRepository.findCocktailOrPostByUid(uid, postType).orElseThrow().forEach(data -> {
+        postRepository.findCocktailOrPostInProfilePageByUid(uid, postType).orElseThrow().forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", data.getProfileImg());
@@ -58,7 +56,6 @@ public class MemberProfilePageService {
             res.put("postImg", data.getPostImg());
             res.put("description", data.getDescription());
 
-            System.out.println(res.entrySet().stream().map(param -> param.getKey() + " : " + param.getValue()));
             resArr.add(res);
         });
 
@@ -68,7 +65,7 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberBookmark(Long uid){
         List<Map<String, String>> resArr = new ArrayList<>();
 
-        cocktailRepository.findBookmarkByUid(uid).orElseThrow().forEach(data -> {
+        cocktailRepository.findBookmarkInProfilePageByUid(uid).orElseThrow().forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("cocktailId", data.getId());
             res.put("nameKR", data.getNameKR());
@@ -76,15 +73,27 @@ public class MemberProfilePageService {
             res.put("category", data.getCategory());
             res.put("tag", data.getTag());
 
-            System.out.println(res.entrySet().stream().map(param -> param.getKey() + " : " + param.getValue()));
             resArr.add(res);
         });
 
         return resArr;
     }
 
-    public MemberDTO readMemberCocktailComment(Long uid){
-//        cocktailCommentRepository
-        return null;
+    public List<Map<String, String>> readMemberCocktailComment(Long uid){
+        List<Map<String, String>> resArr = new ArrayList<>();
+
+        cocktailCommentRepository.findCocktailCommentsInProfilePageByUid(uid).orElseThrow().forEach(data -> {
+            Map<String, String> res = new HashMap<>();
+            res.put("cocktailId", data.getId());
+            res.put("nameKR", data.getNameKR());
+            res.put("img", data.getImg());
+            res.put("category", data.getCategory());
+            res.put("tag", data.getTag());
+            res.put("comment", data.getComment());
+
+            resArr.add(res);
+        });
+
+        return resArr;
     }
 }

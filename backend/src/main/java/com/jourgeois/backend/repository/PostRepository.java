@@ -122,6 +122,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "from post as p join cocktail_awards as c\n" +
             "on p.p_id = c.p_id\n" +
             "order by p_create_time desc", nativeQuery = true)
-    List<CocktailAwardsVO> getCocktailAwardsPostList(Long uid);
+    List<CocktailAwardsVO> getCocktailAwardsList(Long uid);
+
+    @Query(value = "select p.p_id as postId, p.p_img as imgLink, c.contest_title as title,\n" +
+            "(concat(round((select count(*) from post_bookmark where p_id = p.p_id) / \n" +
+            "    (select count(m_id) from post_bookmark \n" +
+            "where p_id in \n" +
+            "(select p_id from post where p_dtype = \"cocktail_awards\")) *100, 1), '%')) as percentage\n" +
+            "from post as p join cocktail_awards as c\n" +
+            "on p.p_id = c.p_id\n" +
+            "order by percentage desc", nativeQuery = true)
+    List<CocktailAwardsVO> getCocktailAwardsVoteList();
 
 }

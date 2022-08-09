@@ -4,10 +4,7 @@ import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.service.CocktailAwardsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -44,6 +41,10 @@ public class CocktailAwardsController {
             if(post.getAgree()){
                 Long uid = Long.valueOf((String) request.getAttribute("uid"));
                 post.setUid(uid);
+                if(!cocktailAwardsService.postCheck(uid)){
+                    result.put("fail", "이미 참여한 회원입니다.");
+                    return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+                }
                 return new ResponseEntity(cocktailAwardsService.postAwards(post), HttpStatus.CREATED);
             }
             result.put("fail", "개인정보를 동의해주세요.");
@@ -59,6 +60,25 @@ public class CocktailAwardsController {
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NoSuchElementException e) {
             result.put("fail", "글 등록 실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/auth")
+    public ResponseEntity postAwardsCheck(HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+
+        try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            if(!cocktailAwardsService.postCheck(uid)){
+                return new ResponseEntity(false, HttpStatus.OK);
+            }
+            return new ResponseEntity(true, HttpStatus.OK);
+        } catch(NumberFormatException e){
+            result.put("fail", "uid의 형식이 다릅니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(Exception e) {
+            result.put("fail", "실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

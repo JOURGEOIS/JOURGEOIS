@@ -28,4 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join custom_cocktail_to_cocktail on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id) as cocktailFilter left join cocktail on cocktailFilter.base_c_id = cocktail.c_id) as cocktailInfo\n" +
             "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer order by createTime desc", nativeQuery = true)
     List<NewsFeedVO> getNewsFeed(@Param("me") Long me, Pageable pageable);
+
+    @Query(value="select count(*) from post where p_dtype = :type and p_writer = :uid", nativeQuery = true)
+    Long findByCocktailAwards(Long uid, String type);
 }

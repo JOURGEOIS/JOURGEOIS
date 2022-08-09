@@ -11,6 +11,11 @@ spring:
     url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: 1q2w3e4r!@#
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 3d6165cd7783a12d9402e73b558291b8e165e0b1
 
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
@@ -31,8 +36,8 @@ spring:
         show_sql: true
   redis:
     host: redis
-    # host: localhost
-    # password: 1q2w3e4r!@#
+#    host: localhost
+#    password: 1q2w3e4r!@#
     port: 6379
 
 jwt:

@@ -1,5 +1,7 @@
 package com.jourgeois.backend.service;
 
+import com.jourgeois.backend.api.dto.post.CocktailAwardsDTO;
+import com.jourgeois.backend.api.dto.post.CocktailAwardsVO;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.Member;
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -61,5 +65,48 @@ public class CocktailAwardsService {
 
         // post 저장
         return postRepository.save(post).getId();
+    }
+
+    public Boolean postCheck(Long uid){
+        return postRepository.findByCocktailAwards(uid, "cocktail_awards")==0;
+    }
+
+    public List<CocktailAwardsDTO> getCocktailAwardsPostList(Long uid){
+        List<CocktailAwardsDTO> list = new ArrayList<>();
+        postRepository.getCocktailAwardsList(uid)
+                .forEach(data-> {
+                    list.add(CocktailAwardsDTO.builder()
+                            .postId(data.getPostId())
+                            .imgLink(s3Url + data.getImgLink())
+                            .title(data.getTitle())
+                            .like(data.getLike()).build());
+                });
+        return list;
+    }
+
+    public List<CocktailAwardsDTO> getCocktailAwardsVoteList(){
+        List<CocktailAwardsDTO> list = new ArrayList<>();
+        postRepository.getCocktailAwardsVoteList()
+                .forEach(data-> {
+                    list.add(CocktailAwardsDTO.builder()
+                            .postId(data.getPostId())
+                            .imgLink(s3Url + data.getImgLink())
+                            .title(data.getTitle())
+                            .percentage(data.getPercentage()).build());
+                });
+        return list;
+    }
+
+    public CocktailAwardsDTO getCocktailAwardsPostInfo(Long memberId, Long postId){
+        CocktailAwardsVO data = postRepository.getCocktailAwardsPostInfo(memberId, postId).get();
+        CocktailAwardsDTO result =
+                CocktailAwardsDTO.builder()
+                        .postId(data.getPostId())
+                        .imgLink(s3Url + data.getImgLink())
+                        .title(data.getTitle())
+                        .like(data.getLike())
+                        .description(data.getDescription())
+                        .percentage(data.getPercentage()).build();
+        return result;
     }
 }

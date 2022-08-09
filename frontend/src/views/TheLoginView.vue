@@ -4,7 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       로그인
     </header-basic>
-    <section class="login-section">
+    <section class="login-section top-view">
       <the-login-form></the-login-form>
       <div class="login-link">
         <router-link to="/user/help/password">
@@ -20,17 +20,17 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from '@/components/basics/HeaderBasic.vue'
-import TheLoginForm from '@/components/accounts/TheLoginForm.vue'
-import TheSocialLogin from '@/components/accounts/TheSocialLogin.vue'
-import FailurePopUp from '@/components/modals/FailurePopUp.vue'
-import { useStore } from 'vuex'
-import { computed } from 'vue'
-const store = useStore()
+import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import TheLoginForm from "@/components/accounts/TheLoginForm.vue";
+import TheSocialLogin from "@/components/accounts/TheSocialLogin.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
+const store = useStore();
 
 const loginFailModalStatus = computed(
-  () => store.getters['account/getLoginFailModalStatus'],
-)
+  () => store.getters["account/getLoginFailModalStatus"]
+);
 </script>
 
 <style scoped lang="scss">
@@ -43,7 +43,6 @@ const loginFailModalStatus = computed(
 
 section {
   width: 100%;
-  margin-top: 2rem;
 
   @media #{$tablet} {
     width: 80%;

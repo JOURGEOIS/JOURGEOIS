@@ -17,7 +17,7 @@
     <input-basic
       :data="emailInputData"
       input-style="normal"
-      v-model="emailInputValue"
+      v-model.trim="emailInputValue"
     ></input-basic>
 
     <!-- 최초로 이메일을 전송하는 버튼 -->

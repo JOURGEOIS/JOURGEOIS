@@ -15,14 +15,14 @@
     <input-basic
       :data="nameInputData"
       :input-style="nameInputStyle"
-      v-model="nameInputValue"
+      v-model.trim="nameInputValue"
     ></input-basic>
 
     <!-- input: 이메일 -->
     <input-basic
       :data="emailInputData"
       :input-style="emailInputStyle"
-      v-model="emailInputValue"
+      v-model.trim="emailInputValue"
     ></input-basic>
 
     <!-- catch 메시지 -->

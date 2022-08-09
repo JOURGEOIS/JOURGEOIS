@@ -10,7 +10,7 @@
     >
       커스텀 칵테일 제작
     </header-basic>
-    <section>
+    <section class="top-view">
       <the-super-custom-cocktail-form
         id="super-custom-cocktail-form"
       ></the-super-custom-cocktail-form>

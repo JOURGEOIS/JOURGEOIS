@@ -45,6 +45,7 @@ const { modalStyle }: any = selectModalColor(props.modalColor);
   position: fixed;
   top: 0;
   animation: fade-in 1s;
+  z-index: 20;
 }
 
 .modal-popup {

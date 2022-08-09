@@ -5,17 +5,15 @@ import com.jourgeois.backend.service.MemberProfilePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/member/profilepage")
+@RequestMapping(value = "/member/profilepage")
 public class MemberProfilePageController {
     private final MemberProfilePageService memberProfilePageService;
 
@@ -29,9 +27,76 @@ public class MemberProfilePageController {
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            System.out.println("1212123123");
-            memberDTO.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
-            MemberDTO result = memberProfilePageService.readMemberProfile(memberDTO);
+            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
+            MemberDTO result = memberProfilePageService.readMemberProfile(uid);
+
+            return ResponseEntity.ok().body(result);
+
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/auth/post")
+    public ResponseEntity<?> readPost(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+        Map<String, Boolean> data = new HashMap<>();
+
+        try {
+            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(uid, "post");
+
+            return ResponseEntity.ok().body(result);
+
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/auth/cocktail")
+    public ResponseEntity<?> readCustomCocktail(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+        Map<String, Boolean> data = new HashMap<>();
+
+        try {
+            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(uid, "cocktail");
+
+            return ResponseEntity.ok().body(result);
+
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/auth/bookmark")
+    public ResponseEntity<?> readBookmark(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+        Map<String, Boolean> data = new HashMap<>();
+
+        try {
+            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
+            List<Map<String, String>> result = memberProfilePageService.readMemberBookmark(uid);
+
+            return ResponseEntity.ok().body(result);
+
+        } catch (Exception e) {
+            System.out.println(e);
+            data.put("success", false);
+            return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/auth/comment")
+    public ResponseEntity<?> readCocktailComment(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+        Map<String, Boolean> data = new HashMap<>();
+
+        try {
+            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
+            MemberDTO result = memberProfilePageService.readMemberCocktailComment(uid);
 
             return ResponseEntity.ok().body(result);
 

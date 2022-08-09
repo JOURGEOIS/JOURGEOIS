@@ -13,4 +13,7 @@ public interface MemberVO {
     Integer getFollowerCnt();
     Integer getFollowingCnt();
     Integer getPostCnt();
+    String getCreateTime();
+    String getPostImg();
+    String getDescription();
 }

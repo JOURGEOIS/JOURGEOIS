@@ -1,7 +1,9 @@
 package com.jourgeois.backend.repository;
 
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
+import com.jourgeois.backend.api.dto.member.MemberVO;
 import com.jourgeois.backend.api.dto.post.NewsFeedVO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailVO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
 import org.springframework.data.domain.Pageable;
@@ -67,4 +69,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "cocktail.c_id = cocktail_bookmark.c_id\n" +
             "group by cocktail.c_id order by bookmarked DESC", nativeQuery = true)
     List<HomeCocktailItemVO> findCocktailOrderByBookmarked(Pageable pageable);
+
+    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p.description AS description " +
+            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid AND p.d_type = :postType " +
+            "WHERE m.uid = :id")
+    Optional<List<MemberVO>> findCocktailOrPostByUid(Long id, String postType);
+
+//    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p1.description AS description " +
+//            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid and p.d_type = :postType WHERE m.uid = :id")
+//    Optional<List<MemberVO>> findCommentByUid(Long uid, String postType);
 }

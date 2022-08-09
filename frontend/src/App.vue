@@ -41,4 +41,12 @@ const shareModalStatus = computed(
   margin-left: $margin-mobile;
   margin-right: $margin-mobile;
 }
+
+.top-view {
+  margin-top: 120px !important;
+
+  @media #{$tablet} {
+    margin-top: 152px !important;
+  }
+}
 </style>

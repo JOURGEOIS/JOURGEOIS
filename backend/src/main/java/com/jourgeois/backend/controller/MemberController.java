@@ -304,7 +304,7 @@ public class MemberController {
         try{
             Map<String, String> data = new HashMap<>();
             memberDto.setUid(Long.parseLong((String) request.getAttribute("uid")));
-            data.put("url", "http://13.209.206.237/img/" + memberService.ProfileImageLocalUpload(memberDto));
+            data.put("url", "https://www.jourgeois.com/img/" + memberService.ProfileImageLocalUpload(memberDto));
             return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
             Map<String, Boolean> data = new HashMap<>();

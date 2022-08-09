@@ -47,13 +47,25 @@ public class HomeService {
         return convertHomeCocktailItemVO2DTO(customCocktails);
     }
 
+    public List<HomeCocktailItemDTO> getHotTop5Cocktail() throws Exception {
+        List<HomeCocktailItemVO> customCocktails = postRepository.findTop5CocktailOrderByBookmarked();
+        return convertHomeCocktailItemVO2DTO(customCocktails);
+    }
+
+    public List<HomeCocktailItemDTO> getHotCocktail(Pageable pageable) throws Exception {
+        List<HomeCocktailItemVO> customCocktails = postRepository.findCocktailOrderByBookmarked(pageable);
+        return convertHomeCocktailItemVO2DTO(customCocktails);
+    }
+
     private List<HomeCocktailItemDTO> convertHomeCocktailItemVO2DTO(List<HomeCocktailItemVO> customCocktails) throws Exception {
         List<HomeCocktailItemDTO> customCocktailsResponse = new ArrayList<>();
 
         customCocktails.forEach((customCocktail) -> {
+            String img = customCocktail.getImg().contains("https://") ? customCocktail.getImg() : s3Url + customCocktail.getImg();
+
             HomeCocktailItemDTO cocktailItem = HomeCocktailItemDTO.builder()
                     .cocktailId(customCocktail.getCocktailId())
-                    .img(s3Url + customCocktail.getImg())
+                    .img(img)
                     .title(customCocktail.getTitle())
                     .base(customCocktail.getBase())
                     .abv(customCocktail.getAbv())

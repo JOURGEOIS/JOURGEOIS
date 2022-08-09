@@ -49,4 +49,24 @@ public class HomeController {
             return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value = "cocktail/hot5")
+    public ResponseEntity hotTop5Cocktail() {
+        try{
+            return new ResponseEntity(homeService.getHotTop5Cocktail(), HttpStatus.OK);
+        } catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "cocktail/hot")
+    public ResponseEntity hotCocktailAll(@PageableDefault(size=10, page = 0) Pageable pageable) {
+        try{
+            return new ResponseEntity(homeService.getHotCocktail(pageable), HttpStatus.OK);
+        } catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

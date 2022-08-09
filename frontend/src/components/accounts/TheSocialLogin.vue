@@ -14,7 +14,7 @@
       </div>
     </button-basic>
     <button-basic
-      @click="clickKakao"
+      @click="kakaoLogin"
       :button-style="['kakao-login', 'long', 'small']"
     >
       <div class="button-content">
@@ -57,21 +57,44 @@ const clickGoogle = () => {
   window.open("http://jourgeois.com/api/member/login/google", "_blank");
 
 }
-
-const clickKakao = () => {
-  // axios({
-  //   url: api.accounts.kakaoLogin(),
-  //   method: 'GET',
-  // })
-  //   .then((res) => {
-  //     const data = res.data
-  //     console.log(data)
-  //   })
-  //   .catch((err) => {
-  //     console.error(err.response)
-  //   })
-  window.open("https://kauth.kakao.com/oauth/authorize?client_id=f1c36f65322c75f1f28caf1560a306d1&redirect_uri=http://jourgeois.com/api/member/login/kakao/redirect&response_type=code")
+const kakaoLogin = () => {
+  window.Kakao.Auth.login({
+    scope: 'profile, account_email',
+    success: getKakaoAccount,
+  });
 }
+const getKakaoAccount = () => {
+  window.Kakao.API.request({
+    url: '/v2/user/me',
+    success: (res:any) => {
+      const kakao_account = res.kakao_account;
+      const nickname = kakao_account.profile.nickname;
+      const email = kakao_account.email
+      console.log('nickname', nickname);
+      console.log('email', email)
+
+      //로그인 처리 구현
+      alert("로그인 성공!");
+    },
+    fail: (error:any) => {
+      console.log(error);
+    }
+  })
+}
+// const clickKakao = () => {
+//   // axios({
+//   //   url: api.accounts.kakaoLogin(),
+//   //   method: 'GET',
+//   // })
+//   //   .then((res) => {
+//   //     const data = res.data
+//   //     console.log(data)
+//   //   })
+//   //   .catch((err) => {
+//   //     console.error(err.response)
+//   //   })
+//   window.open("https://kauth.kakao.com/oauth/authorize?client_id=f1c36f65322c75f1f28caf1560a306d1&redirect_uri=http://jourgeois.com/api/member/login/kakao/redirect&response_type=code")
+// }
 
 const clickNaver = () => {
   window.open("http://jourgeois.com/api/member/login/naver", "_blank");

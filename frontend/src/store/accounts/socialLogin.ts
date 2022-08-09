@@ -4,7 +4,9 @@ import { clickHome } from '../../functions/clickEvent'
 import api from '../../api/api'
 import axios from 'axios'
 import router from '../../router'
+import route from '../../router'
 import { GoogleUserInfo } from '../../interface'
+import KakaoLoginVue from '../../views/KakaoLogin.vue'
 
 export interface SocialLoginState {
   googleLoginApi: string
@@ -83,5 +85,18 @@ export const socialLogin: Module<SocialLoginState, RootState> = {
         console.log(err)
       })
     },
+    // 카카오로그인
+    kakaoLogin: () => {
+      window.Kakao.Auth.login({
+        scope: 'profile, account_email',
+        success: KakaoLoginVue.getKakaoAcount,
+      });
+    },
+    getKakaoAcount: () => {
+      window.Kakao.API.request({
+        url: '/v2/user/me'
+      })
+    }
+    
   },
 }

@@ -19,5 +19,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmailAndName(String email, String name);
 
     //@Query("select count(*) from follow where from_user_id = :id")
-    Optional<Member> findFollow(String id);
+//    Optional<Member> findFollow(String id);
 }

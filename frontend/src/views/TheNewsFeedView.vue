@@ -4,7 +4,7 @@
     <header-basic :success="false" @prevClicked="$router.go(-1)">
       뉴스피드
     </header-basic>
-    <section>
+    <section class="top-view-no-margin">
       <the-news-feed-list></the-news-feed-list>
     </section>
   </div>

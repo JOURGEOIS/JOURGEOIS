@@ -72,15 +72,27 @@ public class CocktailAwardsService {
 
     public List<CocktailAwardsDTO> getCocktailAwardsPostList(Long uid){
         List<CocktailAwardsDTO> list = new ArrayList<>();
-        postRepository.getCocktailAwardsPostList(uid)
+        postRepository.getCocktailAwardsList(uid)
                 .forEach(data-> {
                     list.add(CocktailAwardsDTO.builder()
                             .postId(data.getPostId())
-                            .imgLink(data.getImgLink())
+                            .imgLink(s3Url + data.getImgLink())
                             .title(data.getTitle())
                             .like(data.getLike()).build());
                 });
         return list;
     }
 
+    public List<CocktailAwardsDTO> getCocktailAwardsVoteList(){
+        List<CocktailAwardsDTO> list = new ArrayList<>();
+        postRepository.getCocktailAwardsVoteList()
+                .forEach(data-> {
+                    list.add(CocktailAwardsDTO.builder()
+                            .postId(data.getPostId())
+                            .imgLink(s3Url + data.getImgLink())
+                            .title(data.getTitle())
+                            .percentage(data.getPercentage()).build());
+                });
+        return list;
+    }
 }

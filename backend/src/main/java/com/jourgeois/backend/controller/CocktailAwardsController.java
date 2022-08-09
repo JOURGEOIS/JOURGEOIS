@@ -93,4 +93,15 @@ public class CocktailAwardsController {
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/result")
+    public ResponseEntity getCocktailAwardsVoteList(){
+        Map<String, String> result = new HashMap<>();
+        try{
+            return new ResponseEntity(cocktailAwardsService.getCocktailAwardsVoteList(), HttpStatus.OK);
+        } catch(Exception e) {
+            result.put("fail", "실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

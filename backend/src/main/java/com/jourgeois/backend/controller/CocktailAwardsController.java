@@ -2,6 +2,7 @@ package com.jourgeois.backend.controller;
 
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.service.CocktailAwardsService;
+import com.jourgeois.backend.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,11 @@ import java.util.NoSuchElementException;
 @RequestMapping("/awards")
 public class CocktailAwardsController {
     private final CocktailAwardsService cocktailAwardsService;
+    private final PostService postService;
 
-    public CocktailAwardsController(CocktailAwardsService cocktailAwardsService) {
+    public CocktailAwardsController(CocktailAwardsService cocktailAwardsService, PostService postService) {
         this.cocktailAwardsService = cocktailAwardsService;
+        this.postService = postService;
     }
 
     @PostMapping("/auth")
@@ -67,7 +70,6 @@ public class CocktailAwardsController {
     @GetMapping("/auth")
     public ResponseEntity postAwardsCheck(HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
-
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             if(!cocktailAwardsService.postCheck(uid)){
@@ -103,5 +105,41 @@ public class CocktailAwardsController {
             result.put("fail", "실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/auth/info")
+    public ResponseEntity getCocktailAwardsPostInfo(HttpServletRequest request,
+                                                    @RequestParam(value = "postId") Long postId){
+        Map<String, String> result = new HashMap<>();
+        try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(cocktailAwardsService.getCocktailAwardsPostInfo(uid, postId), HttpStatus.OK);
+        } catch(Exception e) {
+            result.put("fail", "실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/auth/like")
+    public ResponseEntity pushPostBookmark(HttpServletRequest request, @RequestBody Map<String, Long> bookmark){
+        Map<String, Integer> data = new HashMap<>();
+        try{
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            bookmark.put("uid", uid);
+            if(postService.checkPostId(bookmark.get("postId"))) {
+                if (postService.pushBookmark(bookmark)) {
+                    data.put("status", 1);
+                } else {
+                    data.put("status", 0);
+                }
+                data.put("count", postService.countPostBookmark(bookmark.get("postId")));
+                return new ResponseEntity<>(data, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Not Found" ,  HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

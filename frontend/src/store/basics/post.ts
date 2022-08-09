@@ -39,7 +39,7 @@ export const post: Module<PostState, RootState> = {
 
   actions: {
     // * 좋아요 누른 유저리스트 추가
-    setLikedUsers: ({ commit, getters, rootGetters }, data) => {
+    setLikedUsers: ({ commit, dispatch, getters, rootGetters }, data) => {
       axios({
         url: api.post.likedUsers(),
         method: "GET",
@@ -57,7 +57,20 @@ export const post: Module<PostState, RootState> = {
           const page = getters.getLikedUserPage;
           commit("SET_LIKED_USER_PAGE", page + 1);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          // 실패 시, 홈으로 이동 후 에러 모달 on
+          if (err.response.status !== 401) {
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.log(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "post/setLikedUsers",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
     },
 
     // * 좋아요 / 좋아요 취소
@@ -69,15 +82,24 @@ export const post: Module<PostState, RootState> = {
         method: "POST",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
-          // uid: 41003,
         },
         data: { postId: params.postId, uid: 41003 },
       })
         .then((res) => {
           dispatch(params.func, params.data, { root: true });
         })
-        .catch((err) => {
-          console.error(err.response);
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.log(error.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "post/toggleLike",
+              params,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
   },

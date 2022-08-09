@@ -74,7 +74,8 @@ export const newsFeed: Module<NewsFeedState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.error(error);
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.log(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

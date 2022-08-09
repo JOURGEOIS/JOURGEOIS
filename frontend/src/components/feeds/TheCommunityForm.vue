@@ -47,8 +47,9 @@ const communityImage = (data: object) => {
 
 // description input
 const communityDescValue = computed({
-  get: () => store.getters["createFeed/getDescription"],
-  set: (newValue) => store.dispatch("createFeed/setDescription", newValue),
+  get: () =>
+    store.getters["feedDescInfo/getCommunityDetail"].customCocktail.description,
+  set: (newValue) => store.dispatch("feedDescInfo/setDescription", newValue),
 });
 
 const submitCommunityForm = () => {

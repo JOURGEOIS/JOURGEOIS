@@ -97,6 +97,9 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     getErrorMessage: (state) => state.errorMessage,
     // 성공 메시지
     getSuccessMessage: (state) => state.successMessage,
+    // 일반 게시글 세팅
+    getImgLink: (state) => state.communityDetail.customCocktail.imgLink,
+    getDescription: (state) => state.communityDetail.customCocktail.description,
   },
 
   mutations: {
@@ -120,6 +123,11 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     SET_SUCCESS_MESSAGE: (state, value: string) => {
       state.successMessage = value;
     },
+    // 일반 게시글 정보
+    SET_IMG_LINK: (state, value: string) => state.communityDetail.customCocktail.imgLink = value,
+    SET_DESCRIPTION: (state, value: string) => {
+      state.communityDetail.customCocktail.description = value;
+    },
   },
 
   actions: {
@@ -131,9 +139,44 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
       commit("SET_IMG_LINK", "");
       commit("SET_DESCRIPTION", "");
     },
+    
+    // img_Link
+    setImgLink: ({ commit }, value: string) => {
+      commit("SET_IMG_LINK", value)
+    },
+    
     // description
     setDescription: ({ commit }, value: string) => {
       commit("SET_DESCRIPTION", value);
+    },
+
+    // 사진 업로드 임시 저장
+    uploadImage: ({ rootGetters, dispatch, commit }, data) => {
+      axios({
+        url: api.post.uploadImage(),
+        method: 'post',
+        headers: {
+          Authorization: rootGetters['personalInfo/getAccessToken'],
+          'Content-Type': 'multipart/form-data',
+        },
+        data,
+      })
+        .then((response) => {
+          commit("SET_IMG_LINK", response.data.url);
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            commit('SET_ERROR_MESSAGE', '잠시 후에 시도해주세요')
+            commit('SET_ALERT_STATUS', true)
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: 'createFeed/uploadImage',
+              params: data,
+            }
+            dispatch('personalInfo/requestRefreshToken', obj, { root: true })
+          }
+        })
     },
 
     // 일반게시글 상세정보 불러오기
@@ -150,7 +193,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         params: { postId: params.feedId },
       })
         .then((res) => {
-          console.log(res.data);
+          console.log('현재 디비 저장된 정보: ',res.data);
           commit("SET_COMMUNITY_DETAIL", res.data);
         })
         .catch((err) => {

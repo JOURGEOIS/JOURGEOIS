@@ -9,25 +9,26 @@
 -->
 
 <template>
-  <header>
-    <span
-      class="material-icons back-icon"
-      :style="{ visibility: iconVisibility }"
-      @click="clicked"
-    >
-      arrow_back_ios_new
-    </span>
-    <div class="header-content"><slot></slot></div>
-    <button
-      class="header-success"
-      :style="{ visibility: successVisibility }"
-      type="submit"
-      :form="formId"
-    >
-      완료
-    </button>
+  <header class="header-container">
+    <div>
+      <span
+        class="material-icons back-icon"
+        :style="{ visibility: iconVisibility }"
+        @click="clicked"
+      >
+        arrow_back_ios_new
+      </span>
+      <div class="header-content"><slot></slot></div>
+      <button
+        class="header-success"
+        :style="{ visibility: successVisibility }"
+        type="submit"
+        :form="formId"
+      >
+        완료
+      </button>
+    </div>
   </header>
-  <hr />
 </template>
 
 <script setup lang="ts">
@@ -71,68 +72,86 @@ const successVisibility = computed(() => {
 </script>
 
 <style scoped lang="scss">
-header {
-  @include flex-xy(space-between, center);
-  width: 100%;
-  margin-top: 10px;
+.header-container {
+  @include flex-center;
+  @include shadow-feed;
+  flex-wrap: wrap;
+  position: fixed;
+  height: 74px;
+  background-color: $white !important;
+  z-index: 100;
 
   @media #{$tablet} {
-    margin-top: 16px;
-  }
-}
-
-.material-icons {
-  padding: 0.5em 1em 0.5em 0;
-  @include font($fs-title, $fw-thin);
-
-  @media #{$tablet} {
-    font-size: $fs-xl;
+    height: 98px;
   }
 
-  @media #{$pc} {
+  > div {
+    @include flex-xy(space-between, center);
+    width: 100vw;
+    padding: 16px 16px;
+
+    @media #{$tablet} {
+      padding: 24px 15%;
+    }
+    @media #{$pc} {
+      padding: 24px 20%;
+    }
+
+    .material-icons {
+      padding: 0.5em 1em 0.5em 0;
+      @include font($fs-title, $fw-thin);
+
+      @media #{$tablet} {
+        font-size: $fs-xl;
+      }
+
+      @media #{$pc} {
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .header-content {
+      @include font($fs-title, $fw-medium);
+      text-align: center;
+
+      @media #{$tablet} {
+        font-size: $fs-xl;
+      }
+    }
+
+    .header-success {
+      width: fit-content;
+      padding: 0.5em 0 0.5em 0.5em;
+      letter-spacing: $ls-main;
+      @include font($fs-main, $fw-medium);
+      background-color: white;
+
+      @media #{$tablet} {
+        font-size: $fs-title;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .back-icon {
+      user-select: none;
+    }
   }
+  hr {
+    width: 100vw;
+    background-color: $white;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid $unchecked-color;
 
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.header-content {
-  @include font($fs-title, $fw-medium);
-  text-align: center;
-
-  @media #{$tablet} {
-    font-size: $fs-xl;
-  }
-}
-
-.header-success {
-  width: fit-content;
-  padding: 0.5em 0 0.5em 0.5em;
-  letter-spacing: $ls-main;
-  @include font($fs-main, $fw-medium);
-  background-color: white;
-
-  @media #{$tablet} {
-    font-size: $fs-title;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.back-icon {
-  user-select: none;
-}
-
-hr {
-  @include hr;
-  width: 100vw;
-  margin: 10px 0;
-
-  @media #{$tablet} {
-    margin: 16px 0;
+    @media #{$tablet} {
+    }
   }
 }
 </style>

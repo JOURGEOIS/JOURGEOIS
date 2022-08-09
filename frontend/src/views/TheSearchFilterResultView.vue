@@ -4,7 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       검색 결과
     </header-basic>
-    <div class="the-item-container">
+    <div class="the-item-container top-view">
       <the-list-item-cocktail
         v-for="(item, idx) in searchFilterList"
         :key="idx"
@@ -86,8 +86,6 @@ onUnmounted(() => {
   .the-item-container {
     @include flex(column);
     width: 100%;
-
-    margin-top: 1rem;
   }
 }
 </style>

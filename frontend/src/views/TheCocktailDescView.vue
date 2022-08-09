@@ -4,32 +4,33 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       칵테일 상세 정보
     </header-basic>
+    <div class="top-view">
+      <!-- 칵테일 상세 페이지: 상단부분 -->
+      <the-cocktail-desc-detail></the-cocktail-desc-detail>
 
-    <!-- 칵테일 상세 페이지: 상단부분 -->
-    <the-cocktail-desc-detail></the-cocktail-desc-detail>
-
-    <!-- 칵테일 상세 페이지: 탭-->
-    <section class="cocktail-desc-section">
-      <hr class="cocktail-desc-hr" />
-      <!-- 탭: 탭을 선택하면 해당 탭으로 컴포넌트를 바꾼다.  -->
-      <div class="cocktail-desc-tab">
-        <div class="cocktail-desc-tab-recipe" :class="`index-${index}`">
-          <p @click="clickRecipeTab">레시피</p>
+      <!-- 칵테일 상세 페이지: 탭-->
+      <section class="cocktail-desc-section">
+        <hr class="cocktail-desc-hr" />
+        <!-- 탭: 탭을 선택하면 해당 탭으로 컴포넌트를 바꾼다.  -->
+        <div class="cocktail-desc-tab">
+          <div class="cocktail-desc-tab-recipe" :class="`index-${index}`">
+            <p @click="clickRecipeTab">레시피</p>
+          </div>
+          <div class="cocktail-desc-tab-review" :class="`index-${index}`">
+            <p @click="clickReviewTab">후기</p>
+            <!-- <span>99+</span> -->
+          </div>
+          <div class="cocktail-desc-tab-custom" :class="`index-${index}`">
+            <p @click="clickCustomTab">커스텀</p>
+            <!-- <span>99+</span> -->
+          </div>
         </div>
-        <div class="cocktail-desc-tab-review" :class="`index-${index}`">
-          <p @click="clickReviewTab">후기</p>
-          <!-- <span>99+</span> -->
-        </div>
-        <div class="cocktail-desc-tab-custom" :class="`index-${index}`">
-          <p @click="clickCustomTab">커스텀</p>
-          <!-- <span>99+</span> -->
-        </div>
-      </div>
-      <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
-      <keep-alive>
-        <component :is="currentComponent"></component>
-      </keep-alive>
-    </section>
+        <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
+        <keep-alive>
+          <component :is="currentComponent"></component>
+        </keep-alive>
+      </section>
+    </div>
   </div>
   <nav-bar></nav-bar>
   <success-pop-up v-if="successStatus"> {{ successMessage }}</success-pop-up>
@@ -113,6 +114,10 @@ watch(successStatus, () => {
   align-items: center;
   @include accountLayOut;
   margin-bottom: 48px;
+
+  .top-view {
+    width: 100%;
+  }
 
   section {
     @include flex(column);

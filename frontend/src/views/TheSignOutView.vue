@@ -6,7 +6,7 @@
     </header-basic>
 
     <!-- 동적 컴포넌트로 페이지를 구성한다.  -->
-    <section class="sign-out-section">
+    <section class="sign-out-section top-view">
       <component :is="currentComponent"></component>
     </section>
   </div>
@@ -54,7 +54,6 @@ onBeforeMount(() => {
     @include flex(column);
     width: 100%;
     gap: 36px;
-    margin-top: 2rem;
 
     @media #{$tablet} {
       width: 75%;

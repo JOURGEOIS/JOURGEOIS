@@ -21,7 +21,7 @@
     <input-basic
       :data="pwInputData"
       :input-style="pwInputStyle"
-      v-model="pwInputValue"
+      v-model.trim="pwInputValue"
     ></input-basic>
 
     <!-- 유효성 검사 -->

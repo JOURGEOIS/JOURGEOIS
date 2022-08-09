@@ -16,14 +16,14 @@
     <input-basic
       :data="pwInputData"
       :input-style="pwInputStyle"
-      v-model="pwInputValue"
+      v-model.trim="pwInputValue"
     ></input-basic>
 
     <!-- input: 비밀번호 확인 -->
     <input-basic
       :data="pwConfirmInputData"
       :input-style="pwConfirmInputStyle"
-      v-model="pwConfirmInputValue"
+      v-model.trim="pwConfirmInputValue"
     ></input-basic>
 
     <!-- 유효성 검사 -->

@@ -7,7 +7,7 @@
     </header-basic>
 
     <!-- 동적 컴포넌트로 페이지를 구성한다.  -->
-    <section class="change-pw-section">
+    <section class="change-pw-section top-view">
       <component :is="currentComponent"> </component>
     </section>
   </div>

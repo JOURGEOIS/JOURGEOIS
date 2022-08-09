@@ -3,12 +3,12 @@
     <input-basic
       :data="emailInputData"
       :input-style="emailInputStyle"
-      v-model="emailInputValue"
+      v-model.trim="emailInputValue"
     ></input-basic>
     <input-basic
       :data="pwInputData"
       :input-style="pwInputStyle"
-      v-model="pwInputValue"
+      v-model.trim="pwInputValue"
     ></input-basic>
     <div class="login-error-message" v-show="loginErrorMsg">
       <p>

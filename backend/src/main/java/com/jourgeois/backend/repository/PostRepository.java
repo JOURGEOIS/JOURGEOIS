@@ -30,6 +30,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer order by createTime desc", nativeQuery = true)
     List<NewsFeedVO> getNewsFeed(@Param("me") Long me, Pageable pageable);
 
+
+    @Query(value="select count(*) from post where p_dtype = :type and p_writer = :uid", nativeQuery = true)
+    Long findByCocktailAwards(Long uid, String type);
+
     @Query(value = "select custom_cocktail.p_id AS cocktailId, p_img AS img, cc_cocktail_title AS title, c_name_kr AS base from (select * from post where p_dtype = 'cocktail') as post\n" +
             "left join custom_cocktail\n" +
             "on post.p_id = custom_cocktail.p_id\n" +
@@ -111,4 +115,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p_dtype = 'cocktail'\n" +
             "order by score desc limit 5", nativeQuery = true)
     List<HomeCocktailItemVO> getWeeklyHot5CustomCocktail();
+
 }

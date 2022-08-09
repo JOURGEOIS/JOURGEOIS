@@ -62,4 +62,10 @@ public class CocktailAwardsService {
         // post 저장
         return postRepository.save(post).getId();
     }
+
+    public Boolean postCheck(Long uid){
+        return postRepository.findByCocktailAwards(uid, "cocktail_awards")==0;
+    }
+
+
 }

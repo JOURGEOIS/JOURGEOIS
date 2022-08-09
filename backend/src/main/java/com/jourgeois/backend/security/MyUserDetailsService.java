@@ -26,11 +26,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("여긴가 ? ??!? ?!");
         Member member = memberRepository.findById(Long.parseLong(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Member uid : " + username + " was not found"));
 
-        System.out.println("여기에서 문제생김 !!!!ㄹㅇ!!");
         System.out.println(member.getEmail());
         return createUserDetails(member);
     }

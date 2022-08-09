@@ -65,4 +65,12 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
             "group by c_base_liquor\n" +
             "order by count(c_base_liquor) desc limit 1)", nativeQuery = true)
     List<Cocktail> findByrecommenderLiquor(Long uid, Pageable pageable);
+
+
+    @Query("SELECT c.id AS id, c.nameKR AS nameKR, c.img AS img, c.category AS category, c.tag AS tag " +
+            "FROM Member AS m JOIN Cocktail AS c JOIN CocktailBookmark AS cb " +
+            "ON cb.cocktailId.id = c.id AND cb.memberId.uid = m.uid " +
+            "WHERE m.uid = :id")
+    Optional<List<CocktailVO>> findBookmarkByUid(Long id);
+
 }

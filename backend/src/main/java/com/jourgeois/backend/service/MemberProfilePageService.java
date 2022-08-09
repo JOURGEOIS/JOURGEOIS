@@ -52,7 +52,7 @@ public class MemberProfilePageService {
             Map<String, String> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", data.getProfileImg());
-            res.put("createTime", data.getCreateTime());
+            res.put("createTime", data.getCreateTime().toString());
             res.put("postImg", data.getPostImg());
             res.put("description", data.getDescription());
 

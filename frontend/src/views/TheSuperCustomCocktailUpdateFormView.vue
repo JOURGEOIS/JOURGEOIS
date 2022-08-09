@@ -1,30 +1,32 @@
-<!--칵테일 상세 페이지:  커스텀 칵테일 수정 페이지 -->
+<!-- 뉴스피드:  커스텀 칵테일 수정 페이지 -->
 <template>
   <div class="the-custom-cocktail-form-view">
     <!-- 헤더 -->
     <header-basic
       :prev="true"
       :success="true"
-      formId="custom-cocktail-form"
+      formId="super-custom-cocktail-update-form"
       @prevClicked="$router.go(-1)"
     >
       커스텀 칵테일 수정
     </header-basic>
-    <section>
-      <the-custom-cocktail-update-form
-        id="custom-cocktail-form"
-      ></the-custom-cocktail-update-form>
+    <section class="top-view">
+      <the-super-custom-cocktail-update-form
+        id="super-custom-cocktail-update-form"
+      ></the-super-custom-cocktail-update-form>
     </section>
   </div>
   <failure-pop-up v-if="errorStatus">
     {{ errorMessage }}
   </failure-pop-up>
+  <loading-basic v-if="loadingStatus"></loading-basic>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import TheCustomCocktailUpdateForm from "@/components/cocktails/TheCustomCocktailUpdateForm.vue";
+import TheSuperCustomCocktailUpdateForm from "@/components/feeds/TheSuperCustomCocktailUpdateForm.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
+import LoadingBasic from "@/components/basics/LoadingBasic.vue";
 import { useStore } from "vuex";
 import { onBeforeMount, computed, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
@@ -37,6 +39,10 @@ const errorStatus = computed(
 
 const errorMessage = computed(
   () => store.getters["customCocktail/getErrorMessage"]
+);
+
+const loadingStatus = computed(
+  () => store.getters["customCocktail/getLoadingStatus"]
 );
 
 // 시간제 모달
@@ -52,6 +58,7 @@ watch(errorStatus, () => {
 onBeforeMount(() => {
   store.dispatch("customCocktail/getCustomCocktailData", route.params.feedId);
   store.dispatch("customCocktail/changeAlertStatus", false);
+  store.dispatch("customCocktail/toggleLoadingStatus", false);
 });
 
 onUnmounted(() => {

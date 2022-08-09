@@ -1,9 +1,12 @@
 <template>
   <label for="community-image-input">
-    <p>이미지 <span> *</span></p>
+    <p>
+      이미지
+      <span>*</span>
+    </p>
     <div :style="{ backgroundImage: `url(${imageUrl})` }">
       <div class="community-image-input-desc" v-if="!imageUrl">
-        <span class="material-icons"> add_photo_alternate </span>
+        <span class="material-icons">add_photo_alternate</span>
         <p>이미지를 삽입해주세요</p>
       </div>
     </div>
@@ -17,34 +20,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useStore } from "vuex";
-const store = useStore();
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+const store = useStore()
 
 // 이미지 연결
-const imageUrl = ref("");
+const imageUrl = computed(() => store.getters['feedDescInfo/getImgLink'])
 
 // 이미지 input
 const emit = defineEmits<{
-  (event: "changeImage", value: object): void;
-}>();
+  (event: 'changeImage', value: object): void
+}>()
 
 const changeCommunityImage = (event: Event) => {
   // 취소 버튼 누르는 경우 바로 return
   if (!(event?.target as HTMLInputElement).files![0]) {
-    return;
+    return
   }
   const data = {
     img: (event?.target as HTMLInputElement).files![0],
-    imageUrl,
-  };
-  store.dispatch("createFeed/uploadImage", data);
-  emit("changeImage", data.img);
-};
+  }
+  store.dispatch('feedDescInfo/uploadImage', data)
+  emit('changeImage', data.img)
+}
 </script>
 
 <style scoped lang="scss">
-label[for="community-image-input"] {
+label[for='community-image-input'] {
   @include flex(column);
   > p {
     @include font($fs-md, $fw-medium);

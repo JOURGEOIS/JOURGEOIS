@@ -139,7 +139,8 @@ export const comment: Module<Comment, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             // 실패 팝업
-            console.error(error);
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -153,7 +154,6 @@ export const comment: Module<Comment, RootState> = {
 
     // 리스트 받아오기
     saveCommentList: ({ getters, dispatch, rootGetters, commit }, id) => {
-      console.log("데이터!");
       axios({
         url: api.post.comment(),
         method: "get",
@@ -174,7 +174,8 @@ export const comment: Module<Comment, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             // 실패 팝업
-            console.error(error);
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -208,7 +209,8 @@ export const comment: Module<Comment, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             // 실패 팝업
-            console.error(error);
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -239,7 +241,8 @@ export const comment: Module<Comment, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             // 실패 팝업
-            console.error(error);
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

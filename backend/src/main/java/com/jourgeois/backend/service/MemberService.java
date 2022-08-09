@@ -452,7 +452,7 @@ public class MemberService {
         member.ifPresentOrElse(selectMember -> {
             refreshTokenRepository.deleteById(selectMember.getUid());
             String userProfile = selectMember.getProfileImg();
-            if(!userProfile.equals("default/1.png"))
+            if(!userProfile.equals("profile/default/1.png"))
                 s3Util.deleteFile(userProfile);
             memberRepository.delete(selectMember);
         }, () -> {

@@ -10,7 +10,7 @@
     >
       커스텀 칵테일 제작
     </header-basic>
-    <section>
+    <section class="top-view">
       <the-custom-cocktail-form
         id="custom-cocktail-form"
       ></the-custom-cocktail-form>
@@ -19,12 +19,14 @@
   <failure-pop-up v-if="errorStatus">
     {{ errorMessage }}
   </failure-pop-up>
+  <loading-basic v-if="loadingStatus"></loading-basic>
 </template>
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheCustomCocktailForm from "@/components/cocktails/TheCustomCocktailForm.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
+import LoadingBasic from "@/components/basics/LoadingBasic.vue";
 import { useStore } from "vuex";
 import { onBeforeMount, computed, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
@@ -39,6 +41,10 @@ const errorMessage = computed(
   () => store.getters["customCocktail/getErrorMessage"]
 );
 
+const loadingStatus = computed(
+  () => store.getters["customCocktail/getLoadingStatus"]
+);
+
 // 시간제 모달
 watch(errorStatus, () => {
   if (errorStatus.value) {
@@ -48,13 +54,14 @@ watch(errorStatus, () => {
   }
 });
 
-// 모달 초기화
+// 모달 초기화 및 db 요청
 onBeforeMount(() => {
   store.dispatch(
     "customCocktail/getOriginalCocktailData",
     route.params.cocktailId
   );
   store.dispatch("customCocktail/changeAlertStatus", false);
+  store.dispatch("customCocktail/toggleLoadingStatus", false);
 });
 
 // vuex 초기화
@@ -75,7 +82,6 @@ onUnmounted(() => {
     @include flex(column);
     width: 100%;
     gap: 36px;
-    margin-top: 2rem;
 
     @media #{$tablet} {
       width: 80%;

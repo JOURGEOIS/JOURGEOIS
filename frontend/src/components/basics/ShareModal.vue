@@ -2,7 +2,11 @@
 <template>
   <teleport to="body">
     <div class="share-modal">
-      <div class="container" :class="animation">
+      <div
+        class="container"
+        :class="animation"
+        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+      >
         <!-- filter: header -->
         <section class="header-section">
           <span class="material-icons invisible"> close </span>
@@ -61,9 +65,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 const router = useRouter();
 const store = useStore();
 
@@ -72,12 +76,19 @@ const animation = computed(() => store.getters["share/getShareModalClass"]);
 
 // 필터 off
 const clickXIcon = () => {
+  console.log("hi");
   store.dispatch("share/changeShareModalClass", "end");
   setTimeout(() => store.dispatch("share/toggleShareModal", false), 200);
 };
 
+// 개발환경 URL
+const url = encodeURI(window.location.href);
+// 서비스 환경 URL
+// const originUrl = encodeURI(window.location.href);
+// const path = originUrl.split("http://127.0.0.1:5173").splice(1).pop();
+// const url = "http://jourgeois.com" + path;
+
 // 링크 복사 클릭
-const url = encodeURIComponent(window.location.href);
 const clickShareLink = () => {
   navigator.clipboard.writeText(window.location.href);
   alert("링크가 복사되었습니다.");
@@ -85,7 +96,28 @@ const clickShareLink = () => {
 
 // 카카오톡 공유 클릭
 const clickShareKakao = () => {
-  alert("카카오톡 공유");
+  window.Kakao.Link.sendDefault({
+    objectType: "feed",
+    content: {
+      title: "주류주아",
+      description: "당신을 위한 칵테일 지침서",
+      imageUrl:
+        "https://user-images.githubusercontent.com/86189596/183279153-91bfcbef-fa3f-4639-b93d-bfc7e4bcea26.png",
+      link: {
+        webUrl: url,
+        mobileWebUrl: url,
+      },
+    },
+    buttons: [
+      {
+        title: "웹으로 이동",
+        link: {
+          webUrl: url,
+          mobileWebUrl: url,
+        },
+      },
+    ],
+  });
 };
 
 // 페이스북 공유 클릭
@@ -98,6 +130,26 @@ const clickShareTwitter = () => {
   const text = "주류주아에서 즐겨보세요";
   window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + url);
 };
+
+// 아이폰인지 확인
+const deviceType: string = store.getters["navbar/getDeviceType"];
+const isIphone = computed(() => {
+  return deviceType === "iphone";
+});
+
+const shareModalStatus = computed(
+  () => store.getters["share/getShareModalStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  console.log(shareModalStatus);
+  console.log(shareModalStatus.value);
+  if (shareModalStatus.value) {
+    clickXIcon();
+  } else {
+    // next();
+  }
+});
 </script>
 
 <style scoped lang="scss">

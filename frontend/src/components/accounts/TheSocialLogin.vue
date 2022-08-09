@@ -2,7 +2,10 @@
   <hr />
   <div class="social-login">
     <p>or</p>
-    <button-basic @click="clickGoogle" :button-style="['google-login', 'long', 'small']">
+    <button-basic
+      @click="clickGoogle"
+      :button-style="['google-login', 'long', 'small']"
+    >
       <div class="button-content">
         <img
           src="https://raw.githubusercontent.com/JaeKP/image_repo/main/img/google.png"
@@ -10,7 +13,10 @@
         Google 로 로그인
       </div>
     </button-basic>
-    <button-basic @click="clickKakao" :button-style="['kakao-login', 'long', 'small']">
+    <button-basic
+      @click="kakaoLogin"
+      :button-style="['kakao-login', 'long', 'small']"
+    >
       <div class="button-content">
         <img
           src="https://raw.githubusercontent.com/JaeKP/image_repo/main/img/kakao.png"
@@ -18,7 +24,10 @@
         KaKao 로 로그인
       </div>
     </button-basic>
-    <button-basic @click="clickNaver" :button-style="['naver-login', 'long', 'small']">
+    <button-basic
+      @click="clickNaver"
+      :button-style="['naver-login', 'long', 'small']"
+    >
       <div class="button-content">
         <img
           src="https://raw.githubusercontent.com/JaeKP/image_repo/main/img/naver.png"
@@ -30,54 +39,76 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
-import api from "../../api/api";
-import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import { reactive } from "vue";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import axios from 'axios'
+import api from '../../api/api'
+import ButtonBasic from '@/components/basics/ButtonBasic.vue'
+import { computed, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+const store = useStore()
+const router = useRouter()
 
 // 구글 로그인 클릭
-const clickGoogle = () => {
-  axios({
-    url: api.accounts.googleLogin(),
-    method: "GET",
-  })
-    .then((res) => {
-      const data = res.data;
-      console.log(data);
-    })
-    .catch((err) => {
-      console.error(err.response);
-    });
-};
+  const googleAPI = computed(() => store.getters['socialLogin/getGoogleLoginApi'])
 
-const clickKakao = () => {
-  axios({
-    url: api.accounts.kakaoLogin(),
-    method: "GET",
-  })
-    .then((res) => {
-      const data = res.data;
-      console.log(data);
-    })
-    .catch((err) => {
-      console.error(err.response);
-    });
+const clickGoogle = () => {
+  // console.log(googleAPI.value)
+  // store.dispatch('socialLogin/getGoogleLoginApi', googleAPI)
+  window.open("http://jourgeois.com/api/member/login/google", "_blank");
+
 }
+const kakaoLogin = () => {
+  window.Kakao.Auth.login({
+    scope: 'profile, account_email',
+    success: getKakaoAccount,
+  });
+}
+const getKakaoAccount = () => {
+  window.Kakao.API.request({
+    url: '/v2/user/me',
+    success: (res:any) => {
+      const kakao_account = res.kakao_account;
+      const nickname = kakao_account.profile.nickname;
+      const email = kakao_account.email
+      console.log('nickname', nickname);
+      console.log('email', email)
+
+      //로그인 처리 구현
+      alert("로그인 성공!");
+    },
+    fail: (error:any) => {
+      console.log(error);
+    }
+  })
+}
+// const clickKakao = () => {
+//   // axios({
+//   //   url: api.accounts.kakaoLogin(),
+//   //   method: 'GET',
+//   // })
+//   //   .then((res) => {
+//   //     const data = res.data
+//   //     console.log(data)
+//   //   })
+//   //   .catch((err) => {
+//   //     console.error(err.response)
+//   //   })
+//   window.open("https://kauth.kakao.com/oauth/authorize?client_id=f1c36f65322c75f1f28caf1560a306d1&redirect_uri=http://jourgeois.com/api/member/login/kakao/redirect&response_type=code")
+// }
 
 const clickNaver = () => {
-  axios({
-    url: api.accounts.naverLogin(),
-    method: "GET",
-  })
-    .then((res) => {
-      const data = res.data;
-      console.log(data);
-    })
-    .catch((err) => {
-      console.error(err.response);
-    });
+  window.open("http://jourgeois.com/api/member/login/naver", "_blank");
+  // axios({
+  //   url: api.accounts.naverLogin(),
+  //   method: 'GET',
+  // })
+  //   .then((res) => {
+  //     const data = res.data
+  //     console.log(data)
+  //   })
+  //   .catch((err) => {
+  //     console.error(err.response)
+  //   })
 }
 </script>
 

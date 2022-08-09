@@ -22,6 +22,7 @@ public class PostDTO {
     private Integer like;
     private Boolean ilike;
     private Integer reviewCount;
+    private Boolean isAgree;
 
     // 커스텀 칵테일
     private String title;
@@ -30,6 +31,14 @@ public class PostDTO {
     private String[] ingredients;
     private String recipe;
     private Integer type;
+
+    public Boolean getAgree() {
+        return isAgree;
+    }
+
+    public void setAgree(Boolean agree) {
+        isAgree = agree;
+    }
 
     public Integer getReviewCount() {
         return reviewCount;

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class HomeController {
 
@@ -84,6 +87,18 @@ public class HomeController {
     public ResponseEntity weeklyHotCustomCocktail(@PageableDefault(size=10, page = 0) Pageable pageable) {
         try{
             return new ResponseEntity(homeService.getWeeklyHotCustomCocktail(pageable), HttpStatus.OK);
+        } catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "clip")
+    public ResponseEntity getRandomClip() {
+        try{
+            Map<String, String> result = new HashMap<>();
+            result.put("url", homeService.getRandomClip());
+            return new ResponseEntity(result, HttpStatus.OK);
         } catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -2,6 +2,8 @@ package com.jourgeois.backend.api.dto.member;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 public interface MemberVO {
     Long getUid();
     String getEmail();
@@ -13,7 +15,7 @@ public interface MemberVO {
     Integer getFollowerCnt();
     Integer getFollowingCnt();
     Integer getPostCnt();
-    String getCreateTime();
+    LocalDateTime getCreateTime();
     String getPostImg();
     String getDescription();
 }

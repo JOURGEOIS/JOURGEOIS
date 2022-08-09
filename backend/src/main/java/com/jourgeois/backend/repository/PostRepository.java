@@ -1,5 +1,6 @@
 package com.jourgeois.backend.repository;
 
+import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.api.dto.post.NewsFeedVO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
@@ -29,6 +30,46 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer order by createTime desc", nativeQuery = true)
     List<NewsFeedVO> getNewsFeed(@Param("me") Long me, Pageable pageable);
 
+
     @Query(value="select count(*) from post where p_dtype = :type and p_writer = :uid", nativeQuery = true)
     Long findByCocktailAwards(Long uid, String type);
+
+    @Query(value = "select custom_cocktail.p_id AS cocktailId, p_img AS img, cc_cocktail_title AS title, c_name_kr AS base from (select * from post where p_dtype = 'cocktail') as post\n" +
+            "left join custom_cocktail\n" +
+            "on post.p_id = custom_cocktail.p_id\n" +
+            "left join custom_cocktail_to_cocktail\n" +
+            "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id\n" +
+            "left join cocktail\n" +
+            "on custom_cocktail_to_cocktail.c_id = cocktail.c_id\n" +
+            "order by p_create_time DESC", nativeQuery = true)
+    List<HomeCocktailItemVO> findCustomCocktailOrderByCreateTime(Pageable pageable);
+
+    @Query(value = "select custom_cocktail.p_id AS cocktailId, p_img AS img, cc_cocktail_title AS title, c_name_kr AS base from (select * from post where p_dtype = 'cocktail') as post\n" +
+            "left join custom_cocktail\n" +
+            "on post.p_id = custom_cocktail.p_id\n" +
+            "left join custom_cocktail_to_cocktail\n" +
+            "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id\n" +
+            "left join cocktail\n" +
+            "on custom_cocktail_to_cocktail.c_id = cocktail.c_id\n" +
+            "order by p_create_time DESC LIMIT 5", nativeQuery = true)
+    List<HomeCocktailItemVO> findTop5CustomCocktailOrderByCreateTime();
+
+    @Query(value = "select count(m_id) as bookmarked, cocktail.c_id as cocktailId, c_alcohol as abv, c_base_liquor as base, c_img as img, c_name as title from\n" +
+            "cocktail\n" +
+            "left join\n" +
+            "cocktail_bookmark\n" +
+            "on\n" +
+            "cocktail.c_id = cocktail_bookmark.c_id\n" +
+            "group by cocktail.c_id order by bookmarked DESC LIMIT 5", nativeQuery = true)
+    List<HomeCocktailItemVO> findTop5CocktailOrderByBookmarked();
+
+    @Query(value = "select count(m_id) as bookmarked, cocktail.c_id as cocktailId, c_alcohol as abv, c_base_liquor as base, c_img as img, c_name as title from\n" +
+            "cocktail\n" +
+            "left join\n" +
+            "cocktail_bookmark\n" +
+            "on\n" +
+            "cocktail.c_id = cocktail_bookmark.c_id\n" +
+            "group by cocktail.c_id order by bookmarked DESC", nativeQuery = true)
+    List<HomeCocktailItemVO> findCocktailOrderByBookmarked(Pageable pageable);
+
 }

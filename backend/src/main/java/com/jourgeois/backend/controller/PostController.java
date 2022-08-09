@@ -107,7 +107,7 @@ public class PostController {
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             postDTO.setUid(uid);
-            data.put("url", "http://13.209.206.237/img/" + postService.postImageLocalUpload(postDTO));
+            data.put("url", "https://www.jourgeois.com/img/" + postService.postImageLocalUpload(postDTO));
             return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
             data.put("fail", "이미지 업로드 실패");

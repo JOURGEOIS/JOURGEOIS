@@ -1,4 +1,4 @@
-const HOST: string = "http://13.209.206.237/api/";
+const HOST: string = "https://jourgeois.com/api/";
 
 const ACCOUNTS = "member/";
 const EMAIL = "email/cert/";

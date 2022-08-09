@@ -11,8 +11,8 @@ import javax.persistence.Entity;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-@DiscriminatorValue("contest")
-public class Contest extends  Post{
+@DiscriminatorValue("cocktail_awards")
+public class CocktailAwards extends  Post{
     @Column(name="contest_title")
     private String title;
 }

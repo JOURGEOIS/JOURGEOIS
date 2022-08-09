@@ -14,7 +14,7 @@ public class MemberProfilePageService {
     }
 
     public Object readMemberProfile(){
-        memberRepository;
+//        memberRepository;
 
         return null;
     }

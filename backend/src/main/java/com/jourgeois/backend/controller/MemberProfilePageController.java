@@ -30,9 +30,9 @@ public class MemberProfilePageController {
 
         try {
 
-            memberDto.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
-            memberService.changeProfile(memberDto);
-            return new ResponseEntity(memberService.findUserInfo(memberDto.getUid()), HttpStatus.CREATED);
+//            memberDto.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
+//            memberService.changeProfile(memberDto);
+//            return new ResponseEntity(memberService.findUserInfo(memberDto.getUid()), HttpStatus.CREATED);
         }catch (Exception e) {
             System.out.println(e);
             data.put("success", false);

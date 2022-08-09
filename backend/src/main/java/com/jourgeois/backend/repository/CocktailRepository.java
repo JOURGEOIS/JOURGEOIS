@@ -58,4 +58,11 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 //    @Query("UPDATE Cocktail c SET c.name = :name, c.nameKR = :nameKR, c.alcohol = :alcohol, c.cupId = :cupId," +
 //            " c.tag = :tag, c.baseLiquor = :baseLiquor, c.category = :category, c.recipe = :recipe WHERE c.id = :id")
 //    Optional<Cocktail> updateCocktail(@Param("Cocktail") Cocktail cocktail);
+
+    @Query(value = "select * from cocktail where c_base_liquor = (select c_base_liquor\n" +
+            "from cocktail \n" +
+            "where c_id in (select c_id from cocktail_bookmark where m_id = :uid) \n" +
+            "group by c_base_liquor\n" +
+            "order by count(c_base_liquor) desc limit 1)", nativeQuery = true)
+    List<Cocktail> findByrecommenderLiquor(Long uid, Pageable pageable);
 }

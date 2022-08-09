@@ -2,7 +2,11 @@
 <template>
   <teleport to="body">
     <div class="share-modal">
-      <div class="container" :class="animation">
+      <div
+        class="container"
+        :class="animation"
+        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+      >
         <!-- filter: header -->
         <section class="header-section">
           <span class="material-icons invisible"> close </span>
@@ -125,6 +129,12 @@ const clickShareTwitter = () => {
   const text = "주류주아에서 즐겨보세요";
   window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + url);
 };
+
+// 아이폰인지 확인
+const deviceType: string = store.getters["navbar/getDeviceType"];
+const isIphone = computed(() => {
+  return deviceType === "iphone";
+});
 </script>
 
 <style scoped lang="scss">

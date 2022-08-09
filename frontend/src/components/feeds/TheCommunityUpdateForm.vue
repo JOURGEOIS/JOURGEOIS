@@ -47,15 +47,17 @@ const communityImage = (data: object) => {
   communityImageValue = data;
 };
 
-// const communityInfo = computed(() => {
-//   return store.getters['feedDescInfo/getCommunityDetail']
-// })
+// const communityImageValue = computed({
+//   get: () =>
+//     store.getters["feedDescInfo/getCommunityDetail"].customCocktail.imgLink,
+//   set: (newValue) => store.dispatch("feedDescInfo/setImgLink", newValue),
+// });
 
 // description input
 const communityDescValue = computed({
   get: () =>
     store.getters["feedDescInfo/getCommunityDetail"].customCocktail.description,
-  set: (newValue) => store.dispatch("createFeed/setDescription", newValue),
+  set: (newValue) => store.dispatch("feedDescInfo/setDescription", newValue),
 });
 
 const submitCommunityForm = () => {
@@ -65,6 +67,7 @@ const submitCommunityForm = () => {
       img: "",
       postId: route.params.feedId,
     };
+    console.log('수정데이터1: ', data)
     store.dispatch("createFeed/updateCommunityForm", data);
   } else {
     const data = {
@@ -72,6 +75,7 @@ const submitCommunityForm = () => {
       img: communityImageValue,
       postId: route.params.feedId,
     };
+    console.log('수정데이터2: ', data)
     store.dispatch("createFeed/updateCommunityForm", data);
   }
 };

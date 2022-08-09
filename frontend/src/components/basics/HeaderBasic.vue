@@ -81,9 +81,9 @@ const successVisibility = computed(() => {
   background-color: $white !important;
   z-index: 5;
 
-  @media #{$tablet} {
-    height: 98px;
-  }
+  // @media #{$tablet} {
+  //   height: 74px;
+  // }
 
   > div {
     @include flex-xy(space-between, center);
@@ -91,10 +91,10 @@ const successVisibility = computed(() => {
     padding: 16px 16px;
 
     @media #{$tablet} {
-      padding: 24px 15%;
+      padding: 12px 15%;
     }
     @media #{$pc} {
-      padding: 24px 20%;
+      padding: 12px 20%;
     }
 
     .material-icons {

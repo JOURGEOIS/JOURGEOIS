@@ -15,9 +15,7 @@ export interface CreateFeedState {
   errorMessage: string
   // 성공 메시지
   successMessage: string
-  // 일반 게시글 정보
-  imgLink: string
-  description: string
+
 }
 
 export const createFeed: Module<CreateFeedState, RootState> = {
@@ -34,9 +32,6 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     // 성공 메시지
     successMessage: '',
 
-    // 일반 게시글 정보
-    imgLink: "",
-    description: "",
   },
 
   getters: {
@@ -49,9 +44,6 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     getErrorMessage: (state) => state.errorMessage,
     // 성공 메시지
     getSuccessMessage: (state) => state.successMessage,
-    // 일반 게시글 세팅
-    getImgLink: (state) => state.imgLink,
-    getDescription: (state) => state.description,
   },
 
   mutations: {
@@ -74,11 +66,6 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     SET_SUCCESS_MESSAGE: (state, value: string) => {
       state.successMessage = value
     },
-    // 일반 게시글 정보
-    SET_IMG_LINK: (state, value: string) => state.imgLink = value,
-    SET_DESCRIPTION: (state, value: string) => {
-      state.description = value;
-    },
   },
 
   actions: {
@@ -87,45 +74,11 @@ export const createFeed: Module<CreateFeedState, RootState> = {
       commit("SET_ALERT_STATUS", false);
       commit("SET_ERROR_MESSAGE", "");
       commit("SET_SUCCESS_MESSAGE", "");
-      commit("SET_IMG_LINK", "");
-      commit("SET_DESCRIPTION", "");
-    },
-    // description
-    setDescription: ({ commit }, value: string) => {
-      commit("SET_DESCRIPTION", value);
     },
 
     // 알럿 팝업
     changeAlertStatus: ({ commit }, value: boolean) => {
       commit('SET_ALERT_STATUS', value)
-    },
-    // 사진 업로드 임시 저장
-    uploadImage: ({ rootGetters, dispatch, commit }, data) => {
-      axios({
-        url: api.post.uploadImage(),
-        method: 'post',
-        headers: {
-          Authorization: rootGetters['personalInfo/getAccessToken'],
-          'Content-Type': 'multipart/form-data',
-        },
-        data,
-      })
-        .then((response) => {
-          commit("SET_IMG_LINK", response.data.url);
-        })
-        .catch((error) => {
-          if (error.response.status !== 401) {
-            commit('SET_ERROR_MESSAGE', '잠시 후에 시도해주세요')
-            commit('SET_ALERT_STATUS', true)
-          } else {
-            // refreshToken 재발급
-            const obj = {
-              func: 'createFeed/uploadImage',
-              params: data,
-            }
-            dispatch('personalInfo/requestRefreshToken', obj, { root: true })
-          }
-        })
     },
 
     //============== 제출
@@ -218,6 +171,7 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     // 일반게시글 수정 시 유효성 검사
     updateCommunityForm: ({ commit, dispatch }, data) => {
       const { description, img, postId } = data
+      console.log('유효성검사 data: ', data)
 
       // 내용 중 빈 문자만 제출했는지 확인 (빈문자열이 있으면 false)
       const descriptionNull = description.trim().length
@@ -244,7 +198,8 @@ export const createFeed: Module<CreateFeedState, RootState> = {
       { commit, dispatch, rootGetters },
       params,
     ) => {
-      const { postId, img, description } = params
+      const { description, img, postId } = params
+      console.log(params)
       axios({
         url: api.post.postCocktail(),
         method: 'PUT',
@@ -265,10 +220,9 @@ export const createFeed: Module<CreateFeedState, RootState> = {
           console.log(res)
           commit('SET_SUCCESS_MESSAGE', '성공적으로 변경되었습니다')
           commit('SET_ALERT_STATUS', true)
-          commit('SET_REVIEW_SUCCESS', true)
         })
         .catch((err) => {
-          console.log(err.res)
+          console.log(err)
           if (err.response.status !== 401) {
             // 실패 팝업
             commit('SET_ERROR_MESSAGE', '잠시 후에 시도해주세요')
@@ -277,7 +231,7 @@ export const createFeed: Module<CreateFeedState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: 'createFeed/updateSaveCommunity',
-              params: postId,
+              params,
             }
             dispatch('personalInfo/requestRefreshToken', obj, { root: true })
           }

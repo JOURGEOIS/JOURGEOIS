@@ -2,7 +2,11 @@
 <template>
   <teleport to="body">
     <div class="create-post-modal">
-      <div class="container" :class="animation">
+      <div
+        class="container"
+        :class="animation"
+        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+      >
         <!-- filter: header -->
         <section class="header-section">
           <span class="material-icons invisible"> close </span>
@@ -68,6 +72,12 @@ const createNormal = () => {
   store.dispatch("createFeed/toggleCreateFeedModal", false);
   router.push({ name: "TheCommunityFormView" });
 };
+
+// 아이폰인지 확인
+const deviceType: string = store.getters["navbar/getDeviceType"];
+const isIphone = computed(() => {
+  return deviceType === "iphone";
+});
 </script>
 
 <style scoped lang="scss">

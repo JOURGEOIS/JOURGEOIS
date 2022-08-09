@@ -14,7 +14,7 @@ import TheCreatePostModal from "@/components/feeds/TheCreatePostModal.vue";
 import ShareModal from "@/components/basics/ShareModal.vue";
 import TopButton from "@/components/basics/TopButton.vue";
 import { useRoute, useRouter } from "vue-router";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 const router = useRouter();
 const route = useRoute();
@@ -32,6 +32,11 @@ const createFeedModalStatus = computed(
 const shareModalStatus = computed(
   () => store.getters["share/getShareModalStatus"]
 );
+
+// deviceType 확인
+onMounted(() => {
+  store.dispatch("navbar/setDeviceType");
+});
 </script>
 
 <style lang="scss">
@@ -46,15 +51,15 @@ const shareModalStatus = computed(
   margin-top: 120px !important;
 
   @media #{$tablet} {
-    margin-top: 152px !important;
+    margin-top: 128px !important;
   }
 }
 
 .top-view-no-margin {
   margin-top: 74px !important;
 
-  @media #{$tablet} {
-    margin-top: 98px !important;
-  }
+  // @media #{$tablet} {
+  //   margin-top: 74px !important;
+  // }
 }
 </style>

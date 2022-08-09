@@ -9,19 +9,21 @@
     >
       글쓰기
     </header-basic>
-    <section>
-      <!-- 폼 풀러오기 -->
-      <the-community-form id="the-community-form"></the-community-form>
-      <!-- 이용규칙 -->
-      <div class="the-community-notice">
-        <the-community-notice-button></the-community-notice-button>
-        <p>
-          주류주아는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해
-          커뮤니티 이용규칙을 제정하여 운영하고 있습니다.
-        </p>
-        <p>게시물 작성 전 이용규칙 전문을 반드시 확인해주시기 바랍니다.</p>
-      </div>
-    </section>
+    <div class="top-view-no-margin">
+      <section>
+        <!-- 폼 풀러오기 -->
+        <the-community-form id="the-community-form"></the-community-form>
+        <!-- 이용규칙 -->
+        <div class="the-community-notice">
+          <the-community-notice-button></the-community-notice-button>
+          <p>
+            주류주아는 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해
+            커뮤니티 이용규칙을 제정하여 운영하고 있습니다.
+          </p>
+          <p>게시물 작성 전 이용규칙 전문을 반드시 확인해주시기 바랍니다.</p>
+        </div>
+      </section>
+    </div>
   </div>
   <failure-pop-up v-if="errorStatus">
     {{ errorMessage }}
@@ -71,6 +73,7 @@ onUnmounted(() => {
   align-items: center;
   position: relative;
   @include accountLayOut;
+
   section {
     @include flex(column);
     width: 100%;

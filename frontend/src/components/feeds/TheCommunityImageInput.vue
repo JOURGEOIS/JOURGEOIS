@@ -25,7 +25,7 @@ import { useStore } from 'vuex'
 const store = useStore()
 
 // 이미지 연결
-const imageUrl = computed(() => store.getters['createFeed/getImgLink'])
+const imageUrl = computed(() => store.getters['feedDescInfo/getImgLink'])
 
 // 이미지 input
 const emit = defineEmits<{
@@ -40,7 +40,7 @@ const changeCommunityImage = (event: Event) => {
   const data = {
     img: (event?.target as HTMLInputElement).files![0],
   }
-  store.dispatch('createFeed/uploadImage', data)
+  store.dispatch('feedDescInfo/uploadImage', data)
   emit('changeImage', data.img)
 }
 </script>

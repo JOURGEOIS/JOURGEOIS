@@ -38,8 +38,8 @@ onBeforeMount(() => {
 onMounted(() => {
   const scrollY = computed(() => store.getters["newsFeed/getNewsFeedScrollY"]);
   setTimeout(() => {
-    window.scrollTo({ left: 0, top: scrollY.value, behavior: "smooth" });
-  }, 500);
+    window.scrollTo({ left: 0, top: scrollY.value });
+  }, 0);
 });
 
 // 스크롤 높이 저장

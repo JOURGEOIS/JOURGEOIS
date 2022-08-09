@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.api.dto.member.FollowerVO;
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
 import com.jourgeois.backend.domain.member.Follow;
@@ -82,7 +82,7 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean changeProfile(ProfileDTO data){
+    public boolean changeProfile(MemberDTO data){
         memberRepository.findByNicknameAndUidIsNot(data.getNickname(), data.getUid())
                 .ifPresentOrElse(
                         (member -> {throw new IllegalArgumentException("닉네임 중복");}),
@@ -422,9 +422,9 @@ public class MemberService {
     }
 
     @Transactional
-    public ProfileDTO findUserInfo(Long uid){
+    public MemberDTO findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
-        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
+        MemberDTO p = new MemberDTO(member.getUid(), member.getEmail(), member.getName(),
                 member.getNickname(), s3Url + member.getProfileImg(), member.getIntroduce());
         return p;
 
@@ -507,9 +507,9 @@ public class MemberService {
     }
 
     @Transactional
-    public String ProfileImageLocalUpload(ProfileDTO profileDto) throws IOException {
-        Member member = memberRepository.findById(profileDto.getUid()).get();
-        String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
+    public String ProfileImageLocalUpload(MemberDTO memberDto) throws IOException {
+        Member member = memberRepository.findById(memberDto.getUid()).get();
+        String url = s3Util.localUpload(memberDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
         return url;
     }
 

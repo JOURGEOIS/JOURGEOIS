@@ -1,9 +1,9 @@
 package com.jourgeois.backend.controller;
 
 
-import com.jourgeois.backend.api.dto.cocktail.CocktailCommentDTO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailCommentDTO;
 
-import com.jourgeois.backend.api.dto.cocktail.CocktailDTO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailDTO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.cocktail.CocktailBookmarkId;
 import com.jourgeois.backend.domain.cocktail.Material;

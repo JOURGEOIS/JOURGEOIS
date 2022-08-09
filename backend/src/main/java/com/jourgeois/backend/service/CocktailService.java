@@ -1,11 +1,14 @@
 package com.jourgeois.backend.service;
 
 
-import com.jourgeois.backend.api.dto.cocktail.*;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.api.dto.post.PostInfoDTO;
 import com.jourgeois.backend.api.dto.post.PostInfoVO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailCommentDTO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailCommentVO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailDTO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailVO;
 import com.jourgeois.backend.domain.cocktail.*;
 import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;

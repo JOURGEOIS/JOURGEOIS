@@ -76,4 +76,14 @@ public class HomeService {
 
         return customCocktailsResponse;
     }
+
+    public List<HomeCocktailItemDTO> getWeeklyHotCustomCocktail(Pageable pageable) throws Exception {
+        List<HomeCocktailItemVO> customCocktails = postRepository.getWeeklyHotCustomCocktail(pageable);
+        return convertHomeCocktailItemVO2DTO(customCocktails);
+    }
+
+    public List<HomeCocktailItemDTO> getWeeklyHot5CustomCocktail() throws Exception {
+        List<HomeCocktailItemVO> customCocktails = postRepository.getWeeklyHot5CustomCocktail();
+        return convertHomeCocktailItemVO2DTO(customCocktails);
+    }
 }

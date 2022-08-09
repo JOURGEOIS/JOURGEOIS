@@ -15,4 +15,5 @@ public class HomeCocktailItemDTO {
     String title;
     String base;
     Long abv;
+    
 }

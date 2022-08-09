@@ -27,6 +27,13 @@ const routes: any[] = [
     component: () => import("@/views/TheLoginView.vue"),
   },
 
+  // 카카오 로그인
+  {
+    path: "/user/login/kakaologin",
+    name: "Kakaologin",
+    component: () => import("@/views/KakaoLogin.vue")
+  },
+
   // 로그아웃 화면
   {
     path: "/user/sign-out",

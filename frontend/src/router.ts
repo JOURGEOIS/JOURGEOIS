@@ -27,6 +27,13 @@ const routes: any[] = [
     component: () => import("@/views/TheLoginView.vue"),
   },
 
+  // 카카오 로그인
+  {
+    path: "/user/login/kakaologin",
+    name: "Kakaologin",
+    component: () => import("@/views/KakaoLogin.vue")
+  },
+
   // 로그아웃 화면
   {
     path: "/user/sign-out",
@@ -204,7 +211,23 @@ router.beforeEach((to: any, from, next) => {
   const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
   // 로그인이 필요한 페이지
-  const authPages = ["TheSignOutView", "TheChangeUserView", "TheChangePwView"];
+  const authPages = [
+    "TheSignOutView",
+    "TheChangeUserView",
+    "TheChangePwView",
+    "TheCocktailDescBookmarkView",
+    "TheCustomCocktailFormView",
+    "TheCustomCocktailDescView",
+    "TheCustomCocktailUpdateFormView",
+    "TheLikedUserListView",
+    "TheNewsFeedView",
+    "TheCommunityDescView",
+    "TheCommunityFormView",
+    "TheCommunityUpdateFormView",
+    "TheSuperCustomCocktailDescView",
+    "TheSuperCustomCocktailFormView",
+    "TheSuperCustomCocktailUpdateFormView",
+  ];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지
   const notAuthPages = ["TheSignupView", "TheLoginView"];

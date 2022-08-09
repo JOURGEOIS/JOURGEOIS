@@ -4,7 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       회원 정보 수정
     </header-basic>
-    <section>
+    <section class="top-view">
       <the-user-info-change-form></the-user-info-change-form>
       <div class="change-user-info-link">
         <p @click="toggleLogOutModal(true)">로그아웃</p>

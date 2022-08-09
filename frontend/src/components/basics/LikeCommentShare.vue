@@ -47,9 +47,9 @@
 <script setup lang="ts">
 import axios from "axios";
 import api from "../../api/api";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, onBeforeRouteLeave } from "vue-router";
 import { useStore } from "vuex";
-import { ref } from "vue";
+import { computed } from "vue";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -83,6 +83,20 @@ const clickShare = () => {
   store.dispatch("share/changeShareModalClass", "start");
   store.dispatch("share/toggleShareModal", true);
 };
+
+// 뒤로가기 할 때 모달 내려가게 하기
+const shareModalStatus = computed(
+  () => store.getters["share/getShareModalStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  if (shareModalStatus.value) {
+    store.dispatch("share/changeShareModalClass", "end");
+    setTimeout(() => store.dispatch("share/toggleShareModal", false), 200);
+  } else {
+    next();
+  }
+});
 </script>
 
 <style scoped lang="scss">

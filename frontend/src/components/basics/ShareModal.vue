@@ -2,7 +2,11 @@
 <template>
   <teleport to="body">
     <div class="share-modal">
-      <div class="container" :class="animation">
+      <div
+        class="container"
+        :class="animation"
+        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+      >
         <!-- filter: header -->
         <section class="header-section">
           <span class="material-icons invisible"> close </span>
@@ -61,9 +65,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeMount } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 const router = useRouter();
 const store = useStore();
 
@@ -72,6 +76,7 @@ const animation = computed(() => store.getters["share/getShareModalClass"]);
 
 // 필터 off
 const clickXIcon = () => {
+  console.log("hi");
   store.dispatch("share/changeShareModalClass", "end");
   setTimeout(() => store.dispatch("share/toggleShareModal", false), 200);
 };
@@ -125,6 +130,26 @@ const clickShareTwitter = () => {
   const text = "주류주아에서 즐겨보세요";
   window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + url);
 };
+
+// 아이폰인지 확인
+const deviceType: string = store.getters["navbar/getDeviceType"];
+const isIphone = computed(() => {
+  return deviceType === "iphone";
+});
+
+const shareModalStatus = computed(
+  () => store.getters["share/getShareModalStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  console.log(shareModalStatus);
+  console.log(shareModalStatus.value);
+  if (shareModalStatus.value) {
+    clickXIcon();
+  } else {
+    // next();
+  }
+});
 </script>
 
 <style scoped lang="scss">

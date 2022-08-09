@@ -1,10 +1,12 @@
 import { createStore } from "vuex";
 import { navbar, NavbarState } from "../store/basics/navbar";
 import { scroll, ScrollState } from "../store/basics/scroll";
+import { modal, ModalState } from "../store/basics/modal";
 import { post, PostState } from "../store/basics/post";
 import { share, ShareState } from "../store/basics/share";
 import { account, AccountState } from "../store/accounts/account";
 import { signup, SignupState } from "../store/accounts/signup";
+import { socialLogin, SocialLoginState } from '../store/accounts/socialLogin';
 import { password, PasswordState } from "../store/accounts/password";
 import {
   personalInfo,
@@ -54,10 +56,12 @@ import { comment, Comment } from "../store/basics/comment";
 export interface RootState {
   navbar: NavbarState;
   scroll: ScrollState;
+  modal: ModalState;
   post: PostState;
   share: ShareState;
   account: AccountState;
   signup: SignupState;
+  socialLogin: SocialLoginState;
   personalInfo: PersonalInfoState;
   password: PasswordState;
   cocktailSearch: CocktailSearchState;
@@ -77,10 +81,12 @@ export default createStore({
   modules: {
     navbar,
     scroll,
+    modal,
     post,
     share,
     account,
     signup,
+    socialLogin,
     personalInfo,
     password,
     cocktailDesc,

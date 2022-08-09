@@ -4,7 +4,7 @@
     <header-basic :success="false" @prevClicked="$router.go(-1)">
       뉴스피드
     </header-basic>
-    <section>
+    <section class="top-view-no-margin">
       <the-news-feed-list></the-news-feed-list>
     </section>
   </div>
@@ -38,8 +38,8 @@ onBeforeMount(() => {
 onMounted(() => {
   const scrollY = computed(() => store.getters["newsFeed/getNewsFeedScrollY"]);
   setTimeout(() => {
-    window.scrollTo({ left: 0, top: scrollY.value, behavior: "smooth" });
-  }, 500);
+    window.scrollTo({ left: 0, top: scrollY.value });
+  }, 0);
 });
 
 // 스크롤 높이 저장

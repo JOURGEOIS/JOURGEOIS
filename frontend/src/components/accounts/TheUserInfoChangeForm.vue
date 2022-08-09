@@ -56,6 +56,11 @@ import {
   checkEnKr,
   checkNicknameLength,
 } from "../../functions/checkText";
+import {
+  checkImageSize,
+  compressorImage,
+  checkImageExtension,
+} from "../../functions/image";
 import { computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
 
@@ -128,16 +133,36 @@ const nickNameConditionErrorMEssageB: string =
 const nickNameErrorMsg: string[] = reactive([]);
 const nickNameDuplicateError = ref(false);
 
+interface file {
+  file: File;
+}
+
 // 이미지 업로드
 let presentImage: object;
 const changeProfileImage = (event: Event) => {
-  // 취소 버튼 누르는 경우 바로 return
-  if (!(event?.target as HTMLInputElement).files![0]) {
+  let file = (event.target as HTMLInputElement).files![0];
+
+  // 1. 파일을 업로드 하지 않고 취소 버튼을 누르는 경우
+  // 2. 이미지 확장자가 아닌 경우
+  // 바로 return 한다.
+  if (!file || !checkImageExtension(file.name)) {
+    alert("꺼지라마");
     return;
+  }
+  console.log(file);
+  // 이미지 용량이 5mb초과면 compressor를 진행한다.
+  if (!checkImageSize({ max: 5, fileSize: file.size })) {
+    console.log("hi");
+    const result = compressorImage(file);
+    // const data: Compressor  = result.file;
+    // file = data;
+    // if (compressor instanceof FormData ){
+    //   file = result
+    // }
   }
 
   const data = {
-    imageFile: (event.target as HTMLInputElement).files![0],
+    imageFile: file,
     profileImage,
   };
   presentImage = data.imageFile;

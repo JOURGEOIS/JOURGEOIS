@@ -1,6 +1,7 @@
 package com.jourgeois.backend.repository;
 
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
+import com.jourgeois.backend.api.dto.post.CocktailAwardsVO;
 import com.jourgeois.backend.api.dto.post.NewsFeedVO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
@@ -115,5 +116,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p_dtype = 'cocktail'\n" +
             "order by score desc limit 5", nativeQuery = true)
     List<HomeCocktailItemVO> getWeeklyHot5CustomCocktail();
+
+    @Query(value="select p.p_id as postId, p.p_img as imgLink, c.contest_title as title,\n" +
+            "if((select count(*) from post_bookmark where m_id = :uid and p_id = p.p_id), 1, 0) as 'like'\n" +
+            "from post as p join cocktail_awards as c\n" +
+            "on p.p_id = c.p_id\n" +
+            "order by p_create_time desc", nativeQuery = true)
+    List<CocktailAwardsVO> getCocktailAwardsPostList(Long uid);
 
 }

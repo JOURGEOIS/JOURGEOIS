@@ -82,4 +82,15 @@ public class CocktailAwardsController {
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping
+    public ResponseEntity getCocktailAwardsPostList(@RequestHeader(value = "uid", defaultValue = "0") Long uid){
+        Map<String, String> result = new HashMap<>();
+        try{
+            return new ResponseEntity(cocktailAwardsService.getCocktailAwardsPostList(uid), HttpStatus.OK);
+        } catch(Exception e) {
+            result.put("fail", "실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -4,7 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       북마크
     </header-basic>
-    <section class="cocktail-bookmark-section">
+    <section class="cocktail-bookmark-section top-view">
       <div class="cocktail-bookmark-none">
         <p>해당 칵테일을 북마크한 유저가 없습니다</p>
         <p class="emoji">😥</p>

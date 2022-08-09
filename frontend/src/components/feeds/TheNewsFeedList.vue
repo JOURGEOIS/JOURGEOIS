@@ -24,5 +24,10 @@ const newsFeedList = computed(
   width: calc(100% + 32px);
   margin-left: -16px;
   background-color: $white150;
+  padding-top: 114px;
+
+  @media #{$tablet} {
+    padding-top: 138px;
+  }
 }
 </style>

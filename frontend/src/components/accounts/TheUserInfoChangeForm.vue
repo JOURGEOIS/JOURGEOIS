@@ -16,7 +16,7 @@
     <input-basic
       :input-style="nameInputStyle"
       :data="nameInputData"
-      v-model="nameInputValue"
+      v-model.trim="nameInputValue"
     ></input-basic>
     <div v-if="nameErrorStatus" class="change-error-message">
       <p>이름은 한글 또는 영어만 입력이 가능합니다.</p>
@@ -24,7 +24,7 @@
     <input-basic
       :input-style="nickNameInputStyle"
       :data="nickNameInputData"
-      v-model="nickNameInputValue"
+      v-model.trim="nickNameInputValue"
     ></input-basic>
     <div v-if="nickNameErrorStatus" class="change-error-message">
       <p v-for="(msg, index) in nickNameErrorMsg" :key="index">{{ msg }}</p>
@@ -35,7 +35,7 @@
     <input-basic
       :input-style="introduceInputStyle"
       :data="introduceInputData"
-      v-model="introduceInputValue"
+      v-model.trim="introduceInputValue"
     ></input-basic>
     <button-basic
       :button-style="[buttonColor, 'long', 'small']"

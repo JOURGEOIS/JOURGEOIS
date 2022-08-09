@@ -25,14 +25,14 @@
           name="alcohol"
           id="filter-alcohol"
           :value="trueValue"
-          v-model="statusAlcohol"
+          v-model.trim="statusAlcohol"
         />
         <input
           type="radio"
           name="alcohol"
           id="filter-none-alcohol"
           :value="falseValue"
-          v-model="statusAlcohol"
+          v-model.trim="statusAlcohol"
         />
       </div>
     </div>

@@ -43,6 +43,7 @@ const offModal = () => {
   height: 100vh;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.7);
+  z-index: 20;
 }
 
 .modal-basic {

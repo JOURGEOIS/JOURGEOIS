@@ -1,0 +1,65 @@
+package com.jourgeois.backend.controller;
+
+import com.jourgeois.backend.api.dto.post.PostDTO;
+import com.jourgeois.backend.service.CocktailAwardsService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+@RestController
+@RequestMapping("/awards")
+public class CocktailAwardsController {
+    private final CocktailAwardsService cocktailAwardsService;
+
+    public CocktailAwardsController(CocktailAwardsService cocktailAwardsService) {
+        this.cocktailAwardsService = cocktailAwardsService;
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity postAwards(HttpServletRequest request, @ModelAttribute PostDTO post) {
+        Map<String, String> result = new HashMap<>();
+
+        // 사진 필수 입력
+        if(post.getImg() == null || post.getImg().isEmpty()) {
+            result.put("fail", "이미지를 등록해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
+        // title 필수 입력
+        if(post.getTitle() == null || post.getTitle().isEmpty()){
+            result.put("fail", "이름을 등록해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            if(post.getAgree()){
+                Long uid = Long.valueOf((String) request.getAttribute("uid"));
+                post.setUid(uid);
+                return new ResponseEntity(cocktailAwardsService.postAwards(post), HttpStatus.CREATED);
+            }
+            result.put("fail", "개인정보를 동의해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(NumberFormatException e){
+            result.put("fail", "uid의 형식이 다릅니다.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(IllegalArgumentException e){
+            result.put("fail", "필수 입력 정보를 기입해주세요.");
+            return new ResponseEntity(result, HttpStatus.BAD_REQUEST);
+        } catch(IOException e) {
+            result.put("fail", "파일 업로드 실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NoSuchElementException e) {
+            result.put("fail", "글 등록 실패");
+            return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}

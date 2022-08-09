@@ -63,6 +63,11 @@ public class PostService {
         Member member = memberRepository.findById(writerId)
                             .orElseThrow(()->new NoSuchElementException("유저를 찾을 수 없습니다."));
         if(postDTO.getTitle()==null || postDTO.getTitle().isEmpty()){
+            // 공백 처리
+            if(postDTO.getDescription() == null || postDTO.getDescription().trim().isEmpty()) {
+                throw  new IllegalArgumentException("필수 정보 누락");
+            }
+
 
             Post post = new Post();
             post.setDescription(postDTO.getDescription());
@@ -125,6 +130,10 @@ public class PostService {
             Post targetPost = postRepository.findByIdAndMember(postId, member).orElseThrow(()->new NoSuchElementException("게시글을 찾을 수 없습니다."));
             targetPost.setDescription(postDTO.getDescription());
 
+            if(postDTO.getDescription() == null || postDTO.getDescription().trim().isEmpty()) {
+                throw  new IllegalArgumentException("필수 정보 누락");
+            }
+
             // post 이미지 업로드
             if(postDTO.getImg() != null && !postDTO.getImg().getOriginalFilename().isEmpty()){
                 String uploadURL = s3Util.upload(postDTO.getImg(), postDTO.getUid(), ImgType.POST);
@@ -168,7 +177,7 @@ public class PostService {
                             System.out.println(targetPost.getImg());
                     s3Util.deleteFile(targetPost.getImg());
                     // cascade 적용이 안됨..!!
-                    customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(postDeleteReq.get("p_id")))
+                    customCocktailToCocktailRepository.findByCustomCocktailId(new CustomCocktail(postDeleteReq.get("postId")))
                                     .ifPresent(data -> {customCocktailToCocktailRepository.deleteByCustomCocktailId(new CustomCocktail(data.getCustomCocktailId()));});
                     postRepository.delete(targetPost);
                 },
@@ -207,7 +216,7 @@ public class PostService {
         Member member = new Member();
         member.setUid(reviewDeleteReq.get("uid"));
 
-        PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("postReveiwId"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
+        PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("postReviewId"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReviewRepository.delete(postReview);
     }
 

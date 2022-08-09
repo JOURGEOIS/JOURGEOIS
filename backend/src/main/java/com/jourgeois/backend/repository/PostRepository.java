@@ -26,6 +26,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(select * from (select * from post where p_writer in (select to_user_id from follow where from_user_id = :me) or p_writer = :me) as followerFeed left join \n" +
             "(select * from (select cc_cocktail_ingredients, cc_cocktail_recipe, cc_cocktail_title, custom_cocktail.p_id as cock_p_id, c_id as base_c_id, c_id is null as isSuperCustomCocktail from custom_cocktail \n" +
             "left join custom_cocktail_to_cocktail on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id) as cocktailFilter left join cocktail on cocktailFilter.base_c_id = cocktail.c_id) as cocktailInfo\n" +
-            "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo order by createTime desc", nativeQuery = true)
+            "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer order by createTime desc", nativeQuery = true)
     List<NewsFeedVO> getNewsFeed(@Param("me") Long me, Pageable pageable);
 }

@@ -10,7 +10,7 @@
     >
       커스텀 칵테일 제작
     </header-basic>
-    <section>
+    <section class="top-view">
       <the-custom-cocktail-form
         id="custom-cocktail-form"
       ></the-custom-cocktail-form>
@@ -82,7 +82,6 @@ onUnmounted(() => {
     @include flex(column);
     width: 100%;
     gap: 36px;
-    margin-top: 2rem;
 
     @media #{$tablet} {
       width: 80%;

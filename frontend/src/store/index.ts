@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import { navbar, NavbarState } from "../store/basics/navbar";
 import { scroll, ScrollState } from "../store/basics/scroll";
+import { modal, ModalState } from "../store/basics/modal";
 import { post, PostState } from "../store/basics/post";
 import { share, ShareState } from "../store/basics/share";
 import { account, AccountState } from "../store/accounts/account";
@@ -55,6 +56,7 @@ import { comment, Comment } from "../store/basics/comment";
 export interface RootState {
   navbar: NavbarState;
   scroll: ScrollState;
+  modal: ModalState;
   post: PostState;
   share: ShareState;
   account: AccountState;
@@ -79,6 +81,7 @@ export default createStore({
   modules: {
     navbar,
     scroll,
+    modal,
     post,
     share,
     account,

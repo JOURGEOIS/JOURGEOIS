@@ -21,7 +21,10 @@
       <div class="header-content"><slot></slot></div>
       <button
         class="header-success"
-        :style="{ visibility: successVisibility }"
+        :style="{
+          opacity: successVisibility,
+          pointerEvents: successPointerEvent,
+        }"
         type="submit"
         :form="formId"
       >
@@ -64,9 +67,17 @@ const iconVisibility = computed(() => {
 
 const successVisibility = computed(() => {
   if (props.success) {
-    return "visible";
+    return "1";
   } else {
-    return "hidden";
+    return "0";
+  }
+});
+
+const successPointerEvent = computed(() => {
+  if (props.success) {
+    return "auto";
+  } else {
+    return "none";
   }
 });
 </script>

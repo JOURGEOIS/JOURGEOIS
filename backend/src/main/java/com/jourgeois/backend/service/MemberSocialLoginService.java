@@ -144,7 +144,6 @@ public class MemberSocialLoginService {
                 sb.append("grant_type=authorization_code");
                 sb.append("&client_id=" + socialLoginConfigUtils.getKakaoRestapiKey());
                 sb.append("&redirect_uri="+ socialLoginConfigUtils.getKakaoRedirectUrl());
-                sb.append("&client_secret=" + socialLoginConfigUtils.getKakaoClientSecret());
                 sb.append("&code=" + code);
             } else if (domain == "naver"){
                 sb.append("grant_type=authorization_code");

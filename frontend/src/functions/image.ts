@@ -6,12 +6,9 @@ function checkImageSize(fileData: { max: number; fileSize: number }): boolean {
 
   // 제한되는 사이즈
   const maxSize = max * 1024 * 1024;
-  console.log(maxSize, fileSize);
   if (maxSize < fileSize) {
-    console.log("크당");
     return false;
   }
-  console.log("작당");
   return true;
 }
 

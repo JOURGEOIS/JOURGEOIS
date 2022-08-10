@@ -159,7 +159,7 @@ export const createFeed: Module<CreateFeedState, RootState> = {
             name: "TheCommunityDescView",
             params: { feedId: res.data },
           });
-          // 성공 알림
+          dispatch("newsFeed/removeNewsFeedListData", {}, { root: true })
         })
         .catch((error) => {
           // 로딩 off
@@ -233,10 +233,7 @@ export const createFeed: Module<CreateFeedState, RootState> = {
             name: "TheCommunityDescView",
             params: { feedId: res.data },
           });
-
-          // 성공 알림
-          commit("SET_SUCCESS_MESSAGE", "성공적으로 변경되었습니다");
-          commit("SET_ALERT_STATUS", true);
+          dispatch("newsFeed/removeNewsFeedListData", {}, { root: true })
         })
         .catch((err) => {
           if (err.response.status !== 401) {

@@ -232,7 +232,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
           // 성공 알림
           commit("SET_SUCCESS_MESSAGE", "성공적으로 삭제되었습니다");
           commit("SET_ALERT_STATUS", true);
-          
+          dispatch("newsFeed/removeNewsFeedListData", {}, { root: true })
         })
         .catch((err) => {
           if (err.res.status !== 401) {

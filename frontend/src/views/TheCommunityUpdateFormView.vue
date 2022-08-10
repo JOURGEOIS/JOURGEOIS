@@ -25,7 +25,7 @@
       </div>
     </section>
   </div>
-  <failure-pop-up v-if="errorStatus">
+  <failure-pop-up v-if="errorStatus" @off-modal="offFailurePopUp">
     {{ errorMessage }}
   </failure-pop-up>
 </template>
@@ -46,14 +46,17 @@ const errorStatus = computed(() => store.getters["createFeed/getAlertStatus"]);
 const errorMessage = computed(
   () => store.getters["createFeed/getErrorMessage"]
 );
+
 // 시간제 모달
 watch(errorStatus, () => {
   if (errorStatus.value) {
-    setTimeout(() => {
-      store.dispatch("createFeed/changeAlertStatus", false);
-    }, 2000);
+    setTimeout(() => offFailurePopUp(), 2000);
   }
 });
+
+const offFailurePopUp = () => {
+  store.dispatch("customCocktail/changeAlertStatus", false);
+};
 
 // 모달 초기화 및 db 요청
 onBeforeMount(() => {

@@ -33,7 +33,9 @@
     </div>
   </div>
   <nav-bar></nav-bar>
-  <success-pop-up v-if="successStatus"> {{ successMessage }}</success-pop-up>
+  <success-pop-up v-if="successStatus" @off-modal="offSuccessModal">
+    {{ successMessage }}</success-pop-up
+  >
 </template>
 
 <script setup lang="ts">
@@ -100,11 +102,12 @@ const successStatus = computed(
 // 시간제 모달
 watch(successStatus, () => {
   if (successStatus.value) {
-    setTimeout(() => {
-      store.dispatch("customCocktail/changeAlertStatus", false);
-    }, 2000);
+    setTimeout(() => offSuccessModal(), 2000);
   }
 });
+const offSuccessModal = () => {
+  store.dispatch("customCocktail/changeAlertStatus", false);
+};
 </script>
 
 <style scoped lang="scss">

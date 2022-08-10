@@ -1,21 +1,13 @@
 <template>
-  <div class="tmp-container">
-    <div class="category-container">
-      <router-link to="/">Home</router-link>
-    </div>
-
-    <div class="category-container">
-      <router-link to="/user/signup">회원가입</router-link>
-      <router-link to="/user/login">로그인</router-link>
-      <router-link to="/user/my-info">유저정보수정</router-link>
-      <router-link to="/user/my-info/password">비밀번호 변경</router-link>
-    </div>
-
-    <div class="category-container">
-      <router-link to="/cocktail/search">칵테일 검색</router-link>
-    </div>
+  <div class="the-home-view">
+    <!-- 헤더 -->
+    <header-basic :success="false" @prevClicked="$router.go(-1)">
+      홈
+    </header-basic>
+    <the-home-view-container></the-home-view-container>
   </div>
 
+  <!-- 건들지 말 것  -->
   <success-pop-up v-if="changePwPopupStatus">
     비밀번호가 변경되었습니다
   </success-pop-up>
@@ -28,10 +20,18 @@
   <success-pop-up v-if="completeSignUpModalStatus"
     >회원가입이 완료되었습니다.</success-pop-up
   >
+  <!-- <div class="category-container">
+    <router-link to="/user/signup">회원가입</router-link>
+    <router-link to="/user/login">로그인</router-link>
+    <router-link to="/user/my-info">유저정보수정</router-link>
+    <router-link to="/user/my-info/password">비밀번호 변경</router-link>
+  </div> -->
   <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
+import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import TheHomeViewContainer from "@/components/homes/TheHomeViewContainer.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import { computed, getCurrentInstance, onMounted } from "vue";
 import { useStore } from "vuex";
@@ -108,16 +108,16 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.tmp-container {
+.the-home-view {
   @include flex(column);
+  justify-content: flex-start;
   align-items: center;
-  padding: 30px;
-  @include font(20px, $fw-bold);
-
+  @include accountLayOut;
   .category-container {
-    @include flex(column);
+    @include flex;
     align-items: center;
     padding: 30px;
+    gap: 10px;
   }
 }
 </style>

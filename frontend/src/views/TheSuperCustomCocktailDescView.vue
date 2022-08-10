@@ -9,7 +9,7 @@
     <!-- 댓글 좋아요 공유 부분 -->
     <like-comment-share @clickLike="clickLike" :data="{ isLiked: isLiked }">
       <template #like>{{ likeCount }}</template>
-      <template #comment>{{ reviewCount }}</template>
+      <template #comment>{{ commentCount }}</template>
     </like-comment-share>
     <!-- 댓글 부분 -->
     <section class="the-custom-cocktail-desc-comment">
@@ -78,9 +78,7 @@ const clickLike = () => {
 };
 
 // 댓글 개수
-const reviewCount = computed(
-  () => customCocktailInfo?.value?.customCocktail?.reviewCount
-);
+const commentCount = computed(() => store.getters["comment/getCommentCount"]);
 </script>
 
 <style scoped lang="scss">

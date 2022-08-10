@@ -9,7 +9,7 @@
     >
       글수정
     </header-basic>
-    <section>
+    <section class="top-view">
       <!-- 폼 풀러오기 -->
       <the-community-update-form
         id="the-community-update-form"

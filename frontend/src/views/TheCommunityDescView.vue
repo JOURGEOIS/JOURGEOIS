@@ -1,8 +1,8 @@
 <template>
-  <div class="community-desc-view">
-    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-      {{ nickname }}
-    </header-basic>
+  <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+    {{ nickname }}
+  </header-basic>
+  <div class="community-desc-view top-view-no-margin">
     <!-- 포스트 내용 불러오기 -->
     <the-community-desc-body></the-community-desc-body>
     <!-- 댓글 좋아요 공유 부분 -->
@@ -79,7 +79,7 @@ const commentCount = computed(
 <style scoped lang="scss">
 .community-desc-view {
   @include flex(column);
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   position: relative;
   @include accountLayOut;

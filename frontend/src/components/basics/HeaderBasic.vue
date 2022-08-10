@@ -19,17 +19,14 @@
         arrow_back_ios_new
       </span>
       <div class="header-content"><slot></slot></div>
-      <button
+      <span
+        :style="{ visibility: successVisibility }"
         class="header-success"
-        :style="{
-          opacity: successVisibility,
-          pointerEvents: successPointerEvent,
-        }"
         type="submit"
         :form="formId"
       >
         완료
-      </button>
+      </span>
     </div>
   </header>
 </template>
@@ -67,17 +64,9 @@ const iconVisibility = computed(() => {
 
 const successVisibility = computed(() => {
   if (props.success) {
-    return "1";
+    return "visible";
   } else {
-    return "0";
-  }
-});
-
-const successPointerEvent = computed(() => {
-  if (props.success) {
-    return "auto";
-  } else {
-    return "none";
+    return "hidden";
   }
 });
 </script>
@@ -134,7 +123,6 @@ const successPointerEvent = computed(() => {
     }
 
     .header-success {
-      width: fit-content;
       padding: 0.5em 0 0.5em 0.5em;
       letter-spacing: $ls-main;
       @include font($fs-main, $fw-medium);
@@ -151,17 +139,6 @@ const successPointerEvent = computed(() => {
 
     .back-icon {
       user-select: none;
-    }
-  }
-  hr {
-    width: 100vw;
-    background-color: $white;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid $unchecked-color;
-
-    @media #{$tablet} {
     }
   }
 }

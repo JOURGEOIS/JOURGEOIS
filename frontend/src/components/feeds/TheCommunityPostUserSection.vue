@@ -9,7 +9,8 @@
       <div class="user-info-text">
         <div class="user-nickname" @click="goProfile">{{ nickname }}</div>
         <div class="date-line">
-          <span>{{ createTimeDelta }}{{compare}}</span>
+          <span>{{ createTimeDelta }}</span>
+          <span class="updated" v-if="isUpdated">수정됨</span>
         </div>
       </div>
     </div>
@@ -55,13 +56,11 @@ const createTime = computed(
 )
 const createTimeDelta = computed(() => calcDateDelta(createTime.value))
 const updateTime = computed(
-  () => feedDescInfo?.value?.customCocktail?.lastUpdateTime,
-)
-const compare = compareDate(createTime.value, updateTime.value)
-const updateTimeDelta = computed(() => calcDateDelta(updateTime.value))
+  () => feedDescInfo?.value?.customCocktail?.lastUpdateTime
+);
 const isUpdated = computed(
-  () => feedDescInfo?.value?.customCocktail?.lastUpdateTimeUpdate,
-)
+  () => feedDescInfo?.value?.customCocktail?.isUpdated
+);
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
   alert('유저 프로필 페이지로 가라!')

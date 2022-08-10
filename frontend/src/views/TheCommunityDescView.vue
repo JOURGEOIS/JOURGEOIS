@@ -79,7 +79,7 @@ const commentCount = computed(
 <style scoped lang="scss">
 .community-desc-view {
   @include flex(column);
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   position: relative;
   @include accountLayOut;

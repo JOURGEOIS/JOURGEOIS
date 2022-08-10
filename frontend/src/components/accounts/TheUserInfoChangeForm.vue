@@ -138,7 +138,7 @@ interface file {
 }
 
 // 이미지 업로드
-let presentImage: object;
+let presentImage = reactive({});
 const changeProfileImage = (event: Event) => {
   let file = (event.target as HTMLInputElement).files![0];
 
@@ -146,27 +146,45 @@ const changeProfileImage = (event: Event) => {
   // 2. 이미지 확장자가 아닌 경우
   // 바로 return 한다.
   if (!file || !checkImageExtension(file.name)) {
-    alert("꺼지라마");
+    store.dispatch(
+      "modal/changeErrorModalMessage",
+      "올바른 이미지 파일을 업로드 하세요."
+    );
+    store.dispatch("modal/blinkErrorModalAppStatus", true);
     return;
   }
-  console.log(file);
+
   // 이미지 용량이 5mb초과면 compressor를 진행한다.
   if (!checkImageSize({ max: 5, fileSize: file.size })) {
-    console.log("hi");
-    const result = compressorImage(file);
-    // const data: Compressor  = result.file;
-    // file = data;
-    // if (compressor instanceof FormData ){
-    //   file = result
-    // }
-  }
+    compressorImage(file).then((result) => {
+      if (!checkImageSize({ max: 10, fileSize: result.size })) {
+        store.dispatch(
+          "modal/changeErrorModalMessage",
+          "이미지가 너무 큽니다."
+        );
+        store.dispatch("modal/blinkErrorModalAppStatus");
+        return;
+      } else {
+        file = result;
+        presentImage = result;
+        const data = {
+          imageFile: file,
+          profileImage,
+        };
+        store.dispatch("personalInfo/changeProfileImage", data);
+        return;
+      }
+    });
 
-  const data = {
-    imageFile: file,
-    profileImage,
-  };
-  presentImage = data.imageFile;
-  store.dispatch("personalInfo/changeProfileImage", data);
+    // 이미지 용량이 5mb 이하면 그냥 업로드 한다.
+  } else {
+    presentImage = file;
+    const data = {
+      imageFile: file,
+      profileImage,
+    };
+    store.dispatch("personalInfo/changeProfileImage", data);
+  }
 };
 
 const submit = (data: object) =>

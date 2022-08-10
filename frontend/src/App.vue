@@ -3,6 +3,9 @@
   <failure-pop-up-app v-if="failModalAppStatus">{{
     failMessage
   }}</failure-pop-up-app>
+  <failure-pop-up v-if="errorModalAppStatus">{{
+    errorModalAppMessage
+  }}</failure-pop-up>
   <the-create-post-modal v-if="createFeedModalStatus"></the-create-post-modal>
   <share-modal v-if="shareModalStatus"></share-modal>
   <top-button></top-button>
@@ -10,6 +13,7 @@
 
 <script setup lang="ts">
 import FailurePopUpApp from "@/components/modals/FailurePopUpApp.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import TheCreatePostModal from "@/components/feeds/TheCreatePostModal.vue";
 import ShareModal from "@/components/basics/ShareModal.vue";
 import TopButton from "@/components/basics/TopButton.vue";
@@ -31,6 +35,14 @@ const createFeedModalStatus = computed(
 
 const shareModalStatus = computed(
   () => store.getters["share/getShareModalStatus"]
+);
+
+const errorModalAppStatus = computed(
+  () => store.getters["modal/getErrorModalAppStatus"]
+);
+
+const errorModalAppMessage = computed(
+  () => store.getters["modal/getErrorModalAppMessage"]
 );
 
 // deviceType 확인

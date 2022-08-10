@@ -2,10 +2,10 @@ package com.jourgeois.backend.service;
 
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemDTO;
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
-import com.jourgeois.backend.api.dto.search.SearchCocktailDTO;
 import com.jourgeois.backend.repository.ClipRepository;
 import com.jourgeois.backend.repository.CocktailRepository;
 import com.jourgeois.backend.repository.PostRepository;
+import com.jourgeois.backend.util.TagType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,17 +28,14 @@ public class HomeService {
         this.s3Url = s3Url;
     }
 
-    public List<SearchCocktailDTO> recommenderLiquor(Long uid, Pageable pageable){
-        List<SearchCocktailDTO> list = new ArrayList<>();
-        cocktailRepository.findByrecommenderLiquor(uid, pageable).forEach(data -> {
-            list.add(SearchCocktailDTO.builder()
-                    .id(data.getId())
-                    .img(data.getImg())
-                    .name(data.getNameKR())
-                    .alcohol(data.getAlcohol())
-                    .baseLiquor(data.getBaseLiquor()).build());
-        });
-        return list;
+    public List<HomeCocktailItemDTO> recommenderLiquor(Long uid, Pageable pageable) throws Exception {
+        List<HomeCocktailItemVO> recommendCocktail = cocktailRepository.findByrecommenderLiquor(uid, pageable);
+        return convertHomeCocktailItemVO2DTO(recommendCocktail);
+    }
+
+    public List<HomeCocktailItemDTO> recommender5Liquor(Long uid) throws Exception {
+        List<HomeCocktailItemVO> recommendCocktail = cocktailRepository.findByrecommender5Liquor(uid);
+        return convertHomeCocktailItemVO2DTO(recommendCocktail);
     }
 
     // 신규 커스텀 칵테일 5개 반환
@@ -93,5 +90,15 @@ public class HomeService {
 
     public String getRandomClip() {
         return clipRepository.findRandomClip();
+    }
+
+    public List<HomeCocktailItemDTO> getTag5Cocktail(TagType tagType) throws Exception {
+        List<HomeCocktailItemVO> customCocktails = postRepository.getTag5Cocktail(tagType.getValue());
+        return convertHomeCocktailItemVO2DTO(customCocktails);
+    }
+
+    public List<HomeCocktailItemDTO> getTagCocktail(TagType tagType, Pageable pageable) throws Exception {
+        List<HomeCocktailItemVO> customCocktails = postRepository.getTagCocktail(tagType.getValue(), pageable);
+        return convertHomeCocktailItemVO2DTO(customCocktails);
     }
 }

@@ -5,6 +5,7 @@ import com.jourgeois.backend.api.dto.post.CocktailAwardsVO;
 import com.jourgeois.backend.api.dto.post.NewsFeedVO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
+import com.jourgeois.backend.util.TagType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -134,4 +135,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "order by percentage desc", nativeQuery = true)
     List<CocktailAwardsVO> getCocktailAwardsVoteList();
 
+    @Query(value = "SELECT c_base_liquor as base, c_img as img, c_alcohol as abv, c_name_kr as title, c_id as cocktailId FROM cocktail WHERE c_tag like concat('%', :tag, '%') limit 5", nativeQuery = true)
+    List<HomeCocktailItemVO> getTag5Cocktail(@Param(value = "tag") String tagType);
+
+    @Query("SELECT c.baseLiquor as base, c.img as img, c.alcohol as abv, c.name as title, c.id as cocktailId FROM Cocktail AS c WHERE c.tag like concat('%', :tag, '%')")
+    List<HomeCocktailItemVO> getTagCocktail(@Param(value = "tag") String tagType, Pageable pageable);
 }

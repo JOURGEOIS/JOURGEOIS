@@ -1,9 +1,9 @@
 <template>
-  <div class="the-custom-cocktail-desc-view">
-    <!-- 헤더 -->
-    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-      커스텀 칵테일
-    </header-basic>
+  <!-- 헤더 -->
+  <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+    커스텀 칵테일
+  </header-basic>
+  <div class="the-custom-cocktail-desc-view top-view-no-margin">
     <!-- 제목, 사진, 제조법, 설명 등 커스텀 칵테일 내용 -->
     <the-custom-cocktail-desc-body></the-custom-cocktail-desc-body>
     <!-- 댓글 좋아요 공유 부분 -->

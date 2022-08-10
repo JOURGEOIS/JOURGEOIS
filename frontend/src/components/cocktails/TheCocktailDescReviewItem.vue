@@ -169,7 +169,6 @@ const modicalc = calcDateDelta(props.data.modifiedDate);
 const createdDate = props.data.createdDate;
 const modifiedDate = props.data.modifiedDate;
 const compare = compareDate(createdDate, modifiedDate);
-console.log(createdDate)
 // button
 const reviewEditValue = ref("");
 

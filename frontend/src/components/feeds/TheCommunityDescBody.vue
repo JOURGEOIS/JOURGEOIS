@@ -58,7 +58,6 @@ const clickEdit = () => {
 
 // 삭제 클릭
 const clickDelete = () => {
-  console.log(postId);
   store.dispatch("feedDescInfo/deleteCommunityPost", postId.value);
 };
 </script>

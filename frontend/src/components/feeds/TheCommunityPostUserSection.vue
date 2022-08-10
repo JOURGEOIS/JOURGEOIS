@@ -45,7 +45,6 @@ const store = useStore()
 const feedDescInfo = computed(() => {
   return store.getters['feedDescInfo/getCommunityDetail']
 })
-console.log(feedDescInfo )
 const uid = computed(() => feedDescInfo?.value?.followerDTO?.uid)
 const nickname = computed(() => feedDescInfo?.value?.followerDTO?.nickname)
 const profileImg = computed(() => feedDescInfo?.value?.followerDTO?.profileImg)

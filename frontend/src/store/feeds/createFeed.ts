@@ -15,6 +15,8 @@ export interface CreateFeedState {
   errorMessage: string;
   // 성공 메시지
   successMessage: string;
+  // 로딩 팝업
+  loadingStatus: boolean;
 }
 
 export const createFeed: Module<CreateFeedState, RootState> = {
@@ -30,6 +32,8 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     errorMessage: "",
     // 성공 메시지
     successMessage: "",
+    // 로딩 팝업 상태
+    loadingStatus: false,
   },
 
   getters: {
@@ -42,6 +46,8 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     getErrorMessage: (state) => state.errorMessage,
     // 성공 메시지
     getSuccessMessage: (state) => state.successMessage,
+    // 로딩 팝업
+    getLoadingStatus: (state) => state.loadingStatus,
   },
 
   mutations: {
@@ -64,6 +70,10 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     SET_SUCCESS_MESSAGE: (state, value: string) => {
       state.successMessage = value;
     },
+    // 로딩 팝업
+    SET_LOADING_STATUS: (state, value: boolean) => {
+      state.loadingStatus = value;
+    },
   },
 
   actions: {
@@ -79,6 +89,10 @@ export const createFeed: Module<CreateFeedState, RootState> = {
       commit("SET_ALERT_STATUS", value);
     },
 
+    // 로딩 팝업
+    toggleLoadingStatus: ({ commit }, value: Boolean) => {
+      commit("SET_LOADING_STATUS", value);
+    },
     //============== 제출
     // 일반 게시글 제출 전 유효성 검사 (빈 필드가 있는지 확인한다.)
     submitCommunityForm: ({ commit, dispatch }, data) => {
@@ -102,7 +116,6 @@ export const createFeed: Module<CreateFeedState, RootState> = {
       const { description } = data;
       // 내용 중 빈 문자만 제출했는지 확인 (빈문자열이 있으면 false)
       const descriptionNull = description.trim().length;
-      console.log("type: ", descriptionNull);
       if (descriptionNull === 0) {
         commit("SET_ERROR_MESSAGE", "내용에는 빈 값을 입력할 수 없습니다");
         commit("SET_ALERT_STATUS", true);
@@ -122,6 +135,8 @@ export const createFeed: Module<CreateFeedState, RootState> = {
 
     // 저장(생성)
     saveCommunity: ({ commit, rootGetters, dispatch }, data) => {
+      // 로딩 on
+      commit("SET_LOADING_STATUS", true);
       const { description, img } = data;
       // 저장하기
       axios({
@@ -137,23 +152,25 @@ export const createFeed: Module<CreateFeedState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res);
+          // 로딩 off
+          commit("SET_LOADING_STATUS", false);
           // 상세 페이지로 이동
           router.replace({
             name: "TheCommunityDescView",
             params: { feedId: res.data },
           });
-
           // 성공 알림
-          console.log(res);
-          commit("SET_SUCCESS_MESSAGE", "성공적으로 등록되었습니다");
-          commit("SET_ALERT_STATUS", true);
         })
         .catch((error) => {
-          console.log(error);
-          if (error.response.status !== 401) {
-            // 실패 팝업
-            commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+          // 로딩 off
+          commit("SET_LOADING_STATUS", false);
+          if (error.res.status !== 401) {
+            if (error.res.data.fail) {
+              commit("SET_ERROR_MESSAGE", error.response.data.fail);
+            } else {
+              // 실패 팝업
+              commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            }
             commit("SET_ALERT_STATUS", true);
           } else {
             // refreshToken 재발급
@@ -169,11 +186,9 @@ export const createFeed: Module<CreateFeedState, RootState> = {
     // 일반게시글 수정 시 유효성 검사
     updateCommunityForm: ({ commit, dispatch }, data) => {
       const { description, img, postId } = data;
-      console.log("유효성검사 data: ", data);
 
       // 내용 중 빈 문자만 제출했는지 확인 (빈문자열이 있으면 false)
       const descriptionNull = description.trim().length;
-      console.log("type: ", descriptionNull);
       if (descriptionNull === 0) {
         commit("SET_ERROR_MESSAGE", "내용에는 빈 값을 입력할 수 없습니다");
         commit("SET_ALERT_STATUS", true);
@@ -214,19 +229,16 @@ export const createFeed: Module<CreateFeedState, RootState> = {
         data,
       })
         .then((res) => {
-          console.log(res.data);
           router.replace({
             name: "TheCommunityDescView",
             params: { feedId: res.data },
           });
 
           // 성공 알림
-          console.log(res);
           commit("SET_SUCCESS_MESSAGE", "성공적으로 변경되었습니다");
           commit("SET_ALERT_STATUS", true);
         })
         .catch((err) => {
-          console.log(err);
           if (err.response.status !== 401) {
             // 실패 팝업
             commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");

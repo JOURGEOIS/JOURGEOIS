@@ -202,7 +202,7 @@ public class MemberController {
             URI redirectUri = new URI(authUrl);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -215,7 +215,7 @@ public class MemberController {
 
         System.out.println("Kakao Code : " + code);
         try {
-            String accessToken = memberService.getKakaoAccessToken(code, "kakao");
+            String accessToken = memberService.getSocialAccessToken(code, "kakao");
             Map<String, Object> kakaoUserInfo = memberService.getSocialUserInfo(accessToken, "kakao");
             UserDetails userDetails = memberService.loginSocialUser(kakaoUserInfo, "kakao");
             Map<String, Object> data = new HashMap<>();
@@ -250,7 +250,7 @@ public class MemberController {
 
         System.out.println("Naver Code : " + code);
         try {
-            String accessToken = memberService.getKakaoAccessToken(code, "naver");
+            String accessToken = memberService.getSocialAccessToken(code, "naver");
             Map<String, Object> naverUserInfo = memberService.getSocialUserInfo(accessToken, "naver");
             System.out.println(naverUserInfo.get("email"));
             UserDetails userDetails = memberService.loginSocialUser(naverUserInfo, "naver");

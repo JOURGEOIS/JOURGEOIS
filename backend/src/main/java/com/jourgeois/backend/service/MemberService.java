@@ -231,7 +231,7 @@ public class MemberService {
 
     }
 
-    public String getKakaoAccessToken(String code, String domain) {
+    public String getSocialAccessToken(String code, String domain) {
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "";
@@ -260,7 +260,6 @@ public class MemberService {
                 sb.append("grant_type=authorization_code");
                 sb.append("&client_id=" + socialLoginConfigUtils.getKakaoRestapiKey());
                 sb.append("&redirect_uri="+ socialLoginConfigUtils.getKakaoRedirectUrl());
-                sb.append("&client_secret=" + socialLoginConfigUtils.getKakaoClientSecret());
                 sb.append("&code=" + code);
             } else if (domain == "naver"){
                 sb.append("grant_type=authorization_code");

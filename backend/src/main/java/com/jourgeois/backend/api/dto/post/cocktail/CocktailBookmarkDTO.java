@@ -1,4 +1,4 @@
-package com.jourgeois.backend.api.dto.cocktail;
+package com.jourgeois.backend.api.dto.post.cocktail;
 
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.Member;

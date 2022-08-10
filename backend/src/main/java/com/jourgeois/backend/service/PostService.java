@@ -3,8 +3,11 @@ package com.jourgeois.backend.service;
 import com.amazonaws.SdkClientException;
 
 
+import com.jourgeois.backend.api.dto.home.HomeCocktailItemDTO;
+import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.api.dto.post.*;
+import com.jourgeois.backend.api.dto.search.SearchHistoryDTO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -185,7 +189,7 @@ public class PostService {
         );
     }
 
-    public void postReview(PostReviewDTO postReviewDTO) throws Exception {
+    public Map<String, Object> postReview(PostReviewDTO postReviewDTO) throws Exception {
 
         Member member = new Member();
         member.setUid(postReviewDTO.getUid());
@@ -198,26 +202,44 @@ public class PostService {
         postReview.setPost(post);
         postReview.setReview(postReviewDTO.getReview());
 
-        postReviewRepository.save(postReview);
+        PostReview newReview = postReviewRepository.save(postReview);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("postId", newReview.getPost().getId());
+        response.put("reviewCount", postReviewRepository.countByPost(post));
+
+        return response;
     }
 
     @Transactional
-    public void editReview(PostReviewDTO postReviewDTO) throws NoSuchElementException, IllegalArgumentException {
+    public Map<String, Object> editReview(PostReviewDTO postReviewDTO) throws NoSuchElementException, IllegalArgumentException {
         Member member = new Member();
         member.setUid(postReviewDTO.getUid());
 
         PostReview postReview = postReviewRepository.findByIdAndMember(postReviewDTO.getPostReviewId(), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReview.setReview(postReviewDTO.getReview());
-        postReviewRepository.save(postReview);
+        PostReview newPostReview = postReviewRepository.save(postReview);
+
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("postId", newPostReview.getPost().getId());
+        response.put("reviewCount", postReviewRepository.countByPost(newPostReview.getPost()));
+
+        return response;
     }
 
     @Transactional
-    public void deleteReview(Map<String, Long> reviewDeleteReq) throws NoSuchElementException, IllegalArgumentException {
+    public Map<String, Object> deleteReview(Map<String, Long> reviewDeleteReq) throws NoSuchElementException, IllegalArgumentException {
         Member member = new Member();
         member.setUid(reviewDeleteReq.get("uid"));
 
         PostReview postReview = postReviewRepository.findByIdAndMember(reviewDeleteReq.get("postReviewId"), member).orElseThrow(() -> new NoSuchElementException("댓글이 존재하지 않습니다."));
         postReviewRepository.delete(postReview);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("postId", postReview.getPost().getId());
+        response.put("reviewCount", postReviewRepository.countByPost(postReview.getPost()));
+        return response;
     }
 
     public List<PostReviewResponseDTO> getReviewAll(Long uid, Long p_id, Boolean asc, Pageable pageable) throws Exception {

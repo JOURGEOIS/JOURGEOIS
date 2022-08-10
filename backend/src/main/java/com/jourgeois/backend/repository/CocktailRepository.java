@@ -1,6 +1,6 @@
 package com.jourgeois.backend.repository;
 
-import com.jourgeois.backend.api.dto.cocktail.CocktailVO;
+import com.jourgeois.backend.api.dto.post.cocktail.CocktailVO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -58,4 +58,18 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 //    @Query("UPDATE Cocktail c SET c.name = :name, c.nameKR = :nameKR, c.alcohol = :alcohol, c.cupId = :cupId," +
 //            " c.tag = :tag, c.baseLiquor = :baseLiquor, c.category = :category, c.recipe = :recipe WHERE c.id = :id")
 //    Optional<Cocktail> updateCocktail(@Param("Cocktail") Cocktail cocktail);
+
+    @Query(value = "select * from cocktail where c_base_liquor = (select c_base_liquor\n" +
+            "from cocktail \n" +
+            "where c_id in (select c_id from cocktail_bookmark where m_id = :uid) \n" +
+            "group by c_base_liquor\n" +
+            "order by count(c_base_liquor) desc limit 1)", nativeQuery = true)
+    List<Cocktail> findByrecommenderLiquor(Long uid, Pageable pageable);
+
+
+    @Query("SELECT c.id AS id, c.nameKR AS nameKR, c.img AS img, c.category AS category, c.tag AS tag " +
+            "FROM Member AS m JOIN CocktailBookmark AS cb ON cb.memberId.uid = m.uid JOIN Cocktail AS c ON cb.cocktailId.id = c.id " +
+            "WHERE m.uid = :id")
+    Optional<List<CocktailVO>> findBookmarkInProfilePageByUid(Long id);
+
 }

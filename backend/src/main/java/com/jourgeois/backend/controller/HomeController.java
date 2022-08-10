@@ -116,7 +116,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "custom/tag5")
+    @GetMapping(value = "tag5")
     public ResponseEntity Tag5Cocktail(@RequestParam("tag") String tagType) {
         try{
             TagType tag = TagType.valueOf(tagType);
@@ -130,7 +130,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "custom/tag")
+    @GetMapping(value = "tag")
     public ResponseEntity TagCocktail(@RequestParam("tag") String tagType, @PageableDefault(size=10, page = 0) Pageable pageable) {
         try{
             TagType tag = TagType.valueOf(tagType);

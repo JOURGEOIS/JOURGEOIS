@@ -3,12 +3,14 @@ package com.jourgeois.backend.controller;
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemDTO;
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.service.HomeService;
+import com.jourgeois.backend.util.TagType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -21,6 +23,15 @@ public class HomeController {
 
     public HomeController(HomeService homeService) {
         this.homeService = homeService;
+    }
+
+    @GetMapping(value="/liquor5")
+    public ResponseEntity recommender5Liquor(@RequestHeader(value = "uid", defaultValue = "-1") Long uid){
+        try{
+            return new ResponseEntity(homeService.recommender5Liquor(uid), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value="/liquor")
@@ -99,6 +110,34 @@ public class HomeController {
             Map<String, String> result = new HashMap<>();
             result.put("url", homeService.getRandomClip());
             return new ResponseEntity(result, HttpStatus.OK);
+        } catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "custom/tag5")
+    public ResponseEntity Tag5Cocktail(@RequestParam("tag") String tagType) {
+        try{
+            TagType tag = TagType.valueOf(tagType);
+            return new ResponseEntity(homeService.getTag5Cocktail(tag), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+            return new ResponseEntity("Fail", HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "custom/tag")
+    public ResponseEntity TagCocktail(@RequestParam("tag") String tagType, @PageableDefault(size=10, page = 0) Pageable pageable) {
+        try{
+            TagType tag = TagType.valueOf(tagType);
+            return new ResponseEntity(homeService.getTagCocktail(tag, pageable), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+            return new ResponseEntity("Fail", HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             System.out.println(e);
             return new ResponseEntity("Fail", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -5,7 +5,7 @@
       <div
         class="container"
         :class="animation"
-        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+        :style="[isIphone ? { height: '350px' } : { height: '300px' }]"
       >
         <!-- filter: header -->
         <section class="header-section">

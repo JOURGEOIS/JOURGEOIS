@@ -5,7 +5,7 @@
       <div
         class="container"
         :class="animation"
-        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+        :style="[isIphone ? { height: '350px' } : { height: '300px' }]"
       >
         <!-- filter: header -->
         <section class="header-section">
@@ -114,7 +114,7 @@ const isIphone = computed(() => {
     bottom: 0px;
     width: 100%;
     max-width: 600px;
-    height: 250px;
+    height: 300px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding: 0 16px;
@@ -125,7 +125,7 @@ const isIphone = computed(() => {
     }
 
     @media (min-height: 750px) {
-      height: 250px;
+      height: 300px;
     }
 
     .header-section {

@@ -4,7 +4,9 @@
     <header-basic :success="false" @prevClicked="$router.go(-1)">
       홈
     </header-basic>
-    <the-home-view-container></the-home-view-container>
+    <section class="top-view-no-margin">
+      <the-home-view-container></the-home-view-container>
+    </section>
   </div>
 
   <!-- 건들지 말 것  -->
@@ -43,7 +45,7 @@
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheHomeViewContainer from "@/components/homes/TheHomeViewContainer.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import { computed, getCurrentInstance, onMounted } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -130,6 +132,33 @@ onMounted(() => {
     setTimeout(() => offRefreshFailPopupStatus(), 2000);
   }
 });
+
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    // action: "newsFeed/getNewsFeedListData",
+  };
+  store.dispatch("scroll/handleScroll", data);
+};
+
+// db 받아오기
+onBeforeMount(() => {
+  window.addEventListener("scroll", handleScroll);
+  // store.dispatch("newsFeed/getNewsFeedListData");
+});
+
+// 저장된 스크롤 높이로 이동
+onMounted(() => {
+  // const scrollY = computed(() => store.getters["newsFeed/getNewsFeedScrollY"]);
+  setTimeout(() => {
+    // window.scrollTo({ left: 0, top: scrollY.value });
+  }, 0);
+});
+
+// 스크롤 높이 저장
+onBeforeUnmount(() => {
+  // store.dispatch("newsFeed/setNewsFeedScrollY", window.scrollY);
+});
 </script>
 
 <style scoped lang="scss">
@@ -138,11 +167,18 @@ onMounted(() => {
   justify-content: flex-start;
   align-items: center;
   @include accountLayOut;
-  .category-container {
-    @include flex;
-    align-items: center;
-    padding: 30px;
-    gap: 10px;
+
+  section {
+    width: 100%;
+    margin-top: 8px;
+
+    @media #{$tablet} {
+      width: 60%;
+    }
+
+    @media #{$pc} {
+      width: 50%;
+    }
   }
 }
 </style>

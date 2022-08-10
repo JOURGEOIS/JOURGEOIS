@@ -1,9 +1,11 @@
 <template>
   <router-view />
-  <failure-pop-up-app v-if="failModalAppStatus">{{
-    failMessage
-  }}</failure-pop-up-app>
-  <failure-pop-up v-if="errorModalAppStatus">{{
+  <failure-pop-up-app
+    v-if="failModalAppStatus"
+    @off-modal="offFailurePopUpAPP"
+    >{{ failMessage }}</failure-pop-up-app
+  >
+  <failure-pop-up v-if="errorModalAppStatus" @off-modal="offFailurePopUp">{{
     errorModalAppMessage
   }}</failure-pop-up>
   <the-create-post-modal v-if="createFeedModalStatus"></the-create-post-modal>
@@ -44,6 +46,14 @@ const errorModalAppStatus = computed(
 const errorModalAppMessage = computed(
   () => store.getters["modal/getErrorModalAppMessage"]
 );
+
+const offFailurePopUpAPP = () => {
+  store.dispatch("modal/toggleFailModalAppStatus", false);
+};
+
+const offFailurePopUp = () => {
+  store.dispatch("modal/toggleErrorModalAppStatus", false);
+};
 
 // deviceType 확인
 onMounted(() => {

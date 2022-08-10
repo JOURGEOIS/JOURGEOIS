@@ -62,6 +62,12 @@ const routes: any[] = [
     component: () => import("@/views/TheChangePwView.vue"),
   },
 
+    // 타 유저 페이지로 이동
+    {
+      path: "/user/profile/:userId",
+      name: "TheUserProfile"
+    },
+
   // 칵테일 검색 페이지
   {
     path: "/cocktail/search",

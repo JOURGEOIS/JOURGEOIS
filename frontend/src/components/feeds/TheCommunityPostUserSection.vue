@@ -10,8 +10,7 @@
         <div class="user-nickname" @click="goProfile">{{ nickname }}</div>
         <div class="date-line">
           <span>{{ createTimeDelta }}</span>
-          <span v-if="isUpdated">/</span>
-          <span v-if="isUpdated">수정 {{ updateTimeDelta }}</span>
+          <span class="updated" v-if="isUpdated">수정됨</span>
         </div>
       </div>
     </div>
@@ -35,7 +34,7 @@
 <script setup lang="ts">
 import RoundImage from '@/components/basics/RoundImage.vue'
 import { User } from '../../interface'
-import { calcDateDelta } from '../../functions/date'
+import { calcDateDelta, compareDate } from '../../functions/date'
 import { reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 // import { useRouter, useRoute } from "vue-router";
@@ -46,7 +45,7 @@ const store = useStore()
 const feedDescInfo = computed(() => {
   return store.getters['feedDescInfo/getCommunityDetail']
 })
-
+console.log(feedDescInfo )
 const uid = computed(() => feedDescInfo?.value?.followerDTO?.uid)
 const nickname = computed(() => feedDescInfo?.value?.followerDTO?.nickname)
 const profileImg = computed(() => feedDescInfo?.value?.followerDTO?.profileImg)
@@ -57,12 +56,11 @@ const createTime = computed(
 )
 const createTimeDelta = computed(() => calcDateDelta(createTime.value))
 const updateTime = computed(
-  () => feedDescInfo?.value?.customCocktail?.lastUpdateTime,
-)
-const updateTimeDelta = computed(() => calcDateDelta(updateTime.value))
+  () => feedDescInfo?.value?.customCocktail?.lastUpdateTime
+);
 const isUpdated = computed(
-  () => feedDescInfo?.value?.customCocktail?.lastUpdateTimeUpdate,
-)
+  () => feedDescInfo?.value?.customCocktail?.isUpdated
+);
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
   alert('유저 프로필 페이지로 가라!')

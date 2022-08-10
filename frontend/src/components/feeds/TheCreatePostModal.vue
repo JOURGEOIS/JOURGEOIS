@@ -2,7 +2,11 @@
 <template>
   <teleport to="body">
     <div class="create-post-modal">
-      <div class="container" :class="animation">
+      <div
+        class="container"
+        :class="animation"
+        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+      >
         <!-- filter: header -->
         <section class="header-section">
           <span class="material-icons invisible"> close </span>
@@ -60,15 +64,20 @@ const clickXIcon = () => {
 // 슈퍼커스텀칵테일 업로드
 const createCustomCocktail = () => {
   store.dispatch("createFeed/toggleCreateFeedModal", false);
-  alert("슈커칵 게시물 작성 화면으로 이동");
-  // router.push({ name: ""})
+  router.push({ name: "TheSuperCustomCocktailFormView" });
 };
 
 // 일반게시물 업로드
 const createNormal = () => {
   store.dispatch("createFeed/toggleCreateFeedModal", false);
-  router.push({ name: "TheCommunityFormView"})
+  router.push({ name: "TheCommunityFormView" });
 };
+
+// 아이폰인지 확인
+const deviceType: string = store.getters["navbar/getDeviceType"];
+const isIphone = computed(() => {
+  return deviceType === "iphone";
+});
 </script>
 
 <style scoped lang="scss">
@@ -86,7 +95,7 @@ const createNormal = () => {
     transform: translate3d(0, 100%, 0);
   }
   from {
-    transform: translate3d(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 

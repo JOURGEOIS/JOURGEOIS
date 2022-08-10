@@ -160,50 +160,63 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 User 검색결과
-    setSearchUser: ({ commit, state, rootGetters }, data) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
+    setSearchUser: ({ dispatch, commit, getters, rootGetters }, data) => {
       axios({
         url: api.lookups.user(),
         method: "GET",
         headers: {
-          email,
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
           keyword: data.keyword,
-          page: state.searchUserPage,
+          page: getters.getSearchUserPage,
         },
       })
         .then((res) => {
-          commit("SET_SEARCH_USER_PAGE", state.searchUserPage + 1);
+          commit("SET_SEARCH_USER_PAGE", getters.getSearchUserPage + 1);
           // 최대 10개 유저 정보 리스트에 추가
           commit("SET_SEARCH_USERS", res.data);
         })
         .catch((err) => {
-          console.error(err.response);
+          // 실패 시, 홈으로 이동 후 에러 모달 on
+          if (err.response.status !== 401) {
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.log(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "searchResult/setSearchUser",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
 
     // * 검색어 자동완성 재료 Cocktail 검색결과
     setSearchCocktail: (
-      { commit, state, rootGetters },
+      { commit, state, rootGetters, getters },
       ingredientId: number
     ) => {
       // 오류 처리
       if (typeof ingredientId !== "number") return;
-      const email = rootGetters["personalInfo/getUserInfoId"];
       axios({
         url: api.lookups.cocktail(),
         method: "GET",
-        headers: { email },
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         params: {
           id: ingredientId,
-          page: state.searchCocktailPage,
+          page: getters.getSearchCocktailPage,
         },
       })
         .then((res) => {
-          commit("SET_SEARCH_COCKTAIL_PAGE", state.searchCocktailPage + 1);
+          const newSearchCocktails = res.data;
           // 최대 10개 칵테일 정보 리스트에 추가
-          commit("SET_SEARCH_COCKTAILS", res.data);
+          commit("SET_SEARCH_COCKTAILS", newSearchCocktails);
+          const page = getters.getSearchCocktailPage;
+          commit("SET_SEARCH_COCKTAIL_PAGE", page + 1);
         })
         .catch((err) => {
           console.error(err.response);
@@ -211,27 +224,41 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 검색어 Cocktail 검색결과
-    setSearchCocktailAll: ({ commit, state, rootGetters }, data) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
+    setSearchCocktailAll: (
+      { dispatch, commit, getters, rootGetters },
+      data
+    ) => {
       axios({
         url: api.lookups.cocktailall(),
         method: "GET",
-        headers: { email },
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         params: {
           keyword: data.keyword,
-          page: state.searchCocktailAllPage,
+          page: getters.getSearchCocktailAllPage,
         },
       })
         .then((res) => {
-          commit(
-            "SET_SEARCH_COCKTAIL_ALL_PAGE",
-            state.searchCocktailAllPage + 1
-          );
+          const newSearchCocktailAlls = res.data;
           // 최대 10개 칵테일 정보 리스트에 추가
-          commit("SET_SEARCH_COCKTAIL_ALLS", res.data);
+          commit("SET_SEARCH_COCKTAIL_ALLS", newSearchCocktailAlls);
+          const page = getters.getSearchCocktailAllPage;
+          commit("SET_SEARCH_COCKTAIL_ALL_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err.response);
+          // 실패 시, 홈으로 이동 후 에러 모달 on
+          if (err.response.status !== 401) {
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.log(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "post/setLikedUsers",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
 
@@ -247,13 +274,12 @@ export const searchResult: Module<SearchResultState, RootState> = {
     },
 
     // * 전체 칵테일 추가
-    setWholeCocktail: ({ commit, getters, rootGetters }) => {
-      const email = rootGetters["personalInfo/getUserInfoId"];
+    setWholeCocktail: ({ dispatch, commit, getters, rootGetters }) => {
       axios({
         url: api.lookups.wholeCocktail(),
         method: "GET",
         headers: {
-          email,
+          Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         params: {
           page: getters["getWholeCocktailPage"],
@@ -265,7 +291,20 @@ export const searchResult: Module<SearchResultState, RootState> = {
           const page = getters.getWholeCocktailPage;
           commit("SET_WHOLE_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          // 실패 시, 홈으로 이동 후 에러 모달 on
+          if (err.response.status !== 401) {
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.log(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "searchResult/setWholeCocktail",
+              params: {},
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
     },
 
     setSearchFilter: ({ commit, getters, rootGetters }) => {

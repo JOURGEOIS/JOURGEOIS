@@ -25,9 +25,9 @@
         favorite_border
       </span>
     </div>
-    <div class="liked-users tab">
+    <div class="liked-users tab" @click="clickLikedUsers">
       <span class="material-icons liked-users-icon"> diversity_1 </span>
-      <span class="button-text" @click="clickLikedUsers">
+      <span class="button-text">
         <slot name="like"></slot>
       </span>
     </div>
@@ -47,9 +47,9 @@
 <script setup lang="ts">
 import axios from "axios";
 import api from "../../api/api";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, onBeforeRouteLeave } from "vue-router";
 import { useStore } from "vuex";
-import { ref } from "vue";
+import { computed } from "vue";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -71,12 +71,10 @@ const clickLikeInner = () => {
 
 // 좋아요 숫자(좋아요한 유저 목록) 클릭
 const clickLikedUsers = () => {
-  alert("커스텀 칵테일 좋아요 유저 목록으로 이동");
-  const cocktailId = route.params.cocktailId;
   const feedId = route.params.feedId;
   router.push({
     name: "TheLikedUserListView",
-    params: { cocktailId, feedId },
+    params: { feedId },
   });
 };
 
@@ -85,6 +83,20 @@ const clickShare = () => {
   store.dispatch("share/changeShareModalClass", "start");
   store.dispatch("share/toggleShareModal", true);
 };
+
+// 뒤로가기 할 때 모달 내려가게 하기
+const shareModalStatus = computed(
+  () => store.getters["share/getShareModalStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  if (shareModalStatus.value) {
+    store.dispatch("share/changeShareModalClass", "end");
+    setTimeout(() => store.dispatch("share/toggleShareModal", false), 200);
+  } else {
+    next();
+  }
+});
 </script>
 
 <style scoped lang="scss">

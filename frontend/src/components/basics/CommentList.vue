@@ -1,7 +1,7 @@
 <!-- 댓글 리스트 컴포넌트 -->
 <template>
   <!--  api를 통해 받은 comment 정보를 통해 댓글을 사용자에게 보여준다.  -->
-  <div v-if="commentList" class="the-comment-list">
+  <div v-if="commentList.length" class="the-comment-list">
     <!-- comment-item -->
     <div v-for="item in commentList" :key="item.postReviewId">
       <comment-item :comment="item" :page-id="pageId"></comment-item>
@@ -96,7 +96,8 @@ watch(successPopUpStatus, () => {
 .the-comment-none {
   @include flex-center;
   gap: 4px;
-  @include font($fs-main, $fw-medium);
+  @include font($fs-main, $fw-regular);
+  color: $sub-color;
   margin-bottom: 72px;
 }
 </style>

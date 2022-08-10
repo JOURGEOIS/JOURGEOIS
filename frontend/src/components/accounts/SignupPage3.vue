@@ -8,7 +8,7 @@
           <input-basic
             :data="pwInputData"
             :input-style="pwInputStyle"
-            v-model="pwInputValue"
+            v-model.trim="pwInputValue"
           ></input-basic>
           <section class="condition-checker-section">
             <condition-checker :props="pwLengthCheckerProps" />
@@ -20,7 +20,7 @@
           <input-basic
             :data="pwInputCheckData"
             :input-style="pwInputStyle"
-            v-model="pwInputCheckValue"
+            v-model.trim="pwInputCheckValue"
           ></input-basic>
           <section class="condition-checker-section">
             <condition-checker :props="pwEqualCheckerProps" />

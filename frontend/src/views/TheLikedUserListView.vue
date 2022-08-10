@@ -3,7 +3,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       좋아요한 유저</header-basic
     >
-    <div class="the-item-container">
+    <div class="the-item-container top-view">
       <the-list-item-user
         v-for="(item, idx) in likedUsers"
         :key="idx"

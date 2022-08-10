@@ -93,12 +93,12 @@ public class HomeService {
     }
 
     public List<HomeCocktailItemDTO> getTag5Cocktail(TagType tagType) throws Exception {
-        List<HomeCocktailItemVO> customCocktails = postRepository.getTag5Cocktail(tagType.getValue());
+        List<HomeCocktailItemVO> customCocktails = cocktailRepository.getTag5Cocktail(tagType.getValue());
         return convertHomeCocktailItemVO2DTO(customCocktails);
     }
 
     public List<HomeCocktailItemDTO> getTagCocktail(TagType tagType, Pageable pageable) throws Exception {
-        List<HomeCocktailItemVO> customCocktails = postRepository.getTagCocktail(tagType.getValue(), pageable);
+        List<HomeCocktailItemVO> customCocktails = cocktailRepository.getTagCocktail(tagType.getValue(), pageable);
         return convertHomeCocktailItemVO2DTO(customCocktails);
     }
 }

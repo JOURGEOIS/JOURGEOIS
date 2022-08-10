@@ -36,8 +36,6 @@ public class SocialLoginConfigUtils {
     private String kakaoRedirectUrl;
     @Value("${kakao.auth.scope}")
     private String kakaoAuthScope;
-    @Value("${kakao.client.secret}")
-    private String kakaoClientSecret;
 
     @Value("${naver.auth.url}")
     private String naverAuthUrl;
@@ -129,11 +127,6 @@ public class SocialLoginConfigUtils {
     public String getKakaoAuthScope(){
         return kakaoAuthScope;
     }
-
-    public String getKakaoClientSecret(){
-        return kakaoClientSecret;
-    }
-
     public String getNaverClientId(){
         return naverClientId;
     }

@@ -25,14 +25,14 @@
           name="alcohol"
           id="filter-alcohol"
           :value="trueValue"
-          v-model="statusAlcohol"
+          v-model.trim="statusAlcohol"
         />
         <input
           type="radio"
           name="alcohol"
           id="filter-none-alcohol"
           :value="falseValue"
-          v-model="statusAlcohol"
+          v-model.trim="statusAlcohol"
         />
       </div>
     </div>
@@ -75,7 +75,7 @@
     </div>
     <button-basic-round
       class="cocktail-search-filter-button"
-      :button-style="[buttonColor, 'calc(100% - 32px)', '']"
+      :button-style="[buttonColor, '100%', '']"
       :disabled="searchFilterResultCnt === 0"
     >
       {{ searchFilterResultCnt }}개의 검색 결과
@@ -306,14 +306,12 @@ form {
 }
 
 .cocktail-search-filter-button {
-  position: absolute;
-  border-radius: 1em;
+  border-radius: 10px;
   padding: 12px;
   bottom: 70px;
   @include font(13px, $fw-bold);
 
   @media (min-height: 750px) {
-    bottom: 100px;
     @include font($fs-md, $fw-bold);
   }
 }

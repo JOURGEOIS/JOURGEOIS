@@ -5,6 +5,5 @@ public interface FollowerVO {
     String getNickname();
     String getProfileImg();
     Integer getIsFollowed();
-
     String getIntroduce();
 }

@@ -1,11 +1,11 @@
 package com.jourgeois.backend.repository;
 
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
+import com.jourgeois.backend.api.dto.member.MemberVO;
 import com.jourgeois.backend.api.dto.post.CocktailAwardsVO;
 import com.jourgeois.backend.api.dto.post.NewsFeedVO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
-import com.jourgeois.backend.util.TagType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -74,6 +74,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "group by cocktail.c_id order by bookmarked DESC", nativeQuery = true)
     List<HomeCocktailItemVO> findCocktailOrderByBookmarked(Pageable pageable);
 
+    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p.description AS description " +
+            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid AND p.d_type = :postType " +
+            "WHERE m.uid = :id")
+    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long id, String postType);
+
+//    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p1.description AS description " +
+//            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid and p.d_type = :postType WHERE m.uid = :id")
+//    Optional<List<MemberVO>> findCommentByUid(Long uid, String postType);
+
     @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title from\n" +
             "(select (likes + comments) as score, pid from\n" +
             "(select likes, IFNULL(comments, 0) as comments, IFNULL(p_id, pr_p_id) as pid, IFNULL(pr_p_id, p_id) from\n" +
@@ -132,12 +141,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(select p_id from post where p_dtype = \"cocktail_awards\")) *100, 1), '%')) as percentage\n" +
             "from post as p join cocktail_awards as c\n" +
             "on p.p_id = c.p_id\n" +
-            "order by percentage desc", nativeQuery = true)
+            "order by percentage desc, p_create_time desc", nativeQuery = true)
     List<CocktailAwardsVO> getCocktailAwardsVoteList();
 
-    @Query(value = "SELECT c_base_liquor as base, c_img as img, c_alcohol as abv, c_name_kr as title, c_id as cocktailId FROM cocktail WHERE c_tag like concat('%', :tag, '%') limit 5", nativeQuery = true)
-    List<HomeCocktailItemVO> getTag5Cocktail(@Param(value = "tag") String tagType);
-
-    @Query("SELECT c.baseLiquor as base, c.img as img, c.alcohol as abv, c.name as title, c.id as cocktailId FROM Cocktail AS c WHERE c.tag like concat('%', :tag, '%')")
-    List<HomeCocktailItemVO> getTagCocktail(@Param(value = "tag") String tagType, Pageable pageable);
+    @Query(value = "select p.p_id as postId, p.p_description as description, p.p_img as imgLink, c.contest_title as title,\n" +
+            "if((select count(*) from post_bookmark where m_id = :memberId and p_id = p.p_id), 1, 0) as 'like',\n" +
+            "(concat(round((select count(*) from post_bookmark where p_id = p.p_id) / \n" +
+            "    (select count(m_id) from post_bookmark \n" +
+            "where p_id in \n" +
+            "(select p_id from post where p_dtype = \"cocktail_awards\")) *100, 1), '%')) as percentage\n" +
+            "from post p join cocktail_awards as c\n" +
+            "on p.p_id = c.p_id\n" +
+            "where p.p_id=:postId", nativeQuery = true)
+    Optional<CocktailAwardsVO> getCocktailAwardsPostInfo(Long memberId, Long postId);
 }

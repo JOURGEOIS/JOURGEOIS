@@ -3,15 +3,13 @@
     <round-image
       :round-image="{ image: profileImg, width: '100px' }"
     ></round-image>
-    <!-- <p class="my-profile-nickname">{{ nickname }}</p> -->
     <div class="my-profile-nickname-icon">
-      <p class="my-profile-nickname">레몬나르고빚갚으리오임요</p>
+      <p class="my-profile-nickname">{{ nickname }}</p>
       <span class="material-icons-outlined">
         lock
       </span>
     </div>
-    <!-- <p class="my-profile-introduce">{{ introduce }}</p> -->
-    <p class="my-profile-introduce">내가 바로 레몬밭의 장동건이다아아아</p>
+    <p class="my-profile-introduce">{{ introduce }}</p>
     <div class="profile-categories">
       <div class="category">
         <p>게시물</p>
@@ -50,7 +48,7 @@ const introduce = userInfo.value.introduce
   align-items: center;
   gap: 10px;
   .my-profile-nickname-icon {
-    @include flex;
+    @include flex-center;
     .my-profile-nickname {
       @include font($fs-lg, $fw-bold);
     }

@@ -55,9 +55,6 @@ const profileImg = computed(
   () => customCocktailInfo?.value?.followerDTO?.profileImg
 );
 
-const isFollowed = computed(
-  () => customCocktailInfo?.value?.followerDTO?.isFollowed
-);
 const createTime = computed(
   () => customCocktailInfo?.value?.customCocktail?.createTime
 );
@@ -81,10 +78,24 @@ const goProfile = () => {
 const followBtnText = computed(() => (isFollowed.value ? "팔로잉" : "팔로우"));
 
 // 팔로우/팔로잉 버튼 클릭
+const isFollowed = computed(
+  () => customCocktailInfo?.value?.followerDTO?.isFollowed
+);
+
+watch(customCocktailInfo?.value?.followerDTO?.isFollowed, () => {
+  const isFollowed = computed(
+    () => customCocktailInfo?.value?.followerDTO?.isFollowed
+  );
+});
+
 const clickFollowBtn = () => {
-  if (confirm("팔로우 상태 바꾸겠냐고 모달 띄우기")) {
-    alert("팔로우 상태 바로 바뀜");
+  if (isFollowed.value) {
+    store.dispatch("follow/unfollow", { uid: uid.value });
+  } else {
+    store.dispatch("follow/follow", { uid: uid.value });
   }
+
+  store.dispatch("customCocktailInfo/toggleFollowCustomCocktail");
 };
 </script>
 
@@ -126,15 +137,15 @@ const clickFollowBtn = () => {
       border: 1px solid $unchecked-color;
       border-radius: 1000px;
       padding: 0.3em 1em;
-      @include flex-center;
-      gap: 10px;
+      @include flex-xy(center, flex-end);
+      gap: 5px;
       @include shadow-feed;
-      font-size: 15px;
+      font-size: 14px;
       @include for-click;
 
-      // .follow-icon {
-      //   @include font(19px);
-      // }
+      .follow-icon {
+        @include font(17px);
+      }
     }
   }
 }

@@ -3,7 +3,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       칵테일</header-basic
     >
-    <div class="the-item-container top-view">
+    <div class="the-item-container top-view-no-margin">
       <the-list-item-cocktail
         v-for="(item, idx) in searchCocktails"
         :key="idx"

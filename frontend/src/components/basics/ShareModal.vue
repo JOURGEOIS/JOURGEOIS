@@ -5,7 +5,7 @@
       <div
         class="container"
         :class="animation"
-        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+        :style="[isIphone ? { height: '350px' } : { height: '300px' }]"
       >
         <!-- filter: header -->
         <section class="header-section">
@@ -76,7 +76,6 @@ const animation = computed(() => store.getters["share/getShareModalClass"]);
 
 // 필터 off
 const clickXIcon = () => {
-  console.log("hi");
   store.dispatch("share/changeShareModalClass", "end");
   setTimeout(() => store.dispatch("share/toggleShareModal", false), 200);
 };
@@ -142,8 +141,6 @@ const shareModalStatus = computed(
 );
 
 onBeforeRouteLeave((to, from, next) => {
-  console.log(shareModalStatus);
-  console.log(shareModalStatus.value);
   if (shareModalStatus.value) {
     clickXIcon();
   } else {

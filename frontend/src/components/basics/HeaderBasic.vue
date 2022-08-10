@@ -11,20 +11,13 @@
 <template>
   <header class="header-container">
     <div>
-      <span
-        class="material-icons back-icon"
-        :style="{ visibility: iconVisibility }"
-        @click="clicked"
-      >
+      <span class="material-icons back-icon" v-if="prev" @click="clicked">
         arrow_back_ios_new
       </span>
       <div class="header-content"><slot></slot></div>
       <button
+        v-if="success"
         class="header-success"
-        :style="{
-          opacity: successVisibility,
-          pointerEvents: successPointerEvent,
-        }"
         type="submit"
         :form="formId"
       >
@@ -35,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { computed } from "vue";
 
 const props = defineProps<{
@@ -58,26 +50,18 @@ const submitted = () => {
 };
 
 const iconVisibility = computed(() => {
-  if (props.prev) {
-    return "visible";
+  if (props.success) {
+    return;
   } else {
     return "hidden";
   }
 });
 
 const successVisibility = computed(() => {
-  if (props.success) {
-    return "1";
+  if (props.prev) {
+    return true;
   } else {
-    return "0";
-  }
-});
-
-const successPointerEvent = computed(() => {
-  if (props.success) {
-    return "auto";
-  } else {
-    return "none";
+    return false;
   }
 });
 </script>
@@ -92,14 +76,10 @@ const successPointerEvent = computed(() => {
   background-color: $white !important;
   z-index: 5;
 
-  // @media #{$tablet} {
-  //   height: 74px;
-  // }
-
   > div {
-    @include flex-xy(space-between, center);
+    @include flex-center;
     width: 100vw;
-    padding: 16px 16px;
+    padding: 12px 16px;
 
     @media #{$tablet} {
       padding: 12px 15%;
@@ -109,17 +89,19 @@ const successPointerEvent = computed(() => {
     }
 
     .material-icons {
-      padding: 0.5em 1em 0.5em 0;
+      padding: 0;
+      align-self: center;
+      margin-top: 5px;
       @include font($fs-title, $fw-thin);
 
       @media #{$tablet} {
         font-size: $fs-xl;
+        margin-top: 5px;
       }
 
       @media #{$pc} {
       }
-
-      &:hover {
+      x &:hover {
         cursor: pointer;
       }
     }
@@ -127,6 +109,7 @@ const successPointerEvent = computed(() => {
     .header-content {
       @include font($fs-title, $fw-medium);
       text-align: center;
+      flex-grow: 1;
 
       @media #{$tablet} {
         font-size: $fs-xl;
@@ -135,7 +118,7 @@ const successPointerEvent = computed(() => {
 
     .header-success {
       width: fit-content;
-      padding: 0.5em 0 0.5em 0.5em;
+      padding: 0;
       letter-spacing: $ls-main;
       @include font($fs-main, $fw-medium);
       background-color: white;
@@ -151,17 +134,6 @@ const successPointerEvent = computed(() => {
 
     .back-icon {
       user-select: none;
-    }
-  }
-  hr {
-    width: 100vw;
-    background-color: $white;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid $unchecked-color;
-
-    @media #{$tablet} {
     }
   }
 }

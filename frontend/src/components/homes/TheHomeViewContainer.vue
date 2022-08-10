@@ -1,5 +1,5 @@
 <template>
-  <div class="home-view-container top-view-no-margin">
+  <div class="home-view-container">
     <!-- 유저들의 NEW 커스텀 칵테일 -->
     <the-home-basic-section :data="newCustomCocktailData">
       <h1 class="title">
@@ -24,18 +24,10 @@ const newCustomCocktailData = {
 .home-view-container {
   @include flex(column);
   width: calc(100% + 32px);
-  margin-top: 8px;
+  margin-left: -16px;
+  padding: 10px 0;
   gap: 20px;
   background-color: $white150;
-  padding: 20px 0;
-
-  @media #{$tablet} {
-    width: 60%;
-  }
-
-  @media #{$pc} {
-    width: 50%;
-  }
 }
 
 .title {

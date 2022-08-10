@@ -70,8 +70,7 @@ onMounted(() => {
 }
 
 .top-view {
-  margin-top: 120px !important;
-
+  margin-top: 100px !important;
   @media #{$tablet} {
     margin-top: 128px !important;
   }

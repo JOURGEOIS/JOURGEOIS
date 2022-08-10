@@ -5,6 +5,7 @@ const EMAIL = "email/cert/";
 const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
 const POST = "posts/";
+const PROFILE = "profile/";
 
 export default {
   token: {
@@ -25,6 +26,11 @@ export default {
     naverLogin: () => HOST + ACCOUNTS + "login/naver",
     follow: () => HOST + ACCOUNTS + "auth/follow",
     unfollow: () => HOST + ACCOUNTS + "auth/unfollow",
+    profileUserInfo: () => HOST + ACCOUNTS + PROFILE + "auth",
+    profileCommunity: () => HOST + ACCOUNTS + PROFILE + "auth/post",
+    profileCustom: () => HOST + ACCOUNTS + PROFILE + "auth/cocktail",
+    profileBookmark: () => HOST + ACCOUNTS + PROFILE + "auth/bookmark",
+    profileReview: () => HOST + ACCOUNTS + PROFILE + "auth/comment",
   },
   email: {
     emailCert: () => HOST + "email/cert",

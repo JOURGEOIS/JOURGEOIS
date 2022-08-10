@@ -77,8 +77,8 @@ const clickSearch = () => {
 // 프로필 버튼 클릭
 const clickProfile = () => {
   setNavIconStatus(4);
-  alert("프로필 페이지로 이동시켜라");
-  // router.push({ name: "TheProfileView" });
+  // alert("프로필 페이지로 이동시켜라");
+  router.push({ name: "TheMyProfileView" });
 };
 
 const createFeedModalStatus = computed(

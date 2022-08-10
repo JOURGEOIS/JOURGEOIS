@@ -18,8 +18,10 @@
             <p class="cocktail-desc-review-profile-name">
               {{ data.nickname }}
             </p>
-            <p class="cocktail-desc-review-time">{{ calc }}</p>
-            <p class="cocktail-desc-review-time-compare">{{ compare }}</p>
+            <div class="cocktail-desc-review-time-compare">
+              <p class="cocktail-desc-review-time">{{ calc }}</p>
+              <p class="cocktail-desc-review-compare">{{ compare }}</p>
+            </div>
           </div>
           <div
             v-if="userInfo.nickname == data.nickname"
@@ -308,23 +310,26 @@ const clickDeleteReview = () => {
       @include font($fs-md, $fw-regular);
       flex-direction: column;
       width: 100%;
+      gap: 5px;
 
       .cocktail-decs-review-front {
         @include flex;
         justify-content: space-between;
+        align-items: flex-start;
         padding: 0px;
         .cocktail-desc-review-name-time {
-          @include flex-center;
           @include font($fs-main, $fw-medium);
           padding: 0px;
           gap: 8px;
-          .cocktail-desc-review-time {
-            @include font($fs-sm, $fw-regular);
-            color: $navy600;
-          }
           .cocktail-desc-review-time-compare {
+            @include flex;
             @include font($fs-sm, $fw-regular);
+            gap: 5px;
             color: $navy600;
+            .cocktail-desc-review-compare {
+              @include font($fs-sm, $fw-regular);
+              color: $navy400;
+            }
           }
         }
         .cocktail-desc-review-button {

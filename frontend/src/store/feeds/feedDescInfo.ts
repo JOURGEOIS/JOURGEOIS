@@ -132,7 +132,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
 
   actions: {
     // vuex 리셋
-    resetCocktailData: ({ commit }) => {
+    resetCommunityData: ({ commit }) => {
       commit("SET_ALERT_STATUS", false);
       commit("SET_ERROR_MESSAGE", "");
       commit("SET_SUCCESS_MESSAGE", "");
@@ -171,7 +171,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: 'createFeed/uploadImage',
+              func: 'feedDescInfo/uploadImage',
               params: data,
             }
             dispatch('personalInfo/requestRefreshToken', obj, { root: true })
@@ -193,14 +193,11 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         params: { postId: params.feedId },
       })
         .then((res) => {
-          console.log('현재 디비 저장된 정보: ',res.data);
           commit("SET_COMMUNITY_DETAIL", res.data);
         })
         .catch((err) => {
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.log(err.response);
-            console.log(params.feedId);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -229,21 +226,16 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         data: { postId: postId },
       })
         .then((res) => {
-          alert("삭제성공^0^");
           router.push({
             name: "TheNewsFeedView",
           });
-
           // 성공 알림
-          console.log(res);
           commit("SET_SUCCESS_MESSAGE", "성공적으로 삭제되었습니다");
           commit("SET_ALERT_STATUS", true);
-          commit("SET_REVIEW_SUCCESS", true);
+          dispatch("newsFeed/removeNewsFeedListData", {}, { root: true })
         })
         .catch((err) => {
-          console.log(err);
           if (err.res.status !== 401) {
-            console.log(err.res);
             // 실패 팝업
             commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
             commit("SET_ALERT_STATUS", true);

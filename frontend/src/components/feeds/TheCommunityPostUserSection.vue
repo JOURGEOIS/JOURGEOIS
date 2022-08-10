@@ -104,8 +104,11 @@ const clickFollowBtn = () => {
       }
       .date-line {
         @include flex;
-        gap: 5px;
         @include font-size-sub(12px);
+        gap: 5px;
+        .updated {
+          color: $navy400;
+        }
       }
     }
     .user-info-profile {

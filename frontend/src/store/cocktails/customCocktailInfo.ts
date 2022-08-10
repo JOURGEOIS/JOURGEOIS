@@ -97,6 +97,9 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     SET_CUSTOM_COCKTAIL_PAGE: (state, value) => {
       state.customCocktailPage = value;
     },
+    TOGGLE_FOLLOW_CUSTOM_COCKTAIL: (state, value: number) => {
+      state.customCocktailDetail.followerDTO.isFollowed = value;
+    },
     REMOVE_CUSTOM_COCKTAILS: (state) => {
       state.customCocktails = [];
     },
@@ -170,6 +173,14 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           }
         });
     },
+
+    // * 커스텀칵테일 팔로우/언팔로우
+    toggleFollowCustomCocktail: ({ commit, getters }) => {
+      const customCocktailInfo = getters["getCustomCocktailDetail"];
+      const value = customCocktailInfo.followerDTO.isFollowed ? 0 : 1;
+      commit("TOGGLE_FOLLOW_CUSTOM_COCKTAIL", value);
+    },
+
     // * state에 커스텀칵테일 정보 제거
     removeCustomCocktailDetail: ({ commit }) => {
       commit("REMOVE_CUSTOM_COCKTAIL_DETAIL");

@@ -6,43 +6,34 @@ function checkImageSize(fileData: { max: number; fileSize: number }): boolean {
 
   // 제한되는 사이즈
   const maxSize = max * 1024 * 1024;
+  console.log(maxSize, fileSize);
   if (maxSize < fileSize) {
+    console.log("크당");
     return false;
   }
+  console.log("작당");
   return true;
 }
 
 // 이미지 compressor (file: 업로드한 파일 )
-function compressorImage(file: File) {
-  // 이미지 compressor
-  const result = new Compressor(file, {
-    quality: 0.8,
-
-    // 이미지 compressor에 성공 할 경우, 이미지 크기를 확인 한 뒤 이미지를 서버에 보낸다.
-    success(result: File) {
-      const fileData = {
-        max: 10,
-        fileSize: result.size,
-      };
-      const imageSize = checkImageSize(fileData);
-
-      // compressor를 했음에도 이미지 사이즈가 클 경우,
-      if (!imageSize) {
-        return false;
-      }
-
-      // compressor한 이미지 처리
-      const formData = new FormData();
-      formData.append("file", result, result.name);
-      return formData;
-    },
-
-    // 이미지 compressor에 실패할 경우, 알럿을 보낸다.
-    error(error) {
-      return false;
-    },
+function compressorImage(file: File): Promise<File> {
+  return new Promise((resolve, reject) => {
+    new Compressor(file, {
+      checkOrientation: false,
+      quality: 0.8,
+      maxWidth: 1920,
+      maxHeight: 1920,
+      success(result: File) {
+        const compressorImage = new File([result], result.name, {
+          type: result.type,
+        });
+        resolve(compressorImage);
+      },
+      error(error) {
+        reject(error);
+      },
+    });
   });
-  return result;
 }
 
 // 정해진 파일 확장자가 아니라면 false를 반환한다. (fileName: 이미지 이름)

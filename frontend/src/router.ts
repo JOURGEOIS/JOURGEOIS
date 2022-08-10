@@ -62,11 +62,19 @@ const routes: any[] = [
     component: () => import("@/views/TheChangePwView.vue"),
   },
 
-    // 타 유저 페이지로 이동
-    {
-      path: "/user/profile/:userId",
-      name: "TheUserProfile"
-    },
+  // 내 프로필 화면
+  {
+    path: '/user/profile',
+    name: 'TheMyProfileView',
+    component: () => import('@/views/TheMyProfileView.vue'),
+  },
+
+  // 타 유저 페이지로 이동
+  {
+    path: "/user/profile/:userId",
+    name: "TheUserProfileView",
+    component: () => import('@/views/TheUserProfileView.vue'),
+  },
 
   // 칵테일 검색 페이지
   {

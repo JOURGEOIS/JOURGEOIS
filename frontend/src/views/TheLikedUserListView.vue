@@ -45,8 +45,8 @@ const likedUsers = computed(() => store.getters['post/getLikedUsers'])
 // 유저 아이템을 누른 경우 유저 페이지로 이동
 const clickUser = (item: User) => {
   // 유저 프로필 페이지로 이동시켜라
-  // alert("유저 프로필 페이지로 이동시켜라");
-  router.push({ name: 'TheProfileView', params: { userId: item.uid } })
+  alert("유저 프로필 페이지로 이동시켜라");
+  // router.push({ name: 'TheUserProfileView', params: { userId: item.uid } })
 }
 
 // 전체 좋아요 유저 추가 함수

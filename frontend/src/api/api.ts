@@ -22,7 +22,9 @@ export default {
     profile: () => HOST + ACCOUNTS + "auth/profile",
     googleLogin: () => HOST + ACCOUNTS + "login/google",
     kakaoLogin: () => HOST + ACCOUNTS + "login/kakao",
-    naverLogin: () => HOST + ACCOUNTS + "login/naver"
+    naverLogin: () => HOST + ACCOUNTS + "login/naver",
+    follow: () => HOST + ACCOUNTS + "auth/follow",
+    unfollow: () => HOST + ACCOUNTS + "auth/unfollow",
   },
   email: {
     emailCert: () => HOST + "email/cert",

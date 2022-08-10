@@ -32,28 +32,26 @@
 </template>
 
 <script setup lang="ts">
-import RoundImage from '@/components/basics/RoundImage.vue'
-import { User } from '../../interface'
-import { calcDateDelta, compareDate } from '../../functions/date'
-import { reactive, computed } from 'vue'
-import { useStore } from 'vuex'
+import RoundImage from "@/components/basics/RoundImage.vue";
+import { User } from "../../interface";
+import { calcDateDelta, compareDate } from "../../functions/date";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 // import { useRouter, useRoute } from "vue-router";
 // const router = useRouter();
 // const route = useRoute();
-const store = useStore()
+const store = useStore();
 
 const feedDescInfo = computed(() => {
-  return store.getters['feedDescInfo/getCommunityDetail']
-})
-const uid = computed(() => feedDescInfo?.value?.followerDTO?.uid)
-const nickname = computed(() => feedDescInfo?.value?.followerDTO?.nickname)
-const profileImg = computed(() => feedDescInfo?.value?.followerDTO?.profileImg)
-
-const isFollowed = computed(() => feedDescInfo?.value?.followerDTO?.isFollowed)
+  return store.getters["feedDescInfo/getCommunityDetail"];
+});
+const uid = computed(() => feedDescInfo?.value?.followerDTO?.uid);
+const nickname = computed(() => feedDescInfo?.value?.followerDTO?.nickname);
+const profileImg = computed(() => feedDescInfo?.value?.followerDTO?.profileImg);
 const createTime = computed(
-  () => feedDescInfo?.value?.customCocktail?.createTime,
-)
-const createTimeDelta = computed(() => calcDateDelta(createTime.value))
+  () => feedDescInfo?.value?.customCocktail?.createTime
+);
+const createTimeDelta = computed(() => calcDateDelta(createTime.value));
 const updateTime = computed(
   () => feedDescInfo?.value?.customCocktail?.lastUpdateTime
 );
@@ -62,20 +60,25 @@ const isUpdated = computed(
 );
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
-  alert('유저 프로필 페이지로 가라!')
+  alert("유저 프로필 페이지로 가라!");
   // 아직 파일명 및 url 구조 모름... 추가되면 바꾸기
   // router.push({ name: "TheProfileView", params: { userId: uid } });
-}
+};
 
 // 팔로우/팔로잉 텍스트
-const followBtnText = computed(() => (isFollowed.value ? '팔로잉' : '팔로우'))
+const followBtnText = computed(() => (isFollowed.value ? "팔로잉" : "팔로우"));
 
 // 팔로우/팔로잉 버튼 클릭
+const isFollowed = ref(feedDescInfo?.value?.followerDTO?.isFollowed);
 const clickFollowBtn = () => {
-  if (confirm('팔로우 상태 바꾸겠냐고 모달 띄우기')) {
-    alert('팔로우 상태 바로 바뀜')
+  if (isFollowed.value) {
+    store.dispatch("follow/unfollow", { uid });
+    isFollowed.value = 0;
+  } else {
+    store.dispatch("follow/follow", { uid });
+    isFollowed.value = 1;
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

@@ -1,8 +1,12 @@
 package com.jourgeois.backend.util.scheduler;
 
+import com.jourgeois.backend.api.dto.home.HomeCocktailItemDTO;
+import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.api.dto.search.SearchHistoryDTO;
 import com.jourgeois.backend.api.dto.search.SearchHistoryVO;
 import com.jourgeois.backend.api.dto.search.SearchTrendDto;
+import com.jourgeois.backend.service.HomeService;
+import com.jourgeois.backend.service.PostService;
 import com.jourgeois.backend.service.RedisService;
 import com.jourgeois.backend.service.SearchHistoryService;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -21,22 +25,24 @@ public class SearchStatistics {
 
     private static final String CUR_TIME = "cur";
 
-    public SearchStatistics(SearchHistoryService searchHistoryService, RedisService redisService) {
+    public SearchStatistics(SearchHistoryService searchHistoryService, HomeService homeService, RedisService redisService) {
         this.searchHistoryService = searchHistoryService;
+        this.homeService = homeService;
         this.redisService = redisService;
     }
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private final SearchHistoryService searchHistoryService;
+    private final HomeService homeService;
 
     private final RedisService redisService;
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */30 * * * *")
     public void getHotKeywordEveryTenMinutes() {
         // 현재 시간 마지막 집계 시간 기록
         LocalDateTime to = LocalDateTime.now();
-        LocalDateTime from = LocalDateTime.now().minusMinutes(10L);
+        LocalDateTime from = LocalDateTime.now().minusMinutes(30L);
         String toFormatted = to.format(DATE_TIME_FORMATTER);
         String fromFormatted = from.format(DATE_TIME_FORMATTER);
         try {

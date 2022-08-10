@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.api.dto.member.FollowerVO;
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.api.dto.auth.TokenResponseDTO;
 import com.jourgeois.backend.domain.member.Follow;
@@ -82,7 +82,7 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean changeProfile(ProfileDTO data){
+    public boolean changeProfile(MemberDTO data){
         memberRepository.findByNicknameAndUidIsNot(data.getNickname(), data.getUid())
                 .ifPresentOrElse(
                         (member -> {throw new IllegalArgumentException("닉네임 중복");}),
@@ -405,14 +405,15 @@ public class MemberService {
 
         // refresh token 발급 및 저장
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
-        RefreshToken token = RefreshToken.createToken(Long.valueOf(userDetails.getUsername()), refreshToken);
+        RefreshToken token = RefreshToken.createToken(new Member(Long.valueOf(userDetails.getUsername())), refreshToken);
         System.out.println(refreshToken + " " + token);
 
         // 기존 토큰이 있으면 수정, 없으면 생성
-        refreshTokenRepository.findByUid(Long.valueOf(userDetails.getUsername()))
+        refreshTokenRepository.findById(Long.valueOf(userDetails.getUsername()))
                 .ifPresentOrElse(
-                        (tokenEntity)->tokenEntity.changeToken(refreshToken),
-                        ()->refreshTokenRepository.save(RefreshToken.createToken(Long.valueOf(userDetails.getUsername()), refreshToken))
+                        (tokenEntity)->{tokenEntity.changeToken(refreshToken);},
+                        ()->{refreshTokenRepository.save(RefreshToken.createToken(memberRepository.findById(Long.valueOf(userDetails.getUsername())).get(), refreshToken));
+                            }
                 );
 
         return TokenResponseDTO.builder()
@@ -422,9 +423,9 @@ public class MemberService {
     }
 
     @Transactional
-    public ProfileDTO findUserInfo(Long uid){
+    public MemberDTO findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
-        ProfileDTO p = new ProfileDTO(member.getUid(), member.getEmail(), member.getName(),
+        MemberDTO p = new MemberDTO(member.getUid(), member.getEmail(), member.getName(),
                 member.getNickname(), s3Url + member.getProfileImg(), member.getIntroduce());
         return p;
 
@@ -432,7 +433,7 @@ public class MemberService {
 
     @Transactional
     public void logout(Long uid){
-        refreshTokenRepository.deleteByUid(uid);
+        refreshTokenRepository.deleteById(uid);
         System.out.println("토큰 삭제 완료");
     }
 
@@ -449,9 +450,9 @@ public class MemberService {
     public void signOut(Long uid, String email) throws NoSuchElementException{
         Optional<Member> member = memberRepository.findByUidAndEmail(uid, email);
         member.ifPresentOrElse(selectMember -> {
-            refreshTokenRepository.deleteByUid(selectMember.getUid());
+            refreshTokenRepository.deleteById(selectMember.getUid());
             String userProfile = selectMember.getProfileImg();
-            if(!userProfile.equals("default/1.png"))
+            if(!userProfile.equals("profile/default/1.png"))
                 s3Util.deleteFile(userProfile);
             memberRepository.delete(selectMember);
         }, () -> {
@@ -507,9 +508,9 @@ public class MemberService {
     }
 
     @Transactional
-    public String ProfileImageLocalUpload(ProfileDTO profileDto) throws IOException {
-        Member member = memberRepository.findById(profileDto.getUid()).get();
-        String url = s3Util.localUpload(profileDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
+    public String ProfileImageLocalUpload(MemberDTO memberDto) throws IOException {
+        Member member = memberRepository.findById(memberDto.getUid()).get();
+        String url = s3Util.localUpload(memberDto.getProfileLink(), member.getUid(), ImgType.PROFILE);
         return url;
     }
 

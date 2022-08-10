@@ -1,6 +1,5 @@
 package com.jourgeois.backend.security.oauth2;
 
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
 import com.jourgeois.backend.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;

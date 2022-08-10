@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.jourgeois.backend.api.dto.member.ProfileDTO;
+import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
@@ -32,7 +32,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/member")
@@ -285,13 +284,13 @@ public class MemberController {
     }
 
     @PutMapping("/auth/profile")
-    public ResponseEntity changeProfile(HttpServletRequest request, @ModelAttribute ProfileDTO profileDto){
+    public ResponseEntity changeProfile(HttpServletRequest request, @ModelAttribute MemberDTO memberDto){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            profileDto.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
-            memberService.changeProfile(profileDto);
-            return new ResponseEntity(memberService.findUserInfo(profileDto.getUid()), HttpStatus.CREATED);
+            memberDto.setUid(Long.valueOf(((String) request.getAttribute("uid"))));
+            memberService.changeProfile(memberDto);
+            return new ResponseEntity(memberService.findUserInfo(memberDto.getUid()), HttpStatus.CREATED);
         }catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
@@ -301,11 +300,11 @@ public class MemberController {
 
     // 이미지 파일 업로드
     @PostMapping("/auth/profile")
-    public ResponseEntity profileImageTempStorage(HttpServletRequest request, @ModelAttribute ProfileDTO profileDto){
+    public ResponseEntity profileImageTempStorage(HttpServletRequest request, @ModelAttribute MemberDTO memberDto){
         try{
             Map<String, String> data = new HashMap<>();
-            profileDto.setUid(Long.parseLong((String) request.getAttribute("uid")));
-            data.put("url", "http://13.209.206.237/img/" + memberService.ProfileImageLocalUpload(profileDto));
+            memberDto.setUid(Long.parseLong((String) request.getAttribute("uid")));
+            data.put("url", "https://www.jourgeois.com/img/" + memberService.ProfileImageLocalUpload(memberDto));
             return new ResponseEntity(data, HttpStatus.CREATED);
         }catch (Exception e) {
             Map<String, Boolean> data = new HashMap<>();

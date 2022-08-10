@@ -104,7 +104,7 @@ onBeforeRouteLeave((to, from, next) => {
   bottom: 0;
   @include flex-xy(space-around, center);
   width: 100%;
-  height: 60px;
+  height: 64px;
   background-color: $white;
   z-index: 1;
   box-shadow: 0px -1.5px 11px rgba(56, 55, 68, 0.1);

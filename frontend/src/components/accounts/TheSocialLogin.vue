@@ -2,10 +2,6 @@
   <!-- <hr /> -->
   <div class="social-login">
     <p>or</p>
-    <GoogleLogin
-      :callback="callback"
-      :button-style="['google-login', 'long', 'small']"
-    />
     <button-basic
       @click="clickGoogle"
       :button-style="['google-login', 'long', 'small']"

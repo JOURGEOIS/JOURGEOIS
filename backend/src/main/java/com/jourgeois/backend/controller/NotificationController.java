@@ -5,14 +5,12 @@ import com.jourgeois.backend.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/notification")
@@ -25,8 +23,19 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @PostMapping("/follow")
-    public ResponseEntity followNotice(HttpServletRequest request){
-        return null;
+    @PutMapping("/auth/read")
+    public ResponseEntity followNotice(HttpServletRequest request, @RequestBody Map<String, String> notificationId){
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            result.put("success", notificationService.changeToBeRead(uid, notificationId));
+            return new ResponseEntity(result, HttpStatus.CREATED);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

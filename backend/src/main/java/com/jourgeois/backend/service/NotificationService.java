@@ -1,10 +1,7 @@
 package com.jourgeois.backend.service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.FieldValue;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.notification.NotificationDTO;
 import com.jourgeois.backend.domain.member.Member;
@@ -12,6 +9,9 @@ import com.jourgeois.backend.domain.post.Post;
 import com.jourgeois.backend.util.NotificationType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class NotificationService {
@@ -71,6 +71,17 @@ public class NotificationService {
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
         System.out.println("Create Comment Notification - " + result.get().getUpdateTime());
+
+        return true;
+    }
+
+    public boolean changeToBeRead(Long uid, Map<String, String> notificationId) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(uid)).collection(NOTIFICATION_COLLECTION_NAME).document(notificationId.get("notiId"));
+
+        ApiFuture<WriteResult> future = docRef.update("isRead", true);
+        WriteResult result = future.get();
+        System.out.println("changeToBeRead result - " + result);
 
         return true;
     }

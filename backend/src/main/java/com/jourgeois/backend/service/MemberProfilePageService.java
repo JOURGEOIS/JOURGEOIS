@@ -40,7 +40,7 @@ public class MemberProfilePageService {
 
         MemberDTO m = MemberDTO.builder().uid(memberVO.getUid()).email(memberVO.getEmail()).nickname(memberVO.getNickname())
                 .profileImg(memberVO.getProfileImg()).introduce(memberVO.getIntroduce()).followerCnt(memberVO.getFollowerCnt())
-                .followingCnt(memberVO.getFollowingCnt()).postCnt(memberVO.getPostCnt()).build();
+                .followingCnt(memberVO.getFollowingCnt()).postCnt(memberVO.getPostCnt()).isPublic(memberVO.getIsPublic()) .build();
 
         return m;
     }

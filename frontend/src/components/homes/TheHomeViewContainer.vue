@@ -31,10 +31,10 @@ const newCustomCocktailData = {
 }
 
 .title {
-  @include font(15px, $fw-medium);
+  @include font(17px, $fw-medium);
 
   .important {
-    @include font(15px, $fw-bold);
+    @include font(17px, $fw-bold);
     color: $danger-color;
   }
 }

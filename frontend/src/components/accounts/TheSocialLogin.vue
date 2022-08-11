@@ -63,7 +63,12 @@ const googleAPI = computed(
 // };
 
 const clickGoogle = () => {
-  window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=217608233279-029l12gsikbdcs9jpeku5i8e7sdbqu1q.apps.googleusercontent.com&redirect_uri=https://jourgeois.com/api/member/login/google/redirect&response_type=code&scope=profile%20email%20openid`;
+  const google_authorize_url = "ttps://accounts.google.com/o/oauth2/v2/auth";
+  const google_client_id =
+    "217608233279-k2op58rvkdtbbteakk7ag0tp5ia54mij.apps.googleusercontent.com";
+  const google_redirect_url =
+    "https://jourgeois.com/api/member/login/google/redirect";
+  window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google_client_id}&redirect_uri=${google_redirect_url}&response_type=code&scope=profile%20email%20openid`;
 };
 
 const kakaoLogin = () => {

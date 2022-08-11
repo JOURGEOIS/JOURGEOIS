@@ -47,6 +47,17 @@ export interface CustomCocktail {
   followerDTO: User;
 }
 
+// 홈 carousel 칵테일 정보
+export interface CarouselCocktail {
+  type: number;
+  cocktailId: number;
+  baseCocktailId: number;
+  title: string;
+  img: string;
+  base: string;
+  abv: number;
+}
+
 export interface NewsFeed {
   createTime: number[]; // 생성 시간
   updateTime: number[]; // 수정 시간

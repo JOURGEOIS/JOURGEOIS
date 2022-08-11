@@ -214,6 +214,13 @@ const routes: any[] = [
     name: "TheCocktailAwardsDescView",
     component: () => import("@/views/TheCocktailAwardsDescView.vue"),
   },
+
+  // 신규 커스텀 칵테일 리스트
+  {
+    path: "/latestCustom",
+    name: "TheLatestCustomCocktailView",
+    component: () => import("@/views/homes/TheLatestCustomCocktailView.vue"),
+  },
 ];
 
 const router = createRouter({

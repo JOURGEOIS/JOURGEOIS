@@ -84,8 +84,6 @@ const isIphone = computed(() => {
 const isAndroid = computed(() => {
   return deviceType === "android";
 });
-
-import { isAbsolute } from "path";
 </script>
 
 <style scoped lang="scss">

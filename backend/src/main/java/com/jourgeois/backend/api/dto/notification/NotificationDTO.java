@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NotificationDTO {
-    private String notiId;
+//    private String notiId;
 
     // FOLLOW, LIKE, COMMENT
     private NotificationType type;

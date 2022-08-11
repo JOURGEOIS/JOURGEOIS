@@ -11,13 +11,13 @@ import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.PostConstruct;
 
+
 @Configuration
 public class FirebaseConfig {
 
     @PostConstruct
     public void init() {
         try {
-            // Use a service account
             GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("./serviceAccountKey.json").getInputStream());
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(credentials)

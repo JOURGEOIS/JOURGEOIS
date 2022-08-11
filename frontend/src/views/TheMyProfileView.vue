@@ -14,7 +14,6 @@
       </span>
     </button-basic>
   </header-basic>
-  <the-settings-modal v-if="settingsModalStatus"></the-settings-modal>
   <div class="the-my-profile-view top-view">
     <the-my-profile-basic></the-my-profile-basic>
   </div>
@@ -30,7 +29,6 @@ import { onBeforeMount, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import TheMyProfileBasic from '@/components/profile/TheMyProfileBasic.vue'
-import TheSettingsModal from '@/components/profile/TheSettingsModal.vue'
 import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
 import HeaderBasic from '@/components/basics/HeaderBasic.vue'
 import ButtonBasic from '@/components/basics/ButtonBasic.vue'

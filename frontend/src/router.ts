@@ -250,7 +250,7 @@ router.beforeEach((to: any, from, next) => {
     "TheSignOutView",
     "TheChangeUserView",
     "TheChangePwView",
-    "TheMyProfileView",
+    "TheUserProfileView",
     "TheCocktailDescBookmarkView",
     "TheCustomCocktailFormView",
     "TheCustomCocktailDescView",

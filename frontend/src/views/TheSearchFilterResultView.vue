@@ -4,7 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       검색 결과
     </header-basic>
-    <div class="the-item-container top-view">
+    <div class="the-item-container top-view-no-margin">
       <the-list-item-cocktail
         v-for="(item, idx) in searchFilterList"
         :key="idx"

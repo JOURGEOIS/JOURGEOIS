@@ -16,7 +16,7 @@
       ></the-super-custom-cocktail-form>
     </section>
   </div>
-  <failure-pop-up v-if="errorStatus">
+  <failure-pop-up v-if="errorStatus" @off-modal="offFailurePopUp">
     {{ errorMessage }}
   </failure-pop-up>
   <loading-basic v-if="loadingStatus"></loading-basic>
@@ -46,11 +46,13 @@ const loadingStatus = computed(
 // 시간제 모달
 watch(errorStatus, () => {
   if (errorStatus.value) {
-    setTimeout(() => {
-      store.dispatch("customCocktail/changeAlertStatus", false);
-    }, 2000);
+    setTimeout(() => offFailurePopUp(), 2000);
   }
 });
+
+const offFailurePopUp = () => {
+  store.dispatch("customCocktail/changeAlertStatus", false);
+};
 
 // 모달 초기화
 onBeforeMount(() => {

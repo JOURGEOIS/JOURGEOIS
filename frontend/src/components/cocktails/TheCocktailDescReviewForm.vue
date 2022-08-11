@@ -123,7 +123,6 @@ const submitCreateReviewForm = () => {
     cocktailId: cocktailId,
     comment: reviewInputValue.value,
   };
-  console.log("data", data);
   // 제출
   if (reviewCondition) {
     reviewInputStyle.value = "error";

@@ -26,7 +26,7 @@
       :date="customCocktailInfo?.customCocktail?.createTime"
     ></post-user-section>
     <!-- 칵테일 설명 섹션 -->
-    <article class="cocktail-description">
+    <article class="cocktail-description" v-if="description">
       <h1 class="title1">설명</h1>
       <p class="normal-paragraph">{{ description }}</p>
     </article>

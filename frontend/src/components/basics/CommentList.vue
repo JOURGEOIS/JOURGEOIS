@@ -15,7 +15,7 @@
   </div>
 
   <!-- 댓글 수정 성공 팝업 -->
-  <success-pop-up v-if="successPopUpStatus">
+  <success-pop-up v-if="successPopUpStatus" @off-modal="offSuccessPopUpModal">
     성공적으로 수정되었습니다
   </success-pop-up>
 
@@ -23,6 +23,7 @@
   <comment-delete-modal
     v-if="deleteModalStatus"
     :page-id="pageId"
+    @off-modal="offDeleteModal"
   ></comment-delete-modal>
 </template>
 
@@ -74,13 +75,18 @@ const deleteModalStatus = computed(
   () => store.getters["comment/getDeleteModalStatus"]
 );
 
+const offSuccessPopUpModal = () => {
+  store.dispatch("comment/toggleSuccessPopUpStatus", false);
+};
+
+const offDeleteModal = () => {
+  store.dispatch("comment/toggleDeleteModalStatus", false);
+};
+
 // 시간제 모달
 watch(successPopUpStatus, () => {
   if (successPopUpStatus) {
-    setTimeout(
-      () => store.dispatch("comment/toggleSuccessPopUpStatus", false),
-      2000
-    );
+    setTimeout(() => offSuccessPopUpModal(), 2000);
   }
 });
 </script>

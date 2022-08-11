@@ -39,48 +39,49 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
-import api from '../../api/api'
-import ButtonBasic from '@/components/basics/ButtonBasic.vue'
-import { computed, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-const store = useStore()
-const router = useRouter()
+import axios from "axios";
+import api from "../../api/api";
+import ButtonBasic from "@/components/basics/ButtonBasic.vue";
+import { computed, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+const store = useStore();
+const router = useRouter();
 
 // 구글 로그인 클릭
-  const googleAPI = computed(() => store.getters['socialLogin/getGoogleLoginApi'])
+const googleAPI = computed(
+  () => store.getters["socialLogin/getGoogleLoginApi"]
+);
 
 const clickGoogle = () => {
   // console.log(googleAPI.value)
   // store.dispatch('socialLogin/getGoogleLoginApi', googleAPI)
   window.open("http://jourgeois.com/api/member/login/google", "_blank");
-
-}
+};
 const kakaoLogin = () => {
   window.Kakao.Auth.login({
-    scope: 'profile, account_email',
+    scope: "profile, account_email",
     success: getKakaoAccount,
   });
-}
+};
 const getKakaoAccount = () => {
   window.Kakao.API.request({
-    url: '/v2/user/me',
-    success: (res:any) => {
+    url: "/v2/user/me",
+    success: (res: any) => {
       const kakao_account = res.kakao_account;
       const nickname = kakao_account.profile.nickname;
-      const email = kakao_account.email
-      console.log('nickname', nickname);
-      console.log('email', email)
+      const email = kakao_account.email;
+      console.log("nickname", nickname);
+      console.log("email", email);
 
       //로그인 처리 구현
       alert("로그인 성공!");
     },
-    fail: (error:any) => {
-      console.log(error);
-    }
-  })
-}
+    fail: (error: any) => {
+      console.error(error);
+    },
+  });
+};
 // const clickKakao = () => {
 //   // axios({
 //   //   url: api.accounts.kakaoLogin(),
@@ -109,7 +110,7 @@ const clickNaver = () => {
   //   .catch((err) => {
   //     console.error(err.response)
   //   })
-}
+};
 </script>
 
 <style scoped lang="scss">

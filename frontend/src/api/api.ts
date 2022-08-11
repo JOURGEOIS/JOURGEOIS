@@ -8,6 +8,7 @@ const POST = "posts/";
 const AWARDS = "awards/";
 const PROFILE = "profile/";
 const CUSTOM = "custom/";
+const NOTICE = "notification/auth/";
 
 export default {
   token: {
@@ -80,5 +81,10 @@ export default {
     // 홈
     latestCustomCocktail: () => HOST + CUSTOM + "latest5", // 신규 커칵/슈커칵 5개
     latestCustomCocktailView: () => HOST + CUSTOM + "latest", // 신규 커칵/슈커칵 목록
+  },
+
+  notice: {
+    readNotice: () => HOST + NOTICE + "read",
+    readNoticeAll: () => HOST + NOTICE + "readall",
   },
 };

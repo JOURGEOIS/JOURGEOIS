@@ -29,7 +29,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(select * from (select * from post where p_writer in (select to_user_id from follow where from_user_id = :me) or p_writer = :me) as followerFeed left join \n" +
             "(select * from (select cc_cocktail_ingredients, cc_cocktail_recipe, cc_cocktail_title, custom_cocktail.p_id as cock_p_id, c_id as base_c_id, c_id is null as isSuperCustomCocktail from custom_cocktail \n" +
             "left join custom_cocktail_to_cocktail on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id) as cocktailFilter left join cocktail on cocktailFilter.base_c_id = cocktail.c_id) as cocktailInfo\n" +
-            "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer order by createTime desc", nativeQuery = true)
+            "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer where member.is_public = true order by createTime desc", nativeQuery = true)
     List<NewsFeedVO> getNewsFeed(@Param("me") Long me, Pageable pageable);
 
 
@@ -43,6 +43,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id\n" +
             "left join cocktail\n" +
             "on custom_cocktail_to_cocktail.c_id = cocktail.c_id\n" +
+            "left join member\n" +
+            "on post.p_writer = member.uid\n" +
+            "where member.is_public = true" +
             "order by p_create_time DESC", nativeQuery = true)
     List<HomeCocktailItemVO> findCustomCocktailOrderByCreateTime(Pageable pageable);
 
@@ -53,6 +56,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id\n" +
             "left join cocktail\n" +
             "on custom_cocktail_to_cocktail.c_id = cocktail.c_id\n" +
+            "left join member\n" +
+            "on post.p_writer = member.uid\n" +
+            "where member.is_public = true" +
             "order by p_create_time DESC LIMIT 5", nativeQuery = true)
     List<HomeCocktailItemVO> findTop5CustomCocktailOrderByCreateTime();
 
@@ -101,7 +107,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on custom_cocktail.p_id = pid\n" +
             "left join post\n" +
             "on pid = post.p_id\n" +
-            "where p_dtype = 'cocktail'\n" +
+            "left join member\n" +
+            "on post.p_writer = member.uid\n" +
+            "where p_dtype = 'cocktail' and member.is_public = true" +
             "order by score desc", nativeQuery = true)
     List<HomeCocktailItemVO> getWeeklyHotCustomCocktail(Pageable pageable);
 
@@ -123,7 +131,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on custom_cocktail.p_id = pid\n" +
             "left join post\n" +
             "on pid = post.p_id\n" +
-            "where p_dtype = 'cocktail'\n" +
+            "left join member\n" +
+            "on post.p_writer = member.uid\n" +
+            "where p_dtype = 'cocktail' and member.is_public = true" +
             "order by score desc limit 5", nativeQuery = true)
     List<HomeCocktailItemVO> getWeeklyHot5CustomCocktail();
 
@@ -154,5 +164,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on p.p_id = c.p_id\n" +
             "where p.p_id=:postId", nativeQuery = true)
     Optional<CocktailAwardsVO> getCocktailAwardsPostInfo(Long memberId, Long postId);
-
 }

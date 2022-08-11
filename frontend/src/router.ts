@@ -226,7 +226,14 @@ const routes: any[] = [
   {
     path: "/latestCustom",
     name: "TheAllLatestCustomCocktailView",
-    component: () => import("@/views/homes/TheLatestCustomCocktailView.vue"),
+    component: () => import("@/views/homes/TheAllLatestCustomCocktailView.vue"),
+  },
+
+  // 알림
+  {
+    path: "/feeds/notice",
+    name: "TheNoticeView",
+    component: () => import("@/views/TheNoticeView.vue"),
   },
 ];
 

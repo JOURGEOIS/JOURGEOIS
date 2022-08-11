@@ -222,11 +222,11 @@ const routes: any[] = [
     component: () => import("@/views/TheCocktailAwardsDescView.vue"),
   },
 
-  //알림창으로 이동
+  // 신규 커스텀 칵테일 리스트
   {
-    path: "/feeds/notice",
-    name: "TheNoticeView",
-    components: () => import("@/views/TheNoticeView.vue"),
+    path: "/latestCustom",
+    name: "TheLatestCustomCocktailView",
+    component: () => import("@/views/homes/TheLatestCustomCocktailView.vue"),
   },
 ];
 

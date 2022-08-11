@@ -95,6 +95,7 @@ export interface RootState {
   settings: SettingsState;
   contest: ContestState;
   carousel: CarouselState;
+  notice: NoticeState;
 }
 
 // store를 생성한다.
@@ -124,5 +125,6 @@ export default createStore({
     settings,
     contest,
     carousel,
+    notice,
   },
 });

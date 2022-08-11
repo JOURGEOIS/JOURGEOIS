@@ -4,6 +4,7 @@
       알림
     </header-basic>
     <section class="the-notice-section top-view-no-margin">
+      <p>모두 읽기</p>
       <the-notice-list></the-notice-list>
     </section>
   </div>
@@ -11,6 +12,14 @@
 
 <script setup lang="ts">
 import TheNoticeList from "@/components/feeds/TheNoticeList.vue";
+import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import { onMounted } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch("notice/getNoticeList");
+});
 </script>
 
 <style scoped lang="scss">
@@ -18,6 +27,7 @@ import TheNoticeList from "@/components/feeds/TheNoticeList.vue";
   @include flex(column);
   justify-content: flex-start;
   align-items: center;
+  gap: 40px;
   @include accountLayOut;
 
   section {
@@ -29,6 +39,13 @@ import TheNoticeList from "@/components/feeds/TheNoticeList.vue";
 
     @media #{$pc} {
       width: 70%;
+    }
+
+    > p {
+      @include font($fs-md, $fw-bold);
+      margin-top: 16px;
+      text-align: right;
+      cursor: pointer;
     }
   }
 }

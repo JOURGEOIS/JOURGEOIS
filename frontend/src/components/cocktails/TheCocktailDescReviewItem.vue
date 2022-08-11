@@ -119,7 +119,10 @@
         </div>
       </form>
       <!-- 수정이 완료되면 팝업 알림 -->
-      <success-pop-up v-if="successPopUpStatus">
+      <success-pop-up
+        v-if="successPopUpStatus"
+        @offModal="toggleSuccessPopUp(true)"
+      >
         성공적으로 변경되었습니다
       </success-pop-up>
     </div>

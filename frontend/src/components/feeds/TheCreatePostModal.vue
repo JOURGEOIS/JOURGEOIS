@@ -1,7 +1,7 @@
 <!--  on, off시 트랜지션 효과를 준다.  -->
 <template>
   <teleport to="body">
-    <div class="create-post-modal">
+    <div class="create-post-modal" @click.self="clickXIcon">
       <div
         class="container"
         :class="animation"
@@ -9,9 +9,9 @@
       >
         <!-- filter: header -->
         <section class="header-section">
-          <span class="material-icons invisible"> close </span>
+          <!-- <span class="material-icons invisible"> close </span> -->
           <p>업로드</p>
-          <span class="material-icons" @click="clickXIcon"> close </span>
+          <!-- <span class="material-icons" @click="clickXIcon"> close </span> -->
         </section>
         <hr />
         <!-- 버튼 부분 -->
@@ -129,7 +129,7 @@ const isIphone = computed(() => {
     }
 
     .header-section {
-      @include flex-xy(space-between, flex-start);
+      @include flex-center;
       margin-top: 24px;
 
       p {

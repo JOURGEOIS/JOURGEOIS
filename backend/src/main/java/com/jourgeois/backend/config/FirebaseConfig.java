@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

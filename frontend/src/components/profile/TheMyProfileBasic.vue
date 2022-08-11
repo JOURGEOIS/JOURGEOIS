@@ -29,17 +29,22 @@
 
 <script setup lang="ts">
 import RoundImage from '@/components/basics/RoundImage.vue'
-import { computed } from 'vue'
+import { onBeforeMount, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 const route = useRoute()
 const store = useStore()
 
+const myProfileInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+
 // 유저 정보 불러오기
-const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
-const profileImg = userInfo.value.profileImg
-const nickname = userInfo.value.nickname
-const introduce = userInfo.value.introduce
+console.log(myProfileInfo?.value)
+const profileImg = computed(() => myProfileInfo?.value?.profileImg)
+const nickname = computed(() => myProfileInfo?.value?.nickname)
+const introduce = computed(() => myProfileInfo?.value?.introduce)
+
 </script>
 
 <style scoped lang="scss">

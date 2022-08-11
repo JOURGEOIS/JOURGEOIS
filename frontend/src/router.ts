@@ -31,7 +31,7 @@ const routes: any[] = [
   {
     path: "/user/login/kakaologin",
     name: "Kakaologin",
-    component: () => import("@/views/KakaoLogin.vue")
+    component: () => import("@/views/KakaoLogin.vue"),
   },
 
   // 로그아웃 화면
@@ -193,6 +193,20 @@ const routes: any[] = [
     name: "TheSuperCustomCocktailUpdateFormView",
     component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
   },
+
+  //contest 게시글 form
+  {
+    path: "/feeds/contest/form",
+    name: "TheCocktailAwardsFormView",
+    component: () => import("@/views/TheCocktailAwardsFormView.vue"),
+  },
+
+  // contest 게시글 상세
+  {
+    path: "/feeds/:feedId/contest",
+    name: "TheCocktailAwardsDescView",
+    component: () => import("@/views/TheCocktailAwardsDescView.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -227,6 +241,8 @@ router.beforeEach((to: any, from, next) => {
     "TheSuperCustomCocktailDescView",
     "TheSuperCustomCocktailFormView",
     "TheSuperCustomCocktailUpdateFormView",
+    "TheCocktailAwardsFormView",
+    "TheCocktailAwardsDescView",
   ];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지

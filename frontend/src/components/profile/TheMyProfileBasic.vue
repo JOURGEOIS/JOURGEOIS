@@ -41,13 +41,10 @@ const myProfileInfo = computed(
 
 // 유저 정보 불러오기
 console.log(myProfileInfo?.value)
-const profileImg = myProfileInfo?.value?.profileImg
-const nickname = myProfileInfo?.value?.nickname
-const introduce = myProfileInfo?.value?.introduce
+const profileImg = computed(() => myProfileInfo?.value?.profileImg)
+const nickname = computed(() => myProfileInfo?.value?.nickname)
+const introduce = computed(() => myProfileInfo?.value?.introduce)
 
-onBeforeMount(() => {
-  store.dispatch("profileDesc/getCurrentUserData")
-});
 </script>
 
 <style scoped lang="scss">

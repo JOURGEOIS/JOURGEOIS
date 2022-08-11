@@ -48,13 +48,12 @@ const toggleSettingsModal = () => {
   store.dispatch("settings/toggleSettingsModal");
 };
 
-
 const clickSetting = () => {
   store.dispatch("settings/changeSettingsModalClass", "start");
   store.dispatch("settings/toggleSettingsModal", true);
 }
 
-onBeforeMount(() => {
+onMounted(() => {
   store.dispatch("profileDesc/getCurrentUserData")
 });
 

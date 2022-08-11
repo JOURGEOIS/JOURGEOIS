@@ -69,13 +69,15 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
 
     // 프로필 정보 가져오기
-    getCurrentUserData: ({ commit, dispatch, rootGetters }) => {
+    getCurrentUserData: ({ commit, dispatch, rootGetters }, uid: number) => {
       axios({
-        // url: api.accounts.profileUserInfo(),
-        url: "https://jourgeois.com/api/member/profilepage/auth",
+        url: api.accounts.profileUserInfo(),
         method: "GET",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          uid,
         }
       })
         .then((res) => {
@@ -90,7 +92,9 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserData",
-              params: {}
+              params: {
+                uid
+              }
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }

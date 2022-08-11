@@ -36,11 +36,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent, watch, onMounted } from 'vue'
+import { useRoute } from "vue-router";
 import { useStore } from 'vuex'
 import TheUserProfileBasic from '@/components/profile/TheUserProfileBasic.vue'
 import HeaderBasic from '@/components/basics/HeaderBasic.vue'
 import NavBar from '@/components/basics/NavBar.vue'
+const route = useRoute();
 const store = useStore()
 
 // 동적 컴포넌트 (탭)
@@ -67,14 +69,17 @@ const currentComponent = computed(() => {
 const clickCommunityTab = () => store.dispatch("profileDesc/changeCurrentTab", 0);
 const clickCustomCocktailTab = () => store.dispatch("profileDesc/changeCurrentTab", 1);
 const clickReviewTab = () => store.dispatch("profileDesc/changeCurrentTab", 2);
-const clickBookmarkTab = () => store.dispatch("profileDesc/changeCurrentTab", 2);
+const clickBookmarkTab = () => store.dispatch("profileDesc/changeCurrentTab", 3);
 
-
+// 동적 라우팅
+onMounted(() => {
+  store.dispatch("profileDesc/getCurrentUserData")
+});
 
 </script>
 
 <style scoped lang="scss">
-.cocktail-desc-view {
+.the-user-profile-view {
   @include flex(column);
   justify-content: flex-start;
   align-items: center;
@@ -102,9 +107,9 @@ const clickBookmarkTab = () => store.dispatch("profileDesc/changeCurrentTab", 2)
       background-color: $unchecked-color;
       margin: 0;
     }
-    .user-profile-tab{
+    .user-profile-tab {
       @include flex-xy(space-around, center);
-      width: 80%;
+      width: 100%;
       div {
         @include flex-center;
         position: relative;

@@ -77,14 +77,6 @@ const clickRecipeTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 0);
 const clickReviewTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 1);
 const clickCustomTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 2);
 
-// params가 변경될 때
-watch(
-  () => route.params.cocktail,
-  () => {
-    store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
-  }
-);
-
 // 동적 라우팅
 onMounted(() => {
   store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);

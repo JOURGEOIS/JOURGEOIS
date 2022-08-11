@@ -1,17 +1,19 @@
 <!--  on, off시 트랜지션 효과를 준다.  -->
 <template>
   <teleport to="body">
-    <div class="create-post-modal">
+    <div class="create-post-modal" @click.self="clickXIcon">
       <div
         class="container"
         :class="animation"
-        :style="[isIphone ? { height: '350px' } : { height: '300px' }]"
+        :style="[
+          isIphone || isAndroid ? { height: '350px' } : { height: '250px' },
+        ]"
       >
         <!-- filter: header -->
         <section class="header-section">
-          <span class="material-icons invisible"> close </span>
+          <!-- <span class="material-icons invisible"> close </span> -->
           <p>업로드</p>
-          <span class="material-icons" @click="clickXIcon"> close </span>
+          <!-- <span class="material-icons" @click="clickXIcon"> close </span> -->
         </section>
         <hr />
         <!-- 버튼 부분 -->
@@ -78,6 +80,10 @@ const deviceType: string = store.getters["navbar/getDeviceType"];
 const isIphone = computed(() => {
   return deviceType === "iphone";
 });
+
+const isAndroid = computed(() => {
+  return deviceType === "android";
+});
 </script>
 
 <style scoped lang="scss">
@@ -114,7 +120,7 @@ const isIphone = computed(() => {
     bottom: 0px;
     width: 100%;
     max-width: 600px;
-    height: 300px;
+    height: 350px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding: 0 16px;
@@ -125,11 +131,11 @@ const isIphone = computed(() => {
     }
 
     @media (min-height: 750px) {
-      height: 300px;
+      height: 250px;
     }
 
     .header-section {
-      @include flex-xy(space-between, flex-start);
+      @include flex-center;
       margin-top: 24px;
 
       p {

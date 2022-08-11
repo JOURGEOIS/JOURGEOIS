@@ -1,7 +1,7 @@
 <!--  on, off시 트랜지션 효과를 준다.  -->
 <template>
   <teleport to="body">
-    <div class="share-modal">
+    <div class="share-modal" @click.self="clickXIcon">
       <div
         class="container"
         :class="animation"

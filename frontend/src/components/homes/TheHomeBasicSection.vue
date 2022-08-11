@@ -12,16 +12,8 @@
     <article class="article-description" v-if="isShowDescription">
       {{ data.description }}
     </article>
-    <article class="article-carosel">
-      <div class="carosel-item">
-        <div class="carosel-img"></div>
-        <div class="carosel-text">마!가리타라라라라라라라라라라라라라라라</div>
-      </div>
-      <div class="carosel-item">
-        <div class="carosel-img"></div>
-        <div class="carosel-text">마!가리타라라라라라라라라라</div>
-      </div>
-    </article>
+    <!-- carousel -->
+    <the-card-carousel :data="data"></the-card-carousel>
     <article class="article-more-button">
       <div class="more-button" @click="clickMore">
         {{ data.moreButtonText }}
@@ -31,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import TheCardCarousel from "@/components/homes/TheCardCarousel.vue";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -41,10 +34,16 @@ const props = defineProps<{
   data: {
     description: string;
     moreButtonText: string;
-    callCaroselFunc: string;
+    setCarouselFunc: string;
+    getCarouselFunc: string;
     showMoreView: string;
   };
 }>();
+
+const data = {
+  setCarouselFunc: props.data.setCarouselFunc,
+  getCarouselFunc: props.data.getCarouselFunc,
+};
 
 const isShowDescription = ref(false);
 
@@ -72,7 +71,6 @@ const clickMore = () => {
 // title slot
 .article-title {
   @include flex-xy(flex-start, flex-end);
-  @include font(15px);
   gap: 5px;
 
   .icon-info {
@@ -82,29 +80,8 @@ const clickMore = () => {
 
 .article-description {
   margin-top: -20px;
-  @include font(12px, $fw-regular);
+  @include font(13px, $fw-regular);
   color: $sub-color;
-}
-
-.article-carosel {
-  @include flex;
-  gap: 5px;
-  .carosel-item {
-    @include flex(column);
-    width: 130px;
-    gap: 5px;
-    .carosel-img {
-      // width: 150px;
-      // height: 150px;
-      height: 130px;
-      background-color: $white200;
-      border-radius: 5px;
-    }
-    .carosel-text {
-      width: 100%;
-      @include font-size-sub(12px);
-    }
-  }
 }
 
 .article-more-button {

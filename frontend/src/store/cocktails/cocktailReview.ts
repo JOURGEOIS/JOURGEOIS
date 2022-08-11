@@ -39,7 +39,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       return state.deleteModalStatus;
     },
     getReviewChangeSuccess: (state) => {
-      console.log("팝업", state.reviewChangeSuccess);
+      console.log(state.reviewChangeSuccess);
       return state.reviewChangeSuccess;
     },
   },

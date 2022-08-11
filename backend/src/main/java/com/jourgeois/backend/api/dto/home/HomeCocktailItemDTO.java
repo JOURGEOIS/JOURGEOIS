@@ -10,9 +10,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class HomeCocktailItemDTO {
+    Integer type;
     Long cocktailId;
     String img;
     String title;
+    Long baseCocktailId;
     String base;
     Long abv;
 }

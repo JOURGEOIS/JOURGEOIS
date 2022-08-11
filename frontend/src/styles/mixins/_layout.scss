@@ -57,7 +57,7 @@
       width:16px;height:16px;background:transparent;
   } 
 
-  @media #{$pc} {
+  @media #{$tablet} {
     ::-webkit-scrollbar{height: 7px;}
   }
 }

@@ -9,6 +9,7 @@ import { signup, SignupState } from "../store/accounts/signup";
 import { socialLogin, SocialLoginState } from "../store/accounts/socialLogin";
 import { password, PasswordState } from "../store/accounts/password";
 import { follow, FollowState } from "../store/accounts/follow";
+import { carousel, CarouselState } from "../store/homes/carousel";
 
 // 개인 정보
 import {
@@ -90,6 +91,7 @@ export interface RootState {
   newsFeed: NewsFeedState;
   settings: SettingsState;
   contest: ContestState;
+  carousel: CarouselState;
 }
 
 // store를 생성한다.
@@ -118,5 +120,6 @@ export default createStore({
     newsFeed,
     settings,
     contest,
+    carousel,
   },
 });

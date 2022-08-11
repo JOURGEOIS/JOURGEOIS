@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Configuration
 public class FirebaseConfig {
@@ -19,7 +22,9 @@ public class FirebaseConfig {
     @PostConstruct
     public void init() {
         try {
-            FileInputStream serviceAccount = new FileInputStream("src/main/resources/serviceAccountKey.json");
+            Path filePath = Paths.get(File.separatorChar + "serviceAccountKey.json");
+            FileInputStream serviceAccount = new FileInputStream(filePath.toString());
+            // FileInputStream serviceAccount = new FileInputStream("src/main/resources/serviceAccountKey.json");
             // Use a service account
             GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
             FirebaseOptions options = new FirebaseOptions.Builder()

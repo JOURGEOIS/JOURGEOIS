@@ -3,6 +3,8 @@ package com.jourgeois.backend.controller;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.service.CocktailAwardsService;
 import com.jourgeois.backend.service.PostService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,10 +88,11 @@ public class CocktailAwardsController {
     }
 
     @GetMapping
-    public ResponseEntity getCocktailAwardsPostList(@RequestHeader(value = "uid", defaultValue = "0") Long uid){
+    public ResponseEntity getCocktailAwardsPostList(@RequestHeader(value = "uid", defaultValue = "0") Long uid,
+                                                    @PageableDefault(size=10, page = 0) Pageable pageable){
         Map<String, String> result = new HashMap<>();
         try{
-            return new ResponseEntity(cocktailAwardsService.getCocktailAwardsPostList(uid), HttpStatus.OK);
+            return new ResponseEntity(cocktailAwardsService.getCocktailAwardsPostList(uid, pageable), HttpStatus.OK);
         } catch(Exception e) {
             result.put("fail", "실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -97,10 +100,10 @@ public class CocktailAwardsController {
     }
 
     @GetMapping("/result")
-    public ResponseEntity getCocktailAwardsVoteList(){
+    public ResponseEntity getCocktailAwardsVoteList(@PageableDefault(size=10, page = 0) Pageable pageable){
         Map<String, String> result = new HashMap<>();
         try{
-            return new ResponseEntity(cocktailAwardsService.getCocktailAwardsVoteList(), HttpStatus.OK);
+            return new ResponseEntity(cocktailAwardsService.getCocktailAwardsVoteList(pageable), HttpStatus.OK);
         } catch(Exception e) {
             result.put("fail", "실패");
             return new ResponseEntity(result, HttpStatus.INTERNAL_SERVER_ERROR);

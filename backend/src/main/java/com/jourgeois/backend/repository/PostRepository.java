@@ -142,7 +142,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "from post as p join cocktail_awards as c\n" +
             "on p.p_id = c.p_id\n" +
             "order by p_create_time desc", nativeQuery = true)
-    List<CocktailAwardsVO> getCocktailAwardsList(Long uid);
+    List<CocktailAwardsVO> getCocktailAwardsList(Long uid, Pageable pageable);
 
     @Query(value = "select p.p_id as postId, p.p_img as imgLink, c.contest_title as title,\n" +
             "(concat(round((select count(*) from post_bookmark where p_id = p.p_id) / \n" +
@@ -152,7 +152,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "from post as p join cocktail_awards as c\n" +
             "on p.p_id = c.p_id\n" +
             "order by percentage desc, p_create_time desc", nativeQuery = true)
-    List<CocktailAwardsVO> getCocktailAwardsVoteList();
+    List<CocktailAwardsVO> getCocktailAwardsVoteList(Pageable pageable);
 
     @Query(value = "select p.p_id as postId, p.p_description as description, p.p_img as imgLink, c.contest_title as title,\n" +
             "if((select count(*) from post_bookmark where m_id = :memberId and p_id = p.p_id), 1, 0) as 'like',\n" +

@@ -43,17 +43,17 @@ const introduce = userInfo.value.introduce
 </script>
 
 <style scoped lang="scss">
-.the-my-profile-basic {
+.the-user-profile-basic {
   @include flex(column);
   align-items: center;
   gap: 10px;
-  .my-profile-nickname-icon {
+  .user-profile-nickname-icon {
     @include flex-center;
-    .my-profile-nickname {
+    .user-profile-nickname {
       @include font($fs-lg, $fw-bold);
     }
   }
-  .my-profile-introduce {
+  .user-profile-introduce {
     @include font($fs-md, $fw-regular);
   }
   .profile-categories {

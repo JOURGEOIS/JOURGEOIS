@@ -65,7 +65,7 @@ const routes: any[] = [
   
   // 내 프로필 화면
   {
-    path: "/user/my-profile",
+    path: "/user/profile",
     name: "TheMyProfileView",
     component: () => import("@/views/TheMyProfileView.vue"),
   },

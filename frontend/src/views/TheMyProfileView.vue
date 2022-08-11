@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { onBeforeMount, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import TheMyProfileBasic from '@/components/profile/TheMyProfileBasic.vue'
@@ -48,10 +48,15 @@ const toggleSettingsModal = () => {
   store.dispatch("settings/toggleSettingsModal");
 };
 
+
 const clickSetting = () => {
   store.dispatch("settings/changeSettingsModalClass", "start");
   store.dispatch("settings/toggleSettingsModal", true);
 }
+
+onBeforeMount(() => {
+  store.dispatch("profileDesc/getCurrentUserData")
+});
 
 onBeforeRouteLeave((to, from, next) => {
   if (settingsModalStatus.value) {

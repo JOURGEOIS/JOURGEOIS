@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/member/profilepage")
+@RequestMapping(value = "/member/profile")
 public class MemberProfilePageController {
     private final MemberProfilePageService memberProfilePageService;
 

@@ -49,33 +49,35 @@ public class HomeService {
     }
 
     public List<HomeCocktailItemDTO> getHotTop5Cocktail() throws Exception {
-        List<HomeCocktailItemVO> customCocktails = postRepository.findTop5CocktailOrderByBookmarked();
+        List<HomeCocktailItemVO> customCocktails = cocktailRepository.findTop5CocktailOrderByBookmarked();
         return convertHomeCocktailItemVO2DTO(customCocktails);
     }
 
     public List<HomeCocktailItemDTO> getHotCocktail(Pageable pageable) throws Exception {
-        List<HomeCocktailItemVO> customCocktails = postRepository.findCocktailOrderByBookmarked(pageable);
+        List<HomeCocktailItemVO> customCocktails = cocktailRepository.findCocktailOrderByBookmarked(pageable);
         return convertHomeCocktailItemVO2DTO(customCocktails);
     }
 
-    private List<HomeCocktailItemDTO> convertHomeCocktailItemVO2DTO(List<HomeCocktailItemVO> customCocktails) throws Exception {
-        List<HomeCocktailItemDTO> customCocktailsResponse = new ArrayList<>();
+    private List<HomeCocktailItemDTO> convertHomeCocktailItemVO2DTO(List<HomeCocktailItemVO> homeCocktails) throws Exception {
+        List<HomeCocktailItemDTO> homeCocktailsResponse = new ArrayList<>();
 
-        customCocktails.forEach((customCocktail) -> {
+        homeCocktails.forEach((customCocktail) -> {
             String img = customCocktail.getImg().contains("https://") ? customCocktail.getImg() : s3Url + customCocktail.getImg();
 
             HomeCocktailItemDTO cocktailItem = HomeCocktailItemDTO.builder()
+                    .type(customCocktail.getType())
                     .cocktailId(customCocktail.getCocktailId())
                     .img(img)
                     .title(customCocktail.getTitle())
+                    .baseCocktailId(customCocktail.getBaseCocktailId())
                     .base(customCocktail.getBase())
                     .abv(customCocktail.getAbv())
                     .build();
 
-            customCocktailsResponse.add(cocktailItem);
+            homeCocktailsResponse.add(cocktailItem);
         });
 
-        return customCocktailsResponse;
+        return homeCocktailsResponse;
     }
 
     public List<HomeCocktailItemDTO> getWeeklyHotCustomCocktail(Pageable pageable) throws Exception {

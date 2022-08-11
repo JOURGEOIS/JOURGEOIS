@@ -1,17 +1,12 @@
 package com.jourgeois.backend.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.Firestore;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-
-import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.PostConstruct;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 @Configuration
 public class FirebaseConfig {
@@ -19,9 +14,7 @@ public class FirebaseConfig {
     @PostConstruct
     public void init() {
         try {
-            FileInputStream serviceAccount = new FileInputStream("src/main/resources/serviceAccountKey.json");
-            // Use a service account
-            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("./serviceAccountKey.json").getInputStream());
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(credentials)
                     .build();
@@ -29,5 +22,6 @@ public class FirebaseConfig {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }

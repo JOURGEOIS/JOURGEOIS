@@ -208,20 +208,23 @@ public class CocktailService {
         // c_id를 북마크 한 사람들 목록 가져오기
         cocktailBookmarkRepository.findByCocktailId(new Cocktail(c_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
-            FollowPK key = new FollowPK(uid, member.getUid());
 
-            Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
-            if(uid.equals(member.getUid())) {
-                status = -1;
+            if(member.getIsPublic().equals("1")){
+                FollowPK key = new FollowPK(uid, member.getUid());
+
+                Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+                if(uid.equals(member.getUid())) {
+                    status = -1;
+                }
+
+                followersResponse.add(FollowerDTO.builder()
+                        .introduce(data.getMemberId().getIntroduce())
+                        .isFollowed(status)
+                        .nickname(member.getNickname())
+                        .uid(member.getUid())
+                        .profileImg(s3Url+member.getProfileImg())
+                        .build());
             }
-
-            followersResponse.add(FollowerDTO.builder()
-                    .introduce(data.getMemberId().getIntroduce())
-                    .isFollowed(status)
-                    .nickname(member.getNickname())
-                    .uid(member.getUid())
-                    .profileImg(s3Url+member.getProfileImg())
-                    .build());
         });
         return followersResponse;
     }

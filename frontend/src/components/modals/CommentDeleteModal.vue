@@ -7,7 +7,7 @@
   4. 로그아웃 성공 팝업 
 -->
 <template>
-  <modal-basic modal-color="white" @offModal="toggleDeleteModalStatus(false)">
+  <modal-basic modal-color="white" @off-modal="toggleDeleteModalStatus(false)">
     <div class="logout-modal-content">
       <p>정말 삭제하시겠어요?</p>
       <div class="logout-modal-button">

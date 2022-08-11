@@ -47,35 +47,43 @@ const routes: any[] = [
     name: "TheChangeUserView",
     component: () => import("@/views/TheChangeUserView.vue"),
   },
-
+  
+  
   // 비밀번호 찾기 화면
   {
     path: "/user/help/password",
     name: "TheForgotPwView",
     component: () => import("@/views/TheForgotPwView.vue"),
   },
-
+  
   // 비밀번호 변경 화면
   {
     path: "/user/my-info/password",
     name: "TheChangePwView",
     component: () => import("@/views/TheChangePwView.vue"),
   },
-
+  
   // 내 프로필 화면
   {
-    path: "/user/my-profile",
+    path: "/user/profile",
     name: "TheMyProfileView",
     component: () => import("@/views/TheMyProfileView.vue"),
   },
 
+  // 타 유저 프로필로 이동
+  {
+    path: "/user/profile/:userId",
+    name: "TheUserProfileView",
+    component: () => import('@/views/TheUserProfileView.vue'),
+  },
+  
   // 칵테일 검색 페이지
   {
     path: "/cocktail/search",
     name: "TheCocktailSearchView",
     component: () => import("@/views/TheCocktailSearchView.vue"),
   },
-
+  
   // 칵테일 검색 결과(재료) 페이지
   {
     path: "/cocktail/search/byingredients/:ingredientId",
@@ -236,6 +244,7 @@ router.beforeEach((to: any, from, next) => {
     "TheSignOutView",
     "TheChangeUserView",
     "TheChangePwView",
+    "TheMyProfileView",
     "TheCocktailDescBookmarkView",
     "TheCustomCocktailFormView",
     "TheCustomCocktailDescView",

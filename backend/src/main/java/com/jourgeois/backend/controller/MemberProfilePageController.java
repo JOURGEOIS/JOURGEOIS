@@ -23,15 +23,12 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth")
-    public ResponseEntity<?> readProfile(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+    public ResponseEntity<?> readProfile(@RequestParam(value = "uid") Long uid){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
             MemberDTO result = memberProfilePageService.readMemberProfile(uid);
-
             return ResponseEntity.ok().body(result);
-
         } catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
@@ -40,15 +37,13 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/post")
-    public ResponseEntity<?> readPost(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+    public ResponseEntity<?> readPost(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(uid, "post");
-
+            Long userId = Long.parseLong(((String) request.getAttribute("uid")));
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, "post");
             return ResponseEntity.ok().body(result);
-
         } catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
@@ -57,15 +52,13 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/cocktail")
-    public ResponseEntity<?> readCustomCocktail(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+    public ResponseEntity<?> readCustomCocktail(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(uid, "cocktail");
-
+            Long userId = Long.parseLong(((String) request.getAttribute("uid")));
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, "cocktail");
             return ResponseEntity.ok().body(result);
-
         } catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
@@ -74,15 +67,16 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/bookmark")
-    public ResponseEntity<?> readBookmark(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+    public ResponseEntity<?> readBookmark(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberBookmark(uid);
-
-            return ResponseEntity.ok().body(result);
-
+            Long userId = Long.parseLong((String) request.getAttribute("uid"));
+            if(userId.equals(uid)){
+                List<Map<String, String>> result = memberProfilePageService.readMemberBookmark(uid);
+                return ResponseEntity.ok().body(result);
+            }
+            return ResponseEntity.badRequest().body(null);
         } catch (Exception e) {
             System.out.println(e);
             data.put("success", false);
@@ -91,15 +85,13 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/comment")
-    public ResponseEntity<?> readCocktailComment(HttpServletRequest request, @ModelAttribute MemberDTO memberDTO){
+    public ResponseEntity<?> readCocktailComment(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Long uid = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailComment(uid);
-
+            Long userId = Long.parseLong(((String) request.getAttribute("uid")));
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailComment(userId, uid);
             return ResponseEntity.ok().body(result);
-
         } catch (Exception e) {
             System.out.println(e);
             data.put("success", false);

@@ -17,7 +17,17 @@ import { onMounted } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    action: "notice/getNoticeList",
+    data: {},
+  };
+  store.dispatch("scroll/handleScroll", data);
+};
+
 onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
   store.dispatch("notice/getNoticeList");
 });
 </script>

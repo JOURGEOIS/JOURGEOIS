@@ -9,7 +9,7 @@
     >
       글수정
     </header-basic>
-    <section>
+    <section class="top-view">
       <!-- 폼 풀러오기 -->
       <the-community-update-form
         id="the-community-update-form"
@@ -25,7 +25,7 @@
       </div>
     </section>
   </div>
-  <failure-pop-up v-if="errorStatus">
+  <failure-pop-up v-if="errorStatus" @off-modal="offFailurePopUp">
     {{ errorMessage }}
   </failure-pop-up>
 </template>
@@ -46,18 +46,20 @@ const errorStatus = computed(() => store.getters["createFeed/getAlertStatus"]);
 const errorMessage = computed(
   () => store.getters["createFeed/getErrorMessage"]
 );
+
 // 시간제 모달
 watch(errorStatus, () => {
   if (errorStatus.value) {
-    setTimeout(() => {
-      store.dispatch("createFeed/changeAlertStatus", false);
-    }, 2000);
+    setTimeout(() => offFailurePopUp(), 2000);
   }
 });
 
+const offFailurePopUp = () => {
+  store.dispatch("customCocktail/changeAlertStatus", false);
+};
+
 // 모달 초기화 및 db 요청
 onBeforeMount(() => {
-  console.log(route.params.feedId);
   store.dispatch("feedDescInfo/getCommunityDetail", {
     feedId: route.params.feedId,
   });

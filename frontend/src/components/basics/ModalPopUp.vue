@@ -8,7 +8,7 @@
 
 <template>
   <teleport to="body">
-    <div class="modal-container">
+    <div class="modal-container" @click.self="offModal">
       <div class="modal-popup" :class="modalStyle">
         <slot></slot>
       </div>
@@ -24,6 +24,11 @@ const props = defineProps<{
 }>();
 
 const { modalStyle }: any = selectModalColor(props.modalColor);
+
+const emit = defineEmits<{ (event: "offModal"): void }>();
+const offModal = () => {
+  emit("offModal");
+};
 </script>
 
 <style scoped lang="scss">

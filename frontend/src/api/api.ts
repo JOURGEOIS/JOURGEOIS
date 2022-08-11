@@ -5,6 +5,7 @@ const EMAIL = "email/cert/";
 const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
 const POST = "posts/";
+const PROFILE = "profile/";
 
 export default {
   token: {
@@ -22,7 +23,14 @@ export default {
     profile: () => HOST + ACCOUNTS + "auth/profile",
     googleLogin: () => HOST + ACCOUNTS + "login/google",
     kakaoLogin: () => HOST + ACCOUNTS + "login/kakao",
-    naverLogin: () => HOST + ACCOUNTS + "login/naver"
+    naverLogin: () => HOST + ACCOUNTS + "login/naver",
+    follow: () => HOST + ACCOUNTS + "auth/follow",
+    unfollow: () => HOST + ACCOUNTS + "auth/unfollow",
+    profileUserInfo: () => HOST + ACCOUNTS + PROFILE + "auth",
+    profileCommunity: () => HOST + ACCOUNTS + PROFILE + "auth/post",
+    profileCustom: () => HOST + ACCOUNTS + PROFILE + "auth/cocktail",
+    profileBookmark: () => HOST + ACCOUNTS + PROFILE + "auth/bookmark",
+    profileReview: () => HOST + ACCOUNTS + PROFILE + "auth/comment",
   },
   email: {
     emailCert: () => HOST + "email/cert",

@@ -67,7 +67,6 @@ const submitCommunityForm = () => {
       img: "",
       postId: route.params.feedId,
     };
-    console.log('수정데이터1: ', data)
     store.dispatch("createFeed/updateCommunityForm", data);
   } else {
     const data = {
@@ -75,7 +74,6 @@ const submitCommunityForm = () => {
       img: communityImageValue,
       postId: route.params.feedId,
     };
-    console.log('수정데이터2: ', data)
     store.dispatch("createFeed/updateCommunityForm", data);
   }
 };

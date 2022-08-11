@@ -159,7 +159,7 @@ export const account: Module<AccountState, RootState> = {
           if (error.response.status !== 401) {
             clickHome();
             commit("SET_FAIL_MODAL", true);
-            console.log(error.response);
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -190,7 +190,7 @@ export const account: Module<AccountState, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             failStatus.value = true;
-            console.log(error.response);
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -224,7 +224,7 @@ export const account: Module<AccountState, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             failStatus.value = true;
-            console.log(error.response);
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

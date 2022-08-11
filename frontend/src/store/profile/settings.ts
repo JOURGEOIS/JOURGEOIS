@@ -1,0 +1,6 @@
+import { Module } from 'vuex'
+import { RootState } from '../index'
+import axios from 'axios'
+import api from '../../api/api'
+import { checkBadWord } from '../../functions/checkText'
+import router from '../../router'

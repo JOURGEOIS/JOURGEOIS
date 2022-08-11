@@ -53,6 +53,9 @@ import { feedDescInfo, FeedDescState } from "../store/feeds/feedDescInfo";
 
 import { comment, Comment } from "../store/basics/comment";
 
+// profile
+import { settings, SettingsState } from "../store/profile/settings";
+
 // 모듈의 state를 공유한다.
 export interface RootState {
   navbar: NavbarState;
@@ -76,6 +79,7 @@ export interface RootState {
   feedDescInfo: FeedDescState;
   comment: Comment;
   newsFeed: NewsFeedState;
+  settings: SettingsState;
 }
 
 // store를 생성한다.
@@ -102,5 +106,6 @@ export default createStore({
     feedDescInfo,
     comment,
     newsFeed,
+    settings,
   },
 });

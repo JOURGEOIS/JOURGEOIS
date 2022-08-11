@@ -12,6 +12,7 @@ import com.jourgeois.backend.repository.PostRepository;
 import com.jourgeois.backend.util.ImgType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,9 +72,9 @@ public class CocktailAwardsService {
         return postRepository.findByCocktailAwards(uid, "cocktail_awards")==0;
     }
 
-    public List<CocktailAwardsDTO> getCocktailAwardsPostList(Long uid){
+    public List<CocktailAwardsDTO> getCocktailAwardsPostList(Long uid, Pageable pageable){
         List<CocktailAwardsDTO> list = new ArrayList<>();
-        postRepository.getCocktailAwardsList(uid)
+        postRepository.getCocktailAwardsList(uid, pageable)
                 .forEach(data-> {
                     list.add(CocktailAwardsDTO.builder()
                             .postId(data.getPostId())
@@ -84,9 +85,9 @@ public class CocktailAwardsService {
         return list;
     }
 
-    public List<CocktailAwardsDTO> getCocktailAwardsVoteList(){
+    public List<CocktailAwardsDTO> getCocktailAwardsVoteList(Pageable pageable){
         List<CocktailAwardsDTO> list = new ArrayList<>();
-        postRepository.getCocktailAwardsVoteList()
+        postRepository.getCocktailAwardsVoteList(pageable)
                 .forEach(data-> {
                     list.add(CocktailAwardsDTO.builder()
                             .postId(data.getPostId())

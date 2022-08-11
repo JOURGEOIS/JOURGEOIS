@@ -131,6 +131,9 @@ onMounted(() => {
   if (refreshFailPopupStatus) {
     setTimeout(() => offRefreshFailPopupStatus(), 2000);
   }
+
+  // 알림 상태 확인하기
+  store.dispatch("notice/checkNotice");
 });
 
 const handleScroll = (event: any) => {

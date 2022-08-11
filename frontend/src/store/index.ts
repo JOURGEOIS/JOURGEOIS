@@ -66,6 +66,9 @@ import { settings, SettingsState } from "../store/profile/settings";
 //contest
 import { contest, ContestState } from "../store/feeds/contest";
 
+// notice
+import { notice, NoticeState } from "../store/feeds/notice";
+
 // 모듈의 state를 공유한다.
 export interface RootState {
   navbar: NavbarState;

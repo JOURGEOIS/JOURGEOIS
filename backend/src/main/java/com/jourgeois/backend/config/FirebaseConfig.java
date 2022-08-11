@@ -7,21 +7,27 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
 import com.google.firebase.cloud.FirestoreClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Configuration
 public class FirebaseConfig {
 
+//    @Value("${app.firebase-configuration-file}")
+//    private String firebaseConfigPath;
+
     @PostConstruct
     public void init() {
         try {
-            FileInputStream serviceAccount = new FileInputStream("src/main/resources/serviceAccountKey.json");
             // Use a service account
-            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("./serviceAccountKey.json").getInputStream());
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(credentials)
                     .build();

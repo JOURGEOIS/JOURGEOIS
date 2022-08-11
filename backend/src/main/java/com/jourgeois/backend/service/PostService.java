@@ -300,20 +300,22 @@ public class PostService {
         // p_id를 북마크한 사람들 목록 가져오기
         postBookmarkRepository.findByPostId(new Post(p_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
-            FollowPK key = new FollowPK(uid, member.getUid());
 
-            Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
-            if(uid.equals(member.getUid())) {
-                status = -1;
+            if(member.getIsPublic().equals("1")){
+                FollowPK key = new FollowPK(uid, member.getUid());
+                Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+                if(uid.equals(member.getUid())) {
+                    status = -1;
+                }
+
+                followersResponse.add(FollowerDTO.builder()
+                        .introduce(member.getIntroduce())
+                        .isFollowed(status)
+                        .nickname(member.getNickname())
+                        .uid(member.getUid())
+                        .profileImg(s3Url+member.getProfileImg())
+                        .build());
             }
-            
-            followersResponse.add(FollowerDTO.builder()
-                    .introduce(member.getIntroduce())
-                    .isFollowed(status)
-                    .nickname(member.getNickname())
-                    .uid(member.getUid())
-                    .profileImg(s3Url+member.getProfileImg())
-                    .build());
         });
         return followersResponse;
     }

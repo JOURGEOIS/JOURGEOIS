@@ -24,11 +24,27 @@ public class NotificationController {
     }
 
     @PutMapping("/auth/read")
-    public ResponseEntity followNotice(HttpServletRequest request, @RequestBody Map<String, String> notificationId){
+    public ResponseEntity readNotification(HttpServletRequest request, @RequestBody Map<String, String> notificationId){
         Map<String, Object> result = new HashMap<>();
         try {
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             result.put("success", notificationService.changeToBeRead(uid, notificationId));
+            return new ResponseEntity(result, HttpStatus.CREATED);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/auth/readall")
+    public ResponseEntity readNotificationAll(HttpServletRequest request){
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            result.put("success", notificationService.changeToBeReadAll(uid));
             return new ResponseEntity(result, HttpStatus.CREATED);
         } catch (ExecutionException e) {
             e.printStackTrace();

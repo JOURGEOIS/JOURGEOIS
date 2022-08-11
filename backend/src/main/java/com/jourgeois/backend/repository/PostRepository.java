@@ -74,7 +74,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join member\n" +
             "on post.p_writer = member.uid \n" +
             "where member.is_public = true \n" +
-            "order by p_create_time DESC limit 5", nativeQuery = true)
+            "order by p_create_time DESC limit 10", nativeQuery = true)
     List<HomeCocktailItemVO> findTop5CustomCocktailOrderByCreateTime();
 
     @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p.description AS description " +

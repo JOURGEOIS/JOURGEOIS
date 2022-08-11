@@ -81,7 +81,6 @@ public class PostController {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
-
         
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));

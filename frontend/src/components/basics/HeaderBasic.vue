@@ -101,7 +101,7 @@ const successVisibility = computed(() => {
 
       @media #{$pc} {
       }
-      x &:hover {
+      &:hover {
         cursor: pointer;
       }
     }

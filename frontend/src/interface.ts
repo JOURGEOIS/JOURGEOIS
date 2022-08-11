@@ -97,3 +97,14 @@ export interface ContestCocktail {
   like?: number; // 해당 uid가 투표했는지 여부
   percentage?: string; // 투표 비율
 }
+
+// notice
+export interface Notice {
+  from: string;
+  img: string;
+  isRead: boolean;
+  postId: number;
+  timeStamp: Date;
+  type: string;
+  uid: number;
+}

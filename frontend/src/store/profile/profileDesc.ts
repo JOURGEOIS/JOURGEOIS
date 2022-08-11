@@ -70,6 +70,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
 
     // 프로필 정보 가져오기
     getCurrentUserData: ({ commit, dispatch, rootGetters }, uid: number) => {
+      // console.log(uid, rootGetters["personalInfo/getAccessToken"])
       axios({
         url: api.accounts.profileUserInfo(),
         method: "GET",
@@ -85,9 +86,8 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           commit("SET_CURRENT_USER_DATA", res.data)
         })
         .catch((err) => {
-          console.log(err)
+          console.error(err)
           if (err.response.status !== 401) {
-            console.log(err)
           } else {
             // refreshToken 재발급
             const obj = {
@@ -99,6 +99,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
         })
-    }
+    },
   }
 }

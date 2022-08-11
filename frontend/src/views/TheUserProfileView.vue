@@ -1,7 +1,10 @@
 <template>
-  <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-    프로필
-  </header-basic>
+  <the-profile-header :prev="true" :setting="true" @prevClicked="$router.go(-1)">
+    <div>
+      프로필
+    </div>
+  </the-profile-header>
+  <the-settings-modal v-if="settingsModalStatus"></the-settings-modal>
   <div class="the-user-profile-view top-view">
     <the-user-profile-basic></the-user-profile-basic>
     <!-- 프로필: 탭-->
@@ -30,20 +33,43 @@
         <component :is="currentComponent"></component>
       </keep-alive>
     </section>
-  
   </div>
+  <the-log-out-modal
+    v-if="logOutModalStatus"
+    @off-modal="toggleLogOutModal(false)"
+  ></the-log-out-modal>
   <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent, watch, onMounted } from 'vue'
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { useStore } from 'vuex'
 import TheUserProfileBasic from '@/components/profile/TheUserProfileBasic.vue'
-import HeaderBasic from '@/components/basics/HeaderBasic.vue'
+import TheSettingsModal from '@/components/profile/TheSettingsModal.vue'
+import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
+import TheProfileHeader from '@/components/profile/TheProfileHeader.vue'
+import ButtonBasic from '@/components/basics/ButtonBasic.vue'
 import NavBar from '@/components/basics/NavBar.vue'
 const route = useRoute();
 const store = useStore()
+
+// 세팅 모달
+const settingsModalStatus = computed(
+  () => store.getters["settings/getSettingsModalStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  if (settingsModalStatus.value) {
+    store.dispatch("settings/changeSettingsModalClass", "end");
+    setTimeout(
+      () => store.dispatch("settings/toggleSettingsModal", false),
+      200
+    );
+  } else {
+    next();
+  }
+});
 
 // 동적 컴포넌트 (탭)
 const componentArray = [
@@ -71,10 +97,24 @@ const clickCustomCocktailTab = () => store.dispatch("profileDesc/changeCurrentTa
 const clickReviewTab = () => store.dispatch("profileDesc/changeCurrentTab", 2);
 const clickBookmarkTab = () => store.dispatch("profileDesc/changeCurrentTab", 3);
 
-// 동적 라우팅
+// 동적 라우팅 및 리셋
 onMounted(() => {
-  store.dispatch("profileDesc/getCurrentUserData")
+  store.dispatch("profileDesc/getCurrentUserData", route.params.userId )
+  toggleLogOutModal(false);
 });
+
+// 로그아웃 모달
+const logOutModalStatus = computed(
+  () => store.getters["account/getLogOutModalStatus"]
+);
+
+const toggleLogOutModal = (value: boolean) =>
+  store.dispatch("account/toggleLogOutModal", value);
+
+// 버튼 색깔
+const buttonColor = computed(() => {
+  return 'sub-blank'
+})
 
 </script>
 

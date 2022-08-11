@@ -79,7 +79,7 @@ const clickSearch = () => {
 // 프로필 버튼 클릭
 const clickProfile = () => {
   setNavIconStatus(4);
-  router.push({ name: "TheUserProfileView", params: { userId : userId.value } });
+  router.push({ name: "TheUserProfileView", params: { userId : userId.value || 0 } });
 };
 const createFeedModalStatus = computed(
   () => store.getters["createFeed/getCreateFeedModalStatus"]

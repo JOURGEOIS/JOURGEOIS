@@ -1,7 +1,7 @@
 <template>
-  <div>
-
-  </div>
+  <h4>
+    일반
+  </h4>
 </template>
 
 <script setup lang="ts">

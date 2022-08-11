@@ -7,6 +7,7 @@ const LOOKUP = "lookup/";
 const POST = "posts/";
 const AWARDS = "awards/";
 const PROFILE = "profile/";
+const CUSTOM = "custom/";
 
 export default {
   token: {
@@ -73,5 +74,11 @@ export default {
     voteCOntestList: () => HOST + AWARDS,
     resultCOntestList: () => HOST + AWARDS + "/result",
     contestDetail: () => HOST + AWARDS + "/auth/info",
+  },
+
+  custom: {
+    // 홈
+    latestCustomCocktail: () => HOST + CUSTOM + "latest5", // 신규 커칵/슈커칵 5개
+    latestCustomCocktailView: () => HOST + CUSTOM + "latest", // 신규 커칵/슈커칵 목록
   },
 };

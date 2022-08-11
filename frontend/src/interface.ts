@@ -47,6 +47,17 @@ export interface CustomCocktail {
   followerDTO: User;
 }
 
+// 홈 carousel 칵테일 정보
+export interface CarouselCocktail {
+  type: number;
+  cocktailId: number;
+  baseCocktailId: number;
+  title: string;
+  img: string;
+  base: string;
+  abv: number;
+}
+
 export interface NewsFeed {
   createTime: number[]; // 생성 시간
   updateTime: number[]; // 수정 시간
@@ -96,4 +107,15 @@ export interface ContestCocktail {
   title: string; // 게시물 제목
   like?: number; // 해당 uid가 투표했는지 여부
   percentage?: string; // 투표 비율
+}
+
+// notice
+export interface Notice {
+  from: string;
+  img: string;
+  isRead: boolean;
+  postId: number;
+  timeStamp: Date;
+  type: string;
+  uid: number;
 }

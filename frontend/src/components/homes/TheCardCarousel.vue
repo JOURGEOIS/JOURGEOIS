@@ -16,66 +16,25 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { CarouselCocktail } from "../../interface";
 const router = useRouter();
-interface carouselCocktail {
-  cocktailId: number;
-  title: string;
-  img: string;
-  base: string;
-  abv: number;
-}
-const cocktails: carouselCocktail[] = [
-  {
-    cocktailId: 1,
-    title: "마!가리타라라라라",
-    img: "https://news.imaeil.com/photos/2020/01/21/2020012117452367900_l.jpg",
-    base: "마가리타",
-    abv: 13,
-  },
-  {
-    cocktailId: 2,
-    title: "마!가리릴리릴리",
-    img: "https://www.noblesse.com/shop/data/m/editor_new/2020/12/17/e44b2891deae1b8aimage1.jpg",
-    base: "레몬주스",
-    abv: 15,
-  },
-  {
-    cocktailId: 3,
-    title: "마!가리릴리릴리",
-    img: "https://www.noblesse.com/shop/data/m/editor_new/2020/12/17/e44b2891deae1b8aimage1.jpg",
-    base: "레몬주스",
-    abv: 17,
-  },
-  {
-    cocktailId: 4,
-    title: "마!가리타라라라라라라라라라라라라",
-    img: "https://news.imaeil.com/photos/2020/01/21/2020012117452367900_l.jpg",
-    base: "마가리타",
-    abv: 12,
-  },
-  {
-    cocktailId: 5,
-    title: "마!가리타라라라라라라라라라라라라",
-    img: "https://news.imaeil.com/photos/2020/01/21/2020012117452367900_l.jpg",
-    base: "마가리타",
-    abv: 12,
-  },
-  // {
-  //   cocktailId: 6,
-  //   title: "마!가리타라라라라라라라라라라라라",
-  //   img: "https://news.imaeil.com/photos/2020/01/21/2020012117452367900_l.jpg",
-  //   base: "마가리타",
-  //   abv: 12,
-  // },
-  // {
-  //   cocktailId: 7,
-  //   title: "마!가리타라라라라라라라라라라라라",
-  //   img: "https://news.imaeil.com/photos/2020/01/21/2020012117452367900_l.jpg",
-  //   base: "마가리타",
-  //   abv: 12,
-  // },
-];
+const store = useStore();
+
+const props = defineProps<{
+  data: {
+    setCarouselFunc: string;
+    getCarouselFunc: string;
+  };
+}>();
+
+const setCarouselFunc: string = props.data.setCarouselFunc;
+const getCarouselFunc: string = props.data.getCarouselFunc;
+
+store.dispatch(`carousel/${setCarouselFunc}`);
+const cocktails = computed(() => store.getters[`carousel/${getCarouselFunc}`]);
 
 // 요소 & 사이즈
 const clickCarouselItem = (cocktailId: number) => {

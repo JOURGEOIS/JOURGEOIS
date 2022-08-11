@@ -32,16 +32,13 @@
           </article>
           <hr>
           <article class="logOut set-btn">
-            <div @click="toggleLogOutModal(true)" class="btn-text">로그아웃</div>
+            <div @click="clickLogout" class="log-out btn-text">로그아웃</div>
           </article>
           <hr>
         </section>
       </div>
     </div>
-    <the-log-out-modal
-      v-if="logOutModalStatus"
-      @off-modal="toggleLogOutModal(false)"
-    ></the-log-out-modal>
+    
   </teleport>
 </template>
 
@@ -90,18 +87,11 @@ const profilePublicSet = () => {
   // router.push({ name: "TheChangePwView" });
 };
 
+const clickLogout = () => {
+  store.dispatch("settings/toggleSettingsModal", false)
+  store.dispatch("account/toggleLogOutModal", true);
 
-// 로그아웃 모달
-const logOutModalStatus = computed(
-  () => store.getters["account/getLogOutModalStatus"]
-);
-const toggleLogOutModal = (value: boolean) =>
-  store.dispatch("account/toggleLogOutModal", value);
-
-// 리셋
-onMounted(() => {
-  toggleLogOutModal(false);
-});
+}
 
 // 아이폰인지 확인
 const deviceType: string = store.getters["navbar/getDeviceType"];
@@ -192,6 +182,9 @@ const isIphone = computed(() => {
   }
   .btn-text {
     @include font-size-sub(15px);
+  }
+  .log-out{
+    color: $red500;
   }
 
 .invisible {

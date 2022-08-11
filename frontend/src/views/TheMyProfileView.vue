@@ -18,15 +18,20 @@
   <div class="the-my-profile-view top-view">
     <the-my-profile-basic></the-my-profile-basic>
   </div>
+  <the-log-out-modal
+    v-if="logOutModalStatus"
+    @off-modal="toggleLogOutModal(false)"
+  ></the-log-out-modal>
   <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import TheMyProfileBasic from '@/components/profile/TheMyProfileBasic.vue'
 import TheSettingsModal from '@/components/profile/TheSettingsModal.vue'
+import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
 import HeaderBasic from '@/components/basics/HeaderBasic.vue'
 import ButtonBasic from '@/components/basics/ButtonBasic.vue'
 import NavBar from '@/components/basics/NavBar.vue'
@@ -58,6 +63,18 @@ onBeforeRouteLeave((to, from, next) => {
   } else {
     next();
   }
+});
+
+// 로그아웃 모달
+const logOutModalStatus = computed(
+  () => store.getters["account/getLogOutModalStatus"]
+);
+const toggleLogOutModal = (value: boolean) =>
+  store.dispatch("account/toggleLogOutModal", value);
+
+// 리셋
+onMounted(() => {
+  toggleLogOutModal(false);
 });
 
 // 버튼 색깔

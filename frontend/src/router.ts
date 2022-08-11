@@ -62,13 +62,6 @@ const routes: any[] = [
     component: () => import("@/views/TheChangePwView.vue"),
   },
 
-  // 내 프로필 화면
-  {
-    path: "/user/profile",
-    name: "TheMyProfileView",
-    component: () => import("@/views/TheMyProfileView.vue"),
-  },
-
   // 유저 프로필로 이동
   {
     path: "/user/profile/:userId",

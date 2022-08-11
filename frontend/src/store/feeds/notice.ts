@@ -85,14 +85,15 @@ export const notice: Module<NoticeState, RootState> = {
     },
 
     // 알림 리스트를 가져온다.
-    getNoticeList: async ({ commit, getters }) => {
+    getNoticeList: async ({ commit, getters, rootGetters }) => {
+      const uid = rootGetters["personalInfo/getUserInfoUserId"];
       const noticeList: object[] = [];
 
       // 15일 제한
       const halfDay = new Date(new Date().setDate(new Date().getDate() - 15));
 
       const next = query(
-        collection(database, "jourgeois/21001/notification"),
+        collection(database, `jourgeois/${uid}/notification`),
         where("timestamp", ">", halfDay),
         orderBy("timestamp"),
         startAfter(getters["getStartAfter"]),

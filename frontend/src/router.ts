@@ -228,6 +228,13 @@ const routes: any[] = [
     name: "TheAllLatestCustomCocktailView",
     component: () => import("@/views/homes/TheLatestCustomCocktailView.vue"),
   },
+
+  // 알림
+  {
+    path: "/feeds/notice",
+    name: "TheNoticeView",
+    component: () => import("@/views/TheNoticeView.vue"),
+  },
 ];
 
 const router = createRouter({

@@ -65,7 +65,7 @@ const clickMore = () => {
   padding: 20px;
   border-radius: 5px;
   background-color: $white;
-  gap: 15px;
+  gap: 25px;
   @include shadow-feed;
 }
 
@@ -81,7 +81,7 @@ const clickMore = () => {
 }
 
 .article-description {
-  margin-top: -10px;
+  margin-top: -20px;
   @include font(12px, $fw-regular);
   color: $sub-color;
 }
@@ -111,7 +111,7 @@ const clickMore = () => {
   .more-button {
     @include flex-center;
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     border: 1px solid $unchecked-color;
     border-radius: 5px;
     @include font(12px, $fw-medium);

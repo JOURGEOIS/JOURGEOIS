@@ -1,11 +1,11 @@
 <!--  on, off시 트랜지션 효과를 준다.  -->
 <template>
   <teleport to="body">
-    <div class="share-modal">
+    <div class="share-modal" @click.self="clickXIcon">
       <div
         class="container"
         :class="animation"
-        :style="[isIphone ? { height: '350px' } : { height: '250px' }]"
+        :style="[isIphone ? { height: '350px' } : { height: '300px' }]"
       >
         <!-- filter: header -->
         <section class="header-section">

@@ -155,7 +155,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
+          const reviewCount = res.data.customCocktail.reviewCount;
+          dispatch("comment/setCommentCount", reviewCount, { root: true });
           commit("SET_CUSTOM_COCKTAIL_DETAIL", res.data);
         })
         .catch((err) => {
@@ -196,13 +197,14 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          postId,
+          postId: postId.value,
         },
       })
         .then((res) => {
           // 삭제 성공
           if (res.data.success) {
             alert("삭제 성공");
+            router.go(-1);
           }
         })
         .catch((err) => {

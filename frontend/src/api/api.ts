@@ -5,7 +5,11 @@ const EMAIL = "email/cert/";
 const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
 const POST = "posts/";
+<<<<<<< HEAD
 const AWARDS = "awards/";
+=======
+const PROFILE = "profile/";
+>>>>>>> 7bb38da0cd55497fe41e769a94816a740c741a1f
 
 export default {
   token: {
@@ -26,6 +30,11 @@ export default {
     naverLogin: () => HOST + ACCOUNTS + "login/naver",
     follow: () => HOST + ACCOUNTS + "auth/follow",
     unfollow: () => HOST + ACCOUNTS + "auth/unfollow",
+    profileUserInfo: () => HOST + ACCOUNTS + PROFILE + "auth",
+    profileCommunity: () => HOST + ACCOUNTS + PROFILE + "auth/post",
+    profileCustom: () => HOST + ACCOUNTS + PROFILE + "auth/cocktail",
+    profileBookmark: () => HOST + ACCOUNTS + PROFILE + "auth/bookmark",
+    profileReview: () => HOST + ACCOUNTS + PROFILE + "auth/comment",
   },
   email: {
     emailCert: () => HOST + "email/cert",

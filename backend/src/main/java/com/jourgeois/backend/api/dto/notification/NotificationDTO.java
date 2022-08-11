@@ -1,20 +1,25 @@
 package com.jourgeois.backend.api.dto.notification;
 
+import com.google.cloud.Timestamp;
+import com.google.cloud.firestore.FieldValue;
+import com.jourgeois.backend.util.NotificationType;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class NotificationDTO {
-    // follow, message
-    private String type;
+    // FOLLOW, LIKE, COMMENT
+    private NotificationType type;
 
-    private String to;
+    // 상대방 정보
     private String from;
-
-    // 상대방 정보보
+    private Long uid;
+    private Long postId;
     private String img;
-    private String nickname;
-
-    private String isRead;
+    private Boolean isRead;
+    private FieldValue timestamp;
+    public NotificationDTO() {
+        this.isRead = false;
+    }
 }

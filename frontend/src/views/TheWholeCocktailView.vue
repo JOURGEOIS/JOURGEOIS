@@ -1,8 +1,8 @@
 <template>
-  <div class="cocktail-list-view">
-    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-      칵테일</header-basic
-    >
+  <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+    칵테일</header-basic
+  >
+  <div class="cocktail-list-view top-view-no-margin">
     <div class="the-item-container">
       <the-list-item-cocktail
         v-for="(item, idx) in wholeCocktails"

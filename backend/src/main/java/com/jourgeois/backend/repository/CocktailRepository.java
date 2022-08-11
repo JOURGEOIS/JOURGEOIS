@@ -1,5 +1,6 @@
 package com.jourgeois.backend.repository;
 
+import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.api.dto.post.cocktail.CocktailVO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import org.springframework.data.domain.Pageable;
@@ -59,12 +60,21 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 //            " c.tag = :tag, c.baseLiquor = :baseLiquor, c.category = :category, c.recipe = :recipe WHERE c.id = :id")
 //    Optional<Cocktail> updateCocktail(@Param("Cocktail") Cocktail cocktail);
 
-    @Query(value = "select * from cocktail where c_base_liquor = (select c_base_liquor\n" +
+    @Query(value = "select c_id as cocktailId, c_img as img, c_base_liquor as base, c_alcohol as abv, c_name_kr as title\n" +
+            "from cocktail where c_base_liquor = (select c_base_liquor\n" +
             "from cocktail \n" +
             "where c_id in (select c_id from cocktail_bookmark where m_id = :uid) \n" +
             "group by c_base_liquor\n" +
             "order by count(c_base_liquor) desc limit 1)", nativeQuery = true)
-    List<Cocktail> findByrecommenderLiquor(Long uid, Pageable pageable);
+    List<HomeCocktailItemVO> findByrecommenderLiquor(Long uid, Pageable pageable);
+
+    @Query(value = "select c_id as cocktailId, c_img as img, c_base_liquor as base, c_alcohol as abv, c_name_kr as title\n" +
+            "from cocktail where c_base_liquor = (select c_base_liquor\n" +
+            "from cocktail \n" +
+            "where c_id in (select c_id from cocktail_bookmark where m_id = :uid) \n" +
+            "group by c_base_liquor\n" +
+            "order by count(c_base_liquor) desc limit 1) limit 5", nativeQuery = true)
+    List<HomeCocktailItemVO> findByrecommender5Liquor(Long uid);
 
 
     @Query("SELECT c.id AS id, c.nameKR AS nameKR, c.img AS img, c.category AS category, c.tag AS tag " +
@@ -72,4 +82,9 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
             "WHERE m.uid = :id")
     Optional<List<CocktailVO>> findBookmarkInProfilePageByUid(Long id);
 
+    @Query(value = "SELECT c_base_liquor as base, c_img as img, c_alcohol as abv, c_name_kr as title, c_id as cocktailId FROM cocktail WHERE c_tag like concat('%', :tag, '%') limit 5", nativeQuery = true)
+    List<HomeCocktailItemVO> getTag5Cocktail(@Param(value = "tag") String tagType);
+
+    @Query("SELECT c.baseLiquor as base, c.img as img, c.alcohol as abv, c.name as title, c.id as cocktailId FROM Cocktail AS c WHERE c.tag like concat('%', :tag, '%')")
+    List<HomeCocktailItemVO> getTagCocktail(@Param(value = "tag") String tagType, Pageable pageable);
 }

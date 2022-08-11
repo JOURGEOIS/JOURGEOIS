@@ -154,5 +154,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on p.p_id = c.p_id\n" +
             "where p.p_id=:postId", nativeQuery = true)
     Optional<CocktailAwardsVO> getCocktailAwardsPostInfo(Long memberId, Long postId);
-
 }

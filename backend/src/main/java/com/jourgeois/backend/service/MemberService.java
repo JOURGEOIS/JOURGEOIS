@@ -231,7 +231,7 @@ public class MemberService {
 
     }
 
-    public String getKakaoAccessToken(String code, String domain) {
+    public String getSocialAccessToken(String code, String domain) {
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "";
@@ -260,7 +260,6 @@ public class MemberService {
                 sb.append("grant_type=authorization_code");
                 sb.append("&client_id=" + socialLoginConfigUtils.getKakaoRestapiKey());
                 sb.append("&redirect_uri="+ socialLoginConfigUtils.getKakaoRedirectUrl());
-                sb.append("&client_secret=" + socialLoginConfigUtils.getKakaoClientSecret());
                 sb.append("&code=" + code);
             } else if (domain == "naver"){
                 sb.append("grant_type=authorization_code");
@@ -514,7 +513,7 @@ public class MemberService {
         return url;
     }
 
-    public boolean followUser(Long from, Long to) throws IllegalArgumentException, Exception{
+    public Follow followUser(Long from, Long to) throws IllegalArgumentException, Exception{
         Follow follow = new Follow();
 
         Member follower = new Member();
@@ -524,9 +523,8 @@ public class MemberService {
 
         follow.setFrom(follower);
         follow.setTo(followee);
-        followRepository.save(follow);
 
-        return true;
+        return followRepository.save(follow);
     }
 
     public List<FollowerDTO> getFollowerAll(Long uid, Long me, Pageable pageable) throws NumberFormatException{
@@ -578,5 +576,9 @@ public class MemberService {
         followRepository.delete(follow);
 
         return true;
+    }
+
+    public Member findUser(Long uid) {
+        return memberRepository.findById(uid).orElse(new Member(-1L));
     }
 }

@@ -22,15 +22,19 @@
           >
             <div class="btn-text">비밀번호 변경</div>
           </article>
+          <hr>
           <article class="edit-personal-info set-btn" @click="editPersonalInfo">
             <div class="btn-text">개인정보 수정</div>
           </article>
+          <hr>
           <article class="profile-public-set set-btn" @click="profilePublicSet">
             <div class="btn-text">프로필 공개 설정</div>
           </article>
+          <hr>
           <article class="logOut set-btn">
             <div @click="toggleLogOutModal(true)" class="btn-text">로그아웃</div>
           </article>
+          <hr>
         </section>
       </div>
     </div>
@@ -153,26 +157,17 @@ const isIphone = computed(() => {
     @media (min-height: 750px) {
       height: 300px;
     }
-
+// 헤더 레이아웃
     .header-section {
       @include flex-xy(space-between, flex-start);
       margin-top: 24px;
 
       p {
-        &:first-child {
-          @include font($fs-main, $fw-medium);
-          color: $main-color;
-        }
-      }
-      .material-icons-outlined {
-        position: absolute;
-        right: 5px;
-        width: 42.78px;
-        text-align: center;
-        cursor: pointer;
+        @include font($fs-main, $fw-medium);
+        color: $main-color;
       }
     }
-
+// 구분선
     hr {
       width: calc(100% + 32px);
       margin-left: -16px;
@@ -182,43 +177,22 @@ const isIphone = computed(() => {
     }
 
     .btn-section {
+      @include flex(column);
       @include flex-xy(space-around, center);
-      margin-top: 10px;
+      gap: 5px;
     }
   }
 }
 
-.post-btn {
+.set-btn {
   @include flex(column);
   @include flex-xy(center, center);
   @include for-click;
   gap: 10px;
-  .btn-icon {
-    width: 100px;
-    height: 100px;
-    border: 1px solid $white150;
-    border-radius: 20px;
-    background-color: $white100;
-    @include shadow-popup1;
-    @include flex-center;
-    @include font-size-sub(15px);
-
-    .material-icons-outlined {
-      @include font-size-sub(50px);
-    }
   }
   .btn-text {
     @include font-size-sub(15px);
   }
-}
-
-.start {
-  animation: start 0.3s ease-in-out;
-}
-
-.end {
-  animation: end 0.3s ease-in-out;
-}
 
 .invisible {
   visibility: hidden;

@@ -26,7 +26,7 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
-        notificationDTO.setNotiId(docRef.getId());
+//        notificationDTO.setNotiId(docRef.getId());
         notificationDTO.setType(NotificationType.FOLLOW);
         notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());
@@ -45,7 +45,7 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
-        notificationDTO.setNotiId(docRef.getId());
+//        notificationDTO.setNotiId(docRef.getId());
         notificationDTO.setType(NotificationType.LIKE);
         notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());
@@ -65,7 +65,7 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
-        notificationDTO.setNotiId(docRef.getId());
+//        notificationDTO.setNotiId(docRef.getId());
         notificationDTO.setType(NotificationType.COMMENT);
         notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());

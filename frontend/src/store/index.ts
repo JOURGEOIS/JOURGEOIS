@@ -60,6 +60,8 @@ import { feedDescInfo, FeedDescState } from "../store/feeds/feedDescInfo";
 
 import { comment, Comment } from "../store/basics/comment";
 
+// profile
+import { settings, SettingsState } from "../store/profile/settings";
 //contest
 import { contest, ContestState } from "../store/feeds/contest";
 
@@ -86,6 +88,7 @@ export interface RootState {
   feedDescInfo: FeedDescState;
   comment: Comment;
   newsFeed: NewsFeedState;
+  settings: SettingsState;
   contest: ContestState;
 }
 
@@ -113,6 +116,7 @@ export default createStore({
     feedDescInfo,
     comment,
     newsFeed,
+    settings,
     contest,
   },
 });

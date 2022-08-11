@@ -3,6 +3,10 @@ package com.jourgeois.backend.service;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.jourgeois.backend.api.dto.notification.NotificationDTO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
@@ -10,6 +14,7 @@ import com.jourgeois.backend.util.NotificationType;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -82,6 +87,24 @@ public class NotificationService {
         ApiFuture<WriteResult> future = docRef.update("isRead", true);
         WriteResult result = future.get();
         System.out.println("changeToBeRead result - " + result);
+
+        return true;
+    }
+
+    public boolean changeToBeReadAll(Long uid) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference collectionRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(uid)).collection(NOTIFICATION_COLLECTION_NAME);
+
+        WriteBatch batch = db.batch();
+        for(DocumentReference doc : collectionRef.listDocuments()) {
+            batch.update(doc, "isRead", true);
+        }
+
+        ApiFuture<List<WriteResult>> future = batch.commit();
+
+        for(WriteResult result : future.get()) {
+            System.out.println("Update time : " + result.getUpdateTime());
+        }
 
         return true;
     }

@@ -48,7 +48,9 @@
   <loading-basic v-if="loadingStatus"></loading-basic>
 
   <!-- 이메일 인증 없이 다음 누를 때의 popup -->
-  <failure-pop-up v-if="getEmailNonAuthModalStatus"
+  <failure-pop-up
+    v-if="getEmailNonAuthModalStatus"
+    @off-modal="toggleTimedEmailNonAuthModalStatus"
     >이메일이 인증되지 않았습니다.</failure-pop-up
   >
 </template>

@@ -1,7 +1,7 @@
 <template>
-  <div>
-
-  </div>
+  <h4>
+    후기
+  </h4>
 </template>
 
 <script setup lang="ts">

@@ -5,7 +5,11 @@ const EMAIL = "email/cert/";
 const COCKTAIL = "cocktail/";
 const LOOKUP = "lookup/";
 const POST = "posts/";
+<<<<<<< HEAD
+const AWARDS = "awards/";
+=======
 const PROFILE = "profile/";
+>>>>>>> 7bb38da0cd55497fe41e769a94816a740c741a1f
 
 export default {
   token: {
@@ -64,5 +68,13 @@ export default {
     toggleLike: () => HOST + POST + "auth/like",
     likedUsers: () => HOST + POST + "auth/like/list",
     listFeed: () => HOST + POST + "auth/feed",
+  },
+
+  awards: {
+    joinContest: () => HOST + AWARDS + "/auth",
+    voteContest: () => HOST + AWARDS + "/auth/like",
+    voteCOntestList: () => HOST + AWARDS,
+    resultCOntestList: () => HOST + AWARDS + "/result",
+    contestDetail: () => HOST + AWARDS + "/auth/info",
   },
 };

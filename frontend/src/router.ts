@@ -29,9 +29,15 @@ const routes: any[] = [
 
   // 카카오 로그인
   {
+<<<<<<< HEAD
+    path: "/user/login/kakaologin",
+    name: "Kakaologin",
+    component: () => import("@/views/KakaoLogin.vue"),
+=======
     path: '/user/login/kakaologin',
     name: 'Kakaologin',
     component: () => import('@/views/KakaoLogin.vue'),
+>>>>>>> 7bb38da0cd55497fe41e769a94816a740c741a1f
   },
 
   // 로그아웃 화면
@@ -200,7 +206,25 @@ const routes: any[] = [
     name: 'TheSuperCustomCocktailUpdateFormView',
     component: () => import('@/views/TheSuperCustomCocktailUpdateFormView.vue'),
   },
+<<<<<<< HEAD
+
+  //contest 게시글 form
+  {
+    path: "/feeds/contest/form",
+    name: "TheCocktailAwardsFormView",
+    component: () => import("@/views/TheCocktailAwardsFormView.vue"),
+  },
+
+  // contest 게시글 상세
+  {
+    path: "/feeds/:feedId/contest",
+    name: "TheCocktailAwardsDescView",
+    component: () => import("@/views/TheCocktailAwardsDescView.vue"),
+  },
+];
+=======
 ]
+>>>>>>> 7bb38da0cd55497fe41e769a94816a740c741a1f
 
 const router = createRouter({
   history: createWebHistory(),
@@ -219,6 +243,26 @@ router.beforeEach((to: any, from, next) => {
 
   // 로그인이 필요한 페이지
   const authPages = [
+<<<<<<< HEAD
+    "TheSignOutView",
+    "TheChangeUserView",
+    "TheChangePwView",
+    "TheCocktailDescBookmarkView",
+    "TheCustomCocktailFormView",
+    "TheCustomCocktailDescView",
+    "TheCustomCocktailUpdateFormView",
+    "TheLikedUserListView",
+    "TheNewsFeedView",
+    "TheCommunityDescView",
+    "TheCommunityFormView",
+    "TheCommunityUpdateFormView",
+    "TheSuperCustomCocktailDescView",
+    "TheSuperCustomCocktailFormView",
+    "TheSuperCustomCocktailUpdateFormView",
+    "TheCocktailAwardsFormView",
+    "TheCocktailAwardsDescView",
+  ];
+=======
     'TheSignOutView',
     'TheChangeUserView',
     'TheChangePwView',
@@ -236,6 +280,7 @@ router.beforeEach((to: any, from, next) => {
     'TheSuperCustomCocktailFormView',
     'TheSuperCustomCocktailUpdateFormView',
   ]
+>>>>>>> 7bb38da0cd55497fe41e769a94816a740c741a1f
 
   // 로그인이 되어있지 않을 때만 가능한 페이지
   const notAuthPages = ['TheSignupView', 'TheLoginView']

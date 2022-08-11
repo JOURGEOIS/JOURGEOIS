@@ -80,7 +80,6 @@ const clickSearch = () => {
 const clickProfile = () => {
   setNavIconStatus(4);
   router.push({ name: "TheUserProfileView", params: { userId : userId.value } });
-  console.log(userId.value)
 };
 const createFeedModalStatus = computed(
   () => store.getters["createFeed/getCreateFeedModalStatus"]

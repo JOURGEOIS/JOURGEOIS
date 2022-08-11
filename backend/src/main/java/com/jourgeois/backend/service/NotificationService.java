@@ -3,10 +3,6 @@ package com.jourgeois.backend.service;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.jourgeois.backend.api.dto.notification.NotificationDTO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
@@ -30,6 +26,7 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setNotiId(docRef.getId());
         notificationDTO.setType(NotificationType.FOLLOW);
         notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());
@@ -48,6 +45,7 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setNotiId(docRef.getId());
         notificationDTO.setType(NotificationType.LIKE);
         notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());
@@ -67,6 +65,7 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setNotiId(docRef.getId());
         notificationDTO.setType(NotificationType.COMMENT);
         notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());

@@ -24,7 +24,6 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/posts")
 public class PostController {
-
     private final PostService postService;
     private final SearchService searchService;
     private final MemberService memberService;
@@ -81,7 +80,7 @@ public class PostController {
         System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
-        
+
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);

@@ -89,9 +89,9 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
 
   mutations: {
     // * 특정 칵테일의 커스텀 칵테일 목록
-    SET_CUSTOM_COCKTAILS: (state, newCustomCocktails: CustomCocktail[]) => {
-      newCustomCocktails.forEach((newCustomCocktail) => {
-        state.customCocktails.push(newCustomCocktail);
+    SET_CUSTOM_COCKTAILS: (state, latestCustomCocktails: CustomCocktail[]) => {
+      latestCustomCocktails.forEach((latestCustomCocktail) => {
+        state.customCocktails.push(latestCustomCocktail);
       });
     },
     SET_CUSTOM_COCKTAIL_PAGE: (state, value) => {
@@ -103,8 +103,11 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     REMOVE_CUSTOM_COCKTAILS: (state) => {
       state.customCocktails = [];
     },
-    SET_CUSTOM_COCKTAIL_DETAIL: (state, newCustomCocktail: CustomCocktail) => {
-      state.customCocktailDetail = newCustomCocktail;
+    SET_CUSTOM_COCKTAIL_DETAIL: (
+      state,
+      latestCustomCocktail: CustomCocktail
+    ) => {
+      state.customCocktailDetail = latestCustomCocktail;
     },
     // * state에 커스텀칵테일 정보 제거
     REMOVE_CUSTOM_COCKTAIL_DETAIL: (state) => {
@@ -127,8 +130,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         },
       })
         .then((res) => {
-          const newCustomCocktails = res.data;
-          commit("SET_CUSTOM_COCKTAILS", newCustomCocktails);
+          const latestCustomCocktails = res.data;
+          commit("SET_CUSTOM_COCKTAILS", latestCustomCocktails);
           const page = getters.getCustomCocktailPage;
           commit("SET_CUSTOM_COCKTAIL_PAGE", page + 1);
         })

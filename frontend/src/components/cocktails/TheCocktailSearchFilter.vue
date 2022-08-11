@@ -2,7 +2,7 @@
   on, off시 트랜지션 효과를 준다.  -->
 <template>
   <teleport to="body">
-    <div class="cocktail-search-filter">
+    <div class="cocktail-search-filter" @click.self="clickXIcon">
       <div class="cocktail-search-filter-container" :class="animation">
         <!-- filter: header -->
         <div class="cocktail-search-filter-header">
@@ -22,6 +22,7 @@
 import TheCocktailSearchFilterForm from "@/components/cocktails/TheCocktailSearchFilterForm.vue";
 import { computed, ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";
+import { onBeforeRouteLeave } from "vue-router";
 const store = useStore();
 
 // 애니메이션 상태
@@ -39,6 +40,19 @@ const clickXIcon = () => {
 const resetFilter = () => {
   store.dispatch("cocktailSearch/resetSearchFilter");
 };
+
+// * 뒤로가기 할 때 모달 내려가게 하기
+const getFilterStatus = computed(
+  () => store.getters["cocktailSearch/getFilterStatus"]
+);
+
+onBeforeRouteLeave((to, from, next) => {
+  if (getFilterStatus.value) {
+    clickXIcon();
+  } else {
+    next();
+  }
+});
 </script>
 
 <style scoped lang="scss">

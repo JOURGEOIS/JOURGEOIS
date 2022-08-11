@@ -1,7 +1,7 @@
 <template>
   <div class="home-view-container">
     <!-- 유저들의 NEW 커스텀 칵테일 -->
-    <the-home-basic-section :data="newCustomCocktailData">
+    <the-home-basic-section :data="latestCustomCocktailData">
       <h1 class="title">
         유저들의 <span class="important">NEW</span> 커스텀 칵테일
       </h1>
@@ -10,13 +10,16 @@
 </template>
 
 <script setup lang="ts">
+import { useStore } from "vuex";
 import TheHomeBasicSection from "@/components/homes/TheHomeBasicSection.vue";
+const store = useStore();
 
-const newCustomCocktailData = {
+const latestCustomCocktailData = {
   description: "유저들이 최근에 등록한 커스텀 칵테일",
   moreButtonText: "전체 보기",
-  callCaroselFunc: "",
-  showMoreView: "",
+  setCarouselFunc: "setLatestCustomCocktails",
+  getCarouselFunc: "getLatestCustomCocktails",
+  showMoreView: "TheLatestCustomCocktailView",
 };
 </script>
 
@@ -31,10 +34,10 @@ const newCustomCocktailData = {
 }
 
 .title {
-  @include font(15px, $fw-medium);
+  @include font(17px, $fw-medium);
 
   .important {
-    @include font(15px, $fw-bold);
+    @include font(17px, $fw-bold);
     color: $danger-color;
   }
 }

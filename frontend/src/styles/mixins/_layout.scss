@@ -46,3 +46,18 @@
     max-width: 1000px;
   }
 }
+
+@mixin scrollbar {
+  ::-webkit-scrollbar{height: 0px;}
+  ::-webkit-scrollbar-track {background:transparent;}
+  ::-webkit-scrollbar-thumb {background:$primary300;  border-radius: 1000px;}
+  ::-webkit-scrollbar-thumb:hover {background: $primary-color;}
+  ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment 
+  {
+      width:16px;height:16px;background:transparent;
+  } 
+
+  @media #{$tablet} {
+    ::-webkit-scrollbar{height: 7px;}
+  }
+}

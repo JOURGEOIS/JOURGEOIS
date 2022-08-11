@@ -13,9 +13,11 @@
     "@types/node": "^18.0.6",
     "axios": "^0.27.2",
     "compressorjs": "^1.1.1",
+    "firebase": "^9.9.2",
     "nuxt": "^2.15.8",
     "vue": "^3.2.37",
     "vue-router": "^4.1.2",
+    "vue3-google-login": "^2.0.11",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

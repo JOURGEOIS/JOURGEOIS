@@ -225,7 +225,7 @@ const routes: any[] = [
   // 신규 커스텀 칵테일 리스트
   {
     path: "/latestCustom",
-    name: "TheLatestCustomCocktailView",
+    name: "TheAllLatestCustomCocktailView",
     component: () => import("@/views/homes/TheLatestCustomCocktailView.vue"),
   },
 ];

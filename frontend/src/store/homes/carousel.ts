@@ -44,11 +44,14 @@ export const carousel: Module<CarouselState, RootState> = {
         state.allLatestCustomCocktails.push(newLatestCustomCocktail);
       });
     },
-    // SET_ALL_LATEST_CUSTOM_COCKTAIL_PAGE: (state, value) => {
-    //   state.allLatestCustomCocktailPage = value,
-    // }
+    SET_ALL_LATEST_CUSTOM_COCKTAIL_PAGE: (state, value) => {
+      state.allLatestCustomCocktailPage = value;
+    },
+    REMOVE_ALL_LATEST_CUSTOM_COCKTAILS: (state) => {
+      state.allLatestCustomCocktails = [];
+      state.allLatestCustomCocktailPage = 0;
+    },
   },
-
   actions: {
     // * 신규 커스텀 칵테일(carousel)
     setLatestCustomCocktails: ({ commit, dispatch }) => {
@@ -65,6 +68,26 @@ export const carousel: Module<CarouselState, RootState> = {
           console.error(err.response);
         });
     },
-    // setAllLatestCustomCocktails: ({commit, })
+    setAllLatestCustomCocktails: ({ commit, dispatch, getters }) => {
+      const page = getters["getAllLatestCustomCocktailPage"];
+      axios({
+        url: api.custom.latestCustomCocktailView(),
+        method: "GET",
+        params: {
+          page,
+        },
+      })
+        .then((res) => {
+          commit("SET_ALL_LATEST_CUSTOM_COCKTAILS", res.data);
+          commit("SET_ALL_LATEST_CUSTOM_COCKTAIL_PAGE", page + 1);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    removeAllLatestCocktails: ({ commit }) => {
+      commit("REMOVE_ALL_LATEST_CUSTOM_COCKTAILS");
+    },
   },
 };

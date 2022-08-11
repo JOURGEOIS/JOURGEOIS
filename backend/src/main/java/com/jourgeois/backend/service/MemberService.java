@@ -513,7 +513,7 @@ public class MemberService {
         return url;
     }
 
-    public boolean followUser(Long from, Long to) throws IllegalArgumentException, Exception{
+    public Follow followUser(Long from, Long to) throws IllegalArgumentException, Exception{
         Follow follow = new Follow();
 
         Member follower = new Member();
@@ -523,9 +523,8 @@ public class MemberService {
 
         follow.setFrom(follower);
         follow.setTo(followee);
-        followRepository.save(follow);
 
-        return true;
+        return followRepository.save(follow);
     }
 
     public List<FollowerDTO> getFollowerAll(Long uid, Long me, Pageable pageable) throws NumberFormatException{
@@ -577,5 +576,9 @@ public class MemberService {
         followRepository.delete(follow);
 
         return true;
+    }
+
+    public Member findUser(Long uid) {
+        return memberRepository.findById(uid).orElse(new Member(-1L));
     }
 }

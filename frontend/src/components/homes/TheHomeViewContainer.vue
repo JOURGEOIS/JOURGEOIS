@@ -19,7 +19,7 @@ const latestCustomCocktailData = {
   moreButtonText: "전체 보기",
   setCarouselFunc: "setLatestCustomCocktails",
   getCarouselFunc: "getLatestCustomCocktails",
-  showMoreView: "TheLatestCustomCocktailView",
+  showMoreView: "TheAllLatestCustomCocktailView",
 };
 </script>
 

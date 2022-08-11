@@ -12,8 +12,6 @@ spring:
     username: root
     password: 1q2w3e4r!@#
 
-
-
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
 
@@ -57,3 +55,4 @@ cloud:
       auto: false
 
 # 정리 한 번 합시다..
+

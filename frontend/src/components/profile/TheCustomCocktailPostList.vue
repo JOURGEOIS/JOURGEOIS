@@ -1,7 +1,7 @@
 <template>
-  <div>
-
-  </div>
+  <h4>
+    커스텀칵테일
+  </h4>
 </template>
 
 <script setup lang="ts">

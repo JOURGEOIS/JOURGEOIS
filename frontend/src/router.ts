@@ -69,7 +69,7 @@ const routes: any[] = [
     component: () => import("@/views/TheMyProfileView.vue"),
   },
 
-  // 타 유저 프로필로 이동
+  // 유저 프로필로 이동
   {
     path: "/user/profile/:userId",
     name: "TheUserProfileView",

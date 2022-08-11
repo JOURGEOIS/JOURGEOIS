@@ -43,6 +43,8 @@ import { onBeforeRouteLeave, useRouter } from "vue-router";
 const router = useRouter();
 const store = useStore();
 const navIconStatus = computed(() => store.getters["navbar/getNavIconStatus"]);
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+
 
 const setNavIconStatus = (index: number) => {
   store.dispatch("navbar/setNavIconStatus", index);
@@ -77,9 +79,9 @@ const clickSearch = () => {
 // 프로필 버튼 클릭
 const clickProfile = () => {
   setNavIconStatus(4);
-  router.push({ name: "TheMyProfileView" });
+  router.push({ name: "TheUserProfileView", params: { userId : userId.value } });
+  console.log(userId.value)
 };
-
 const createFeedModalStatus = computed(
   () => store.getters["createFeed/getCreateFeedModalStatus"]
 );

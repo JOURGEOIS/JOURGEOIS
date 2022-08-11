@@ -41,6 +41,13 @@ public class S3Util {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
 
+
+    private static final String s3url = "https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/";
+
+    public static String s3urlFormatter(String withoutDomain) {
+        return S3Util.s3url + withoutDomain;
+    }
+
     public String upload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
         File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));

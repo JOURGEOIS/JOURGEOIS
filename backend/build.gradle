@@ -33,6 +33,9 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation'com.google.code.gson:gson:2.8.7'
+
+    // firebase
+    implementation 'com.google.firebase:firebase-admin:9.0.0'
 }
 
 

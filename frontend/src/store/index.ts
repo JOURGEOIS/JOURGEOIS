@@ -9,31 +9,38 @@ import { signup, SignupState } from "../store/accounts/signup";
 import { socialLogin, SocialLoginState } from "../store/accounts/socialLogin";
 import { password, PasswordState } from "../store/accounts/password";
 import { follow, FollowState } from "../store/accounts/follow";
+
+// 개인 정보
 import {
   personalInfo,
   PersonalInfoState,
 } from "../store/accounts/personalInfo";
 
+// 칵테일 정보
 import {
   cocktailDesc,
   CocktailDescState,
 } from "../store/cocktails/cocktailDesc";
 
+// 검색
 import {
   cocktailSearch,
   CocktailSearchState,
 } from "../store/cocktails/cocktailSearch";
 
+// 검색 결과
 import {
   searchResult,
   SearchResultState,
 } from "../store/cocktails/searchResult";
 
+// 칵테일 후기
 import {
   cocktailReview,
   CocktailReviewState,
 } from "../store/cocktails/cocktailReview";
 
+// 커스텀 칵테일
 import {
   customCocktail,
   CustomCocktailState,
@@ -55,6 +62,8 @@ import { comment, Comment } from "../store/basics/comment";
 
 // profile
 import { settings, SettingsState } from "../store/profile/settings";
+//contest
+import { contest, ContestState } from "../store/feeds/contest";
 
 // 모듈의 state를 공유한다.
 export interface RootState {
@@ -80,6 +89,7 @@ export interface RootState {
   comment: Comment;
   newsFeed: NewsFeedState;
   settings: SettingsState;
+  contest: ContestState;
 }
 
 // store를 생성한다.
@@ -107,5 +117,6 @@ export default createStore({
     comment,
     newsFeed,
     settings,
+    contest,
   },
 });

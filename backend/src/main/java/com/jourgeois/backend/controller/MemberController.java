@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
+import com.jourgeois.backend.domain.member.Follow;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
 import com.jourgeois.backend.service.MemberService;
+import com.jourgeois.backend.service.NotificationService;
 import com.jourgeois.backend.socialLogin.SocialLoginConfigUtils;
 import com.jourgeois.backend.socialLogin.GoogleLoginDTO;
 import com.jourgeois.backend.socialLogin.GoogleLoginRequest;
@@ -39,12 +41,14 @@ import java.util.NoSuchElementException;
 public class MemberController {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final MemberService memberService;
+    private final NotificationService notificationService;
     private final S3Util s3Uploader;
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    MemberController(MemberService memberService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, SocialLoginConfigUtils configUtils) {
+    MemberController(MemberService memberService, NotificationService notificationService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, SocialLoginConfigUtils configUtils) {
         this.memberService = memberService;
+        this.notificationService = notificationService;
         this.s3Uploader = s3Uploader;
         this.jwtTokenProvider = jwtTokenProvider;
         this.configUtils = configUtils;
@@ -202,7 +206,7 @@ public class MemberController {
             URI redirectUri = new URI(authUrl);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -215,7 +219,7 @@ public class MemberController {
 
         System.out.println("Kakao Code : " + code);
         try {
-            String accessToken = memberService.getKakaoAccessToken(code, "kakao");
+            String accessToken = memberService.getSocialAccessToken(code, "kakao");
             Map<String, Object> kakaoUserInfo = memberService.getSocialUserInfo(accessToken, "kakao");
             UserDetails userDetails = memberService.loginSocialUser(kakaoUserInfo, "kakao");
             Map<String, Object> data = new HashMap<>();
@@ -250,7 +254,7 @@ public class MemberController {
 
         System.out.println("Naver Code : " + code);
         try {
-            String accessToken = memberService.getKakaoAccessToken(code, "naver");
+            String accessToken = memberService.getSocialAccessToken(code, "naver");
             Map<String, Object> naverUserInfo = memberService.getSocialUserInfo(accessToken, "naver");
             System.out.println(naverUserInfo.get("email"));
             UserDetails userDetails = memberService.loginSocialUser(naverUserInfo, "naver");
@@ -386,7 +390,8 @@ public class MemberController {
                 return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
             }
 
-            data.put("success", memberService.followUser(from, to));
+            Follow follow = memberService.followUser(from, to);
+            data.put("success", notificationService.followNotification(follow.getTo(), follow.getFrom()));
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch(JpaObjectRetrievalFailureException e) {
             data.put("success", false);

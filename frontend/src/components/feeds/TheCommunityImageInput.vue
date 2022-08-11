@@ -43,7 +43,11 @@ const changeCommunityImage = (event: Event) => {
   // 1. 파일을 업로드 하지 않고 취소 버튼을 누르는 경우
   // 2. 이미지 확장자가 아닌 경우
   // 바로 return 한다.
-  if (!file || !checkImageExtension(file.name)) {
+  if (!file) {
+    return;
+  }
+
+  if (!checkImageExtension(file.name)) {
     store.dispatch(
       "modal/changeErrorModalMessage",
       "올바른 이미지 파일을 업로드 하세요."

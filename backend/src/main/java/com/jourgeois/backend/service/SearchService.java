@@ -112,19 +112,21 @@ public class SearchService {
 
     public int filterCount(SearchFilterDTO searchFilterDto){
         String type = searchFilterDto.getType()==1 ? "Alcoholic" : "Non alcoholic";
+        int high = searchFilterDto.getAbv()[1]==30 ? 100:searchFilterDto.getAbv()[1];
         if(searchFilterDto.getMaterials().size()==0){
-            return cocktailRepository.countByTypeAndAlcoholBetween(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1]);
+            return cocktailRepository.countByTypeAndAlcoholBetween(type, searchFilterDto.getAbv()[0], high);
         }else {
-            return cocktailRepository.findByFilter(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
+            return cocktailRepository.findByFilter(type, searchFilterDto.getAbv()[0], high,
                     searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size());
         }
     }
 
     public List<SearchCocktailDTO> filterList(SearchFilterDTO searchFilterDto){
         String type = searchFilterDto.getType()==1 ?  "Alcoholic" : "Non alcoholic";
+        int high = searchFilterDto.getAbv()[1]==30 ? 100:searchFilterDto.getAbv()[1];
         List<SearchCocktailDTO> list = new ArrayList<>();
         if(searchFilterDto.getMaterials().size()==0){
-            cocktailRepository.findByTypeAndAlcoholBetween(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1]
+            cocktailRepository.findByTypeAndAlcoholBetween(type, searchFilterDto.getAbv()[0], high
                     ,searchFilterDto.getPage()*10, 10)
                     .forEach(data ->
                             list.add(SearchCocktailDTO.builder()
@@ -134,7 +136,7 @@ public class SearchService {
                                     .alcohol(data.getAlcohol())
                                     .baseLiquor(data.getBaseLiquor()).build()));
         }else{
-            cocktailRepository.findByFilterInfo(type, searchFilterDto.getAbv()[0], searchFilterDto.getAbv()[1],
+            cocktailRepository.findByFilterInfo(type, searchFilterDto.getAbv()[0], high,
                     searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size(),searchFilterDto.getPage()*10).forEach(data ->
                     list.add(SearchCocktailDTO.builder()
                             .id(data.getId())

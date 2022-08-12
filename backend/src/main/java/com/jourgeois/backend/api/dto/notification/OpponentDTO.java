@@ -1,11 +1,11 @@
-package com.jourgeois.backend.api.dto.chat;
+package com.jourgeois.backend.api.dto.notification;
 
 import lombok.Builder;
 import lombok.ToString;
 
 @Builder
 @ToString
-public class ChatOpponentDTO {
+public class OpponentDTO {
     Long uid;
     String img;
     String nickname;

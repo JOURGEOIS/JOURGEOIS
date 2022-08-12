@@ -155,11 +155,11 @@ onBeforeUnmount(() => {
     margin-top: 8px;
 
     @media #{$tablet} {
-      width: 60%;
+      width: 80%;
     }
 
     @media #{$pc} {
-      width: 50%;
+      width: 60%;
     }
   }
 }

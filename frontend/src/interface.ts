@@ -158,7 +158,7 @@ export interface userCommunityPostData {
   postId: number
   iLike: number
   profileImg: string
-  postImg: null
+  postImg: string
   likes: number
 }
 
@@ -168,10 +168,12 @@ export interface userCustomPostData {
   baseCocktail: number | null
   nickname: string
   description: string
+  ingredients: string
   postId: number
   iLike: number
   profileImg: string
-  postImg: null
+  title: string
+  postImg: string
   likes: number
 }
 

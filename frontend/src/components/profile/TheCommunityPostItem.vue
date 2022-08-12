@@ -64,6 +64,7 @@ const clickPost = () => {
 
 <style scoped lang="scss">
 .list-item-custom-cocktail {
+  height: 181px;
   width: 100%;
   padding: 20px;
   border: 1px solid $white150;
@@ -119,7 +120,8 @@ const clickPost = () => {
     @include flex;
     gap: 10px;
     .item-img-part {
-      height: 100%;
+      height: 74.8px;
+      width: 74.8px;
       aspect-ratio: 1/1;
       border-radius: 5px;
       background : {
@@ -130,6 +132,7 @@ const clickPost = () => {
     }
     .item-text-part {
       @include text-overflow-ellipsis;
+      @include flex-xy(flex-start, center);
 
       .cocktail-description {
         @include font-size-sub(13px);

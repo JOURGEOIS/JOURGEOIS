@@ -3,6 +3,7 @@ package com.jourgeois.backend.repository;
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.api.dto.member.MemberVO;
 import com.jourgeois.backend.api.dto.post.CocktailAwardsVO;
+import com.jourgeois.backend.api.dto.post.PostMetaDTO;
 import com.jourgeois.backend.api.dto.post.NewsFeedVO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
@@ -183,4 +184,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on p.p_id = c.p_id\n" +
             "where p.p_id=:postId", nativeQuery = true)
     Optional<CocktailAwardsVO> getCocktailAwardsPostInfo(Long memberId, Long postId);
+
+    @Query(value = "select c_id is Not Null AS isSuperCustom, " +
+            "custom_cocktail.p_id as postId, " +
+            "custom_cocktail_to_cocktail.c_id AS baseCocktailId " +
+            "from custom_cocktail " +
+            "left join custom_cocktail_to_cocktail " +
+            "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id " +
+            "where custom_cocktail.p_id = :postId", nativeQuery = true)
+    PostMetaDTO getPostMetaDate(@Param("postId") Long postId);
 }

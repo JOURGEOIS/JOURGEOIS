@@ -1,14 +1,9 @@
 package com.jourgeois.backend.api.dto.chat;
 
-import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.FieldValue;
-import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.api.dto.notification.OpponentDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -18,7 +13,7 @@ public class ChatRoomDTO {
     private String chatRoomId;
     
     // 상대방
-    private ChatOpponentDTO opponent;
+    private OpponentDTO opponent;
 
     // 메세지 정보
     private ChatMessageDTO lastMessage;

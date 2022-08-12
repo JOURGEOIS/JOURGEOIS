@@ -1,6 +1,7 @@
 package com.jourgeois.backend.service;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.notification.NotificationDTO;
@@ -12,6 +13,7 @@ import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -35,12 +37,10 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
-//        notificationDTO.setNotiId(docRef.getId());
+        notificationDTO.setNotificationId(docRef.getId());
         notificationDTO.setType(NotificationType.FOLLOW);
-        notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());
-        notificationDTO.setImg(S3Util.s3urlFormatter(from.getProfileImg()));
-        notificationDTO.setTimestamp(FieldValue.serverTimestamp());
+        notificationDTO.setTimestamp(Timestamp.now());
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
         System.out.println("Create Follow Notification - " + result.get().getUpdateTime());
@@ -54,13 +54,10 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
-//        notificationDTO.setNotiId(docRef.getId());
+        notificationDTO.setNotificationId(docRef.getId());
         notificationDTO.setType(NotificationType.LIKE);
-        notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());
-        notificationDTO.setImg(S3Util.s3urlFormatter(from.getProfileImg()));
-        notificationDTO.setPostId(post.getId());
-        notificationDTO.setTimestamp(FieldValue.serverTimestamp());
+        notificationDTO.setTimestamp(Timestamp.now());
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
         System.out.println("Create Like Notification - " + result.get().getUpdateTime());
@@ -74,13 +71,10 @@ public class NotificationService {
         DocumentReference docRef = db.collection(ROOT_COLLECTION_NAME).document(String.valueOf(to.getUid())).collection(NOTIFICATION_COLLECTION_NAME).document();
 
         NotificationDTO notificationDTO = new NotificationDTO();
-//        notificationDTO.setNotiId(docRef.getId());
+        notificationDTO.setNotificationId(docRef.getId());
         notificationDTO.setType(NotificationType.COMMENT);
-        notificationDTO.setFrom(from.getNickname());
         notificationDTO.setUid(from.getUid());
-        notificationDTO.setImg(S3Util.s3urlFormatter(from.getProfileImg()));
-        notificationDTO.setPostId(post.getId());
-        notificationDTO.setTimestamp(FieldValue.serverTimestamp());
+        notificationDTO.setTimestamp(Timestamp.now());
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
         System.out.println("Create Comment Notification - " + result.get().getUpdateTime());

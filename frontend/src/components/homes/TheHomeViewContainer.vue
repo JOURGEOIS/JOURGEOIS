@@ -1,5 +1,6 @@
 <template>
   <div class="home-view-container">
+    <the-video-section><h1 class="title">영상 추천</h1></the-video-section>
     <the-hot-keyword-section
       ><h1 class="title">
         실시간 <span class="important">급상승</span>
@@ -24,6 +25,7 @@
 
 <script setup lang="ts">
 import { useStore } from "vuex";
+import TheVideoSection from "@/components/homes/TheVideoSection.vue";
 import TheHomeBasicSection from "@/components/homes/TheHomeBasicSection.vue";
 import TheHotKeywordSection from "@/components/homes/TheHotKeywordSection.vue";
 const store = useStore();

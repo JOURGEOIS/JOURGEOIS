@@ -150,9 +150,7 @@ export const carousel: Module<CarouselState, RootState> = {
 
     // * 전체보기 리스트 클릭
     clickShowMoreItem: ({}, item: CarouselCocktail) => {
-      console.log(item.type);
       const { cocktailId, baseCocktailId, type } = item;
-      console.log(item);
       // [type] 1 슈커칵 / 0 커칵 / -1 기본칵
       switch (item.type) {
         // 슈퍼커스텀칵테일

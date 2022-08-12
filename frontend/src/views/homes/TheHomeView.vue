@@ -139,7 +139,6 @@ onMounted(() => {
 
 // 스크롤 높이 저장
 onBeforeUnmount(() => {
-  console.log(window.scrollY);
   store.dispatch("scroll/setHomeScrollY", window.scrollY);
 });
 </script>

@@ -144,6 +144,7 @@ public class MemberController {
         // HTTP 통신을 위해 RestTemplate 활용
         System.out.println("Google authCde :" + authCode);
 
+
         RestTemplate restTemplate = new RestTemplate();
         GoogleLoginRequest requestParams = GoogleLoginRequest.builder()
                 .clientId(configUtils.getGoogleClientId())

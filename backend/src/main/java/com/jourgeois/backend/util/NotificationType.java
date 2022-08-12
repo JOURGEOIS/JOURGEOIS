@@ -1,6 +1,8 @@
 package com.jourgeois.backend.util;
 
-public enum NotificationType {
+import java.io.Serializable;
+
+public enum NotificationType implements Serializable {
 
     FOLLOW("follow"),
     LIKE("like"),

@@ -3,6 +3,7 @@ package com.jourgeois.backend.controller;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/notification")
@@ -52,6 +54,22 @@ public class NotificationController {
         } catch (InterruptedException e) {
             e.printStackTrace();
             return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/auth/list")
+    public ResponseEntity getNotificationList(HttpServletRequest request, @RequestParam(value="page") int page){
+        try {
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            return new ResponseEntity(notificationService.getNotificationList(uid, page), HttpStatus.OK);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
         }
     }
 }

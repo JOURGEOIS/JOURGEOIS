@@ -3,6 +3,7 @@ package com.jourgeois.backend.repository;
 import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.api.dto.member.MemberVO;
 import com.jourgeois.backend.api.dto.post.CocktailAwardsVO;
+import com.jourgeois.backend.api.dto.post.PostMetaDTO;
 import com.jourgeois.backend.api.dto.post.NewsFeedVO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
@@ -27,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(select count(*) from post_bookmark where post_bookmark.p_id = pid) as likeCount,\n" +
             "(select count(*) from post_bookmark where post_bookmark.p_id = pid and post_bookmark.m_id = :me) as isLiked\n" +
             "from member join\n" +
-            "(select * from (select * from post where p_writer in (select to_user_id from follow where from_user_id = :me) or p_writer = :me) as followerFeed left join \n" +
+            "(select * from (select * from post where p_writer in (select to_user_id from follow where from_user_id = :me) or p_writer = :me AND p_dtype != 'cocktail_awards') as followerFeed left join \n" +
             "(select * from (select cc_cocktail_ingredients, cc_cocktail_recipe, cc_cocktail_title, custom_cocktail.p_id as cock_p_id, c_id as base_c_id, c_id is null as isSuperCustomCocktail from custom_cocktail \n" +
             "left join custom_cocktail_to_cocktail on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id) as cocktailFilter left join cocktail on cocktailFilter.base_c_id = cocktail.c_id) as cocktailInfo\n" +
             "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer where member.is_public = true order by createTime desc", nativeQuery = true)
@@ -77,17 +78,21 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "order by p_create_time DESC limit 10", nativeQuery = true)
     List<HomeCocktailItemVO> findTop5CustomCocktailOrderByCreateTime();
 
-    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS postImg, p.description AS description " +
-            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid AND p.d_type = :postType " +
-            "WHERE m.uid = :id")
-    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long id, String postType);
+    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS postImg, p.description AS description, p.id AS postId, " +
+            "(SELECT ccc.cocktailId.id FROM CustomCocktailToCocktail AS ccc WHERE ccc.customCocktailId.id = p.id) as baseCocktail, " +
+            "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id ) as likes, " +
+            "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id and pb.memberId.uid = :id ) as ilike " +
+            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid WHERE p.d_type = :postType " +
+            "AND p.member.uid = :userId")
+    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long userId, Long id, String postType);
+
 
 //    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p1.description AS description " +
 //            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid and p.d_type = :postType WHERE m.uid = :id")
 //    Optional<List<MemberVO>> findCommentByUid(Long uid, String postType);
 
     // 주간 인기 커칵, 슈커칵 5개
-    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCustomCocktailId, cocktail.c_name_kr as base, \n" +
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCocktailId, cocktail.c_name_kr as base, \n" +
             "CASE\n" +
             "   WHEN custom_cocktail_to_cocktail.c_id IS NULL\n" +
             "   THEN 1\n" +
@@ -122,7 +127,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<HomeCocktailItemVO> getWeeklyHotCustomCocktail(Pageable pageable);
 
     // 주간 인기 칵테일 더보기
-    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCustomCocktailId, cocktail.c_name_kr as base, \n" +
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCocktailId, cocktail.c_name_kr as base, \n" +
             "CASE\n" +
             "   WHEN custom_cocktail_to_cocktail.c_id IS NULL\n" +
             "   THEN 1\n" +
@@ -153,7 +158,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join cocktail\n" +
             "on custom_cocktail_to_cocktail.c_id = cocktail.c_id\n" +
             "where p_dtype = 'cocktail' and member.is_public = true\n" +
-            "order by score desc limit 5", nativeQuery = true)
+            "order by score desc limit 10", nativeQuery = true)
     List<HomeCocktailItemVO> getWeeklyHot5CustomCocktail();
 
     @Query(value="select p.p_id as postId, p.p_img as imgLink, c.contest_title as title,\n" +
@@ -183,4 +188,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "on p.p_id = c.p_id\n" +
             "where p.p_id=:postId", nativeQuery = true)
     Optional<CocktailAwardsVO> getCocktailAwardsPostInfo(Long memberId, Long postId);
+
+    @Query(value = "select p_dtype AS type, c_id is Null AS isSuperCustom, " +
+            "custom_cocktail.p_id as postId, " +
+            "custom_cocktail_to_cocktail.c_id AS baseCocktailId " +
+            "from post " +
+            "left join custom_cocktail " +
+            "on post.p_id = custom_cocktail.p_id " +
+            "left join custom_cocktail_to_cocktail " +
+            "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id " +
+            "where post.p_id = :postId", nativeQuery = true)
+    PostMetaDTO getPostMetaData(@Param("postId") Long postId);
 }

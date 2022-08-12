@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/home")
 public class HomeController {
 
     public final HomeService homeService;
@@ -44,7 +46,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "custom/latest5")
+    @GetMapping(value = "/custom/latest5")
     public ResponseEntity latestTop5CustomCocktail() {
         try{
             return new ResponseEntity(homeService.getLatestTop5CustomCocktail(), HttpStatus.OK);
@@ -54,7 +56,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "custom/latest")
+    @GetMapping(value = "/custom/latest")
     public ResponseEntity latestCustomCocktailAll(@PageableDefault(size=10, page = 0) Pageable pageable) {
         try{
             return new ResponseEntity(homeService.getLatestCustomCocktail(pageable), HttpStatus.OK);
@@ -64,7 +66,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "cocktail/hot5")
+    @GetMapping(value = "/cocktail/hot5")
     public ResponseEntity hotTop5Cocktail() {
         try{
             return new ResponseEntity(homeService.getHotTop5Cocktail(), HttpStatus.OK);
@@ -74,7 +76,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "cocktail/hot")
+    @GetMapping(value = "/cocktail/hot")
     public ResponseEntity hotCocktailAll(@PageableDefault(size=10, page = 0) Pageable pageable) {
         try{
             return new ResponseEntity(homeService.getHotCocktail(pageable), HttpStatus.OK);
@@ -84,7 +86,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "custom/weekly5")
+    @GetMapping(value = "/custom/weekly5")
     public ResponseEntity weeklyHot5CustomCocktail() {
         try{
             return new ResponseEntity(homeService.getWeeklyHot5CustomCocktail(), HttpStatus.OK);
@@ -94,7 +96,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "custom/weekly")
+    @GetMapping(value = "/custom/weekly")
     public ResponseEntity weeklyHotCustomCocktail(@PageableDefault(size=10, page = 0) Pageable pageable) {
         try{
             return new ResponseEntity(homeService.getWeeklyHotCustomCocktail(pageable), HttpStatus.OK);
@@ -104,7 +106,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "clip")
+    @GetMapping(value = "/clip")
     public ResponseEntity getRandomClip() {
         try{
             Map<String, String> result = new HashMap<>();
@@ -116,7 +118,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "tag5")
+    @GetMapping(value = "/tag5")
     public ResponseEntity Tag5Cocktail(@RequestParam("tag") String tagType) {
         try{
             TagType tag = TagType.valueOf(tagType);
@@ -130,7 +132,7 @@ public class HomeController {
         }
     }
 
-    @GetMapping(value = "tag")
+    @GetMapping(value = "/tag")
     public ResponseEntity TagCocktail(@RequestParam("tag") String tagType, @PageableDefault(size=10, page = 0) Pageable pageable) {
         try{
             TagType tag = TagType.valueOf(tagType);

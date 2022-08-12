@@ -6,7 +6,6 @@
       class="the-cocktail-awards-now-item"
       v-for="(item, index) in cocktailAwardsNowList"
       :key="item.postId"
-      :cocktail-awards-now-item="item"
     >
       <div class="the-cocktail-awards-now-rank" v-if="index <= 4">
         {{ `${index + 1}등` }}

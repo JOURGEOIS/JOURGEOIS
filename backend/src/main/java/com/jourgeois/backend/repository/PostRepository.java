@@ -78,10 +78,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "order by p_create_time DESC limit 10", nativeQuery = true)
     List<HomeCocktailItemVO> findTop5CustomCocktailOrderByCreateTime();
 
-    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS postImg, p.description AS description " +
-            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid AND p.d_type = :postType " +
-            "WHERE m.uid = :id")
-    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long id, String postType);
+    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS postImg, p.description AS description, p.id AS postId, " +
+            "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id ) as likes, " +
+            "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id and pb.memberId.uid = :id ) as ilike " +
+            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid WHERE p.d_type = :postType " +
+            "AND p.member.uid = :userId")
+    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long userId, Long id, String postType);
+
 
 //    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p1.description AS description " +
 //            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid and p.d_type = :postType WHERE m.uid = :id")

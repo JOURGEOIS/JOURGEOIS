@@ -54,16 +54,22 @@ public class MemberProfilePageService {
             return resArr;
         }
 
-        postRepository.findCocktailOrPostInProfilePageByUid(uid, postType).orElseThrow().forEach(data -> {
+        System.out.println("123123213113");
+
+        postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType).orElseThrow().forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", S3Util.s3urlFormatter(data.getProfileImg()));
             res.put("createTime", data.getCreateTime().toString());
             res.put("postImg", S3Util.s3urlFormatter(data.getPostImg()));
             res.put("description", data.getDescription());
+            res.put("likes", data.getLikes().toString());
+            res.put("iLike", data.getIlike().toString());
 
             resArr.add(res);
         });
+
+        System.out.println("12311");
 
         return resArr;
     }

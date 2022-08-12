@@ -158,7 +158,7 @@ export interface userCommunityPostData {
   postId: number
   iLike: number
   profileImg: string
-  postImg: null
+  postImg: string
   likes: number
 }
 
@@ -171,7 +171,7 @@ export interface userCustomPostData {
   postId: number
   iLike: number
   profileImg: string
-  postImg: null
+  postImg: string
   likes: number
 }
 

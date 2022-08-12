@@ -89,6 +89,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<MemberVO> findCocktailOrPostInProfilePageByUid(Long userId, Long id, String postType, Pageable pageable);
 
 
+
 //    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p1.description AS description " +
 //            "FROM Member AS m JOIN Post p ON p.member.uid = m.uid and p.d_type = :postType WHERE m.uid = :id")
 //    Optional<List<MemberVO>> findCommentByUid(Long uid, String postType);

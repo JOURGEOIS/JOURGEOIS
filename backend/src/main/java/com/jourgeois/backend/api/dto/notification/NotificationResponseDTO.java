@@ -14,5 +14,4 @@ public class NotificationResponseDTO {
     private NotificationDTO notification;
     private OpponentDTO opponent;
     private PostMetaDTO postMetaInfo;
-    private Long lastSize;
 }

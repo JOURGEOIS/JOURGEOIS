@@ -185,7 +185,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.p_id=:postId", nativeQuery = true)
     Optional<CocktailAwardsVO> getCocktailAwardsPostInfo(Long memberId, Long postId);
 
-    @Query(value = "select p_dtype AS type, c_id is Not Null AS isSuperCustom, " +
+    @Query(value = "select p_dtype AS type, c_id is Null AS isSuperCustom, " +
             "custom_cocktail.p_id as postId, " +
             "custom_cocktail_to_cocktail.c_id AS baseCocktailId " +
             "from post " +

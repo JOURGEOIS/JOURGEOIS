@@ -8,18 +8,22 @@ import { CarouselCocktail, HotKeywords } from "../../interface";
 export interface CarouselState {
   // * 급상승 검색어
   hotKeywords: HotKeywords;
-  // * 신규 커스텀 칵테일(carousel)
+  // * 신규 커스텀 칵테일
   latestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktailPage: number;
-  // * 주류주아 HOT 칵테일(carousel)
+  // * 주류주아 HOT 칵테일
   hotCocktails: CarouselCocktail[];
   allHotCocktails: CarouselCocktail[];
   allHotCocktailPage: number;
-  // * 유저들의 이번 주 커스텀 칵테일(carousel)
+  // * 유저들의 이번 주 커스텀 칵테일
   weeklyHotCocktails: CarouselCocktail[];
   allWeeklyHotCocktails: CarouselCocktail[];
   allWeeklyHotCocktailPage: number;
+  // * 좋아요 기반 추천 칵테일
+  likeRecommendedCocktails: CarouselCocktail[];
+  allLikeRecommendedCocktails: CarouselCocktail[];
+  allLikeRecommendedCocktailPage: number;
 }
 
 export const carousel: Module<CarouselState, RootState> = {
@@ -33,36 +37,46 @@ export const carousel: Module<CarouselState, RootState> = {
       keywords: [{ keyword: "", hits: 0 }],
       delta: [0],
     },
-    // * 신규 커스텀 칵테일(carousel)
+    // * 신규 커스텀 칵테일
     latestCustomCocktails: [],
     allLatestCustomCocktails: [],
     allLatestCustomCocktailPage: 0,
-    // * 주류주아 HOT 칵테일(carousel)
+    // * 주류주아 HOT 칵테일
     hotCocktails: [],
     allHotCocktails: [],
     allHotCocktailPage: 0,
-    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    // * 유저들의 이번 주 커스텀 칵테일
     weeklyHotCocktails: [],
     allWeeklyHotCocktails: [],
     allWeeklyHotCocktailPage: 0,
+    // * 좋아요 기반 추천 칵테일
+    likeRecommendedCocktails: [],
+    allLikeRecommendedCocktails: [],
+    allLikeRecommendedCocktailPage: 0,
   },
 
   getters: {
     // * 급상승 검색어
     getHotKeywords: (state) => state.hotKeywords,
-    // * 신규 커스텀 칵테일(carousel)
+    // * 신규 커스텀 칵테일
     getLatestCustomCocktails: (state) => state.latestCustomCocktails,
     getAllLatestCustomCocktails: (state) => state.allLatestCustomCocktails,
     getAllLatestCustomCocktailPage: (state) =>
       state.allLatestCustomCocktailPage,
-    // * 주류주아 HOT 칵테일(carousel)
+    // * 주류주아 HOT 칵테일
     getHotCocktails: (state) => state.hotCocktails,
     getAllHotCocktails: (state) => state.allHotCocktails,
     getAllHotCocktailPage: (state) => state.allHotCocktailPage,
-    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    // * 유저들의 이번 주 커스텀 칵테일
     getWeeklyHotCocktails: (state) => state.weeklyHotCocktails,
     getAllWeeklyHotCocktails: (state) => state.allWeeklyHotCocktails,
     getAllWeeklyHotCocktailPage: (state) => state.allWeeklyHotCocktailPage,
+    // * 좋아요 기반 추천 칵테일
+    getLikeRecommendedCocktails: (state) => state.likeRecommendedCocktails,
+    getAllLikeRecommendedCocktails: (state) =>
+      state.allLikeRecommendedCocktails,
+    getAllLikeRecommendedCocktailPage: (state) =>
+      state.allLikeRecommendedCocktailPage,
   },
 
   mutations: {
@@ -70,7 +84,7 @@ export const carousel: Module<CarouselState, RootState> = {
     SET_HOT_KEYWORDS: (state, hotKeywords) => {
       state.hotKeywords = hotKeywords;
     },
-    // * 신규 커스텀 칵테일(carousel)
+    // * 신규 커스텀 칵테일
     SET_LATEST_CUSTOM_COCKTAILS: (
       state,
       latestCustomCocktails: CarouselCocktail[]
@@ -92,7 +106,7 @@ export const carousel: Module<CarouselState, RootState> = {
       state.allLatestCustomCocktails = [];
       state.allLatestCustomCocktailPage = 0;
     },
-    // * 주류주아 HOT 칵테일(carousel)
+    // * 주류주아 HOT 칵테일
     SET_HOT_COCKTAILS: (state, hotCocktails: CarouselCocktail[]) => {
       state.hotCocktails = hotCocktails;
     },
@@ -108,7 +122,7 @@ export const carousel: Module<CarouselState, RootState> = {
       state.allHotCocktails = [];
       state.allHotCocktailPage = 0;
     },
-    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    // * 유저들의 이번 주 커스텀 칵테일
     SET_WEEKLY_HOT_COCKTAILS: (
       state,
       weeklyHotCocktails: CarouselCocktail[]
@@ -129,6 +143,28 @@ export const carousel: Module<CarouselState, RootState> = {
     REMOVE_ALL_WEEKLY_HOT_COCKTAILS: (state) => {
       state.allWeeklyHotCocktails = [];
       state.allWeeklyHotCocktailPage = 0;
+    },
+    // * 좋아요 기반 추천 칵테일
+    SET_LIKE_RECOMMENDED_COCKTAILS: (
+      state,
+      likeRecommendedCocktails: CarouselCocktail[]
+    ) => {
+      state.likeRecommendedCocktails = likeRecommendedCocktails;
+    },
+    SET_ALL_LIKE_RECOMMENDED_COCKTAILS: (
+      state,
+      newLikeRecommendedCocktails: CarouselCocktail[]
+    ) => {
+      newLikeRecommendedCocktails.forEach((newLikeRecommendedCocktail) => {
+        state.allLikeRecommendedCocktails.push(newLikeRecommendedCocktail);
+      });
+    },
+    SET_ALL_LIKE_RECOMMENDED_COCKTAIL_PAGE: (state, value) => {
+      state.allLikeRecommendedCocktailPage = value;
+    },
+    REMOVE_ALL_LIKE_RECOMMENDED_COCKTAILS: (state) => {
+      state.allLikeRecommendedCocktails = [];
+      state.allLikeRecommendedCocktailPage = 0;
     },
   },
   actions: {
@@ -180,7 +216,7 @@ export const carousel: Module<CarouselState, RootState> = {
       }
     },
 
-    // * 신규 커스텀 칵테일(carousel)
+    // * 신규 커스텀 칵테일
     setLatestCustomCocktails: ({ commit, dispatch }) => {
       axios({
         url: api.homes.latestCustomCocktail(),
@@ -216,7 +252,7 @@ export const carousel: Module<CarouselState, RootState> = {
       commit("REMOVE_ALL_LATEST_CUSTOM_COCKTAILS");
     },
 
-    // * 주류주아 HOT 칵테일(carousel)
+    // * 주류주아 HOT 칵테일
     setHotCocktails: ({ commit, dispatch }) => {
       axios({
         url: api.homes.hotCocktail(),
@@ -249,11 +285,11 @@ export const carousel: Module<CarouselState, RootState> = {
           console.error(err.response);
         });
     },
-    removeHotCocktails: ({ commit }) => {
+    removeAllHotCocktails: ({ commit }) => {
       commit("REMOVE_ALL_HOT_COCKTAILS");
     },
 
-    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    // * 유저들의 이번 주 커스텀 칵테일
     setWeeklyHotCocktails: ({ commit, dispatch }) => {
       axios({
         url: api.homes.weeklyHotCocktail(),
@@ -287,6 +323,42 @@ export const carousel: Module<CarouselState, RootState> = {
     },
     removeAllWeeklyHotCocktails: ({ commit }) => {
       commit("REMOVE_ALL_WEEKLY_HOT_COCKTAILS");
+    },
+    // * 좋아요 기반 추천 칵테일
+    setLikeRecommendedCocktails: ({ commit, dispatch }) => {
+      axios({
+        url: api.homes.likeRecommendedCocktail(),
+        method: "GET",
+      })
+        .then((res) => {
+          console.log(res.data);
+          commit("SET_LIKE_RECOMMENDED_COCKTAILS", res.data);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    setAllLikeRecommendedCocktails: ({ commit, dispatch, getters }) => {
+      const page = getters["getAllLikeRecommendedCocktailPage"];
+      axios({
+        url: api.homes.likeRecommendedCocktailView(),
+        method: "GET",
+        params: {
+          page,
+        },
+      })
+        .then((res) => {
+          commit("SET_ALL_LIKE_RECOMMENDED_COCKTAILS", res.data);
+          commit("SET_ALL_LIKE_RECOMMENDED_COCKTAIL_PAGE", page + 1);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    removeLikeRecommendedCocktails: ({ commit }) => {
+      commit("REMOVE_ALL_LIKE_RECOMMENDED_COCKTAILS");
     },
   },
 };

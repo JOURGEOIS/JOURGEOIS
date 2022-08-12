@@ -10,12 +10,12 @@ import store from "../../store";
     <div class="the-notice-item-content" @click="readNotice">
       <p>
         <!-- 알림 설명 -->
-        <span class="the-notice-item-name">{{ noticeData.from + " "}}</span>
+        <span class="the-notice-item-name">{{ noticeData.opponent.nickname + " "}}</span>
         <span> {{ notice }} </span>
       </p>
       <!-- 알림 시간, 알림 읽음 여부 체크 -->
       <p class="the-notice-item-time">
-        <span>{{ time }} </span> <div class="the-notice-item-unread" v-if="!noticeData.isRead"></div>
+        <span>{{ time }} </span> <div class="the-notice-item-unread" v-if="!noticeData.notification.isRead"></div>
       </p>
     </div>
   </div>
@@ -30,17 +30,17 @@ import { useStore } from "vuex";
 const store = useStore();
 
 const props = defineProps<{
-  noticeData: Notice;
+  noticeData: Notice;        
 }>();
 
 // 프로필 이미지 
 const imageData = reactive({
-  image: props.noticeData.img,
+  image: props.noticeData.opponent.img
 });
 
 //  알림 설명
 const notice = computed(() => {
-  switch (props.noticeData.type) {
+  switch (props.noticeData.notification.type) {
     case "LIKE": {
       return "님이 당신의 게시글에 좋아요를 눌렀습니다.";
     }
@@ -53,27 +53,32 @@ const notice = computed(() => {
   }
 });
 
+const timestamp = computed(()=> {
+  return props?.noticeData?.notification?.timestamp
+  });
+
 // 알림 시간
 const time = computed(() => {
-  const t = props.noticeData.timestamp.toDate();
-  return calcDateDelta2(t)
+  // return calcDateDelta2(timestamp.value.toDate())  
 });
 
 
 // 알림 클릭시 (알림 읽음)
 const readNotice = () => {
   const data = {
-    notiId: props.noticeData.key,
-    type: props.noticeData.type,
-    postId: props.noticeData.postId,
-    uid: props.noticeData.uid,
+    notiId: props.noticeData.notification.notificationId,
+    type: props.noticeData.notification.type,
+    uid: props.noticeData.opponent.uid,
+    postId: props?.noticeData?.postMetaInfo?.postId || 0, 
+    postType: props?.noticeData?.postMetaInfo?.type || 0,
+    baseCocktailId: props?.noticeData?.postMetaInfo?.baseCocktailId || 0,
   }
   store.dispatch("notice/readNotice",data)
 };
 
 // 프로필 클릭시, 해당 유저의 프로필로 이동한다. 
 const clickProfileImage = () => {
-  const uid = props.noticeData.uid;
+  const uid = props.noticeData.notification.uid;
   alert("프로필로 이동");
 };
 </script>

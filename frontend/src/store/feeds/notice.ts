@@ -5,52 +5,63 @@ import axios from "axios";
 import api from "../../api/api";
 import router from "../../router";
 import { Notice } from "../../interface";
-import { where, onSnapshot } from "firebase/firestore";
-import {
-  collection,
-  query,
-  orderBy,
-  startAfter,
-  limit,
-  getDocs,
-} from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
 export interface NoticeState {
-  startAfter: number;
   noticeStatus: boolean;
   noticeList: Notice[];
+  noticeListPage: number;
 }
 
 export const notice: Module<NoticeState, RootState> = {
   namespaced: true,
 
   state: {
-    startAfter: 0,
+    // 알림 읽은 상태 여부
     noticeStatus: false,
+
+    // 알림 리스트
     noticeList: [],
+
+    // 알림 리스트 페이징
+    noticeListPage: 0,
   },
 
   getters: {
-    getStartAfter: (state) => state.startAfter,
+    // 알림 읽은 상태 여부
     getNoticeStatus: (state) => state.noticeStatus,
+
+    // 알림 리스트
     getNoticeList: (state) => state.noticeList,
+
+    // 알림 리스트 페이징
+    getNoticeListPage: (state) => state.noticeListPage,
   },
 
   mutations: {
-    SET_START_AFTER: (state, value: number) => {
-      state.startAfter = value;
-    },
+    // 알림 상태 변경
     SET_NOTICE_STATUS: (state, value: boolean) => {
       state.noticeStatus = value;
     },
+
+    // 알림 리스트 추가
     ADD_NOTICE_LIST: (state, value: Notice[]) => {
       state.noticeList.push(...value);
     },
+
+    // 알림 리스트 변경
     SET_NOTICE_LIST: (state, value: Notice[]) => {
       state.noticeList = value;
     },
+
+    // 알림 리스트 페이지 변경
+    SET_NOTICE_LIST_PAGE: (state, value: number) => {
+      state.noticeListPage = value;
+    },
+
+    // 알림 모두 읽기
     READ_NOTICE_LIST: (state) => {
-      state.noticeList.forEach((item) => (item.isRead = true));
+      state.noticeList.forEach((item) => (item.notification.isRead = true));
     },
   },
 
@@ -58,7 +69,7 @@ export const notice: Module<NoticeState, RootState> = {
     // 리셋
     resetNoticeList: ({ commit }) => {
       commit("SET_NOTICE_LIST", []);
-      commit("SET_START_AFTER", 0);
+      commit("SET_NOTICE_LIST_PAGE", 0);
     },
 
     // 알림 다 읽은척...
@@ -74,14 +85,15 @@ export const notice: Module<NoticeState, RootState> = {
         orderBy("timestamp", "desc")
       );
       onSnapshot(q, (snapshot) => {
-        // 알림이 있는 경우,
+        // 알림이 없는 경우,
         if (snapshot.empty) {
-          console.log("비어있음ㅋ");
+          console.log("알림 없음ㅋ");
           commit("SET_NOTICE_STATUS", false);
           return;
         }
 
-        // 알림이 없는 경우
+        // 알림이 있는 경우
+        console.log("알림 있음");
         const docs = snapshot.docChanges();
         for (let i = 0; i < docs.length; i++) {
           if (docs[i].type === "added") {
@@ -93,44 +105,44 @@ export const notice: Module<NoticeState, RootState> = {
     },
 
     // 알림 리스트를 가져온다.
-    getNoticeList: async ({ commit, getters, rootGetters }) => {
-      const uid = rootGetters["personalInfo/getUserInfoUserId"];
-      const noticeList: object[] = [];
+    getNoticeList: ({ rootGetters, commit, getters, dispatch }) => {
+      const page = getters["getNoticeListPage"];
+      axios({
+        url: api.notice.getNoticeList(),
+        method: "get",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          page,
+        },
+      })
+        .then((response) => {
+          if (!response.data.list) {
+            return;
+          }
 
-      // 15일 제한
-      const halfDay = new Date(new Date().setDate(new Date().getDate() - 15));
-
-      const next = query(
-        collection(database, `jourgeois/${uid}/notification`),
-        where("timestamp", ">", halfDay),
-        orderBy("timestamp"),
-        startAfter(getters["getStartAfter"]),
-        limit(10)
-      );
-
-      const querySnapshot = await getDocs(next);
-
-      // 라우터 변수를 마지막 시작 지점으로 변경한다.
-      commit(
-        "SET_START_AFTER",
-        querySnapshot.docs[querySnapshot.docs.length - 1]
-      );
-
-      querySnapshot.forEach((doc) => {
-        const key = {
-          key: doc.id,
-        };
-        const data = Object.assign(doc.data(), key);
-        noticeList.push(data);
-      });
-
-      noticeList.reverse();
-      commit("ADD_NOTICE_LIST", noticeList);
+          // 데이터 추가
+          commit("ADD_NOTICE_LIST", response.data.list);
+          commit("SET_NOTICE_LIST_PAGE", page + 10);
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "notice/getNoticeList",
+              params: {},
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
     },
 
     // 알림 읽음 처리 (1개)
     readNotice: ({ rootGetters, dispatch }, data) => {
-      const { notiId, type, postId, uid } = data;
+      const { notiId, type, uid, postId, postType, baseCocktailId } = data;
       axios({
         url: api.notice.readNotice(),
         method: "put",
@@ -146,9 +158,36 @@ export const notice: Module<NoticeState, RootState> = {
           if (type === "FOLLOW") {
             alert("프로필로 이동! 변수명 uid가 uid입니다.");
           }
-
           // 댓글, 좋아요 알림일 경우 해당 글로 이동한다.
           else {
+            if (postType === "post") {
+              // 일반 게시글로 이동
+              router.push({
+                name: "TheCommunityDescView",
+                params: {
+                  feedId: postId,
+                },
+              });
+            } else {
+              if (baseCocktailId) {
+                // 커스텀 칵테일
+                router.push({
+                  name: "TheCustomCocktailDescView",
+                  params: {
+                    cocktailId: baseCocktailId,
+                    feedId: postId,
+                  },
+                });
+              } else {
+                // 슈퍼 커스텀 칵테일
+                router.push({
+                  name: "TheSuperCustomCocktailDescView",
+                  params: {
+                    feedId: postId,
+                  },
+                });
+              }
+            }
           }
         })
         .catch((error) => {

@@ -1,12 +1,15 @@
 <template>
-  <article v-for="post in userCustomPostData" :key="post.postId">
+  <article
+    v-for="(post, index) in userCustomPostData"
+    :key="`custom-cocktail-${index}`"
+  >
     <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
   </article>
 </template>
 
 <script setup lang="ts">
 import TheCustomCocktailPostItem from "@/components/profile/TheCustomCocktailPostItem.vue";
-import { computed, onMounted } from "vue";
+import { computed, onBeforeMount, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -14,13 +17,32 @@ const store = useStore();
 
 const userCustomPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostCustom"]
-)
-onMounted(() => {
-  store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
-  store.dispatch("profileDesc/getCurrentUserPostCustom", route.params.userId);
+);
+
+// 인피니티 스크롤
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    action: "profileDesc/getCurrentUserPostCustomData",
+    data: route.params.userId,
+  };
+  store.dispatch("scroll/handleScroll", data);
+};
+
+// 인피니티 스크롤을 연동, 처음 데이터 가져오기
+onBeforeMount(() => {
+  // store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
+  window.addEventListener("scroll", handleScroll);
+  store.dispatch(
+    "profileDesc/getCurrentUserPostCustomData",
+    route.params.userId
+  );
+});
+
+// unmount될 때, 페이지와 리스트를 리셋한다.
+onUnmounted(() => {
+  store.dispatch("profileDesc/resetCurrentUserPost");
 });
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

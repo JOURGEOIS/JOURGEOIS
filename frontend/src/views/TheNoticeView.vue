@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import TheNoticeList from "@/components/feeds/TheNoticeList.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -39,6 +39,11 @@ const readNoticeAll = () => {
   store.dispatch("notice/readNoticeAll");
   store.dispatch("notice/readNoticeList");
 };
+
+// 리셋
+onUnmounted(() => {
+  store.dispatch("notice/resetNoticeList");
+});
 </script>
 
 <style scoped lang="scss">
@@ -51,7 +56,6 @@ const readNoticeAll = () => {
 
   section {
     @include flex(column);
-    gap: 16px;
     width: 100%;
 
     @media #{$tablet} {

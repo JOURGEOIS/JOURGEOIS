@@ -246,11 +246,11 @@ const routes: any[] = [
   },
 
   // 주류주아 좋아요 기반 추천 칵테일 리스트
-  {
-    path: "/likeRecommended",
-    name: "TheLikeRecommenedCocktailView",
-    component: () => import("@/views/homes/TheLikeRecommenedCocktailView.vue"),
-  },
+  // {
+  //   path: "/likeRecommended",
+  //   name: "TheLikeRecommendedCocktailView",
+  //   component: () => import("@/views/homes/TheLikeRecommendedCocktailView.vue"),
+  // },
 
   // 알림
   {
@@ -295,6 +295,7 @@ router.beforeEach((to: any, from, next) => {
     "TheSuperCustomCocktailUpdateFormView",
     "TheCocktailAwardsFormView",
     "TheCocktailAwardsDescView",
+    "TheNoticeView",
   ];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지

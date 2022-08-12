@@ -2,26 +2,15 @@ import { Module } from 'vuex'
 import { RootState } from '../index'
 import axios from 'axios'
 import api from '../../api/api'
-import router from '../../router'
+import { userProfileData, userPostData, userPostReviewData, userBookmarkData } from '../../interface'
 
-export interface userProfileData {
-  uid: number
-  email: string
-  name: string | null
-  nickname: string
-  profileImg: string
-  profileLink: null
-  introduce: string
-  followerCnt: number
-  followingCnt: number
-  postCnt: number
-  isPublic: number
-}
 
 export interface ProfileDescState {
   currentTab: number;
   currentUserData: userProfileData;
-  
+  currentUserPost: userPostData;
+  currentUserReview: userPostReviewData;
+  currentUserBookmark: userBookmarkData;
 }
 
 export const profileDesc: Module<ProfileDescState, RootState> = {
@@ -42,6 +31,28 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       postCnt: 0,
       isPublic: 0,
     },
+    currentUserPost: {
+      createTime: "",
+      nickname: "",
+      description: "",
+      profileImg: "",
+      postImg: null,
+    },
+    currentUserReview: {
+      img: "",
+      cocktailId: 0,
+      comment: "",
+      tag: "",
+      category: "",
+      nameKR: "",
+    },
+    currentUserBookmark: {
+      img: "",
+      cocktailId: 0,
+      tag: "",
+      category: "",
+      nameKR: "",
+    }
   },
 
   getters: {
@@ -51,6 +62,18 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     getCurrentUserData: (state) => {
       return state.currentUserData;
     },
+    getCurrentUserPostCommunity: (state) => {
+      return state.currentUserPost
+    },
+    getCurrentUserPostCustom: (state) => {
+      return state.currentUserPost
+    },
+    getCurrentUserPostReview: (state) => {
+      return state.currentUserReview
+    },
+    getCurrentUserPostBookmark: (state) => {
+      return state.currentUserBookmark
+    },
   },
 
   mutations: {
@@ -59,6 +82,18 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
     SET_CURRENT_USER_DATA: (state, value: userProfileData) => {
       state.currentUserData = value;
+    },
+    SET_CURRENT_USER_POST_COMMUNITY: (state, value: userPostData) => {
+      state.currentUserPost = value
+    },
+    SET_CURRENT_USER_POST_CUSTOM: (state, value: userPostData) => {
+      state.currentUserPost = value
+    },
+    SET_CURRENT_USER_POST_REVIEW: (state, value: userPostReviewData) => {
+      state.currentUserReview = value
+    },
+    SET_CURRENT_USER_POST_BOOKMARK: (state, value: userBookmarkData) => {
+      state.currentUserBookmark = value
     },
   },
 
@@ -83,6 +118,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       })
         .then((res) => {
           console.log(res.data)
+          console.log(res.data.uid)
           commit("SET_CURRENT_USER_DATA", res.data)
         })
         .catch((err) => {
@@ -92,6 +128,134 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserData",
+              params: {
+                uid
+              }
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        })
+    },
+
+    // 유저가 작성한 일반게시물 리스트 보기
+    getCurrentUserPostCommunity: ({ commit, dispatch, rootGetters }, uid: number) => {
+      axios({
+        url: api.accounts.profileCommunity(),
+        method: "GET",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          uid,
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          commit("SET_CURRENT_USER_POST_COMMUNITY", res.data)
+        })
+        .catch((err) => {
+          console.error(err)
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/getCurrentUserPostCommunity",
+              params: {
+                uid
+              }
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        })
+    },
+
+    // 유저가 작성한 커칵/슈커칵 리스트 보기
+    getCurrentUserPostCustom: ({ commit, dispatch, rootGetters }, uid: number) => {
+      axios({
+        url: api.accounts.profileCustom(),
+        method: "GET",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          uid,
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          commit("SET_CURRENT_USER_POST_CUSTOM", res.data)
+        })
+        .catch((err) => {
+          console.error(err)
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/getCurrentUserPostCustom",
+              params: {
+                uid
+              }
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        })
+    },
+
+    // 유저가 작성한 후기 리스트 보기
+    getCurrentUserPostReview: ({ commit, dispatch, rootGetters }, uid: number) => {
+      axios({
+        url: api.accounts.profileReview(),
+        method: "GET",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          uid,
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          commit("SET_CURRENT_USER_POST_REVIEW", res.data)
+        })
+        .catch((err) => {
+          console.error(err)
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/getCurrentUserPostCustom",
+              params: {
+                uid
+              }
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        })
+    },
+
+    // 유저가 북마크한 칵테일 리스트 보기
+    getCurrentUserPostBookmark: ({ commit, dispatch, rootGetters }, uid: number) => {
+      axios({
+        url: api.accounts.profileBookmark(),
+        method: "GET",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          uid,
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          commit("SET_CURRENT_USER_POST_BOOKMARK", res.data)
+        })
+        .catch((err) => {
+          console.error(err)
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/getCurrentUserPostCustom",
               params: {
                 uid
               }

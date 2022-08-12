@@ -5,6 +5,7 @@ import { RootState } from "../index";
 
 export interface ScrollState {
   debounce: any;
+  homeScrollY: number;
 }
 
 export const scroll: Module<ScrollState, RootState> = {
@@ -12,11 +13,18 @@ export const scroll: Module<ScrollState, RootState> = {
 
   state: {
     debounce: 0,
+    homeScrollY: 0,
   },
 
-  getters: {},
+  getters: {
+    getHomeScrollY: (state) => state.homeScrollY,
+  },
 
-  mutations: {},
+  mutations: {
+    SET_HOME_SCROLL_Y: (state, value: number) => {
+      state.homeScrollY = value;
+    },
+  },
 
   actions: {
     // * 끝까지 내려오면 API 호출하여 아래에 더 추가, total값 최대면 호출X
@@ -41,6 +49,10 @@ export const scroll: Module<ScrollState, RootState> = {
     // * 스크롤을 맨 위로 올리고 싶을 때(부드럽게)
     goToTop: ({ commit }) => {
       window.scroll({ behavior: "smooth", top: 0 });
+    },
+
+    setHomeScrollY: ({ commit }, value: number) => {
+      commit("SET_HOME_SCROLL_Y", value);
     },
   },
 };

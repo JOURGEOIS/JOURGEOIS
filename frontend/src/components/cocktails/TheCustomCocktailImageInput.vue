@@ -103,13 +103,13 @@ label[for="custom-cocktail-image-input"] {
   > div {
     position: relative;
     width: calc(100% + 32px);
-    margin: 10px -16px;
-    padding-bottom: 100%;
-    background-color: $white150;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
     aspect-ratio: 1/1;
+    margin: 0 -16px;
+    background-color: $white150;
+    background : {
+      size: cover;
+      position: center center;
+    }
 
     .custom-cocktail-image-input-desc {
       @include flex-center;

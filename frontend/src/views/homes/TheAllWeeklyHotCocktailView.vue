@@ -1,13 +1,13 @@
 <template>
   <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
     <h1 class="title">
-      유저들의 <span class="important">NEW</span> 칵테일
+      유저들의 <span class="important">이번 주 HOT</span> 칵테일
     </h1></header-basic
   >
   <div class="cocktail-list-view top-view-no-margin">
     <div class="the-item-container">
       <the-list-item-carousel-cocktail
-        v-for="(item, idx) in allLatestCustomCocktails"
+        v-for="(item, idx) in allWeeklyHotCocktails"
         :key="idx"
         :data="item"
         @click="clickCocktail(item)"
@@ -29,8 +29,8 @@ const router = useRouter();
 const store = useStore();
 
 // 전체 칵테일 리스트
-const allLatestCustomCocktails = computed(
-  () => store.getters["carousel/getAllLatestCustomCocktails"]
+const allWeeklyHotCocktails = computed(
+  () => store.getters["carousel/getAllWeeklyHotCocktails"]
 );
 
 // 칵테일 누른 경우 칵테일 상세 페이지로 이동
@@ -41,26 +41,26 @@ const clickCocktail = (item: CarouselCocktail) => {
 const handleScroll = (event: any) => {
   const data = {
     event,
-    action: "carousel/setAllLatestCustomCocktails",
+    action: "carousel/setAllWeeklyHotCocktails",
   };
   store.dispatch("scroll/handleScroll", data);
 };
 
 // 전체 칵테일 추가 함수
-const setAllLatestCustomCocktails = () => {
-  store.dispatch("carousel/setAllLatestCustomCocktails");
+const setAllWeeklyHotCocktails = () => {
+  store.dispatch("carousel/setAllWeeklyHotCocktails");
 };
 
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
-  setAllLatestCustomCocktails();
+  setAllWeeklyHotCocktails();
   setTimeout(() => {
-    setAllLatestCustomCocktails();
+    setAllWeeklyHotCocktails();
   }, 100);
 });
 
 onUnmounted(() => {
-  store.dispatch("carousel/removeAllLatestCustomCocktails");
+  store.dispatch("carousel/removeAllWeeklyHotCocktails");
 });
 </script>
 

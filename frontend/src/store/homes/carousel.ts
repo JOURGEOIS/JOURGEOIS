@@ -3,9 +3,12 @@ import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
 import router from "../../router";
-import { CarouselCocktail } from "../../interface";
+import { CarouselCocktail, HotKeywords } from "../../interface";
 
 export interface CarouselState {
+  // * 급상승 검색어
+  hotKeywords: HotKeywords;
+  // * 신규 커스텀 칵테일(carousel)
   latestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktailPage: number;
@@ -15,12 +18,22 @@ export const carousel: Module<CarouselState, RootState> = {
   namespaced: true,
 
   state: {
+    // * 급상승 검색어
+    hotKeywords: {
+      from: "",
+      to: "",
+      keywords: [{ keyword: "", hits: 0 }],
+      delta: [0],
+    },
+    // * 신규 커스텀 칵테일(carousel)
     latestCustomCocktails: [],
     allLatestCustomCocktails: [],
     allLatestCustomCocktailPage: 0,
   },
 
   getters: {
+    // * 급상승 검색어
+    getHotKeywords: (state) => state.hotKeywords,
     // * 신규 커스텀 칵테일(carousel)
     getLatestCustomCocktails: (state) => state.latestCustomCocktails,
     getAllLatestCustomCocktails: (state) => state.allLatestCustomCocktails,
@@ -29,6 +42,10 @@ export const carousel: Module<CarouselState, RootState> = {
   },
 
   mutations: {
+    // * 급상승 검색어
+    SET_HOT_KEYWORDS: (state, hotKeywords) => {
+      state.hotKeywords = hotKeywords;
+    },
     // * 신규 커스텀 칵테일(carousel)
     SET_LATEST_CUSTOM_COCKTAILS: (
       state,
@@ -53,10 +70,25 @@ export const carousel: Module<CarouselState, RootState> = {
     },
   },
   actions: {
+    // * 급상승 검색어
+    setHotKeywords: ({ commit, dispatch }) => {
+      axios({
+        url: api.lookups.hotKeyword(),
+        method: "GET",
+      })
+        .then((res) => {
+          console.log(res.data);
+          commit("SET_HOT_KEYWORDS", res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+        });
+    },
     // * 신규 커스텀 칵테일(carousel)
     setLatestCustomCocktails: ({ commit, dispatch }) => {
       axios({
-        url: api.custom.latestCustomCocktail(),
+        url: api.homes.latestCustomCocktail(),
         method: "GET",
       })
         .then((res) => {
@@ -71,7 +103,7 @@ export const carousel: Module<CarouselState, RootState> = {
     setAllLatestCustomCocktails: ({ commit, dispatch, getters }) => {
       const page = getters["getAllLatestCustomCocktailPage"];
       axios({
-        url: api.custom.latestCustomCocktailView(),
+        url: api.homes.latestCustomCocktailView(),
         method: "GET",
         params: {
           page,

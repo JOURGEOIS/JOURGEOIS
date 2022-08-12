@@ -7,7 +7,7 @@ const LOOKUP = "lookup/";
 const POST = "posts/";
 const AWARDS = "awards/";
 const PROFILE = "profile/";
-const CUSTOM = "custom/";
+const HOME = "home/";
 const NOTICE = "notification/auth/";
 
 export default {
@@ -77,10 +77,10 @@ export default {
     contestDetail: () => HOST + AWARDS + "/auth/info",
   },
 
-  custom: {
+  homes: {
     // 홈
-    latestCustomCocktail: () => HOST + CUSTOM + "latest5", // 신규 커칵/슈커칵 5개
-    latestCustomCocktailView: () => HOST + CUSTOM + "latest", // 신규 커칵/슈커칵 목록
+    latestCustomCocktail: () => HOST + HOME + "custom/latest5", // 신규 커칵/슈커칵 5개
+    latestCustomCocktailView: () => HOST + HOME + "custom/latest", // 신규 커칵/슈커칵 목록
   },
 
   notice: {

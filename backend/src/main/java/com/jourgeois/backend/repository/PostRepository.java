@@ -92,7 +92,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //    Optional<List<MemberVO>> findCommentByUid(Long uid, String postType);
 
     // 주간 인기 커칵, 슈커칵 5개
-    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCustomCocktailId, cocktail.c_name_kr as base, \n" +
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCocktailId, cocktail.c_name_kr as base, \n" +
             "CASE\n" +
             "   WHEN custom_cocktail_to_cocktail.c_id IS NULL\n" +
             "   THEN 1\n" +
@@ -127,7 +127,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<HomeCocktailItemVO> getWeeklyHotCustomCocktail(Pageable pageable);
 
     // 주간 인기 칵테일 더보기
-    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCustomCocktailId, cocktail.c_name_kr as base, \n" +
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCocktailId, cocktail.c_name_kr as base, \n" +
             "CASE\n" +
             "   WHEN custom_cocktail_to_cocktail.c_id IS NULL\n" +
             "   THEN 1\n" +
@@ -158,7 +158,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join cocktail\n" +
             "on custom_cocktail_to_cocktail.c_id = cocktail.c_id\n" +
             "where p_dtype = 'cocktail' and member.is_public = true\n" +
-            "order by score desc limit 5", nativeQuery = true)
+            "order by score desc limit 10", nativeQuery = true)
     List<HomeCocktailItemVO> getWeeklyHot5CustomCocktail();
 
     @Query(value="select p.p_id as postId, p.p_img as imgLink, c.contest_title as title,\n" +
@@ -189,12 +189,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.p_id=:postId", nativeQuery = true)
     Optional<CocktailAwardsVO> getCocktailAwardsPostInfo(Long memberId, Long postId);
 
-    @Query(value = "select c_id is Not Null AS isSuperCustom, " +
+    @Query(value = "select p_dtype AS type, c_id is Null AS isSuperCustom, " +
             "custom_cocktail.p_id as postId, " +
             "custom_cocktail_to_cocktail.c_id AS baseCocktailId " +
-            "from custom_cocktail " +
+            "from post " +
+            "left join custom_cocktail " +
+            "on post.p_id = custom_cocktail.p_id " +
             "left join custom_cocktail_to_cocktail " +
             "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id " +
-            "where custom_cocktail.p_id = :postId", nativeQuery = true)
-    PostMetaDTO getPostMetaDate(@Param("postId") Long postId);
+            "where post.p_id = :postId", nativeQuery = true)
+    PostMetaDTO getPostMetaData(@Param("postId") Long postId);
 }

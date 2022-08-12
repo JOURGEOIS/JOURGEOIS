@@ -1,9 +1,7 @@
 <template>
-  <the-custom-cocktail-post-item
-    v-for="(post, id) in userPostListData"
-    :key="`main-${id}`"
-    :post="post"
-  ></the-custom-cocktail-post-item>
+  <article v-for="post in userCustomPostData" :key="post.postId">
+    <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -14,8 +12,8 @@ import { useStore } from "vuex";
 const route = useRoute()
 const store = useStore();
 
-const userPostListData = computed(
-  () => store.getters["profileDesc/getCurrentUserPostCommunity"]
+const userCustomPostData = computed(
+  () => store.getters["profileDesc/getCurrentUserPostCustom"]
 )
 onMounted(() => {
   store.dispatch("profileDesc/getCurrentUserData", route.params.userId )
@@ -23,6 +21,6 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="ts">
+<style scoped lang="scss">
 
 </style>

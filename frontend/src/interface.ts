@@ -117,7 +117,7 @@ export interface Notice {
   img: string; // 발신인 프로필
   isRead: boolean; // 읽음 여부
   postId: number; // 포스트 id
-  timeStamp: Date; // 시간
+  timestamp: any; // 시간
   type: string; // 타입
 }
 

@@ -2,7 +2,6 @@ import { Module } from 'vuex'
 import { RootState } from '../index'
 import axios from 'axios'
 import api from '../../api/api'
-import router from '../../router'
 
 export interface SettingsState {
   // * (+) 팝업 모달

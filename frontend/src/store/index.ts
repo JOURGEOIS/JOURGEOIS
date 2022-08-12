@@ -66,7 +66,7 @@ import { settings, SettingsState } from "../store/profile/settings";
 import { profileDesc, ProfileDescState } from "../store/profile/profileDesc";
 
 //contest
-import { contest, ContestState } from "../store/feeds/contest";
+import { cocktailAwards, CocktailAwardsState } from "./feeds/cocktailAwards";
 
 // notice
 import { notice, NoticeState } from "../store/feeds/notice";
@@ -96,7 +96,7 @@ export interface RootState {
   newsFeed: NewsFeedState;
   settings: SettingsState;
   profileDesc: ProfileDescState;
-  contest: ContestState;
+  cocktailAwards: CocktailAwardsState;
   carousel: CarouselState;
   notice: NoticeState;
 }
@@ -127,7 +127,7 @@ export default createStore({
     newsFeed,
     settings,
     profileDesc,
-    contest,
+    cocktailAwards,
     carousel,
     notice,
   },

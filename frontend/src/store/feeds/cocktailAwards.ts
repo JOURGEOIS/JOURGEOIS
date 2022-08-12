@@ -6,17 +6,18 @@ import router from "../../router";
 import { ContestCocktail } from "../../interface";
 import { checkBadWord } from "../../functions/checkText";
 
-export interface ContestState {
-  contestList: ContestCocktail[];
-  contestDetail: ContestCocktail;
+export interface CocktailAwardsState {
+  cocktailAwardsList: ContestCocktail[];
+  cocktailAwardsDetail: ContestCocktail;
+  currentTab: number;
 }
 
-export const contest: Module<ContestState, RootState> = {
+export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
   namespaced: true,
 
   state: {
-    contestList: [],
-    contestDetail: {
+    cocktailAwardsList: [],
+    cocktailAwardsDetail: {
       postId: 0,
       description: "",
       imgLink: "",
@@ -24,15 +25,32 @@ export const contest: Module<ContestState, RootState> = {
       like: 0,
       percentage: "",
     },
+    currentTab: 0,
   },
 
-  getters: {},
+  getters: {
+    getCocktailAwardsList: (state) => state.cocktailAwardsList,
+    getCocktailAwardsDetail: (state) => state.cocktailAwardsDetail,
+    getCurrentTab: (state) => state.currentTab,
+  },
 
-  mutations: {},
+  mutations: {
+    SET_CURRENT_TAB: (state, value: number) => {
+      state.currentTab = value;
+    },
+  },
 
   actions: {
+    // 탭 변경
+    changeCurrentTab: ({ commit }, value: number) => {
+      commit("SET_CURRENT_TAB", value);
+    },
+
     // 제출 시, 유효성 검사
-    checkContestForm: ({ dispatch }, { title, description, img, isAgree }) => {
+    checkCocktailAwardsForm: (
+      { dispatch },
+      { title, description, img, isAgree }
+    ) => {
       // 빈필드 확인
       const imgRequired = !(img instanceof File);
       const titleRequired = !title;
@@ -72,11 +90,16 @@ export const contest: Module<ContestState, RootState> = {
         return;
       }
 
-      dispatch("submitContestForm", { title, description, img, isAgree });
+      dispatch("submitCocktailAwardsForm", {
+        title,
+        description,
+        img,
+        isAgree,
+      });
     },
 
     // 제출
-    submitContestForm: ({ rootGetters, dispatch }, data: object) => {
+    submitCocktailAwardsForm: ({ rootGetters, dispatch }, data: object) => {
       axios({
         url: api.awards.joinContest(),
         method: "post",
@@ -113,7 +136,7 @@ export const contest: Module<ContestState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "contest/submitContestForm",
+              func: "contest/submitCocktailAwardsForm",
               params: data,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });

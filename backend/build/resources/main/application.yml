@@ -11,12 +11,6 @@ spring:
     url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: 1q2w3e4r!@#
-<<<<<<< HEAD
-
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
-=======
->>>>>>> 7c0ff3c53cf2c8da22a2585f3f4131a7980e11ed
 
     hikari:
       auto-commit: false

@@ -65,7 +65,9 @@ public class MemberProfilePageService {
             res.put("description", data.getDescription());
             res.put("likes", data.getLikes().toString());
             res.put("iLike", data.getIlike().toString());
-            res.put("baseCocktail", data.getBaseCocktail());
+            if(postType == "cocktail"){
+                res.put("baseCocktail", data.getBaseCocktail());
+            }
 
             resArr.add(res);
         });

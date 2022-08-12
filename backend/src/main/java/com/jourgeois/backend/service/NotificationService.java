@@ -6,8 +6,10 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.notification.NotificationDTO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.domain.post.Post;
+import com.jourgeois.backend.repository.PostRepository;
 import com.jourgeois.backend.util.NotificationType;
 import com.jourgeois.backend.util.S3Util;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,13 @@ public class NotificationService {
 
     public static final String ROOT_COLLECTION_NAME = "jourgeois";
     public static final String NOTIFICATION_COLLECTION_NAME = "notification";
+
+    private final PostRepository postRepository;
+
+    @Autowired
+    public NotificationService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     public boolean followNotification(Member to, Member from) throws Exception {
         if(to.getUid() == from.getUid()) return true;

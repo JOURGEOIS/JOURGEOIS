@@ -88,7 +88,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //    Optional<List<MemberVO>> findCommentByUid(Long uid, String postType);
 
     // 주간 인기 커칵, 슈커칵 5개
-    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCustomCocktailId, cocktail.c_name_kr as base, \n" +
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCocktailId, cocktail.c_name_kr as base, \n" +
             "CASE\n" +
             "   WHEN custom_cocktail_to_cocktail.c_id IS NULL\n" +
             "   THEN 1\n" +
@@ -123,7 +123,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<HomeCocktailItemVO> getWeeklyHotCustomCocktail(Pageable pageable);
 
     // 주간 인기 칵테일 더보기
-    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCustomCocktailId, cocktail.c_name_kr as base, \n" +
+    @Query(value = "select pid as cocktailId, p_img as img, cc_cocktail_title as title, custom_cocktail_to_cocktail.c_id as baseCocktailId, cocktail.c_name_kr as base, \n" +
             "CASE\n" +
             "   WHEN custom_cocktail_to_cocktail.c_id IS NULL\n" +
             "   THEN 1\n" +

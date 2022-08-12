@@ -85,7 +85,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id ) as likes, " +
             "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id and pb.memberId.uid = :userId ) as ilike " +
             "FROM Member AS m JOIN Post p ON p.member.uid = m.uid WHERE p.d_type = :postType " +
-            "AND p.member.uid = :id")
+            "AND p.member.uid = :id ORDER BY p.createTime DESC")
     List<MemberVO> findCocktailOrPostInProfilePageByUid(Long userId, Long id, String postType, Pageable pageable);
 
 

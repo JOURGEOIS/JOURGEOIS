@@ -86,6 +86,15 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
     SET_CURRENT_TAB: (state, value: number) => {
       state.currentTab = value;
     },
+
+    // 상세 정보
+    SET_COCKTAIL_AWARDS_DETAIL: (state, value: ContestCocktail) => {
+      state.cocktailAwardsDetail = value;
+    },
+
+    CHANGE_COCKTAIL_DESC_STATUS: (state, value: number) => {
+      state.cocktailAwardsDetail.like = value;
+    },
   },
 
   actions: {
@@ -100,6 +109,19 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
       commit("SET_COCKTAIL_AWARDS_NOW_PAGE", 0);
       commit("SET_COCKTAIL_AWARDS_VOTE_LIST", []);
       commit("SET_COCKTAIL_AWARDS_VOTE_PAGE", 0);
+    },
+
+    // desc 리셋
+    resetCocktailAwardsDesc: ({ commit }) => {
+      const data = {
+        postId: 0,
+        description: "",
+        imgLink: "",
+        title: "",
+        like: 0,
+        percentage: "",
+      };
+      commit("SET_COCKTAIL_AWARDS_DETAIL", data);
     },
 
     //======================== Create ========================
@@ -256,6 +278,11 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
       commit("CHANGE_COCKTAIL_VOTE_STATUS", data);
     },
 
+    // desc 값 수정
+    changeCocktailVoteDesc: ({ commit }, value: number) => {
+      commit("CHANGE_COCKTAIL_DESC_STATUS", value);
+    },
+
     // 서버에 제출
     voteCocktail: ({ commit, rootGetters, dispatch }, { index, postId }) => {
       axios({
@@ -270,6 +297,9 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
       })
         .then((response) => {
           const data = response.data;
+          if (index === null) {
+            dispatch("changeCocktailVoteDesc", data.status);
+          }
           dispatch("changeCocktailVoteStatus", { index, value: data.status });
         })
         .catch((error) => {
@@ -281,6 +311,39 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
               func: "cocktailAwards/voteCocktail",
               params: {
                 index,
+                postId,
+              },
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+    //======================== desc ========================
+    fetchCocktailAwardsDesc: (
+      { commit, rootGetters, dispatch },
+      { postId }
+    ) => {
+      axios({
+        url: api.awards.contestDesc(),
+        method: "get",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          postId,
+        },
+      })
+        .then((response) => {
+          commit("SET_COCKTAIL_AWARDS_DETAIL", response.data);
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "cocktailAwards/fetchCocktailAwardsDesc",
+              params: {
                 postId,
               },
             };

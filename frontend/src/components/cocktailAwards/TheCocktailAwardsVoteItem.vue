@@ -3,8 +3,9 @@
     <div
       class="cocktail-awards-vote-item-image"
       :style="{ backgroundImage: imageUrl }"
+      @click="clickCard"
     ></div>
-    <p>{{ cocktailAwardsVoteItem.title }}</p>
+    <p @click="clickCard">{{ cocktailAwardsVoteItem.title }}</p>
     <button
       v-if="!cocktailAwardsVoteItem.like"
       class="cocktail-awards-vote-item-btn vote"
@@ -26,22 +27,37 @@
 import { ContestCocktail } from "../../interface";
 import { computed } from "vue";
 import store from "../../store";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
+// props
 const props = defineProps<{
   cocktailAwardsVoteItem: ContestCocktail;
   cocktailAwardsVoteRank: number;
 }>();
 
+// 이미지 링크
 const imageUrl = computed(() => {
   return `url(${props.cocktailAwardsVoteItem.imgLink})`;
 });
 
+// 투표
 const clickVote = () => {
   const data = {
     index: props.cocktailAwardsVoteRank,
     postId: props.cocktailAwardsVoteItem.postId,
   };
   store.dispatch("cocktailAwards/voteCocktail", data);
+};
+
+// 클릭
+const clickCard = () => {
+  router.push({
+    name: "TheCocktailAwardsDescView",
+    params: {
+      feedId: props.cocktailAwardsVoteItem.postId,
+    },
+  });
 };
 </script>
 
@@ -55,6 +71,7 @@ const clickVote = () => {
   @include feed;
   padding: 0px;
   padding-bottom: 10px;
+  cursor: pointer;
 
   .cocktail-awards-vote-item-image {
     width: 100%;

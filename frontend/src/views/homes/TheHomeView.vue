@@ -139,7 +139,6 @@ onMounted(() => {
 
 // 스크롤 높이 저장
 onBeforeUnmount(() => {
-  console.log(window.scrollY);
   store.dispatch("scroll/setHomeScrollY", window.scrollY);
 });
 </script>
@@ -156,11 +155,11 @@ onBeforeUnmount(() => {
     margin-top: 8px;
 
     @media #{$tablet} {
-      width: 60%;
+      width: 80%;
     }
 
     @media #{$pc} {
-      width: 50%;
+      width: 60%;
     }
   }
 }

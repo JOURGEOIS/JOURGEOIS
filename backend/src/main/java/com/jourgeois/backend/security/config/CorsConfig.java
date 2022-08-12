@@ -26,6 +26,7 @@ public class CorsConfig {
         source.registerCorsConfiguration("/awards/**", config);
         source.registerCorsConfiguration("/home/**", config);
         source.registerCorsConfiguration("/notification/**", config);
+        source.registerCorsConfiguration("/chat/**", config);
         return new CorsFilter(source);
     }
 }

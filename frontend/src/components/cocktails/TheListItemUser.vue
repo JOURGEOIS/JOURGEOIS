@@ -35,10 +35,7 @@ const props = defineProps<{
   data: User;
 }>();
 
-console.log(props.data);
-
 const isFollowed = ref(props.data.isFollowed);
-console.log(isFollowed);
 
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => (isFollowed ? "팔로잉" : "팔로우"));

@@ -3,17 +3,27 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onUnmounted } from "vue";
+import { onBeforeMount, onUnmounted, onMounted } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
-onBeforeMount(() => {
-  console.log("데이터!");
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    action: "notice/getCocktailAwardsNowList",
+    data: {},
+  };
+  store.dispatch("scroll/handleScroll", data);
+};
+
+// 초기 데이터, 무한 스크롤 연동
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
   store.dispatch("cocktailAwards/getCocktailAwardsNowList");
 });
 
+// unMounted될 시, 데이터 리셋
 onUnmounted(() => {
-  console.log("리셋");
   store.dispatch("cocktailAwards/resetCocktailAwardsList");
 });
 </script>

@@ -19,4 +19,8 @@ public interface MemberVO {
     String getPostImg();
     String getDescription();
     Integer getIsPublic();
+    Integer getLikes();
+    Integer getIlike();
+    Long getPostId();
+    String getBaseCocktail();
 }

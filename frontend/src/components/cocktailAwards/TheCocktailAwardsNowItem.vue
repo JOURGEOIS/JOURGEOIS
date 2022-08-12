@@ -1,10 +1,16 @@
 <template>
-  <div class="cocktail-awards-now-item-card">
+  <!-- 카드 -->
+  <div class="cocktail-awards-now-item-card" @click="clickCard">
+    <!-- 이미지 -->
     <div
       class="cocktail-awards-now-item-image"
       :style="{ backgroundImage: imageUrl }"
     ></div>
+
+    <!-- 제목 -->
     <p>{{ cocktailAwardsNowItem.title }}</p>
+
+    <!-- 투표 % -->
     <div
       class="cocktail-awards-now-item-percentage"
       :style="{ backgroundColor: cocktailAwardsNowColor }"
@@ -18,16 +24,21 @@
 import { ContestCocktail } from "../../interface";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { computed } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
+// props
 const props = defineProps<{
   cocktailAwardsNowItem: ContestCocktail;
   cocktailAwardsNowRank: number;
 }>();
 
+// 이미지 링크
 const imageUrl = computed(() => {
   return `url(${props.cocktailAwardsNowItem.imgLink})`;
 });
 
+// 순위에 따른 색상 변경
 const cocktailAwardsNowColor = computed(() => {
   if (props.cocktailAwardsNowRank <= 4) {
     return "#a2a2fc";
@@ -35,6 +46,16 @@ const cocktailAwardsNowColor = computed(() => {
     return "#c8cfdc";
   }
 });
+
+// 클릭
+const clickCard = () => {
+  router.push({
+    name: "TheCocktailAwardsDescView",
+    params: {
+      feedId: props.cocktailAwardsNowItem.postId,
+    },
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -47,6 +68,7 @@ const cocktailAwardsNowColor = computed(() => {
   @include feed;
   padding: 0px;
   padding-bottom: 10px;
+  cursor: pointer;
 
   .cocktail-awards-now-item-image {
     align-self: flex-start;

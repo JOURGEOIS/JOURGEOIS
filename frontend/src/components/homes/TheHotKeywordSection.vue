@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, watchEffect } from "vue";
+import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 store.dispatch("carousel/setHotKeywords");

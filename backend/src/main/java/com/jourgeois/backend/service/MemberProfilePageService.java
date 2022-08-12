@@ -56,7 +56,7 @@ public class MemberProfilePageService {
         }
 
 
-        postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType,pageable).orElseThrow().forEach(data -> {
+        postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType,pageable).forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", S3Util.s3urlFormatter(data.getProfileImg()));
@@ -66,10 +66,11 @@ public class MemberProfilePageService {
             res.put("description", data.getDescription());
             res.put("likes", data.getLikes().toString());
             res.put("iLike", data.getIlike().toString());
+            res.put("title", data.getTitle());
+            res.put("ingredients", data.getIngredients());
             if(postType == "cocktail"){
                 res.put("baseCocktail", data.getBaseCocktail());
             }
-
             resArr.add(res);
         });
 

@@ -1,8 +1,10 @@
 <template>
-  <the-profile-header :prev="true" :setting="true" @prevClicked="$router.go(-1)">
-    <div>
-      프로필
-    </div>
+  <the-profile-header
+    :prev="true"
+    :setting="true"
+    @prevClicked="$router.go(-1)"
+  >
+    <div>프로필</div>
   </the-profile-header>
   <the-settings-modal v-if="settingsModalStatus"></the-settings-modal>
   <div class="the-user-profile-view top-view">
@@ -42,17 +44,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, watch, onMounted } from 'vue'
+import { computed, defineAsyncComponent, watch, onMounted } from "vue";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
-import { useStore } from 'vuex'
-import TheUserProfileBasic from '@/components/profile/TheUserProfileBasic.vue'
-import TheSettingsModal from '@/components/profile/TheSettingsModal.vue'
+import { useStore } from "vuex";
+import TheUserProfileBasic from "@/components/profile/TheUserProfileBasic.vue";
+import TheSettingsModal from "@/components/profile/TheSettingsModal.vue";
 import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
-import TheProfileHeader from '@/components/profile/TheProfileHeader.vue'
-import ButtonBasic from '@/components/basics/ButtonBasic.vue'
-import NavBar from '@/components/basics/NavBar.vue'
+import TheProfileHeader from "@/components/profile/TheProfileHeader.vue";
+import ButtonBasic from "@/components/basics/ButtonBasic.vue";
+import NavBar from "@/components/basics/NavBar.vue";
 const route = useRoute();
-const store = useStore()
+const store = useStore();
 
 // 세팅 모달
 const settingsModalStatus = computed(
@@ -92,14 +94,17 @@ const currentComponent = computed(() => {
   return componentArray[index.value];
 });
 
-const clickCommunityTab = () => store.dispatch("profileDesc/changeCurrentTab", 0);
-const clickCustomCocktailTab = () => store.dispatch("profileDesc/changeCurrentTab", 1);
+const clickCommunityTab = () =>
+  store.dispatch("profileDesc/changeCurrentTab", 0);
+const clickCustomCocktailTab = () =>
+  store.dispatch("profileDesc/changeCurrentTab", 1);
 const clickReviewTab = () => store.dispatch("profileDesc/changeCurrentTab", 2);
-const clickBookmarkTab = () => store.dispatch("profileDesc/changeCurrentTab", 3);
+const clickBookmarkTab = () =>
+  store.dispatch("profileDesc/changeCurrentTab", 3);
 
 // 동적 라우팅 및 리셋
 onMounted(() => {
-  store.dispatch("profileDesc/getCurrentUserData", route.params.userId )
+  store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
   toggleLogOutModal(false);
 });
 
@@ -113,9 +118,8 @@ const toggleLogOutModal = (value: boolean) =>
 
 // 버튼 색깔
 const buttonColor = computed(() => {
-  return 'sub-blank'
-})
-
+  return "sub-blank";
+});
 </script>
 
 <style scoped lang="scss">
@@ -159,7 +163,7 @@ const buttonColor = computed(() => {
         @media #{$tablet} {
           width: 96px;
         }
-        
+
         @media #{$pc} {
           width: 120px;
         }
@@ -213,7 +217,7 @@ const buttonColor = computed(() => {
         span {
           color: $white400;
         }
-      }   
+      }
     }
   }
 }

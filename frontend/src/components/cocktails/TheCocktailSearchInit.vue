@@ -71,6 +71,9 @@ const clickTag = (keyword: string) => {
     name: "TheSearchResultView",
     params: { searchValue: keyword },
   });
+  setTimeout(() => {
+    store.dispatch("cocktailSearch/setRecentSearchWords");
+  }, 100);
 };
 
 onMounted(() => {

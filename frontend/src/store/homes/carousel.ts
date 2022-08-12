@@ -139,6 +139,7 @@ export const carousel: Module<CarouselState, RootState> = {
         method: "GET",
       })
         .then((res) => {
+          console.log(res.data);
           commit("SET_HOT_KEYWORDS", res.data);
         })
         .catch((err) => {

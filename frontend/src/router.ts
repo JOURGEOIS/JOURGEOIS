@@ -201,25 +201,27 @@ const routes: any[] = [
     component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
   },
 
-  // contest home
+  // cocktailAwards home
   {
     path: "/feeds/awards",
     name: "TheCocktailAwardsView",
-    component: () => import("@/views/TheCocktailAwardsView.vue"),
+    component: () => import("@/views/cocktailAwards/TheCocktailAwardsView.vue"),
   },
 
-  //contest 게시글 form
+  // cocktailAwards 게시글 form
   {
     path: "/feeds/awards/form",
     name: "TheCocktailAwardsFormView",
-    component: () => import("@/views/TheCocktailAwardsFormView.vue"),
+    component: () =>
+      import("@/views/cocktailAwards/TheCocktailAwardsFormView.vue"),
   },
 
-  // contest 게시글 상세
+  // cocktailAwards 게시글 상세
   {
     path: "/feeds/:feedId/awards",
     name: "TheCocktailAwardsDescView",
-    component: () => import("@/views/TheCocktailAwardsDescView.vue"),
+    component: () =>
+      import("@/views/cocktailAwards/TheCocktailAwardsDescView.vue"),
   },
 
   // 신규 커스텀 칵테일 리스트

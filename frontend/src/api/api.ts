@@ -44,7 +44,7 @@ export default {
     getCocktailData: () => HOST + COCKTAIL + "cocktail",
     cocktailList: () => HOST + COCKTAIL + "list",
     cocktailReview: () => HOST + COCKTAIL + "comment",
-    customCocktailList: () => HOST + "/cocktail",
+    customCocktailList: () => HOST + "cocktail",
   },
 
   lookups: {
@@ -86,6 +86,8 @@ export default {
     hotCocktailView: () => HOST + HOME + "cocktail/hot", // 주류주아 인기 칵테일 목록
     weeklyHotCocktail: () => HOST + HOME + "custom/weekly5", // 유저의 이번 주 인기 칵테일
     weeklyHotCocktailView: () => HOST + HOME + "custom/weekly", // 유저의 이번 주 인기 칵테일
+    likeRecommendedCocktail: () => HOST + HOME + "liquor5", // 좋아요한 칵테일과 기주가 같은 칵테일 5개
+    likeRecommendedCocktailView: () => HOST + HOME + "liquor", // 좋아요한 칵테일과 기주가 같은 칵테일
   },
 
   notice: {

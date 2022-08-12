@@ -245,6 +245,13 @@ const routes: any[] = [
     component: () => import("@/views/homes/TheAllWeeklyHotCocktailView.vue"),
   },
 
+  // 주류주아 좋아요 기반 추천 칵테일 리스트
+  {
+    path: "/likeRecommended",
+    name: "TheLikeRecommenedCocktailView",
+    component: () => import("@/views/homes/TheLikeRecommenedCocktailView.vue"),
+  },
+
   // 알림
   {
     path: "/feeds/notice",

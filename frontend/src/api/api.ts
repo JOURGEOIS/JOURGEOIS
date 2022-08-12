@@ -83,6 +83,8 @@ export default {
     latestCustomCocktailView: () => HOST + HOME + "custom/latest", // 신규 커칵/슈커칵 목록
     hotCocktail: () => HOST + HOME + "cocktail/hot5", // 주류주아 인기 칵테일 5개
     hotCocktailView: () => HOST + HOME + "cocktail/hot", // 주류주아 인기 칵테일 목록
+    weeklyHotCocktail: () => HOST + HOME + "custom/weekly5", // 유저의 이번 주 인기 칵테일
+    weeklyHotCocktailView: () => HOST + HOME + "custom/weekly", // 유저의 이번 주 인기 칵테일
   },
 
   notice: {

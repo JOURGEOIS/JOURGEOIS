@@ -93,5 +93,6 @@ export default {
   notice: {
     readNotice: () => HOST + NOTICE + "read",
     readNoticeAll: () => HOST + NOTICE + "readall",
+    getNoticeList: () => HOST + NOTICE + "list",
   },
 };

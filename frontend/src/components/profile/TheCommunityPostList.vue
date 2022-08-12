@@ -16,7 +16,6 @@ const userCommunityPostData = computed(() =>
   store.getters["profileDesc/getCurrentUserPostCommunity"]
 )
 
-console.log(userCommunityPostData.value)
 onMounted(() => {
   store.dispatch("profileDesc/getCurrentUserPostCommunityData", route.params.userId )
 });

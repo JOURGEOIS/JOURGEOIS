@@ -2,13 +2,14 @@ import { Module } from 'vuex'
 import { RootState } from '../index'
 import axios from 'axios'
 import api from '../../api/api'
-import { userProfileData, userPostData, userPostReviewData, userBookmarkData } from '../../interface'
+import { userProfileData, userCommunityPostData, userCustomPostData, userPostReviewData, userBookmarkData } from '../../interface'
 
 
 export interface ProfileDescState {
   currentTab: number;
   currentUserData: userProfileData;
-  currentUserPost: userPostData;
+  currentUserCommunity: userCommunityPostData;
+  currentUserCustom: userCustomPostData;
   currentUserReview: userPostReviewData;
   currentUserBookmark: userBookmarkData;
 }
@@ -31,13 +32,29 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       postCnt: 0,
       isPublic: 0,
     },
-    currentUserPost: {
+    currentUserCommunity: {
       createTime: "",
       nickname: "",
       description: "",
+      postId: 0,
+      iLike:0,
       profileImg: "",
       postImg: null,
+      likes:0
     },
+    
+    currentUserCustom: {
+      createTime: "",
+      baseCocktail: null,
+      nickname: "",
+      description: "",
+      postId: 0,
+      iLike:0,
+      profileImg: "",
+      postImg: null,
+      likes:0
+    },
+
     currentUserReview: {
       img: "",
       cocktailId: 0,
@@ -46,6 +63,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       category: "",
       nameKR: "",
     },
+
     currentUserBookmark: {
       img: "",
       cocktailId: 0,
@@ -63,10 +81,10 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       return state.currentUserData;
     },
     getCurrentUserPostCommunity: (state) => {
-      return state.currentUserPost
+      return state.currentUserCommunity
     },
     getCurrentUserPostCustom: (state) => {
-      return state.currentUserPost
+      return state.currentUserCustom
     },
     getCurrentUserPostReview: (state) => {
       return state.currentUserReview
@@ -83,11 +101,11 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     SET_CURRENT_USER_DATA: (state, value: userProfileData) => {
       state.currentUserData = value;
     },
-    SET_CURRENT_USER_POST_COMMUNITY: (state, value: userPostData) => {
-      state.currentUserPost = value
+    SET_CURRENT_USER_POST_COMMUNITY: (state, value: userCommunityPostData) => {
+      state.currentUserCommunity = value
     },
-    SET_CURRENT_USER_POST_CUSTOM: (state, value: userPostData) => {
-      state.currentUserPost = value
+    SET_CURRENT_USER_POST_CUSTOM: (state, value: userCustomPostData) => {
+      state.currentUserCustom = value
     },
     SET_CURRENT_USER_POST_REVIEW: (state, value: userPostReviewData) => {
       state.currentUserReview = value
@@ -118,7 +136,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       })
         .then((res) => {
           console.log(res.data)
-          console.log(res.data.uid)
           commit("SET_CURRENT_USER_DATA", res.data)
         })
         .catch((err) => {
@@ -223,7 +240,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "profileDesc/getCurrentUserPostCustom",
+              func: "profileDesc/getCurrentUserPostReview",
               params: {
                 uid
               }
@@ -255,7 +272,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "profileDesc/getCurrentUserPostCustom",
+              func: "profileDesc/getCurrentUserPostBookmark",
               params: {
                 uid
               }

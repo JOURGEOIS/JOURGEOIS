@@ -111,14 +111,31 @@ export interface ContestCocktail {
 
 // notice
 export interface Notice {
-  key: string; // id
-  uid: number; // 발신인 uid
-  from: string; // 발신인
-  img: string; // 발신인 프로필
-  isRead: boolean; // 읽음 여부
-  postId: number; // 포스트 id
-  timestamp: any; // 시간
-  type: string; // 타입
+  notification: Notification; // 알림
+  opponent: Opponent; // 상대방 정보들
+  postMetaInfo: PostMetaInfo;
+}
+
+export interface Notification {
+  notificationId: string; // 알림 key
+  type: string; // FOLLOW< LIKE, COMMENT
+  postId: number; // follow이면 null값
+  uid: number;
+  isRead: boolean; // 유저가 읽었는지 여부
+  timestamp: any;
+}
+
+export interface Opponent {
+  uid: number;
+  img: string;
+  nickname: string;
+}
+
+export interface PostMetaInfo {
+  baseCocktailId: number;
+  postId: number; // follow이면 null 값
+  isSuperCustom: number; // 0: 커칵, 1: 슈커칵
+  type: string; // post or cocktail
 }
 
 // 급상승 검색어
@@ -137,29 +154,29 @@ export interface HotKeywords {
 
 // 프로필페이지 유저 정보
 export interface userProfileData {
-  uid: number
-  email: string
-  name: null
-  nickname: string
-  profileImg: string
-  profileLink: null
-  introduce: string
-  followerCnt: number
-  followingCnt: number
-  postCnt: number
-  isPublic: number
+  uid: number;
+  email: string;
+  name: null;
+  nickname: string;
+  profileImg: string;
+  profileLink: null;
+  introduce: string;
+  followerCnt: number;
+  followingCnt: number;
+  postCnt: number;
+  isPublic: number;
 }
 
 // 프로필 유저-게시물 정보(일반)
 export interface userCommunityPostData {
-  createTime: string
-  nickname: string
-  description: string
-  postId: number
-  iLike: number
-  profileImg: string
-  postImg: string
-  likes: number
+  createTime: string;
+  nickname: string;
+  description: string;
+  postId: number;
+  iLike: number;
+  profileImg: string;
+  postImg: string;
+  likes: number;
 }
 
 // 프로필 유저-게시물 정보(커칵/슈커칵)
@@ -179,20 +196,19 @@ export interface userCustomPostData {
 
 // 프로필 유저-후기 정보
 export interface userPostReviewData {
-  img: string
-  cocktailId: number
-  comment: string
-  tag: string
-  category: string
-  nameKR: string
+  img: string;
+  cocktailId: number;
+  comment: string;
+  tag: string;
+  category: string;
+  nameKR: string;
 }
 
 // 프로필 유저-북마크 정보
 export interface userBookmarkData {
-  img: string
-  cocktailId: number
-  tag: string
-  category: string
-  nameKR: string
+  img: string;
+  cocktailId: number;
+  tag: string;
+  category: string;
+  nameKR: string;
 }
-

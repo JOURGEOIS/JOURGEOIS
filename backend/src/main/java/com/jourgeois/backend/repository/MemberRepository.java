@@ -26,6 +26,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "(select COUNT(ff) FROM Follow AS ff WHERE ff.from.uid = :id) AS followingCnt, " +
             "(SELECT COUNT(ft) FROM Follow AS ft WHERE ft.to.uid = :id) AS followerCnt " +
             "FROM Member AS m JOIN Post AS p ON m.uid = p.member.uid WHERE m.uid = :id")
-    Optional<MemberVO> findMemberProfile(@Param("id") Long id);
+    Optional<MemberVO> findMemberProfile(Long id);
 
 }

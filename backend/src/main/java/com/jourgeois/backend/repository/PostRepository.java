@@ -83,9 +83,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(SELECT cc.ingredients fROM CustomCocktail AS cc WHERE cc.id = p.id) AS ingredients, " +
             "(SELECT ccc.cocktailId.id FROM CustomCocktailToCocktail AS ccc WHERE ccc.customCocktailId.id = p.id) as baseCocktail, " +
             "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id ) as likes, " +
-            "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id and pb.memberId.uid = :id ) as ilike " +
+            "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id and pb.memberId.uid = :userId ) as ilike " +
             "FROM Member AS m JOIN Post p ON p.member.uid = m.uid WHERE p.d_type = :postType " +
-            "AND p.member.uid = :userId")
+            "AND p.member.uid = :id")
     List<MemberVO> findCocktailOrPostInProfilePageByUid(Long userId, Long id, String postType, Pageable pageable);
 
 

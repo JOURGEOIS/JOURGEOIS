@@ -21,4 +21,6 @@ public interface MemberVO {
     Integer getIsPublic();
     Integer getLikes();
     Integer getIlike();
+    Long getPostId();
+    String getBaseCocktail();
 }

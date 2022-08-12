@@ -42,7 +42,7 @@ public class MemberProfilePageService {
 
         MemberDTO m = MemberDTO.builder().uid(memberVO.getUid()).email(memberVO.getEmail()).nickname(memberVO.getNickname())
                 .profileImg(S3Util.s3urlFormatter(memberVO.getProfileImg())).introduce(memberVO.getIntroduce()).followerCnt(memberVO.getFollowerCnt())
-                .followingCnt(memberVO.getFollowingCnt()).postCnt(memberVO.getPostCnt()).isPublic(memberVO.getIsPublic()) .build();
+                .followingCnt(memberVO.getFollowingCnt()).postCnt(memberVO.getPostCnt()).isPublic(memberVO.getIsPublic()).build();
 
         return m;
     }
@@ -54,22 +54,22 @@ public class MemberProfilePageService {
             return resArr;
         }
 
-        System.out.println("123123213113");
 
         postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType).orElseThrow().forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", S3Util.s3urlFormatter(data.getProfileImg()));
             res.put("createTime", data.getCreateTime().toString());
+            res.put("postId", data.getPostId().toString());
             res.put("postImg", S3Util.s3urlFormatter(data.getPostImg()));
             res.put("description", data.getDescription());
             res.put("likes", data.getLikes().toString());
             res.put("iLike", data.getIlike().toString());
+            res.put("baseCocktail", data.getBaseCocktail());
 
             resArr.add(res);
         });
 
-        System.out.println("12311");
 
         return resArr;
     }

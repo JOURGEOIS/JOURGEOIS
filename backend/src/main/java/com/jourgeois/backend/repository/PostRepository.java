@@ -79,6 +79,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<HomeCocktailItemVO> findTop5CustomCocktailOrderByCreateTime();
 
     @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS postImg, p.description AS description, p.id AS postId, " +
+            "(SELECT ccc.cocktailId.id FROM CustomCocktailToCocktail AS ccc WHERE ccc.customCocktailId.id = p.id) as baseCocktail, " +
             "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id ) as likes, " +
             "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id and pb.memberId.uid = :id ) as ilike " +
             "FROM Member AS m JOIN Post p ON p.member.uid = m.uid WHERE p.d_type = :postType " +

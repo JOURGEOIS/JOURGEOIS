@@ -1,9 +1,8 @@
 <template>
   <div class="the-home-view">
     <!-- 헤더 -->
-    <header-basic :success="false" @prevClicked="$router.go(-1)">
-      홈
-    </header-basic>
+    <header-notice :success="false" @prevClicked="$router.go(-1)">
+    </header-notice>
     <section class="top-view-no-margin">
       <the-home-view-container></the-home-view-container>
     </section>
@@ -36,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import HeaderNotice from "@/components/basics/HeaderNotice.vue";
 import TheHomeViewContainer from "@/components/homes/TheHomeViewContainer.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import { computed, onBeforeUnmount, onMounted } from "vue";

@@ -23,4 +23,6 @@ public interface MemberVO {
     Integer getIlike();
     Long getPostId();
     String getBaseCocktail();
+    String getTitle();
+    String getIngredients();
 }

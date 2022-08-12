@@ -1,9 +1,10 @@
 <template>
   <div class="home-view-container">
-    <the-video-section><h1 class="title">영상 추천</h1></the-video-section>
+    <!-- 초심자들을 위한 영상 추천 -->
+    <!-- <the-video-section><h1 class="title">영상 추천</h1></the-video-section> -->
     <the-hot-keyword-section
       ><h1 class="title">
-        실시간 <span class="important">급상승</span>
+        실시간 <span class="important">급상승</span> 검색어
       </h1></the-hot-keyword-section
     >
     <!-- 유저들의 NEW 커스텀 칵테일 -->
@@ -20,6 +21,12 @@
         유저들의 <span class="important">이번 주 HOT</span> 칵테일
       </h1>
     </the-home-basic-section>
+    <!-- 좋아요 기반 추천 칵테일  -->
+    <!-- <the-home-basic-section :data="likeRecommendedCocktailData">
+      <h1 class="title">
+        당신을 위한 <span class="important">취향저격</span> 칵테일
+      </h1>
+    </the-home-basic-section> -->
   </div>
 </template>
 
@@ -55,6 +62,15 @@ const weeklyHotCocktailData = {
   setCarouselFunc: "setWeeklyHotCocktails",
   getCarouselFunc: "getWeeklyHotCocktails",
   showMoreView: "TheAllWeeklyHotCocktailView",
+};
+
+// 좋아요 기반 추천 칵테일
+const likeRecommendedCocktailData = {
+  description: "당신이 좋아하는 칵테일들을 기반으로 추천하는 취향저격 칵테일",
+  moreButtonText: "전체 보기",
+  setCarouselFunc: "setLikeRecommendedCocktails",
+  getCarouselFunc: "getLikeRecommendedCocktails",
+  showMoreView: "TheAllLikeRecommendedCocktailView",
 };
 </script>
 

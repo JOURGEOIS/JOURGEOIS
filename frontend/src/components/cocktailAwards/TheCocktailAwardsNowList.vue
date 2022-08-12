@@ -49,7 +49,7 @@ const cocktailAwardsNowList = computed(
   article {
     position: relative;
     width: 80%;
-    aspect-ratio: 2/3;
+    aspect-ratio: 1/1.7;
 
     .the-cocktail-awards-now-rank {
       position: absolute;

@@ -270,7 +270,7 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
       })
         .then((response) => {
           const data = response.data;
-          dispatch("changeCocktailVoteStatus", { index, value: data.state });
+          dispatch("changeCocktailVoteStatus", { index, value: data.status });
         })
         .catch((error) => {
           if (error.response.status !== 401) {

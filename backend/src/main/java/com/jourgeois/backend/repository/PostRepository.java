@@ -84,7 +84,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(select coalesce(count(pb), 0) from PostBookmark AS pb where p.id = pb.postId.id and pb.memberId.uid = :id ) as ilike " +
             "FROM Member AS m JOIN Post p ON p.member.uid = m.uid WHERE p.d_type = :postType " +
             "AND p.member.uid = :userId")
-    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long userId, Long id, String postType);
+    Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long userId, Long id, String postType, Pageable pageable);
 
 
 //    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p1.description AS description " +

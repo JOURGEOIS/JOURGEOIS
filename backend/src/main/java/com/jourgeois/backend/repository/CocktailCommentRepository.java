@@ -27,5 +27,5 @@ public interface CocktailCommentRepository extends JpaRepository<CocktailComment
     @Query("SELECT c.id AS id, c.nameKR AS nameKR, c.img AS img, c.category AS category, c.tag AS tag, cc.comment AS comment " +
             "FROM Member AS m JOIN CocktailComment AS cc ON cc.member.uid = m.uid JOIN Cocktail AS c ON cc.cocktail.id = c.id " +
             "WHERE m.uid = :id")
-    Optional<List<CocktailVO>> findCocktailCommentsInProfilePageByUid(Long id);
+    Optional<List<CocktailVO>> findCocktailCommentsInProfilePageByUid(Long id, Pageable pageable);
 }

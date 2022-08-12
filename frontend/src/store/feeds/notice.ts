@@ -49,6 +49,9 @@ export const notice: Module<NoticeState, RootState> = {
     SET_NOTICE_LIST: (state, value: Notice[]) => {
       state.noticeList = value;
     },
+    READ_NOTICE_LIST: (state) => {
+      state.noticeList.forEach((item) => (item.isRead = true));
+    },
   },
 
   actions: {
@@ -56,6 +59,11 @@ export const notice: Module<NoticeState, RootState> = {
     resetNoticeList: ({ commit }) => {
       commit("SET_NOTICE_LIST", []);
       commit("SET_START_AFTER", 0);
+    },
+
+    // 알림 다 읽은척...
+    readNoticeList: ({ commit }) => {
+      commit("READ_NOTICE_LIST");
     },
 
     // 알림이 있는지 확인한다.
@@ -104,7 +112,7 @@ export const notice: Module<NoticeState, RootState> = {
 
       // 라우터 변수를 마지막 시작 지점으로 변경한다.
       commit(
-        " SET_START_AFTER",
+        "SET_START_AFTER",
         querySnapshot.docs[querySnapshot.docs.length - 1]
       );
 
@@ -118,6 +126,67 @@ export const notice: Module<NoticeState, RootState> = {
 
       noticeList.reverse();
       commit("ADD_NOTICE_LIST", noticeList);
+    },
+
+    // 알림 읽음 처리 (1개)
+    readNotice: ({ rootGetters, dispatch }, data) => {
+      const { notiId, type, postId, uid } = data;
+      axios({
+        url: api.notice.readNotice(),
+        method: "put",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          notiId,
+        },
+      })
+        .then(() => {
+          // 팔로우 알림일 경우, 해당 유저의 프로필 페이지로 이동한다.
+          if (type === "FOLLOW") {
+            alert("프로필로 이동! 변수명 uid가 uid입니다.");
+          }
+
+          // 댓글, 좋아요 알림일 경우 해당 글로 이동한다.
+          else {
+          }
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "notice/readNotice",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+
+    // 알림 모두 읽음 처리
+    readNoticeAll: ({ rootGetters, dispatch }) => {
+      axios({
+        url: api.notice.readNoticeAll(),
+        method: "put",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+      })
+        .then(() => {})
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "notice/readNoticeAll",
+              params: {},
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
     },
   },
 };

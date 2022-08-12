@@ -1,10 +1,12 @@
 <template>
   <div class="the-notice-view">
+    <!-- 헤더 -->
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       알림
     </header-basic>
+    <!-- 알림 리스트 -->
     <section class="the-notice-section top-view-no-margin">
-      <p>모두 읽기</p>
+      <p @click="readNoticeAll">모두 읽기</p>
       <the-notice-list></the-notice-list>
     </section>
   </div>
@@ -26,10 +28,17 @@ const handleScroll = (event: any) => {
   store.dispatch("scroll/handleScroll", data);
 };
 
+// 초기 데이터, 무한 스크롤 연동
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
   store.dispatch("notice/getNoticeList");
 });
+
+// 모두 읽기
+const readNoticeAll = () => {
+  store.dispatch("notice/readNoticeAll");
+  store.dispatch("notice/readNoticeList");
+};
 </script>
 
 <style scoped lang="scss">
@@ -41,6 +50,8 @@ onMounted(() => {
   @include accountLayOut;
 
   section {
+    @include flex(column);
+    gap: 16px;
     width: 100%;
 
     @media #{$tablet} {

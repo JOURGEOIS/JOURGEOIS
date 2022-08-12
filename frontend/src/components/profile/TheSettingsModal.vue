@@ -1,10 +1,10 @@
 <template>
   <teleport to="body">
-    <div class="settings-modal">
+    <div class="settings-modal" @click.self="clickXIcon">
       <div
         class="container"
         :class="animation"
-        :style="[isIphone ? { height: '350px' } : { height: '300px' }]"
+        :style="[isIphone ? { height: '400px' } : { height: '350px' }]"
       >
         <!-- filter: header -->
         <section class="header-section">
@@ -38,14 +38,13 @@
         </section>
       </div>
     </div>
-    
   </teleport>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
 const router = useRouter();
 const store = useStore();
@@ -53,7 +52,7 @@ const store = useStore();
 // 애니메이션 상태
 const animation = computed(
   // store 만들어지면 변경
-  () => store.getters["settings/changeSettingsModalClass"]
+  () => store.getters["settings/getSettingsModalClass"]
 );
 
 // 필터 off
@@ -90,7 +89,6 @@ const profilePublicSet = () => {
 const clickLogout = () => {
   store.dispatch("settings/toggleSettingsModal", false)
   store.dispatch("account/toggleLogOutModal", true);
-
 }
 
 // 아이폰인지 확인
@@ -98,6 +96,24 @@ const deviceType: string = store.getters["navbar/getDeviceType"];
 const isIphone = computed(() => {
   return deviceType === "iphone";
 });
+
+const isAndroid = computed(() => {
+  return deviceType === "android";
+});
+
+// const settingsModalStatus = computed(() => 
+//   store.getters["settings/getSettingsModalStatus"]
+// )
+
+//   console.log(settingsModalStatus)
+// onBeforeRouteLeave((to, from, next) => {
+//   if (settingsModalStatus.value) {
+//     clickXIcon();
+//   } else {
+//     // next();
+//   }
+// });
+
 </script>
 
 <style scoped lang="scss">
@@ -120,7 +136,7 @@ const isIphone = computed(() => {
 }
 
 .settings-modal {
-  @include flex-xy(center, center);
+  @include flex-center;
   position: fixed;
   top: 0;
   height: 100vh;
@@ -176,7 +192,7 @@ const isIphone = computed(() => {
 
 .set-btn {
   @include flex(column);
-  @include flex-xy(center, center);
+  @include flex-center;
   @include for-click;
   gap: 10px;
   }
@@ -186,6 +202,14 @@ const isIphone = computed(() => {
   .log-out{
     color: $red500;
   }
+  
+.start {
+  animation: start 0.3s ease-in-out;
+}
+
+.end {
+  animation: end 0.3s ease-in-out;
+}
 
 .invisible {
   visibility: hidden;

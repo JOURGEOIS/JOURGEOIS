@@ -192,5 +192,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join custom_cocktail_to_cocktail " +
             "on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id " +
             "where custom_cocktail.p_id = :postId", nativeQuery = true)
-    PostMetaDTO getPostMetaDate(@Param("postId") Long postId);
+    PostMetaDTO getPostMetaData(@Param("postId") Long postId);
 }

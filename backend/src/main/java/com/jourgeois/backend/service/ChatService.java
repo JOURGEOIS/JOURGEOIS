@@ -4,8 +4,8 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.chat.ChatMessageDTO;
-import com.jourgeois.backend.api.dto.chat.ChatOpponentDTO;
 import com.jourgeois.backend.api.dto.chat.ChatRoomDTO;
+import com.jourgeois.backend.api.dto.notification.OpponentDTO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.util.S3Util;
@@ -51,7 +51,7 @@ public class ChatService {
 
                 Long opponentUid = chatMessageDTO.getFrom().equals(myUid) ? chatMessageDTO.getTo() : chatMessageDTO.getFrom();
                 Member opponent = memberRepository.findById(opponentUid).orElseThrow(() -> new NoSuchElementException("상대 유저 정보가 없습니다."));
-                ChatOpponentDTO chatOpponentDTO = ChatOpponentDTO.builder()
+                OpponentDTO chatOpponentDTO = OpponentDTO.builder()
                         .uid(opponent.getUid())
                         .img(S3Util.s3urlFormatter(opponent.getProfileImg()))
                         .nickname(opponent.getNickname())

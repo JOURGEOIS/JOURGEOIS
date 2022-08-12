@@ -134,3 +134,47 @@ export interface HotKeywords {
   keywords: HotKeyword[];
   delta: number[];
 }
+
+// 프로필페이지 유저 정보
+export interface userProfileData {
+  uid: number
+  email: string
+  name: string | null
+  nickname: string
+  profileImg: string
+  profileLink: null
+  introduce: string
+  followerCnt: number
+  followingCnt: number
+  postCnt: number
+  isPublic: number
+}
+
+// 프로필 유저-게시물 정보(일반/커칵/슈커칵)
+export interface userPostData {
+  createTime: string
+  nickname: string
+  description: string
+  profileImg: string
+  postImg: null
+}
+
+// 프로필 유저-후기 정보
+export interface userPostReviewData {
+  img: string
+  cocktailId: number
+  comment: string
+  tag: string
+  category: string
+  nameKR: string
+}
+
+// 프로필 유저-북마크 정보
+export interface userBookmarkData {
+  img: string
+  cocktailId: number
+  tag: string
+  category: string
+  nameKR: string
+}
+

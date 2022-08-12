@@ -1,5 +1,10 @@
 <template>
   <div class="home-view-container">
+    <the-hot-keyword-section
+      ><h1 class="title">
+        실시간 <span class="important">급상승</span>
+      </h1></the-hot-keyword-section
+    >
     <!-- 유저들의 NEW 커스텀 칵테일 -->
     <the-home-basic-section :data="latestCustomCocktailData">
       <h1 class="title">
@@ -12,6 +17,7 @@
 <script setup lang="ts">
 import { useStore } from "vuex";
 import TheHomeBasicSection from "@/components/homes/TheHomeBasicSection.vue";
+import TheHotKeywordSection from "@/components/homes/TheHotKeywordSection.vue";
 const store = useStore();
 
 const latestCustomCocktailData = {

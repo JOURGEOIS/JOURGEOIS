@@ -120,3 +120,17 @@ export interface Notice {
   timeStamp: Date; // 시간
   type: string; // 타입
 }
+
+// 급상승 검색어
+export interface HotKeyword {
+  keyword: string;
+  hits: number;
+}
+
+// 급상승 검색어 목록
+export interface HotKeywords {
+  from: string;
+  to: string;
+  keywords: HotKeyword[];
+  delta: number[];
+}

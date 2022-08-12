@@ -8,6 +8,8 @@ import { CarouselCocktail, HotKeywords } from "../../interface";
 export interface CarouselState {
   // * 급상승 검색어
   hotKeywords: HotKeywords;
+  hotKeywordDelta: number[];
+  hotKeywordDate: string;
   // * 신규 커스텀 칵테일(carousel)
   latestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktails: CarouselCocktail[];
@@ -33,6 +35,8 @@ export const carousel: Module<CarouselState, RootState> = {
       keywords: [{ keyword: "", hits: 0 }],
       delta: [0],
     },
+    hotKeywordDelta: [0, 0, 0, 0, 0],
+    hotKeywordDate: "",
     // * 신규 커스텀 칵테일(carousel)
     latestCustomCocktails: [],
     allLatestCustomCocktails: [],
@@ -50,6 +54,8 @@ export const carousel: Module<CarouselState, RootState> = {
   getters: {
     // * 급상승 검색어
     getHotKeywords: (state) => state.hotKeywords,
+    getHotKeywordDelta: (state) => state.hotKeywordDelta,
+    getHotKeywordDate: (state) => state.hotKeywordDate,
     // * 신규 커스텀 칵테일(carousel)
     getLatestCustomCocktails: (state) => state.latestCustomCocktails,
     getAllLatestCustomCocktails: (state) => state.allLatestCustomCocktails,
@@ -69,6 +75,12 @@ export const carousel: Module<CarouselState, RootState> = {
     // * 급상승 검색어
     SET_HOT_KEYWORDS: (state, hotKeywords) => {
       state.hotKeywords = hotKeywords;
+    },
+    SET_HOT_KEYWORD_DELTA: (state, delta) => {
+      state.hotKeywordDelta = delta;
+    },
+    SET_HOT_KEYWORD_DATE: (state, date) => {
+      state.hotKeywordDate = date;
     },
     // * 신규 커스텀 칵테일(carousel)
     SET_LATEST_CUSTOM_COCKTAILS: (
@@ -133,14 +145,32 @@ export const carousel: Module<CarouselState, RootState> = {
   },
   actions: {
     // * 급상승 검색어
-    setHotKeywords: ({ commit, dispatch }) => {
+    setHotKeywords: ({ commit, dispatch, getters }) => {
       axios({
         url: api.lookups.hotKeyword(),
         method: "GET",
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_HOT_KEYWORDS", res.data);
+        })
+        .then(() => {
+          // delta 계산 및 등록
+          const rawDelta = getters["getHotKeywords"].delta;
+          const delta = rawDelta.map((d: number) => {
+            if (d > 0 || d === -5) {
+              return 1;
+            } else if (0 > d && d > -5) {
+              return -1;
+            }
+            return 0;
+          });
+          commit("SET_HOT_KEYWORD_DELTA", delta);
+        })
+        .then(() => {
+          // date 정리 및 등록
+          const rawDate = getters["getHotKeywords"].to;
+          const date = rawDate.split("-").splice(1, 2).join(".");
+          commit("SET_HOT_KEYWORD_DATE", date);
         })
         .catch((err) => {
           console.error(err.response);
@@ -231,7 +261,6 @@ export const carousel: Module<CarouselState, RootState> = {
     },
     setAllHotCocktails: ({ commit, dispatch, getters }) => {
       const page = getters["getAllHotCocktailPage"];
-      console.log(page);
       axios({
         url: api.homes.hotCocktailView(),
         method: "GET",

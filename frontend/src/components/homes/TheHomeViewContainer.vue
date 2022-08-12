@@ -1,9 +1,10 @@
 <template>
   <div class="home-view-container">
-    <the-video-section><h1 class="title">영상 추천</h1></the-video-section>
+    <!-- 초심자들을 위한 영상 추천 -->
+    <!-- <the-video-section><h1 class="title">영상 추천</h1></the-video-section> -->
     <the-hot-keyword-section
       ><h1 class="title">
-        실시간 <span class="important">급상승</span>
+        실시간 <span class="important">급상승</span> 검색어
       </h1></the-hot-keyword-section
     >
     <!-- 유저들의 NEW 커스텀 칵테일 -->

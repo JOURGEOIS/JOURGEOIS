@@ -16,6 +16,10 @@ export interface CarouselState {
   hotCocktails: CarouselCocktail[];
   allHotCocktails: CarouselCocktail[];
   allHotCocktailPage: number;
+  // * 유저들의 이번 주 커스텀 칵테일(carousel)
+  weeklyHotCocktails: CarouselCocktail[];
+  allWeeklyHotCocktails: CarouselCocktail[];
+  allWeeklyHotCocktailPage: number;
 }
 
 export const carousel: Module<CarouselState, RootState> = {
@@ -37,6 +41,10 @@ export const carousel: Module<CarouselState, RootState> = {
     hotCocktails: [],
     allHotCocktails: [],
     allHotCocktailPage: 0,
+    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    weeklyHotCocktails: [],
+    allWeeklyHotCocktails: [],
+    allWeeklyHotCocktailPage: 0,
   },
 
   getters: {
@@ -51,6 +59,10 @@ export const carousel: Module<CarouselState, RootState> = {
     getHotCocktails: (state) => state.hotCocktails,
     getAllHotCocktails: (state) => state.allHotCocktails,
     getAllHotCocktailPage: (state) => state.allHotCocktailPage,
+    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    getWeeklyHotCocktails: (state) => state.weeklyHotCocktails,
+    getAllWeeklyHotCocktails: (state) => state.allWeeklyHotCocktails,
+    getAllWeeklyHotCocktailPage: (state) => state.allWeeklyHotCocktailPage,
   },
 
   mutations: {
@@ -96,6 +108,28 @@ export const carousel: Module<CarouselState, RootState> = {
       state.allHotCocktails = [];
       state.allHotCocktailPage = 0;
     },
+    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    SET_WEEKLY_HOT_COCKTAILS: (
+      state,
+      weeklyHotCocktails: CarouselCocktail[]
+    ) => {
+      state.weeklyHotCocktails = weeklyHotCocktails;
+    },
+    SET_ALL_WEEKLY_HOT_COCKTAILS: (
+      state,
+      newWeeklyHotCocktails: CarouselCocktail[]
+    ) => {
+      newWeeklyHotCocktails.forEach((newWeeklyHotCocktail) => {
+        state.allWeeklyHotCocktails.push(newWeeklyHotCocktail);
+      });
+    },
+    SET_ALL_WEEKLY_HOT_COCKTAIL_PAGE: (state, value) => {
+      state.allWeeklyHotCocktailPage = value;
+    },
+    REMOVE_ALL_WEEKLY_HOT_COCKTAILS: (state) => {
+      state.allWeeklyHotCocktails = [];
+      state.allWeeklyHotCocktailPage = 0;
+    },
   },
   actions: {
     // * 급상승 검색어
@@ -115,7 +149,9 @@ export const carousel: Module<CarouselState, RootState> = {
 
     // * 전체보기 리스트 클릭
     clickShowMoreItem: ({}, item: CarouselCocktail) => {
+      console.log(item.type);
       const { cocktailId, baseCocktailId, type } = item;
+      console.log(item);
       // [type] 1 슈커칵 / 0 커칵 / -1 기본칵
       switch (item.type) {
         // 슈퍼커스텀칵테일
@@ -179,6 +215,7 @@ export const carousel: Module<CarouselState, RootState> = {
     removeAllLatestCustomCocktails: ({ commit }) => {
       commit("REMOVE_ALL_LATEST_CUSTOM_COCKTAILS");
     },
+
     // * 주류주아 HOT 칵테일(carousel)
     setHotCocktails: ({ commit, dispatch }) => {
       axios({
@@ -214,6 +251,42 @@ export const carousel: Module<CarouselState, RootState> = {
     },
     removeHotCocktails: ({ commit }) => {
       commit("REMOVE_ALL_HOT_COCKTAILS");
+    },
+
+    // * 유저들의 이번 주 커스텀 칵테일(carousel)
+    setWeeklyHotCocktails: ({ commit, dispatch }) => {
+      axios({
+        url: api.homes.weeklyHotCocktail(),
+        method: "GET",
+      })
+        .then((res) => {
+          commit("SET_WEEKLY_HOT_COCKTAILS", res.data);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    setAllWeeklyHotCocktails: ({ commit, dispatch, getters }) => {
+      const page = getters["getAllWeeklyHotCocktailPage"];
+      axios({
+        url: api.homes.weeklyHotCocktailView(),
+        method: "GET",
+        params: {
+          page,
+        },
+      })
+        .then((res) => {
+          commit("SET_ALL_WEEKLY_HOT_COCKTAILS", res.data);
+          commit("SET_ALL_WEEKLY_HOT_COCKTAIL_PAGE", page + 1);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    removeAllWeeklyHotCocktails: ({ commit }) => {
+      commit("REMOVE_ALL_WEEKLY_HOT_COCKTAILS");
     },
   },
 };

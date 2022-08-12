@@ -13,6 +13,12 @@
     <the-home-basic-section :data="hotCocktailData">
       <h1 class="title">주류주아 <span class="important">HOT</span> 칵테일</h1>
     </the-home-basic-section>
+    <!-- 유저들의 이번 주 HOT 칵테일  -->
+    <the-home-basic-section :data="weeklyHotCocktailData">
+      <h1 class="title">
+        유저들의 <span class="important">이번 주 HOT</span> 칵테일
+      </h1>
+    </the-home-basic-section>
   </div>
 </template>
 
@@ -38,6 +44,15 @@ const hotCocktailData = {
   setCarouselFunc: "setHotCocktails",
   getCarouselFunc: "getHotCocktails",
   showMoreView: "TheAllHotCocktailView",
+};
+
+// 유저들의 이번 주 HOT 칵테일
+const weeklyHotCocktailData = {
+  description: "한 주간 유저들이 올린 커스텀 칵테일 중 인기가 많은 칵테일",
+  moreButtonText: "전체 보기",
+  setCarouselFunc: "setWeeklyHotCocktails",
+  getCarouselFunc: "getWeeklyHotCocktails",
+  showMoreView: "TheAllWeeklyHotCocktailView",
 };
 </script>
 

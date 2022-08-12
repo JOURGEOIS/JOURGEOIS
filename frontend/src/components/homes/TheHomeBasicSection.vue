@@ -50,10 +50,8 @@ const isShowDescription = ref(false);
 const toggleShowDescription = () => {
   isShowDescription.value = !isShowDescription.value;
 };
-
 // 더보기 클릭
 const clickMore = () => {
-  console.log("눌렀다");
   router.push({ name: props.data.showMoreView });
 };
 </script>

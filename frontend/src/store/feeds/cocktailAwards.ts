@@ -78,6 +78,9 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
     SET_COCKTAIL_AWARDS_VOTE_PAGE: (state, value: number) => {
       state.cocktailAwardsVotePage = value;
     },
+    CHANGE_COCKTAIL_VOTE_STATUS: (state, { index, value }) => {
+      state.cocktailAwardsVoteList[index].like = value;
+    },
 
     // 탭 변경
     SET_CURRENT_TAB: (state, value: number) => {
@@ -241,6 +244,48 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
         })
         .catch((error) => {
           console.error(error);
+        });
+    },
+
+    //======================== Vote ========================
+    // vuex 값 수정
+    changeCocktailVoteStatus: (
+      { commit },
+      data: { index: number; value: number }
+    ) => {
+      commit("CHANGE_COCKTAIL_VOTE_STATUS", data);
+    },
+
+    // 서버에 제출
+    voteCocktail: ({ commit, rootGetters, dispatch }, { index, postId }) => {
+      axios({
+        url: api.awards.voteContest(),
+        method: "post",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        data: {
+          postId,
+        },
+      })
+        .then((response) => {
+          const data = response.data;
+          dispatch("changeCocktailVoteStatus", { index, value: data.state });
+        })
+        .catch((error) => {
+          if (error.response.status !== 401) {
+            console.error(error);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "cocktailAwards/voteCocktail",
+              params: {
+                index,
+                postId,
+              },
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
   },

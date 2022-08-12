@@ -70,11 +70,11 @@ export default {
   },
 
   awards: {
-    joinContest: () => HOST + AWARDS + "/auth",
-    voteContest: () => HOST + AWARDS + "/auth/like",
-    voteContestList: () => HOST + AWARDS,
-    contestListNow: () => HOST + AWARDS + "/result",
-    contestListVote: () => HOST + AWARDS + "/auth/info",
+    joinContest: () => HOST + AWARDS + "auth",
+    voteContest: () => HOST + AWARDS + "auth/like",
+    contestListVote: () => HOST + AWARDS,
+    contestListNow: () => HOST + AWARDS + "result",
+    contestDesc: () => HOST + AWARDS + "auth/info",
   },
 
   homes: {

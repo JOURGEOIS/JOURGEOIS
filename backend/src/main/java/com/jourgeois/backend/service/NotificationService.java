@@ -174,7 +174,6 @@ public class NotificationService {
                             .notification(notificationDTO)
                             .opponent(notiOpponentDTO)
                             .postMetaInfo(postMetaDTO)
-                            .lastSize((long) (page+documents.size()))
                             .build());
         }
 

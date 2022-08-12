@@ -168,9 +168,11 @@ export interface userCustomPostData {
   baseCocktail: number | null
   nickname: string
   description: string
+  ingredients: string
   postId: number
   iLike: number
   profileImg: string
+  title: string
   postImg: string
   likes: number
 }

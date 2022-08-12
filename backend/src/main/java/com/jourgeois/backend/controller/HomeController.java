@@ -1,7 +1,5 @@
 package com.jourgeois.backend.controller;
 
-import com.jourgeois.backend.api.dto.home.HomeCocktailItemDTO;
-import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.service.HomeService;
 import com.jourgeois.backend.util.TagType;
 import org.springframework.data.domain.Pageable;

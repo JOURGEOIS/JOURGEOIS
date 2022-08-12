@@ -1,19 +1,19 @@
 <template>
-  <div class="the-contest-agree">
-    <label for="contest-agree">
+  <div class="the-cocktail-awards-agree">
+    <label for="cocktail-awards-agree">
       <div>
         <span class="material-icons" v-if="modelValue"> done </span>
       </div>
       개인정보 수집에 동의합니다.
     </label>
     <input
-      class="the-contest-input"
+      class="the-cocktail-awards-input"
       type="checkbox"
-      id="contest-agree"
+      id="cocktail-awards-agree"
       @input="emitValue"
       :value="modelValue"
     />
-    <div class="the-contest-agree-content">
+    <div class="the-cocktail-awards-agree-content">
       <p>
         주류주아는 아래의 목적으로 개인정보를 수집 및 이용하며, 개인정보를
         안전하게 취급하는데 최선을 다합니다.
@@ -42,7 +42,7 @@ const emitValue = (event: Event) => {
 </script>
 
 <style scoped lang="scss">
-.the-contest-agree {
+.the-cocktail-awards-agree {
   @include flex(column);
   gap: 8px;
   @include font($fs-md, $fw-medium);
@@ -70,11 +70,11 @@ const emitValue = (event: Event) => {
       }
     }
   }
-  .the-contest-input {
+  .the-cocktail-awards-input {
     display: none;
   }
 
-  .the-contest-agree-content {
+  .the-cocktail-awards-agree-content {
     @include font(13px, $fw-medium);
     color: $sub-color;
   }

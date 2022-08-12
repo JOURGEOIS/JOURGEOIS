@@ -4,7 +4,7 @@
       class="carousel-item"
       v-for="item in cocktails"
       :key="item.cocktailId"
-      @click="clickCarouselItem(item.cocktailId)"
+      @click="clickShowMoreItem(item)"
     >
       <div
         class="carousel-img"
@@ -36,9 +36,8 @@ const getCarouselFunc: string = props.data.getCarouselFunc;
 store.dispatch(`carousel/${setCarouselFunc}`);
 const cocktails = computed(() => store.getters[`carousel/${getCarouselFunc}`]);
 
-// 요소 & 사이즈
-const clickCarouselItem = (cocktailId: number) => {
-  console.log(cocktailId);
+const clickShowMoreItem = (item: CarouselCocktail) => {
+  store.dispatch("carousel/clickShowMoreItem", item);
 };
 </script>
 
@@ -71,6 +70,7 @@ const clickCarouselItem = (cocktailId: number) => {
         position: center center;
       }
       border-radius: 5px;
+      border: 1px solid $white200;
     }
     .carousel-text {
       width: 100%;

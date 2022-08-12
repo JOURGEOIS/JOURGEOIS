@@ -55,6 +55,8 @@ const buttonWidth = computed((): string => {
 // 버튼 폰트 사이즈 선택 (small or medium or large)
 const buttonFontSize = computed(() => {
   switch (props.buttonStyle[2]) {
+    case "very-small":
+      return "12px";
     case "small":
       return "15px";
     case "medium":

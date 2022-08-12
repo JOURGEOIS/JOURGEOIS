@@ -54,5 +54,6 @@ cloud:
     stack:
       auto: false
 
+firebase-configuration-file: ./serviceAccountKey.json
 # 정리 한 번 합시다..
 

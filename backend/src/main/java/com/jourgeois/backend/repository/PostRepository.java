@@ -77,7 +77,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "order by p_create_time DESC limit 10", nativeQuery = true)
     List<HomeCocktailItemVO> findTop5CustomCocktailOrderByCreateTime();
 
-    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS img, p.description AS description " +
+    @Query("SELECT m.nickname AS nickname, m.profileImg AS profileImg, p.createTime AS createTime, p.img AS postImg, p.description AS description " +
             "FROM Member AS m JOIN Post p ON p.member.uid = m.uid AND p.d_type = :postType " +
             "WHERE m.uid = :id")
     Optional<List<MemberVO>> findCocktailOrPostInProfilePageByUid(Long id, String postType);

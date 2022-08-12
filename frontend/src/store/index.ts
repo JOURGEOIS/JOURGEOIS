@@ -63,6 +63,8 @@ import { comment, Comment } from "../store/basics/comment";
 
 // profile
 import { settings, SettingsState } from "../store/profile/settings";
+import { profileDesc, ProfileDescState } from "../store/profile/profileDesc";
+
 //contest
 import { contest, ContestState } from "../store/feeds/contest";
 
@@ -93,8 +95,10 @@ export interface RootState {
   comment: Comment;
   newsFeed: NewsFeedState;
   settings: SettingsState;
+  profileDesc: ProfileDescState;
   contest: ContestState;
   carousel: CarouselState;
+  notice: NoticeState;
 }
 
 // store를 생성한다.
@@ -122,7 +126,9 @@ export default createStore({
     comment,
     newsFeed,
     settings,
+    profileDesc,
     contest,
     carousel,
+    notice,
   },
 });

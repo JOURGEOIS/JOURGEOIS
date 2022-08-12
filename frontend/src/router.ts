@@ -62,14 +62,7 @@ const routes: any[] = [
     component: () => import("@/views/TheChangePwView.vue"),
   },
 
-  // 내 프로필 화면
-  {
-    path: "/user/profile",
-    name: "TheMyProfileView",
-    component: () => import("@/views/TheMyProfileView.vue"),
-  },
-
-  // 타 유저 프로필로 이동
+  // 유저 프로필로 이동
   {
     path: "/user/profile/:userId",
     name: "TheUserProfileView",
@@ -225,8 +218,15 @@ const routes: any[] = [
   // 신규 커스텀 칵테일 리스트
   {
     path: "/latestCustom",
-    name: "TheLatestCustomCocktailView",
-    component: () => import("@/views/homes/TheLatestCustomCocktailView.vue"),
+    name: "TheAllLatestCustomCocktailView",
+    component: () => import("@/views/homes/TheAllLatestCustomCocktailView.vue"),
+  },
+
+  // 알림
+  {
+    path: "/feeds/notice",
+    name: "TheNoticeView",
+    component: () => import("@/views/TheNoticeView.vue"),
   },
 ];
 
@@ -250,7 +250,7 @@ router.beforeEach((to: any, from, next) => {
     "TheSignOutView",
     "TheChangeUserView",
     "TheChangePwView",
-    "TheMyProfileView",
+    "TheUserProfileView",
     "TheCocktailDescBookmarkView",
     "TheCustomCocktailFormView",
     "TheCustomCocktailDescView",

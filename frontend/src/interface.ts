@@ -111,11 +111,12 @@ export interface ContestCocktail {
 
 // notice
 export interface Notice {
-  from: string;
-  img: string;
-  isRead: boolean;
-  postId: number;
-  timeStamp: Date;
-  type: string;
-  uid: number;
+  key: string; // id
+  uid: number; // 발신인 uid
+  from: string; // 발신인
+  img: string; // 발신인 프로필
+  isRead: boolean; // 읽음 여부
+  postId: number; // 포스트 id
+  timestamp: any; // 시간
+  type: string; // 타입
 }

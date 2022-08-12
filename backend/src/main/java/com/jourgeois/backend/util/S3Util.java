@@ -53,20 +53,20 @@ public class S3Util {
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         upload(uploadFile, dirName, imgType);
         System.out.println(uploadFile.getName());
-        return URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_"), "UTF-8");
+        return URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + doFilterFilename(uploadFile.getName()), "UTF-8");
     }
 
     public String localUpload(MultipartFile multipartFile, Long dirName, ImgType imgType) throws IOException {
         File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        String url = imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_");
+        String url = imgType.getValue() + "/" + dirName + "/" + doFilterFilename(uploadFile.getName());
         return url;
     }
 
     // S3로 파일 업로드하기
     private void upload(File uploadFile, Long dirName, ImgType imgType) {
 
-        String fileName = imgType.getValue() + "/" + dirName + "/" + uploadFile.getName().replaceAll(" ", "_");   // S3에 저장된 파일 이름
+        String fileName = imgType.getValue() + "/" + dirName + "/" + this.doFilterFilename(uploadFile.getName());   // S3에 저장된 파일 이름
         putS3(uploadFile, fileName); // s3로 업로드
         try {
             File tmp_img = new File(IMG_TMP + "/" + imgType.getValue() + "/" + dirName);
@@ -104,7 +104,7 @@ public class S3Util {
             System.out.println("폴더 만들었음");
         }
 
-        File convertFile = new File(folderPath + Long.toString(System.nanoTime()) + "_" +file.getOriginalFilename().replaceAll(" ", "_"));
+        File convertFile = new File(folderPath + Long.toString(System.nanoTime()) + "_" + this.doFilterFilename(file.getOriginalFilename()));
         System.out.println(convertFile.getAbsolutePath());
         URL url = ResourceUtils.getURL(folderPath);
         System.out.println("url임" + url);
@@ -121,5 +121,9 @@ public class S3Util {
     public void deleteFile(final String url) throws SdkClientException {
         DeleteObjectRequest request = new DeleteObjectRequest(bucket, url);
         amazonS3Client.deleteObject(request);
+    }
+
+    private String doFilterFilename(final String fileName) throws SdkClientException {
+        return fileName.replaceAll(" ", "_").replace("^\\.+", "").replaceAll("[\\\\/:*?\"<>()|]", "");
     }
 }

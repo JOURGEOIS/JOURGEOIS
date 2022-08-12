@@ -12,6 +12,8 @@ public class NotificationDTO {
     // FOLLOW, LIKE, COMMENT
     private NotificationType type;
 
+    private Long postId;
+
     // 상대방 정보
     private Long uid;
     private Boolean isRead;

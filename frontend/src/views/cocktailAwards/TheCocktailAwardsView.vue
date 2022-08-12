@@ -25,9 +25,7 @@
         </div>
 
         <!-- 동적 컴포넌트: 탭에 따라 변경된다.  -->
-        <keep-alive>
-          <component :is="currentComponent"></component>
-        </keep-alive>
+        <component :is="currentComponent"></component>
       </section>
     </section>
   </div>
@@ -91,7 +89,7 @@ const changeTab = (value: number) =>
           height: 1px;
           margin: 0;
           border: 0;
-          background-color: $white400;
+          background-color: $white300;
         }
 
         > div {

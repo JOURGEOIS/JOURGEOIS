@@ -72,9 +72,9 @@ export default {
   awards: {
     joinContest: () => HOST + AWARDS + "/auth",
     voteContest: () => HOST + AWARDS + "/auth/like",
-    voteCOntestList: () => HOST + AWARDS,
-    resultCOntestList: () => HOST + AWARDS + "/result",
-    contestDetail: () => HOST + AWARDS + "/auth/info",
+    voteContestList: () => HOST + AWARDS,
+    contestListNow: () => HOST + AWARDS + "/result",
+    contestListVote: () => HOST + AWARDS + "/auth/info",
   },
 
   homes: {

@@ -7,16 +7,29 @@ import { ContestCocktail } from "../../interface";
 import { checkBadWord } from "../../functions/checkText";
 
 export interface CocktailAwardsState {
-  cocktailAwardsList: ContestCocktail[];
+  cocktailAwardsVoteList: ContestCocktail[];
+  cocktailAwardsVotePage: number;
+  cocktailAwardsNowList: ContestCocktail[];
+  cocktailAwardsNowPage: number;
   cocktailAwardsDetail: ContestCocktail;
   currentTab: number;
+  cocktailAwardsErrorStatus: boolean;
+  cocktailAwardsErrorMessage: string;
 }
 
 export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
   namespaced: true,
 
   state: {
-    cocktailAwardsList: [],
+    // 칵테일 현황 탭 리스트
+    cocktailAwardsNowList: [],
+    cocktailAwardsNowPage: 0,
+
+    // 칵테일 투표 탭 리스트
+    cocktailAwardsVoteList: [],
+    cocktailAwardsVotePage: 0,
+
+    // 칵테일 상세 정보
     cocktailAwardsDetail: {
       postId: 0,
       description: "",
@@ -25,16 +38,48 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
       like: 0,
       percentage: "",
     },
+
+    // 현재 탭 index
     currentTab: 0,
+
+    // 칵테일 에러 메시지
+    cocktailAwardsErrorStatus: false,
+    cocktailAwardsErrorMessage: "",
   },
 
   getters: {
-    getCocktailAwardsList: (state) => state.cocktailAwardsList,
+    getCocktailAwardsNowList: (state) => state.cocktailAwardsNowList,
+    getCocktailAwardsNowPage: (state) => state.cocktailAwardsNowPage,
+    getCocktailAwardsVoteList: (state) => state.cocktailAwardsVoteList,
+    getCocktailAwardsVotePage: (state) => state.cocktailAwardsVotePage,
     getCocktailAwardsDetail: (state) => state.cocktailAwardsDetail,
     getCurrentTab: (state) => state.currentTab,
   },
 
   mutations: {
+    // 칵테일 현황
+    ADD_COCKTAIL_AWARDS_NOW_LIST: (state, value: ContestCocktail[]) => {
+      state.cocktailAwardsNowList.push(...value);
+    },
+    SET_COCKTAIL_AWARDS_NOW_LIST: (state, value: ContestCocktail[]) => {
+      state.cocktailAwardsNowList = value;
+    },
+    SET_COCKTAIL_AWARDS_NOW_PAGE: (state, value: number) => {
+      state.cocktailAwardsNowPage = value;
+    },
+
+    // 칵테일 투표
+    ADD_COCKTAIL_AWARDS_VOTE_LIST: (state, value: ContestCocktail[]) => {
+      state.cocktailAwardsVoteList.push(...value);
+    },
+    SET_COCKTAIL_AWARDS_VOTE_LIST: (state, value: ContestCocktail[]) => {
+      state.cocktailAwardsVoteList = value;
+    },
+    SET_COCKTAIL_AWARDS_VOTE_PAGE: (state, value: number) => {
+      state.cocktailAwardsVotePage = value;
+    },
+
+    // 탭 변경
     SET_CURRENT_TAB: (state, value: number) => {
       state.currentTab = value;
     },
@@ -46,6 +91,15 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
       commit("SET_CURRENT_TAB", value);
     },
 
+    // 리스트 리셋
+    resetCocktailAwardsList: ({ commit }) => {
+      commit("SET_COCKTAIL_AWARDS_NOW_LIST", []);
+      commit("SET_COCKTAIL_AWARDS_NOW_PAGE", 0);
+      commit("SET_COCKTAIL_AWARDS_VOTE_LIST", []);
+      commit("SET_COCKTAIL_AWARDS_VOTE_PAGE", 0);
+    },
+
+    //======================== Create ========================
     // 제출 시, 유효성 검사
     checkCocktailAwardsForm: (
       { dispatch },
@@ -141,6 +195,52 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
+        });
+    },
+
+    //======================== READ ========================
+    getCocktailAwardsNowList: ({ commit, getters }) => {
+      axios({
+        url: api.awards.contestListNow(),
+        method: "get",
+        params: {
+          page: getters["getCocktailAwardsNowPage"],
+        },
+      })
+        .then((response) => {
+          // 저장
+          commit("ADD_COCKTAIL_AWARDS_NOW_LIST", response.data);
+
+          //page+ 1
+          const page = getters["getCocktailAwardsNowPage"];
+          commit("SET_COCKTAIL_AWARDS_NOW_PAGE", page + 1);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    getCocktailAwardsVoteList: ({ commit, getters, rootGetters }) => {
+      axios({
+        url: api.awards.contestListVote(),
+        method: "get",
+        headers: {
+          uid: rootGetters["personalInfo/getUserInfoUserId"],
+        },
+        params: {
+          page: getters["getCocktailAwardsVotePage"],
+        },
+      })
+        .then((response) => {
+          // 저장
+          commit("ADD_COCKTAIL_AWARDS_VOTE_LIST", response.data);
+
+          //page+ 1
+          const page = getters["getCocktailAwardsVotePage"];
+          commit("SET_COCKTAIL_AWARDS_VOTE_PAGE", page + 1);
+        })
+        .catch((error) => {
+          console.error(error);
         });
     },
   },

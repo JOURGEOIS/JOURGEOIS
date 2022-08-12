@@ -3,11 +3,8 @@ package com.jourgeois.backend.service;
 import com.amazonaws.SdkClientException;
 
 
-import com.jourgeois.backend.api.dto.home.HomeCocktailItemDTO;
-import com.jourgeois.backend.api.dto.home.HomeCocktailItemVO;
 import com.jourgeois.backend.api.dto.member.FollowerDTO;
 import com.jourgeois.backend.api.dto.post.*;
-import com.jourgeois.backend.api.dto.search.SearchHistoryDTO;
 import com.jourgeois.backend.domain.cocktail.Cocktail;
 import com.jourgeois.backend.domain.member.FollowPK;
 import com.jourgeois.backend.domain.member.Member;
@@ -20,20 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 public class PostService {
 
+    private final NotificationService notificationService;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CustomCocktailToCocktailRepository customCocktailToCocktailRepository;
@@ -45,10 +38,11 @@ public class PostService {
     private final String s3Url;
 
     @Autowired
-    public PostService(PostRepository postRepository,
+    public PostService(NotificationService notificationService, PostRepository postRepository,
                        MemberRepository memberRepository,
                        CustomCocktailToCocktailRepository customCocktailToCocktailRepository, CocktailRepository cocktailRepository, PostBookmarkRepository postBookmarkRepository, PostReviewRepository postReviewRepository, FollowRepository followRepository, S3Util s3Util,
                        @Value("${cloud.aws.s3.bucket.path}") String s3Url) {
+        this.notificationService = notificationService;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.customCocktailToCocktailRepository = customCocktailToCocktailRepository;
@@ -191,11 +185,9 @@ public class PostService {
 
     public Map<String, Object> postReview(PostReviewDTO postReviewDTO) throws Exception {
 
-        Member member = new Member();
-        member.setUid(postReviewDTO.getUid());
+        Member member = memberRepository.findById(postReviewDTO.getUid()).orElseThrow(() -> new NoSuchElementException("해당 유저가 없습니다."));
 
-        Post post = new Post();
-        post.setId(postReviewDTO.getPostId());
+        Post post = postRepository.findById(postReviewDTO.getPostId()).orElseThrow(() -> new NoSuchElementException("해당 글이 없습니다."));
 
         PostReview postReview = new PostReview();
         postReview.setMember(member);
@@ -203,6 +195,8 @@ public class PostService {
         postReview.setReview(postReviewDTO.getReview());
 
         PostReview newReview = postReviewRepository.save(postReview);
+
+        notificationService.commentNotification(post.getMember(), newReview.getMember(), newReview.getPost());
 
         Map<String, Object> response = new HashMap<>();
         response.put("postId", newReview.getPost().getId());
@@ -306,20 +300,22 @@ public class PostService {
         // p_id를 북마크한 사람들 목록 가져오기
         postBookmarkRepository.findByPostId(new Post(p_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
-            FollowPK key = new FollowPK(uid, member.getUid());
 
-            Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
-            if(uid.equals(member.getUid())) {
-                status = -1;
+            if(member.getIsPublic().equals("1")){
+                FollowPK key = new FollowPK(uid, member.getUid());
+                Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
+                if(uid.equals(member.getUid())) {
+                    status = -1;
+                }
+
+                followersResponse.add(FollowerDTO.builder()
+                        .introduce(member.getIntroduce())
+                        .isFollowed(status)
+                        .nickname(member.getNickname())
+                        .uid(member.getUid())
+                        .profileImg(s3Url+member.getProfileImg())
+                        .build());
             }
-            
-            followersResponse.add(FollowerDTO.builder()
-                    .introduce(member.getIntroduce())
-                    .isFollowed(status)
-                    .nickname(member.getNickname())
-                    .uid(member.getUid())
-                    .profileImg(s3Url+member.getProfileImg())
-                    .build());
         });
         return followersResponse;
     }
@@ -398,5 +394,9 @@ public class PostService {
         });
 
         return feedResponse;
+    }
+
+    public Post findById(Long postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new NoSuchElementException("해당 글이 존재하지 않습니다."));
     }
 }

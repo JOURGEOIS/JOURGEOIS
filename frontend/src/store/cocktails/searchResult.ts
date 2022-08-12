@@ -165,7 +165,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
         url: api.lookups.user(),
         method: "GET",
         headers: {
-          Authorization: rootGetters["personalInfo/getAccessToken"],
+          uid: rootGetters["personalInfo/getUserInfoUserId"],
         },
         params: {
           keyword: data.keyword,
@@ -181,7 +181,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
           // 실패 시, 홈으로 이동 후 에러 모달 on
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.log(err.response);
+            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -250,7 +250,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
           // 실패 시, 홈으로 이동 후 에러 모달 on
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.log(err.response);
+            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -295,7 +295,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
           // 실패 시, 홈으로 이동 후 에러 모달 on
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.log(err.response);
+            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {

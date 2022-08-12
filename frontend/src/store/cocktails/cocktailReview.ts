@@ -39,7 +39,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       return state.deleteModalStatus;
     },
     getReviewChangeSuccess: (state) => {
-      console.log("팝업", state.reviewChangeSuccess);
+      console.log(state.reviewChangeSuccess);
       return state.reviewChangeSuccess;
     },
   },
@@ -86,7 +86,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           commit("SET_REVIEW_COCKTAIL_PAGE", page + 1);
         })
         .catch((err) => {
-          console.log(err.response);
+          console.error(err.response);
         });
     },
     // 후기 생성
@@ -110,7 +110,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           dispatch("getCocktailReview", cocktailId);
         })
         .catch((err) => {
-          console.log(err.res);
+          console.error(err.res);
         });
     },
     // 후기 수정
@@ -138,7 +138,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           console.log("4");
         })
         .catch((err) => {
-          console.log(err.res);
+          console.error(err.res);
           console.log("에러");
         });
     },
@@ -164,8 +164,8 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           dispatch("getCocktailReview", cocktailId);
         })
         .catch((err) => {
-          console.log(err.res);
-          console.log(err.data);
+          console.error(err.res);
+          console.error(err.data);
           console.log("에러");
         });
     },

@@ -1,12 +1,12 @@
 package com.jourgeois.backend.controller;
 
 import com.amazonaws.AmazonClientException;
+import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.api.dto.post.PostDTO;
 import com.jourgeois.backend.api.dto.post.PostReviewDTO;
-import com.jourgeois.backend.service.CocktailService;
-import com.jourgeois.backend.service.MemberService;
-import com.jourgeois.backend.service.PostService;
-import com.jourgeois.backend.service.SearchService;
+import com.jourgeois.backend.domain.member.Member;
+import com.jourgeois.backend.domain.post.Post;
+import com.jourgeois.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 
@@ -24,14 +24,17 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/posts")
 public class PostController {
-
     private final PostService postService;
     private final SearchService searchService;
+    private final MemberService memberService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public PostController(PostService postService, SearchService searchService) {
+    public PostController(PostService postService, SearchService searchService, MemberService memberService, NotificationService notificationService) {
         this.postService = postService;
         this.searchService = searchService;
+        this.memberService = memberService;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("/auth")
@@ -78,7 +81,6 @@ public class PostController {
 
         Map<String, String> result = new HashMap<>();
 
-        
         try{
             Long uid = Long.valueOf((String) request.getAttribute("uid"));
             post.setUid(uid);
@@ -236,6 +238,9 @@ public class PostController {
             bookmark.put("uid", uid);
             if(postService.checkPostId(bookmark.get("postId"))) {
                 if (postService.pushBookmark(bookmark)) {
+                    Member member = memberService.findUser(uid);
+                    Post post = postService.findById(bookmark.get("postId"));
+                    notificationService.likeNotification(post.getMember(), member, post);
                     data.put("status", 1);
                 } else {
                     data.put("status", 0);

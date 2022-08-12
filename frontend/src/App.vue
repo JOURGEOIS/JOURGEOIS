@@ -1,8 +1,13 @@
 <template>
   <router-view />
-  <failure-pop-up-app v-if="failModalAppStatus">{{
-    failMessage
-  }}</failure-pop-up-app>
+  <failure-pop-up-app
+    v-if="failModalAppStatus"
+    @off-modal="offFailurePopUpAPP"
+    >{{ failMessage }}</failure-pop-up-app
+  >
+  <failure-pop-up v-if="errorModalAppStatus" @off-modal="offFailurePopUp">{{
+    errorModalAppMessage
+  }}</failure-pop-up>
   <the-create-post-modal v-if="createFeedModalStatus"></the-create-post-modal>
   <share-modal v-if="shareModalStatus"></share-modal>
   <top-button></top-button>
@@ -10,6 +15,7 @@
 
 <script setup lang="ts">
 import FailurePopUpApp from "@/components/modals/FailurePopUpApp.vue";
+import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import TheCreatePostModal from "@/components/feeds/TheCreatePostModal.vue";
 import ShareModal from "@/components/basics/ShareModal.vue";
 import TopButton from "@/components/basics/TopButton.vue";
@@ -33,6 +39,22 @@ const shareModalStatus = computed(
   () => store.getters["share/getShareModalStatus"]
 );
 
+const errorModalAppStatus = computed(
+  () => store.getters["modal/getErrorModalAppStatus"]
+);
+
+const errorModalAppMessage = computed(
+  () => store.getters["modal/getErrorModalAppMessage"]
+);
+
+const offFailurePopUpAPP = () => {
+  store.dispatch("modal/toggleFailModalAppStatus", false);
+};
+
+const offFailurePopUp = () => {
+  store.dispatch("modal/toggleErrorModalAppStatus", false);
+};
+
 // deviceType 확인
 onMounted(() => {
   store.dispatch("navbar/setDeviceType");
@@ -48,8 +70,7 @@ onMounted(() => {
 }
 
 .top-view {
-  margin-top: 120px !important;
-
+  margin-top: 100px !important;
   @media #{$tablet} {
     margin-top: 128px !important;
   }

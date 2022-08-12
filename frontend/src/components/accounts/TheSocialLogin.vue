@@ -1,5 +1,5 @@
 <template>
-  <hr />
+  <!-- <hr /> -->
   <div class="social-login">
     <p>or</p>
     <button-basic
@@ -14,7 +14,7 @@
       </div>
     </button-basic>
     <button-basic
-      @click="kakaoLogin"
+      @click="clickKakao"
       :button-style="['kakao-login', 'long', 'small']"
     >
       <div class="button-content">
@@ -39,77 +39,65 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
-import api from '../../api/api'
-import ButtonBasic from '@/components/basics/ButtonBasic.vue'
-import { computed, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-const store = useStore()
-const router = useRouter()
+import axios from "axios";
+import api from "../../api/api";
+import ButtonBasic from "@/components/basics/ButtonBasic.vue";
+import { computed, onMounted, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+const store = useStore();
+const router = useRouter();
 
 // 구글 로그인 클릭
-  const googleAPI = computed(() => store.getters['socialLogin/getGoogleLoginApi'])
+const googleAPI = computed(
+  () => store.getters["socialLogin/getGoogleLoginApi"]
+);
 
 const clickGoogle = () => {
-  // console.log(googleAPI.value)
-  // store.dispatch('socialLogin/getGoogleLoginApi', googleAPI)
-  window.open("http://jourgeois.com/api/member/login/google", "_blank");
+  const googleClientId = `217608233279-k2op58rvkdtbbteakk7ag0tp5ia54mij.apps.googleusercontent.com`;
+  // const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
+  const googleRedirect = `http://localhost:8080/member/login/google/redirect`;
+  window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirect}&response_type=code&scope=profile%20email%20openid`;
+};
 
-}
-const kakaoLogin = () => {
-  window.Kakao.Auth.login({
-    scope: 'profile, account_email',
-    success: getKakaoAccount,
-  });
-}
-const getKakaoAccount = () => {
-  window.Kakao.API.request({
-    url: '/v2/user/me',
-    success: (res:any) => {
-      const kakao_account = res.kakao_account;
-      const nickname = kakao_account.profile.nickname;
-      const email = kakao_account.email
-      console.log('nickname', nickname);
-      console.log('email', email)
-
-      //로그인 처리 구현
-      alert("로그인 성공!");
-    },
-    fail: (error:any) => {
-      console.log(error);
-    }
-  })
-}
-// const clickKakao = () => {
-//   // axios({
-//   //   url: api.accounts.kakaoLogin(),
-//   //   method: 'GET',
-//   // })
-//   //   .then((res) => {
-//   //     const data = res.data
-//   //     console.log(data)
-//   //   })
-//   //   .catch((err) => {
-//   //     console.error(err.response)
-//   //   })
-//   window.open("https://kauth.kakao.com/oauth/authorize?client_id=f1c36f65322c75f1f28caf1560a306d1&redirect_uri=http://jourgeois.com/api/member/login/kakao/redirect&response_type=code")
-// }
+const clickKakao = () => {
+  const kakaoRestApiKey = `f1c36f65322c75f1f28caf1560a306d1`;
+  const kakaoRedirect = `https://jourgeois.com/api/member/login/kakao/redirect`;
+  window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirect}&response_type=code`;
+};
 
 const clickNaver = () => {
-  window.open("http://jourgeois.com/api/member/login/naver", "_blank");
-  // axios({
-  //   url: api.accounts.naverLogin(),
-  //   method: 'GET',
-  // })
-  //   .then((res) => {
-  //     const data = res.data
-  //     console.log(data)
-  //   })
-  //   .catch((err) => {
-  //     console.error(err.response)
-  //   })
-}
+  const naverClientId = `D0B_Xn9oGT7I_66h9Z4U`;
+  const naverRedirect = `https://jourgeois.com/api/member/login/naver/redirect`;
+  window.location.href = `
+  https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirect}&state=78577e6c-3f10-4146-910c-3fd4e684dfb5`;
+};
+
+// const kakaoLogin = () => {
+//   window.Kakao.Auth.login({
+//     scope: "profile_nickname, profile_image, account_email",
+//     success: getKakaoAccount,
+//   });
+// };
+// const getKakaoAccount = () => {
+//   window.Kakao.API.request({
+//     url: "/v2/user/me",
+//     success: (res: any) => {
+//       const kakao_account = res.kakao_account;
+//       const nickname = kakao_account.profile.nickname;
+//       const email = kakao_account.email;
+//       console.log(kakao_account);
+//       console.log("nickname", nickname);
+//       console.log("email", email);
+
+//       //로그인 처리 구현
+//       alert("로그인 성공!");
+//     },
+//     fail: (error: any) => {
+//       console.log(error);
+//     },
+//   });
+// };
 </script>
 
 <style scoped lang="scss">

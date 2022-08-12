@@ -1,5 +1,5 @@
 <template>
-  <modal-pop-up modal-color="primary">
+  <modal-pop-up modal-color="primary" @off-modal="offModal">
     <div class="success-popup-content">
       <div class="check-icon">
         <div class="icon-line line-left"></div>
@@ -14,6 +14,11 @@
 
 <script setup lang="ts">
 import ModalPopUp from "@/components/basics/ModalPopUp.vue";
+
+const emit = defineEmits<{ (event: "offModal"): void }>();
+const offModal = () => {
+  emit("offModal");
+};
 </script>
 <style scoped lang="scss">
 @keyframes icon-line-left {

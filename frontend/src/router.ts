@@ -31,7 +31,7 @@ const routes: any[] = [
   {
     path: "/user/login/kakaologin",
     name: "Kakaologin",
-    component: () => import("@/views/KakaoLogin.vue")
+    component: () => import("@/views/KakaoLogin.vue"),
   },
 
   // 로그아웃 화면
@@ -60,6 +60,13 @@ const routes: any[] = [
     path: "/user/my-info/password",
     name: "TheChangePwView",
     component: () => import("@/views/TheChangePwView.vue"),
+  },
+
+  // 유저 프로필로 이동
+  {
+    path: "/user/profile/:userId",
+    name: "TheUserProfileView",
+    component: () => import("@/views/TheUserProfileView.vue"),
   },
 
   // 칵테일 검색 페이지
@@ -193,6 +200,34 @@ const routes: any[] = [
     name: "TheSuperCustomCocktailUpdateFormView",
     component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
   },
+
+  //contest 게시글 form
+  {
+    path: "/feeds/contest/form",
+    name: "TheCocktailAwardsFormView",
+    component: () => import("@/views/TheCocktailAwardsFormView.vue"),
+  },
+
+  // contest 게시글 상세
+  {
+    path: "/feeds/:feedId/contest",
+    name: "TheCocktailAwardsDescView",
+    component: () => import("@/views/TheCocktailAwardsDescView.vue"),
+  },
+
+  // 신규 커스텀 칵테일 리스트
+  {
+    path: "/latestCustom",
+    name: "TheAllLatestCustomCocktailView",
+    component: () => import("@/views/homes/TheAllLatestCustomCocktailView.vue"),
+  },
+
+  // 알림
+  {
+    path: "/feeds/notice",
+    name: "TheNoticeView",
+    component: () => import("@/views/TheNoticeView.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -215,6 +250,7 @@ router.beforeEach((to: any, from, next) => {
     "TheSignOutView",
     "TheChangeUserView",
     "TheChangePwView",
+    "TheUserProfileView",
     "TheCocktailDescBookmarkView",
     "TheCustomCocktailFormView",
     "TheCustomCocktailDescView",
@@ -227,6 +263,8 @@ router.beforeEach((to: any, from, next) => {
     "TheSuperCustomCocktailDescView",
     "TheSuperCustomCocktailFormView",
     "TheSuperCustomCocktailUpdateFormView",
+    "TheCocktailAwardsFormView",
+    "TheCocktailAwardsDescView",
   ];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지

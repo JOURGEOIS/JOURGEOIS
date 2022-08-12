@@ -43,6 +43,8 @@ import { onBeforeRouteLeave, useRouter } from "vue-router";
 const router = useRouter();
 const store = useStore();
 const navIconStatus = computed(() => store.getters["navbar/getNavIconStatus"]);
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+
 
 const setNavIconStatus = (index: number) => {
   store.dispatch("navbar/setNavIconStatus", index);
@@ -77,10 +79,8 @@ const clickSearch = () => {
 // 프로필 버튼 클릭
 const clickProfile = () => {
   setNavIconStatus(4);
-  alert("프로필 페이지로 이동시켜라");
-  // router.push({ name: "TheProfileView" });
+  router.push({ name: "TheUserProfileView", params: { userId : userId.value || 0 } });
 };
-
 const createFeedModalStatus = computed(
   () => store.getters["createFeed/getCreateFeedModalStatus"]
 );
@@ -104,7 +104,7 @@ onBeforeRouteLeave((to, from, next) => {
   bottom: 0;
   @include flex-xy(space-around, center);
   width: 100%;
-  height: 60px;
+  height: 64px;
   background-color: $white;
   z-index: 1;
   box-shadow: 0px -1.5px 11px rgba(56, 55, 68, 0.1);

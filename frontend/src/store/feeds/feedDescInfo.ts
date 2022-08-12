@@ -124,7 +124,8 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
       state.successMessage = value;
     },
     // 일반 게시글 정보
-    SET_IMG_LINK: (state, value: string) => state.communityDetail.customCocktail.imgLink = value,
+    SET_IMG_LINK: (state, value: string) =>
+      (state.communityDetail.customCocktail.imgLink = value),
     SET_DESCRIPTION: (state, value: string) => {
       state.communityDetail.customCocktail.description = value;
     },
@@ -132,19 +133,19 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
 
   actions: {
     // vuex 리셋
-    resetCocktailData: ({ commit }) => {
+    resetCommunityData: ({ commit }) => {
       commit("SET_ALERT_STATUS", false);
       commit("SET_ERROR_MESSAGE", "");
       commit("SET_SUCCESS_MESSAGE", "");
       commit("SET_IMG_LINK", "");
       commit("SET_DESCRIPTION", "");
     },
-    
+
     // img_Link
     setImgLink: ({ commit }, value: string) => {
-      commit("SET_IMG_LINK", value)
+      commit("SET_IMG_LINK", value);
     },
-    
+
     // description
     setDescription: ({ commit }, value: string) => {
       commit("SET_DESCRIPTION", value);
@@ -154,10 +155,10 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     uploadImage: ({ rootGetters, dispatch, commit }, data) => {
       axios({
         url: api.post.uploadImage(),
-        method: 'post',
+        method: "post",
         headers: {
-          Authorization: rootGetters['personalInfo/getAccessToken'],
-          'Content-Type': 'multipart/form-data',
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+          "Content-Type": "multipart/form-data",
         },
         data,
       })
@@ -166,17 +167,17 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            commit('SET_ERROR_MESSAGE', '잠시 후에 시도해주세요')
-            commit('SET_ALERT_STATUS', true)
+            commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
+            commit("SET_ALERT_STATUS", true);
           } else {
             // refreshToken 재발급
             const obj = {
-              func: 'createFeed/uploadImage',
+              func: "feedDescInfo/uploadImage",
               params: data,
-            }
-            dispatch('personalInfo/requestRefreshToken', obj, { root: true })
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
-        })
+        });
     },
 
     // 일반게시글 상세정보 불러오기
@@ -193,14 +194,13 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         params: { postId: params.feedId },
       })
         .then((res) => {
-          console.log('현재 디비 저장된 정보: ',res.data);
+          const reviewCount = res.data.customCocktail.reviewCount;
+          dispatch("comment/setCommentCount", reviewCount, { root: true });
           commit("SET_COMMUNITY_DETAIL", res.data);
         })
         .catch((err) => {
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.log(err.response);
-            console.log(params.feedId);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -229,21 +229,16 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         data: { postId: postId },
       })
         .then((res) => {
-          alert("삭제성공^0^");
           router.push({
             name: "TheNewsFeedView",
           });
-
           // 성공 알림
-          console.log(res);
           commit("SET_SUCCESS_MESSAGE", "성공적으로 삭제되었습니다");
           commit("SET_ALERT_STATUS", true);
-          commit("SET_REVIEW_SUCCESS", true);
+          dispatch("newsFeed/removeNewsFeedListData", {}, { root: true });
         })
         .catch((err) => {
-          console.log(err);
           if (err.res.status !== 401) {
-            console.log(err.res);
             // 실패 팝업
             commit("SET_ERROR_MESSAGE", "잠시 후에 시도해주세요");
             commit("SET_ALERT_STATUS", true);

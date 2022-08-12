@@ -12,11 +12,17 @@
       </div>
     </section>
   </div>
-  <the-log-out-modal v-if="logOutModalStatus"></the-log-out-modal>
-  <success-pop-up v-if="successPopUpStatus">
+  <the-log-out-modal
+    v-if="logOutModalStatus"
+    @off-modal="toggleLogOutModal(false)"
+  ></the-log-out-modal>
+  <success-pop-up
+    v-if="successPopUpStatus"
+    @off-modal="toggleSuccessPopUp(false)"
+  >
     성공적으로 저장되었습니다
   </success-pop-up>
-  <failure-pop-up v-if="failModalStatus">
+  <failure-pop-up v-if="failModalStatus" @off-modal="toggleFailPopUp(false)">
     잠시 후에 다시 시도해주세요
   </failure-pop-up>
   <nav-bar></nav-bar>

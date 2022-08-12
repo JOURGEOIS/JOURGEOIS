@@ -1,9 +1,9 @@
 <template>
   <div class="the-news-feed-view">
     <!-- 헤더 -->
-    <header-basic :success="false" @prevClicked="$router.go(-1)">
+    <header-notice :success="false" @prevClicked="$router.go(-1)">
       뉴스피드
-    </header-basic>
+    </header-notice>
     <section class="top-view-no-margin">
       <the-news-feed-list></the-news-feed-list>
     </section>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import HeaderNotice from "@/components/basics/HeaderNotice.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import TheNewsFeedList from "@/components/feeds/TheNewsFeedList.vue";
 import { useStore } from "vuex";
@@ -40,13 +40,15 @@ onMounted(() => {
   setTimeout(() => {
     window.scrollTo({ left: 0, top: scrollY.value });
   }, 0);
+
+  // 알림 상태 확인하기
+  store.dispatch("notice/checkNotice");
 });
 
 // 스크롤 높이 저장
 onBeforeUnmount(() => {
-  console.log(window.scrollY);
+  // 스크롤 위치 기억하기
   store.dispatch("newsFeed/setNewsFeedScrollY", window.scrollY);
-  // store.dispatch("newsFeed/removeNewsFeedListData");
 });
 </script>
 

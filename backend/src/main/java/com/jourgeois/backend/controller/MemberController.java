@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.api.dto.member.PasswordChangeForm;
+import com.jourgeois.backend.domain.member.Follow;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
 import com.jourgeois.backend.service.MemberService;
+import com.jourgeois.backend.service.NotificationService;
 import com.jourgeois.backend.socialLogin.SocialLoginConfigUtils;
 import com.jourgeois.backend.socialLogin.GoogleLoginDTO;
 import com.jourgeois.backend.socialLogin.GoogleLoginRequest;
@@ -39,12 +41,14 @@ import java.util.NoSuchElementException;
 public class MemberController {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final MemberService memberService;
+    private final NotificationService notificationService;
     private final S3Util s3Uploader;
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    MemberController(MemberService memberService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, SocialLoginConfigUtils configUtils) {
+    MemberController(MemberService memberService, NotificationService notificationService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, SocialLoginConfigUtils configUtils) {
         this.memberService = memberService;
+        this.notificationService = notificationService;
         this.s3Uploader = s3Uploader;
         this.jwtTokenProvider = jwtTokenProvider;
         this.configUtils = configUtils;
@@ -139,6 +143,7 @@ public class MemberController {
     public ResponseEntity<?> redirectGoogleLogin(@RequestParam(value = "code") String authCode) {
         // HTTP 통신을 위해 RestTemplate 활용
         System.out.println("Google authCde :" + authCode);
+
 
         RestTemplate restTemplate = new RestTemplate();
         GoogleLoginRequest requestParams = GoogleLoginRequest.builder()
@@ -386,7 +391,8 @@ public class MemberController {
                 return new ResponseEntity(data, HttpStatus.BAD_REQUEST);
             }
 
-            data.put("success", memberService.followUser(from, to));
+            Follow follow = memberService.followUser(from, to);
+            data.put("success", notificationService.followNotification(follow.getTo(), follow.getFrom()));
             return new ResponseEntity(data, HttpStatus.CREATED);
         } catch(JpaObjectRetrievalFailureException e) {
             data.put("success", false);

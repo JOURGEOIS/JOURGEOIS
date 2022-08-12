@@ -33,7 +33,9 @@
     </div>
   </div>
   <nav-bar></nav-bar>
-  <success-pop-up v-if="successStatus"> {{ successMessage }}</success-pop-up>
+  <success-pop-up v-if="successStatus" @off-modal="offSuccessModal">
+    {{ successMessage }}</success-pop-up
+  >
 </template>
 
 <script setup lang="ts">
@@ -75,14 +77,6 @@ const clickRecipeTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 0);
 const clickReviewTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 1);
 const clickCustomTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 2);
 
-// params가 변경될 때
-watch(
-  () => route.params.cocktail,
-  () => {
-    store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
-  }
-);
-
 // 동적 라우팅
 onMounted(() => {
   store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
@@ -100,11 +94,12 @@ const successStatus = computed(
 // 시간제 모달
 watch(successStatus, () => {
   if (successStatus.value) {
-    setTimeout(() => {
-      store.dispatch("customCocktail/changeAlertStatus", false);
-    }, 2000);
+    setTimeout(() => offSuccessModal(), 2000);
   }
 });
+const offSuccessModal = () => {
+  store.dispatch("customCocktail/changeAlertStatus", false);
+};
 </script>
 
 <style scoped lang="scss">

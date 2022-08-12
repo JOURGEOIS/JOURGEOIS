@@ -13,6 +13,9 @@ export interface Comment {
   // 댓글 정렬: false는 최신순, true는 오래된 순
   commentSort: boolean;
 
+  // 댓글 개수
+  commentCount: number;
+
   // 수정 팝업
   successPopUpStatus: boolean;
 
@@ -36,6 +39,9 @@ export const comment: Module<Comment, RootState> = {
     // 댓글 정렬
     commentSort: false,
 
+    // 댓글 개수
+    commentCount: 0,
+
     // 수정 성공 팝업
     successPopUpStatus: false,
 
@@ -54,6 +60,9 @@ export const comment: Module<Comment, RootState> = {
 
     // 댓글 정렬
     getCommentSort: (state) => state.commentSort,
+
+    // 댓글 개수
+    getCommentCount: (state) => state.commentCount,
 
     // 수정 성공 팝업
     getSuccessPopUpStatus: (state) => state.successPopUpStatus,
@@ -83,6 +92,11 @@ export const comment: Module<Comment, RootState> = {
     // 댓글 정렬 변경
     SET_COMMENT_SORT: (state, value: boolean) => {
       state.commentSort = value;
+    },
+
+    // 댓글 개수 변경
+    SET_COMMENT_COUNT: (state, value: number) => {
+      state.commentCount = value;
     },
 
     // 수정 팝업 세팅
@@ -115,6 +129,12 @@ export const comment: Module<Comment, RootState> = {
     setDeleteCommentId: ({ commit }, value: number) => {
       commit("SET_DELETE_COMMENT_ID", value);
     },
+
+    // 댓글 개수 갱신
+    setCommentCount: ({ commit }, value: number) => {
+      commit("SET_COMMENT_COUNT", value);
+    },
+
     // 리스트와 페이지 리셋
     resetCommentData: ({ commit }) => {
       commit("REMOVE_COMMENT_LIST");
@@ -132,9 +152,10 @@ export const comment: Module<Comment, RootState> = {
         },
         data,
       })
-        .then(() => {
+        .then((res) => {
           dispatch("resetCommentData");
           dispatch("saveCommentList", postId);
+          dispatch("setCommentCount", res.data.reviewCount);
         })
         .catch((error) => {
           if (error.response.status !== 401) {

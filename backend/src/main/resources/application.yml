@@ -3,19 +3,14 @@ spring:
     static-path-pattern: /img/**
   servlet:
     multipart:
-      max-request-size: 20MB
-      max-file-size: 20MB
+      max-request-size: 10MB
+      max-file-size: 10MB
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
 #    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#     url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    username: root
 #    password: 1q2w3e4r!@#
-
-
-
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: "jdbc:mysql://localhost:3306/JuaDB?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"
 
     hikari:
       auto-commit: false
@@ -56,4 +51,6 @@ cloud:
     stack:
       auto: false
 
+firebase-configuration-file: ./serviceAccountKey.json
 # 정리 한 번 합시다..
+

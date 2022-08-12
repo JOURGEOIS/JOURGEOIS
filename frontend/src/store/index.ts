@@ -6,33 +6,42 @@ import { post, PostState } from "../store/basics/post";
 import { share, ShareState } from "../store/basics/share";
 import { account, AccountState } from "../store/accounts/account";
 import { signup, SignupState } from "../store/accounts/signup";
-import { socialLogin, SocialLoginState } from '../store/accounts/socialLogin';
+import { socialLogin, SocialLoginState } from "../store/accounts/socialLogin";
 import { password, PasswordState } from "../store/accounts/password";
+import { follow, FollowState } from "../store/accounts/follow";
+import { carousel, CarouselState } from "../store/homes/carousel";
+
+// 개인 정보
 import {
   personalInfo,
   PersonalInfoState,
 } from "../store/accounts/personalInfo";
 
+// 칵테일 정보
 import {
   cocktailDesc,
   CocktailDescState,
 } from "../store/cocktails/cocktailDesc";
 
+// 검색
 import {
   cocktailSearch,
   CocktailSearchState,
 } from "../store/cocktails/cocktailSearch";
 
+// 검색 결과
 import {
   searchResult,
   SearchResultState,
 } from "../store/cocktails/searchResult";
 
+// 칵테일 후기
 import {
   cocktailReview,
   CocktailReviewState,
 } from "../store/cocktails/cocktailReview";
 
+// 커스텀 칵테일
 import {
   customCocktail,
   CustomCocktailState,
@@ -52,6 +61,16 @@ import { feedDescInfo, FeedDescState } from "../store/feeds/feedDescInfo";
 
 import { comment, Comment } from "../store/basics/comment";
 
+// profile
+import { settings, SettingsState } from "../store/profile/settings";
+import { profileDesc, ProfileDescState } from "../store/profile/profileDesc";
+
+//contest
+import { contest, ContestState } from "../store/feeds/contest";
+
+// notice
+import { notice, NoticeState } from "../store/feeds/notice";
+
 // 모듈의 state를 공유한다.
 export interface RootState {
   navbar: NavbarState;
@@ -64,6 +83,7 @@ export interface RootState {
   socialLogin: SocialLoginState;
   personalInfo: PersonalInfoState;
   password: PasswordState;
+  follow: FollowState;
   cocktailSearch: CocktailSearchState;
   cocktailDesc: CocktailDescState;
   searchResult: SearchResultState;
@@ -74,6 +94,11 @@ export interface RootState {
   feedDescInfo: FeedDescState;
   comment: Comment;
   newsFeed: NewsFeedState;
+  settings: SettingsState;
+  profileDesc: ProfileDescState;
+  contest: ContestState;
+  carousel: CarouselState;
+  notice: NoticeState;
 }
 
 // store를 생성한다.
@@ -89,6 +114,7 @@ export default createStore({
     socialLogin,
     personalInfo,
     password,
+    follow,
     cocktailDesc,
     cocktailSearch,
     searchResult,
@@ -99,5 +125,10 @@ export default createStore({
     feedDescInfo,
     comment,
     newsFeed,
+    settings,
+    profileDesc,
+    contest,
+    carousel,
+    notice,
   },
 });

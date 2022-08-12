@@ -20,33 +20,76 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useStore } from 'vuex'
-const store = useStore()
+import { computed } from "vue";
+import { useStore } from "vuex";
+import {
+  checkImageSize,
+  compressorImage,
+  checkImageExtension,
+} from "../../functions/image";
+const store = useStore();
 
 // 이미지 연결
-const imageUrl = computed(() => store.getters['feedDescInfo/getImgLink'])
+const imageUrl = computed(() => store.getters["feedDescInfo/getImgLink"]);
 
 // 이미지 input
 const emit = defineEmits<{
-  (event: 'changeImage', value: object): void
-}>()
+  (event: "changeImage", value: object): void;
+}>();
 
 const changeCommunityImage = (event: Event) => {
-  // 취소 버튼 누르는 경우 바로 return
-  if (!(event?.target as HTMLInputElement).files![0]) {
-    return
+  let file = (event.target as HTMLInputElement).files![0];
+
+  // 1. 파일을 업로드 하지 않고 취소 버튼을 누르는 경우
+  // 2. 이미지 확장자가 아닌 경우
+  // 바로 return 한다.
+  if (!file) {
+    return;
   }
-  const data = {
-    img: (event?.target as HTMLInputElement).files![0],
+
+  if (!checkImageExtension(file.name)) {
+    store.dispatch(
+      "modal/changeErrorModalMessage",
+      "올바른 이미지 파일을 업로드 하세요."
+    );
+    store.dispatch("modal/blinkErrorModalAppStatus", true);
+    return;
   }
-  store.dispatch('feedDescInfo/uploadImage', data)
-  emit('changeImage', data.img)
-}
+
+  // 이미지 용량이 5mb초과면 compressor를 진행한다.
+  if (!checkImageSize({ max: 5, fileSize: file.size })) {
+    compressorImage(file).then((result) => {
+      if (!checkImageSize({ max: 10, fileSize: result.size })) {
+        store.dispatch(
+          "modal/changeErrorModalMessage",
+          "이미지가 너무 큽니다."
+        );
+        store.dispatch("modal/blinkErrorModalAppStatus");
+        return;
+      } else {
+        const data = {
+          img: result,
+        };
+        store.dispatch("feedDescInfo/uploadImage", data);
+        emit("changeImage", data.img);
+        return;
+      }
+    });
+
+    // 이미지 용량이 5mb 이하면 그냥 업로드 한다.
+  } else {
+    const data = {
+      img: file,
+    };
+    store.dispatch("feedDescInfo/uploadImage", data);
+    emit("changeImage", data.img);
+    return;
+  }
+};
 </script>
 
 <style scoped lang="scss">
-label[for='community-image-input'] {
+label[for="community-image-input"] {
   @include flex(column);
   > p {
     @include font($fs-md, $fw-medium);

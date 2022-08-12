@@ -89,19 +89,25 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
 
   mutations: {
     // * 특정 칵테일의 커스텀 칵테일 목록
-    SET_CUSTOM_COCKTAILS: (state, newCustomCocktails: CustomCocktail[]) => {
-      newCustomCocktails.forEach((newCustomCocktail) => {
-        state.customCocktails.push(newCustomCocktail);
+    SET_CUSTOM_COCKTAILS: (state, latestCustomCocktails: CustomCocktail[]) => {
+      latestCustomCocktails.forEach((latestCustomCocktail) => {
+        state.customCocktails.push(latestCustomCocktail);
       });
     },
     SET_CUSTOM_COCKTAIL_PAGE: (state, value) => {
       state.customCocktailPage = value;
     },
+    TOGGLE_FOLLOW_CUSTOM_COCKTAIL: (state, value: number) => {
+      state.customCocktailDetail.followerDTO.isFollowed = value;
+    },
     REMOVE_CUSTOM_COCKTAILS: (state) => {
       state.customCocktails = [];
     },
-    SET_CUSTOM_COCKTAIL_DETAIL: (state, newCustomCocktail: CustomCocktail) => {
-      state.customCocktailDetail = newCustomCocktail;
+    SET_CUSTOM_COCKTAIL_DETAIL: (
+      state,
+      latestCustomCocktail: CustomCocktail
+    ) => {
+      state.customCocktailDetail = latestCustomCocktail;
     },
     // * state에 커스텀칵테일 정보 제거
     REMOVE_CUSTOM_COCKTAIL_DETAIL: (state) => {
@@ -124,8 +130,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         },
       })
         .then((res) => {
-          const newCustomCocktails = res.data;
-          commit("SET_CUSTOM_COCKTAILS", newCustomCocktails);
+          const latestCustomCocktails = res.data;
+          commit("SET_CUSTOM_COCKTAILS", latestCustomCocktails);
           const page = getters.getCustomCocktailPage;
           commit("SET_CUSTOM_COCKTAIL_PAGE", page + 1);
         })
@@ -152,7 +158,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
+          const reviewCount = res.data.customCocktail.reviewCount;
+          dispatch("comment/setCommentCount", reviewCount, { root: true });
           commit("SET_CUSTOM_COCKTAIL_DETAIL", res.data);
         })
         .catch((err) => {
@@ -170,6 +177,14 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           }
         });
     },
+
+    // * 커스텀칵테일 팔로우/언팔로우
+    toggleFollowCustomCocktail: ({ commit, getters }) => {
+      const customCocktailInfo = getters["getCustomCocktailDetail"];
+      const value = customCocktailInfo.followerDTO.isFollowed ? 0 : 1;
+      commit("TOGGLE_FOLLOW_CUSTOM_COCKTAIL", value);
+    },
+
     // * state에 커스텀칵테일 정보 제거
     removeCustomCocktailDetail: ({ commit }) => {
       commit("REMOVE_CUSTOM_COCKTAIL_DETAIL");
@@ -185,13 +200,14 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
         data: {
-          postId,
+          postId: postId.value,
         },
       })
         .then((res) => {
           // 삭제 성공
           if (res.data.success) {
             alert("삭제 성공");
+            router.go(-1);
           }
         })
         .catch((err) => {

@@ -54,9 +54,9 @@ const googleAPI = computed(
 );
 
 const clickGoogle = () => {
-  const googleClientId = `217608233279-k2op58rvkdtbbteakk7ag0tp5ia54mij.apps.googleusercontent.com`;
-  // const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
-  const googleRedirect = `http://localhost:8080/member/login/google/redirect`;
+  const googleClientId = `217608233279-029l12gsikbdcs9jpeku5i8e7sdbqu1q.apps.googleusercontent.com`;
+  const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
+  // const googleRedirect = `http://localhost:8080/member/login/google/redirect`;
   window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirect}&response_type=code&scope=profile%20email%20openid`;
 };
 
@@ -70,7 +70,7 @@ const clickNaver = () => {
   const naverClientId = `D0B_Xn9oGT7I_66h9Z4U`;
   const naverRedirect = `https://jourgeois.com/api/member/login/naver/redirect`;
   window.location.href = `
-  https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirect}&state=78577e6c-3f10-4146-910c-3fd4e684dfb5`;
+  https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirect}&state=1234`;
 };
 
 // const kakaoLogin = () => {

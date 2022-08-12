@@ -3,7 +3,9 @@
     <round-image :round-image="cocktailImage"></round-image>
     <div class="cocktail-info-text">
       <h1 class="cocktail-name">{{ data.title }}</h1>
-      <p class="cocktail-base-liquor">{{ data.base }} 베이스</p>
+      <p class="cocktail-base-liquor" v-if="data.base">
+        {{ data.base }} 베이스
+      </p>
     </div>
   </div>
 </template>

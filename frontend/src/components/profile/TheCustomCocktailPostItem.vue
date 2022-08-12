@@ -1,31 +1,31 @@
 <template>
-  <article class="list-item-custom-cocktail">
+  <article class="list-item-custom-cocktail" @click="clickPost">
     <div class="item-header">
-      <!-- <div class="user-part">
+      <div class="user-part">
         <div class="user-info">
-          <round-image :round-image="{image: post.profileImg}"></round-image>
-          <div class="user-nickname">{{ post.nickname }}</div>
+          <round-image :round-image="{image: profileImg}"></round-image>
+          <div class="user-nickname">{{ nickname }}</div>
         </div>
         <div class="created-at">{{ createTimeDelta }}</div>
-      </div> -->
-      <!-- <div class="cocktail-liked">
+      </div>
+      <div class="cocktail-liked">
         <span class="material-icons unliked" v-if="!ilike"> favorite </span>
         <span class="material-icons liked" v-if="ilike"> favorite </span>
         {{ ilike }}
-      </div> -->
+      </div>
     </div>
     <div class="item-content-container">
-      <!-- <div
+      <div
         class="item-img-part"
-        :style="{ backgroundImage: `url(${post.postImg})` }"
-      ></div> -->
+        :style="{ backgroundImage: `url(${postImg})` }"
+      ></div>
       <div class="item-text-part">
         <!-- <h1 class="cocktail-name">{{ title }}</h1> -->
         <!-- <h1 class="cocktail-name"><span class="material-icons"> local_bar </span>제목이다제목이다제목이다</h1> -->
         <!-- <p class="cocktail-ingredients">재료: {{ ingredientsString }}</p> -->
         <!-- <p class="cocktail-ingredients">재료: 재료다</p> -->
         <p class="cocktail-description">
-          {{ post?.description }}
+          {{ description }}
         </p>
       </div>
     </div>
@@ -47,25 +47,36 @@ const props = defineProps<{
   post: userCustomPostData;
 }>();
 
-// const profileImg = props.post.profileImg
-// const nickname = props.post.nickname
-// const createTime = props.post.createTime;
-// const createTimeDelta = calcDateDelta2(createTime);
-// const postImg = props.post.postImg
-// const baseCocktail = props.post.baseCocktail
-// const postId = props.post.postId
-// const ilike = props.post.iLike
-// const likes = props.post.likes
+const baseCocktail = props.post.baseCocktail
+const postId = props.post.postId
+
+const profileImg = props.post.profileImg
+const nickname = props.post.nickname
+const createTime = props.post.createTime;
+const createTimeDelta = calcDateDelta2(createTime);
+const postImg = props.post.postImg
+const ilike = props.post.iLike
+const likes = props.post.likes
 // const ingredients = props.post.ingredients
 // const ingredientsString = ingredients.join(", ");
-// const description = props.post.description
+const description = props.post.description
 
-// const clickPost = () => {
-//   router.push({
-//     name: "TheCommunityDescView",
-//     params: { feedId: postId }
-//   })
-// }
+const clickPost = () => {
+  if (!baseCocktail) {
+    router.push({
+      name: "TheSuperCustomCocktailDescView",
+      params: { feedId: postId }
+    })
+  } else {
+    router.push({
+      name: "TheCustomCocktailDescView",
+      params: {
+        cocktailId: baseCocktail,
+        feedId: postId,
+      }
+    })
+  }
+}
 </script>
 
 <style scoped lang="scss">

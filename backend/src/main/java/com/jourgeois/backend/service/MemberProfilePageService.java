@@ -7,6 +7,7 @@ import com.jourgeois.backend.repository.*;
 import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class MemberProfilePageService {
         return m;
     }
 
-    public List<Map<String, String>> readMemberCocktailOrPost(Long userId, Long uid, String postType){
+    public List<Map<String, String>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
         if(member.getIsPublic().equals("0") && !member.getUid().equals(userId)){
@@ -55,7 +56,7 @@ public class MemberProfilePageService {
         }
 
 
-        postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType).orElseThrow().forEach(data -> {
+        postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType,pageable).orElseThrow().forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", S3Util.s3urlFormatter(data.getProfileImg()));
@@ -76,10 +77,10 @@ public class MemberProfilePageService {
         return resArr;
     }
 
-    public List<Map<String, String>> readMemberBookmark(Long uid){
+    public List<Map<String, String>> readMemberBookmark(Long uid, Pageable pageable){
         List<Map<String, String>> resArr = new ArrayList<>();
 
-        cocktailRepository.findBookmarkInProfilePageByUid(uid).orElseThrow().forEach(data -> {
+        cocktailRepository.findBookmarkInProfilePageByUid(uid, pageable).orElseThrow().forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("cocktailId", data.getId());
             res.put("nameKR", data.getNameKR());
@@ -93,14 +94,14 @@ public class MemberProfilePageService {
         return resArr;
     }
 
-    public List<Map<String, String>> readMemberCocktailComment(Long userId, Long uid){
+    public List<Map<String, String>> readMemberCocktailComment(Long userId, Long uid, Pageable pageable){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
         if(member.getIsPublic().equals("0") && !member.getUid().equals(userId)){
             return resArr;
         }
 
-        cocktailCommentRepository.findCocktailCommentsInProfilePageByUid(uid).orElseThrow().forEach(data -> {
+        cocktailCommentRepository.findCocktailCommentsInProfilePageByUid(uid, pageable).orElseThrow().forEach(data -> {
             Map<String, String> res = new HashMap<>();
             res.put("cocktailId", data.getId());
             res.put("nameKR", data.getNameKR());

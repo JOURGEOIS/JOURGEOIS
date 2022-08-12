@@ -139,7 +139,7 @@ export interface HotKeywords {
 export interface userProfileData {
   uid: number
   email: string
-  name: string | null
+  name: null
   nickname: string
   profileImg: string
   profileLink: null
@@ -150,13 +150,31 @@ export interface userProfileData {
   isPublic: number
 }
 
-// 프로필 유저-게시물 정보(일반/커칵/슈커칵)
-export interface userPostData {
+// 프로필 유저-게시물 정보(일반)
+export interface userCommunityPostData {
   createTime: string
   nickname: string
   description: string
+  postId: number
+  iLike: number
   profileImg: string
-  postImg: null
+  postImg: string
+  likes: number
+}
+
+// 프로필 유저-게시물 정보(커칵/슈커칵)
+export interface userCustomPostData {
+  createTime: string
+  baseCocktail: number | null
+  nickname: string
+  description: string
+  ingredients: string
+  postId: number
+  iLike: number
+  profileImg: string
+  title: string
+  postImg: string
+  likes: number
 }
 
 // 프로필 유저-후기 정보

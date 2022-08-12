@@ -1,5 +1,5 @@
 <template>
-  <section class="hot-keyword-section">
+  <section class="hot-keyword-section" v-if="hotKeywords.keywords.length">
     <article class="article-title">
       <div class="line-title">
         <slot></slot>
@@ -8,7 +8,7 @@
           @click="toggleShowDescription"
           >info</span
         >
-        <p class="standard-time">{{ stdTime }} 기준</p>
+        <p class="standard-time">{{ date }} 기준</p>
       </div>
       <div class="line-description" v-if="isShowDescription">
         지난 1시간동안 많이 검색된 검색어들
@@ -19,6 +19,7 @@
         class="rank-item"
         v-for="(item, idx) in hotKeywords.keywords"
         :key="idx"
+        @click="clickRankItem(item)"
       >
         <span class="rank-item-number">{{ idx + 1 }}</span>
         <span class="rank-item-content">
@@ -40,9 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, watchEffect } from "vue";
+import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { HotKeyword } from "../../interface";
 const store = useStore();
+const router = useRouter();
 store.dispatch("carousel/setHotKeywords");
 
 const isShowDescription = ref(false);
@@ -53,21 +57,18 @@ const toggleShowDescription = () => {
 
 // 랭킹 불러오기
 const hotKeywords = computed(() => store.getters["carousel/getHotKeywords"]);
+const delta = computed(() => store.getters["carousel/getHotKeywordDelta"]);
+const date = computed(() => store.getters["carousel/getHotKeywordDate"]);
 
-const rawStdTime = hotKeywords?.value?.to;
-const rawDelta = hotKeywords?.value?.delta;
-const stdTime = ref("");
-stdTime.value = rawStdTime?.split("-").splice(1, 2).join(".");
-const delta = reactive(
-  rawDelta.map((d: number) => {
-    if (d > 0) {
-      return 1;
-    } else if (0 > d && d > -5) {
-      return -1;
-    }
-    return 0;
-  })
-);
+const clickRankItem = (item: HotKeyword) => {
+  // 검색어 저장
+  store.dispatch("cocktailSearch/setRecentSearchWords");
+  // 검색 결과 view로 이동
+  router.push({
+    name: "TheSearchResultView",
+    params: { searchValue: item.keyword },
+  });
+};
 </script>
 
 <style scoped lang="scss">

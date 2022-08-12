@@ -79,6 +79,7 @@ export default {
 
   homes: {
     // 홈
+    clipVideo: () => HOST + HOME + "clip", // 초보자 추천 동영상 랜덤 링크
     latestCustomCocktail: () => HOST + HOME + "custom/latest5", // 신규 커칵/슈커칵 5개
     latestCustomCocktailView: () => HOST + HOME + "custom/latest", // 신규 커칵/슈커칵 목록
     hotCocktail: () => HOST + HOME + "cocktail/hot5", // 주류주아 인기 칵테일 5개

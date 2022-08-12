@@ -10,7 +10,7 @@ const routes: any[] = [
   {
     path: "/",
     name: "TheHomeView",
-    component: () => import("@/views/TheHomeView.vue"),
+    component: () => import("@/views/homes/TheHomeView.vue"),
   },
 
   // 회원가입 화면

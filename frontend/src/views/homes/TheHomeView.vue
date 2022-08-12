@@ -1,9 +1,8 @@
 <template>
   <div class="the-home-view">
     <!-- 헤더 -->
-    <header-basic :success="false" @prevClicked="$router.go(-1)">
-      홈
-    </header-basic>
+    <header-notice :success="false" @prevClicked="$router.go(-1)">
+    </header-notice>
     <section class="top-view-no-margin">
       <the-home-view-container></the-home-view-container>
     </section>
@@ -36,10 +35,10 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import HeaderNotice from "@/components/basics/HeaderNotice.vue";
 import TheHomeViewContainer from "@/components/homes/TheHomeViewContainer.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted } from "vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -130,19 +129,6 @@ onMounted(() => {
   store.dispatch("notice/checkNotice");
 });
 
-const handleScroll = (event: any) => {
-  const data = {
-    event,
-    // action: "newsFeed/getNewsFeedListData",
-  };
-  store.dispatch("scroll/handleScroll", data);
-};
-
-// db 받아오기
-onBeforeMount(() => {
-  window.addEventListener("scroll", handleScroll);
-});
-
 // 저장된 스크롤 높이로 이동
 onMounted(() => {
   const scrollY = computed(() => store.getters["scroll/getHomeScrollY"]);
@@ -153,7 +139,6 @@ onMounted(() => {
 
 // 스크롤 높이 저장
 onBeforeUnmount(() => {
-  console.log(window.scrollY);
   store.dispatch("scroll/setHomeScrollY", window.scrollY);
 });
 </script>
@@ -170,11 +155,11 @@ onBeforeUnmount(() => {
     margin-top: 8px;
 
     @media #{$tablet} {
-      width: 60%;
+      width: 80%;
     }
 
     @media #{$pc} {
-      width: 50%;
+      width: 60%;
     }
   }
 }

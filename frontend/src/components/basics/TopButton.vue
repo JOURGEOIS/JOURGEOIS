@@ -28,7 +28,7 @@ const handleScroll = (event: Event) => {
     const top = document.documentElement.scrollTop;
     const st = window.pageYOffset || document.documentElement.scrollTop;
     // scroll up
-    if (top > 1500 && st < lastScrollTop) {
+    if (top > 1000 && st < lastScrollTop) {
       goTopBtnStatus.value = 1;
     } else {
       goTopBtnStatus.value = 0;

@@ -8,7 +8,9 @@ import { CarouselCocktail, HotKeywords } from "../../interface";
 export interface CarouselState {
   // * 급상승 검색어
   hotKeywords: HotKeywords;
-  // * 신규 커스텀 칵테일
+  hotKeywordDelta: number[];
+  hotKeywordDate: string;
+  // * 신규 커스텀 칵테일(carousel)
   latestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktailPage: number;
@@ -37,7 +39,9 @@ export const carousel: Module<CarouselState, RootState> = {
       keywords: [{ keyword: "", hits: 0 }],
       delta: [0],
     },
-    // * 신규 커스텀 칵테일
+    hotKeywordDelta: [0, 0, 0, 0, 0],
+    hotKeywordDate: "",
+    // * 신규 커스텀 칵테일(carousel)
     latestCustomCocktails: [],
     allLatestCustomCocktails: [],
     allLatestCustomCocktailPage: 0,
@@ -58,7 +62,9 @@ export const carousel: Module<CarouselState, RootState> = {
   getters: {
     // * 급상승 검색어
     getHotKeywords: (state) => state.hotKeywords,
-    // * 신규 커스텀 칵테일
+    getHotKeywordDelta: (state) => state.hotKeywordDelta,
+    getHotKeywordDate: (state) => state.hotKeywordDate,
+    // * 신규 커스텀 칵테일(carousel)
     getLatestCustomCocktails: (state) => state.latestCustomCocktails,
     getAllLatestCustomCocktails: (state) => state.allLatestCustomCocktails,
     getAllLatestCustomCocktailPage: (state) =>
@@ -84,7 +90,13 @@ export const carousel: Module<CarouselState, RootState> = {
     SET_HOT_KEYWORDS: (state, hotKeywords) => {
       state.hotKeywords = hotKeywords;
     },
-    // * 신규 커스텀 칵테일
+    SET_HOT_KEYWORD_DELTA: (state, delta) => {
+      state.hotKeywordDelta = delta;
+    },
+    SET_HOT_KEYWORD_DATE: (state, date) => {
+      state.hotKeywordDate = date;
+    },
+    // * 신규 커스텀 칵테일(carousel)
     SET_LATEST_CUSTOM_COCKTAILS: (
       state,
       latestCustomCocktails: CarouselCocktail[]
@@ -169,13 +181,32 @@ export const carousel: Module<CarouselState, RootState> = {
   },
   actions: {
     // * 급상승 검색어
-    setHotKeywords: ({ commit, dispatch }) => {
+    setHotKeywords: ({ commit, dispatch, getters }) => {
       axios({
         url: api.lookups.hotKeyword(),
         method: "GET",
       })
         .then((res) => {
           commit("SET_HOT_KEYWORDS", res.data);
+        })
+        .then(() => {
+          // delta 계산 및 등록
+          const rawDelta = getters["getHotKeywords"].delta;
+          const delta = rawDelta.map((d: number) => {
+            if (d > 0 || d === -5) {
+              return 1;
+            } else if (0 > d && d > -5) {
+              return -1;
+            }
+            return 0;
+          });
+          commit("SET_HOT_KEYWORD_DELTA", delta);
+        })
+        .then(() => {
+          // date 정리 및 등록
+          const rawDate = getters["getHotKeywords"].to;
+          const date = rawDate.split("-").splice(1, 2).join(".");
+          commit("SET_HOT_KEYWORD_DATE", date);
         })
         .catch((err) => {
           console.error(err.response);
@@ -185,9 +216,7 @@ export const carousel: Module<CarouselState, RootState> = {
 
     // * 전체보기 리스트 클릭
     clickShowMoreItem: ({}, item: CarouselCocktail) => {
-      console.log(item.type);
       const { cocktailId, baseCocktailId, type } = item;
-      console.log(item);
       // [type] 1 슈커칵 / 0 커칵 / -1 기본칵
       switch (item.type) {
         // 슈퍼커스텀칵테일
@@ -268,7 +297,6 @@ export const carousel: Module<CarouselState, RootState> = {
     },
     setAllHotCocktails: ({ commit, dispatch, getters }) => {
       const page = getters["getAllHotCocktailPage"];
-      console.log(page);
       axios({
         url: api.homes.hotCocktailView(),
         method: "GET",

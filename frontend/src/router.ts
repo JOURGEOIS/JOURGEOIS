@@ -231,6 +231,13 @@ const routes: any[] = [
     component: () => import("@/views/homes/TheAllLatestCustomCocktailView.vue"),
   },
 
+  // 주류주아 인기 칵테일 리스트
+  {
+    path: "/hot",
+    name: "TheAllHotCocktailView",
+    component: () => import("@/views/homes/TheAllHotCocktailView.vue"),
+  },
+
   // 알림
   {
     path: "/feeds/notice",

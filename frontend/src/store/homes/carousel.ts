@@ -12,6 +12,10 @@ export interface CarouselState {
   latestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktails: CarouselCocktail[];
   allLatestCustomCocktailPage: number;
+  // * 주류주아 HOT 칵테일(carousel)
+  hotCocktails: CarouselCocktail[];
+  allHotCocktails: CarouselCocktail[];
+  allHotCocktailPage: number;
 }
 
 export const carousel: Module<CarouselState, RootState> = {
@@ -29,6 +33,10 @@ export const carousel: Module<CarouselState, RootState> = {
     latestCustomCocktails: [],
     allLatestCustomCocktails: [],
     allLatestCustomCocktailPage: 0,
+    // * 주류주아 HOT 칵테일(carousel)
+    hotCocktails: [],
+    allHotCocktails: [],
+    allHotCocktailPage: 0,
   },
 
   getters: {
@@ -39,6 +47,10 @@ export const carousel: Module<CarouselState, RootState> = {
     getAllLatestCustomCocktails: (state) => state.allLatestCustomCocktails,
     getAllLatestCustomCocktailPage: (state) =>
       state.allLatestCustomCocktailPage,
+    // * 주류주아 HOT 칵테일(carousel)
+    getHotCocktails: (state) => state.hotCocktails,
+    getAllHotCocktails: (state) => state.allHotCocktails,
+    getAllHotCocktailPage: (state) => state.allHotCocktailPage,
   },
 
   mutations: {
@@ -68,6 +80,22 @@ export const carousel: Module<CarouselState, RootState> = {
       state.allLatestCustomCocktails = [];
       state.allLatestCustomCocktailPage = 0;
     },
+    // * 주류주아 HOT 칵테일(carousel)
+    SET_HOT_COCKTAILS: (state, hotCocktails: CarouselCocktail[]) => {
+      state.hotCocktails = hotCocktails;
+    },
+    SET_ALL_HOT_COCKTAILS: (state, newHotCocktails: CarouselCocktail[]) => {
+      newHotCocktails.forEach((newHotCocktail) => {
+        state.allHotCocktails.push(newHotCocktail);
+      });
+    },
+    SET_ALL_HOT_COCKTAIL_PAGE: (state, value) => {
+      state.allHotCocktailPage = value;
+    },
+    REMOVE_ALL_HOT_COCKTAILS: (state) => {
+      state.allHotCocktails = [];
+      state.allHotCocktailPage = 0;
+    },
   },
   actions: {
     // * 급상승 검색어
@@ -77,11 +105,10 @@ export const carousel: Module<CarouselState, RootState> = {
         method: "GET",
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_HOT_KEYWORDS", res.data);
         })
         .catch((err) => {
-          console.log(err.response);
+          console.error(err.response);
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
         });
     },
@@ -93,7 +120,6 @@ export const carousel: Module<CarouselState, RootState> = {
       switch (item.type) {
         // 슈퍼커스텀칵테일
         case 1:
-          console.log(1);
           router.push({
             name: "TheSuperCustomCocktailDescView",
             params: { feedId: item.cocktailId },
@@ -101,7 +127,6 @@ export const carousel: Module<CarouselState, RootState> = {
           break;
         // 커스텀칵테일
         case 0:
-          console.log(0);
           router.push({
             name: "TheCustomCocktailDescView",
             params: {
@@ -111,7 +136,6 @@ export const carousel: Module<CarouselState, RootState> = {
           });
           break;
         case -1:
-          console.log(-1);
           router.push({
             name: "TheCocktailDescView",
             params: { cocktailId: item.cocktailId },
@@ -127,7 +151,6 @@ export const carousel: Module<CarouselState, RootState> = {
         method: "GET",
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_LATEST_CUSTOM_COCKTAILS", res.data);
         })
         .catch((err) => {
@@ -153,8 +176,44 @@ export const carousel: Module<CarouselState, RootState> = {
           console.error(err.response);
         });
     },
-    removeAllLatestCocktails: ({ commit }) => {
+    removeAllLatestCustomCocktails: ({ commit }) => {
       commit("REMOVE_ALL_LATEST_CUSTOM_COCKTAILS");
+    },
+    // * 주류주아 HOT 칵테일(carousel)
+    setHotCocktails: ({ commit, dispatch }) => {
+      axios({
+        url: api.homes.hotCocktail(),
+        method: "GET",
+      })
+        .then((res) => {
+          commit("SET_HOT_COCKTAILS", res.data);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    setAllHotCocktails: ({ commit, dispatch, getters }) => {
+      const page = getters["getAllHotCocktailPage"];
+      console.log(page);
+      axios({
+        url: api.homes.hotCocktailView(),
+        method: "GET",
+        params: {
+          page,
+        },
+      })
+        .then((res) => {
+          commit("SET_ALL_HOT_COCKTAILS", res.data);
+          commit("SET_ALL_HOT_COCKTAIL_PAGE", page + 1);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    removeHotCocktails: ({ commit }) => {
+      commit("REMOVE_ALL_HOT_COCKTAILS");
     },
   },
 };

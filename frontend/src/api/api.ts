@@ -81,6 +81,8 @@ export default {
     // 홈
     latestCustomCocktail: () => HOST + HOME + "custom/latest5", // 신규 커칵/슈커칵 5개
     latestCustomCocktailView: () => HOST + HOME + "custom/latest", // 신규 커칵/슈커칵 목록
+    hotCocktail: () => HOST + HOME + "cocktail/hot5", // 주류주아 인기 칵테일 5개
+    hotCocktailView: () => HOST + HOME + "cocktail/hot", // 주류주아 인기 칵테일 목록
   },
 
   notice: {

@@ -14,7 +14,7 @@
       </div>
     </button-basic>
     <button-basic
-      @click="kakaoLogin"
+      @click="clickKakao"
       :button-style="['kakao-login', 'long', 'small']"
     >
       <div class="button-content">
@@ -45,7 +45,6 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { computed, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-// import { CallbackTypes } from "vue3-google-login";
 const store = useStore();
 const router = useRouter();
 
@@ -54,97 +53,50 @@ const googleAPI = computed(
   () => store.getters["socialLogin/getGoogleLoginApi"]
 );
 
-// const callback: CallbackTypes.CredentialCallback = (response) => {
-//   console.log("Credential JWT string", response.credential);
-// };
-
 const clickGoogle = () => {
-  const google_authorize_url = "ttps://accounts.google.com/o/oauth2/v2/auth";
-  const google_client_id =
-    "217608233279-k2op58rvkdtbbteakk7ag0tp5ia54mij.apps.googleusercontent.com";
-  const google_redirect_url =
-    "https://jourgeois.com/api/member/login/google/redirect";
-  window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google_client_id}&redirect_uri=${google_redirect_url}&response_type=code&scope=profile%20email%20openid`;
+  const googleClientId = `217608233279-k2op58rvkdtbbteakk7ag0tp5ia54mij.apps.googleusercontent.com`;
+  const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
+  window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirect}&response_type=code&scope=profile%20email%20openid`;
 };
 
-const kakaoLogin = () => {
-  window.Kakao.Auth.login({
-    scope: "profile_nickname, profile_image, account_email",
-    success: getKakaoAccount,
-  });
+const clickKakao = () => {
+  const kakaoRestApiKey = `f1c36f65322c75f1f28caf1560a306d1`;
+  const kakaoRedirect = `https://jourgeois.com/api/member/login/kakao/redirect`;
+  window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirect}&response_type=code`;
 };
-const getKakaoAccount = () => {
-  window.Kakao.API.request({
-    url: "/v2/user/me",
-    success: (res: any) => {
-      const kakao_account = res.kakao_account;
-      const nickname = kakao_account.profile.nickname;
-      const email = kakao_account.email;
-      console.log(kakao_account);
-      console.log("nickname", nickname);
-      console.log("email", email);
-
-      //로그인 처리 구현
-      alert("로그인 성공!");
-    },
-    fail: (error: any) => {
-      console.log(error);
-    },
-  });
-};
-
-// const clickKakao = () => {
-//   // axios({
-//   //   url: api.accounts.kakaoLogin(),
-//   //   method: 'GET',
-//   // })
-//   //   .then((res) => {
-//   //     const data = res.data
-//   //     console.log(data)
-//   //   })
-//   //   .catch((err) => {
-//   //     console.error(err.response)
-//   //   })
-//   window.open("https://kauth.kakao.com/oauth/authorize?client_id=0c777eb20471ff56b13960d5e8534d5e&redirect_uri=https://jourgeois.com/api/member/login/kakao/redirect&response_type=code")
-// }
 
 const clickNaver = () => {
+  const naverClientId = `D0B_Xn9oGT7I_66h9Z4U`;
+  const naverRedirect = `https://jourgeois.com/api/member/login/naver/redirect`;
   window.location.href = `
-https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=D0B_Xn9oGT7I_66h9Z4U&redirect_uri=https://jourgeois.com/api/member/login/naver/redirect&state=78577e6c-3f10-4146-910c-3fd4e684dfb5`;
-  // const naverLogin = new naver.LoginWithNaverId({
-  //   clientId: "D0B_Xn9oGT7I_66h9Z4U", // Naver client key
-  //   callbackUrl: `https://jourgeois.com/api/member/login/naver/redirect`,
-  //   callbackHandle: true,
-  //   isPopup: true,
-  // });
-  // naverLogin.init();
-  // naverLogin.getLoginStatus(function (status: any) {
-  //   if (status) {
-  //     const email = naverLogin.user.getEmail();
-  //     const name = naverLogin.user.getName();
-  //     const profileImage = naverLogin.user.getProfileImage();
-  //     const birthday = naverLogin.user.getBirthday();
-  //     const uniqId = naverLogin.user.getId();
-  //     const age = naverLogin.user.getAge();
-  //     console.log(email);
-  //     console.log(name);
-  //     console.log(profileImage);
-  //     console.log(birthday);
-  //     console.log(uniqId);
-  //     console.log(age);
-  //   } else {
-  //     console.log("AccessToken이 올바르지 않습니다.");
-  //   }
-  // });
-  // naverLogin.reprompt();
+  https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirect}&state=78577e6c-3f10-4146-910c-3fd4e684dfb5`;
 };
 
-// const clickNaver = () => {
-//   var client_id = 'D0B_Xn9oGT7I_66h9Z4U';
-//   var callbackUrl = 'https://jourgeois.com/api/member/login/naver/redirect';//서버 주소
-//   var url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + callbackUrl + '&state=1234';
-//   window.location.replace(url);
-// }
+// const kakaoLogin = () => {
+//   window.Kakao.Auth.login({
+//     scope: "profile_nickname, profile_image, account_email",
+//     success: getKakaoAccount,
+//   });
+// };
+// const getKakaoAccount = () => {
+//   window.Kakao.API.request({
+//     url: "/v2/user/me",
+//     success: (res: any) => {
+//       const kakao_account = res.kakao_account;
+//       const nickname = kakao_account.profile.nickname;
+//       const email = kakao_account.email;
+//       console.log(kakao_account);
+//       console.log("nickname", nickname);
+//       console.log("email", email);
+
+//       //로그인 처리 구현
+//       alert("로그인 성공!");
+//     },
+//     fail: (error: any) => {
+//       console.log(error);
+//     },
+//   });
+// };
 </script>
 
 <style scoped lang="scss">

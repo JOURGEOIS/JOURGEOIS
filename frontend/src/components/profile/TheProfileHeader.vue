@@ -15,55 +15,36 @@
         arrow_back_ios_new
       </span>
       <div class="header-content"><slot></slot></div>
-      <button
-        v-if="success"
-        class="header-success"
-        type="submit"
-        :form="formId"
-      >
-        완료
-      </button>
+      <span class="material-icons-outlined" v-if="setting" @click="clickSet">
+        settings
+      </span>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useStore } from 'vuex'
+const store = useStore()
 
 const props = defineProps<{
-  prev?: boolean;
-  success?: boolean;
-  formId?: string;
+  prev: boolean;
+  setting: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: "prevClicked"): void;
-  (e: "successClicked"): void;
 }>();
 
 const clicked = () => {
   emit("prevClicked");
 };
 
-const submitted = () => {
-  emit("successClicked");
-};
+const clickSet = () => {
+  store.dispatch("settings/changeSettingsModalClass", "start");
+  store.dispatch("settings/toggleSettingsModal", true);
+}
 
-const iconVisibility = computed(() => {
-  if (props.success) {
-    return;
-  } else {
-    return "hidden";
-  }
-});
-
-const successVisibility = computed(() => {
-  if (props.prev) {
-    return true;
-  } else {
-    return false;
-  }
-});
 </script>
 
 <style scoped lang="scss">
@@ -116,23 +97,23 @@ const successVisibility = computed(() => {
         font-size: $fs-xl;
       }
     }
-
-    .header-success {
-      width: fit-content;
+    .material-icons-outlined{
       padding: 0;
-      letter-spacing: $ls-main;
-      @include font($fs-main, $fw-medium);
-      background-color: white;
+      align-self: center;
+      margin-top: 5px;
+      @include font($fs-title, $fw-thin);
 
       @media #{$tablet} {
-        font-size: $fs-title;
+        font-size: $fs-xl;
+        margin-top: 5px;
       }
 
+      @media #{$pc} {
+      }
       &:hover {
         cursor: pointer;
       }
     }
-
     .back-icon {
       user-select: none;
     }

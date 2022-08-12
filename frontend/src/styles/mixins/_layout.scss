@@ -50,7 +50,7 @@
 @mixin scrollbar {
   ::-webkit-scrollbar{height: 0px;}
   ::-webkit-scrollbar-track {background:transparent;}
-  ::-webkit-scrollbar-thumb {background:$primary300;  border-radius: 1000px;}
+  ::-webkit-scrollbar-thumb {background:transparent; border: 1px solid $primary300;  border-radius: 1000px;}
   ::-webkit-scrollbar-thumb:hover {background: $primary-color;}
   ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment 
   {

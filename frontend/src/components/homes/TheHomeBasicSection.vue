@@ -13,7 +13,7 @@
       {{ data.description }}
     </article>
     <!-- carousel -->
-    <the-card-carousel :data="data"></the-card-carousel>
+    <the-card-carousel :data="carouselData"></the-card-carousel>
     <article class="article-more-button">
       <div class="more-button" @click="clickMore">
         {{ data.moreButtonText }}
@@ -40,7 +40,7 @@ const props = defineProps<{
   };
 }>();
 
-const data = {
+const carouselData = {
   setCarouselFunc: props.data.setCarouselFunc,
   getCarouselFunc: props.data.getCarouselFunc,
 };

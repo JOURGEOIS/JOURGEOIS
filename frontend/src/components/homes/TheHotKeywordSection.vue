@@ -31,7 +31,7 @@
             eject
           </span>
           <span class="material-icons icon-maintain" v-if="!delta[idx]">
-            remove_circle_outline
+            horizontal_rule
           </span>
         </span>
       </li>
@@ -107,7 +107,7 @@ const delta = reactive(
       @include flex-xy(flex-start, center);
       gap: 10px;
       padding: 10px 5px;
-      border-bottom: 1px solid $unchecked-color;
+      border-bottom: 1px solid $white150;
       @include list-hover;
       .rank-item-number {
         @include flex;
@@ -129,13 +129,15 @@ const delta = reactive(
 
 .icon-down {
   @include font-size-blue(25px);
+  transform: rotate(0.5turn);
 }
 
 .icon-maintain {
   @include font-size-sub(25px);
+  transform: scale(0.6, 1);
 }
 
 .material-icons {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 </style>

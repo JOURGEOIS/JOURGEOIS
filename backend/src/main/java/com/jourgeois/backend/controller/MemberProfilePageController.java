@@ -3,6 +3,8 @@ package com.jourgeois.backend.controller;
 import com.jourgeois.backend.api.dto.member.MemberDTO;
 import com.jourgeois.backend.service.MemberProfilePageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +39,13 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/post")
-    public ResponseEntity<?> readPost(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
+    public ResponseEntity<?> readPost(HttpServletRequest request, @RequestParam(value = "uid") Long uid,
+                                      @PageableDefault(size=10, page = 0) Pageable pageable){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
             Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, "post");
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable, "post");
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);
@@ -52,12 +55,13 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/cocktail")
-    public ResponseEntity<?> readCustomCocktail(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
+    public ResponseEntity<?> readCustomCocktail(HttpServletRequest request, @RequestParam(value = "uid") Long uid,
+                                                @PageableDefault(size=10, page = 0) Pageable pageable){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
             Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, "cocktail");
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable,"cocktail");
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);
@@ -67,13 +71,14 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/bookmark")
-    public ResponseEntity<?> readBookmark(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
+    public ResponseEntity<?> readBookmark(HttpServletRequest request, @RequestParam(value = "uid") Long uid,
+                                          @PageableDefault(size=10, page = 0) Pageable pageable){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
             Long userId = Long.parseLong((String) request.getAttribute("uid"));
             if(userId.equals(uid)){
-                List<Map<String, String>> result = memberProfilePageService.readMemberBookmark(uid);
+                List<Map<String, String>> result = memberProfilePageService.readMemberBookmark(uid, pageable);
                 return ResponseEntity.ok().body(result);
             }
             return ResponseEntity.badRequest().body(null);
@@ -85,12 +90,13 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth/comment")
-    public ResponseEntity<?> readCocktailComment(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
+    public ResponseEntity<?> readCocktailComment(HttpServletRequest request, @RequestParam(value = "uid") Long uid,
+                                                 @PageableDefault(size=10, page = 0) Pageable pageable){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
             Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailComment(userId, uid);
+            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailComment(userId, uid, pageable);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);

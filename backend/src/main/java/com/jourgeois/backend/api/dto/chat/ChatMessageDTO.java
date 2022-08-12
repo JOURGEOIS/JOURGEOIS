@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class ChatMessageDTO {
-    // 송신자 정보
-    private Long from;
-    private Long to;
+
+    private Long sender;
+
     // 메세지 정보
-    private String message;
+    private String text;
     private Boolean isRead;
     private Timestamp timestamp;
     public ChatMessageDTO() {

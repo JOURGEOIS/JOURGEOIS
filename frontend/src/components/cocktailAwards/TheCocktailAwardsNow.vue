@@ -1,16 +1,17 @@
 <template>
-  <div></div>
+  <the-cocktail-awards-now-list></the-cocktail-awards-now-list>
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount, onUnmounted, onMounted } from "vue";
+import TheCocktailAwardsNowList from "@/components/cocktailAwards/TheCocktailAwardsNowList.vue";
 import { useStore } from "vuex";
 const store = useStore();
 
 const handleScroll = (event: any) => {
   const data = {
     event,
-    action: "notice/getCocktailAwardsNowList",
+    action: "cocktailAwards/getCocktailAwardsNowList",
     data: {},
   };
   store.dispatch("scroll/handleScroll", data);

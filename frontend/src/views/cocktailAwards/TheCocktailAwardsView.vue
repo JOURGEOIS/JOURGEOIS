@@ -4,7 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       칵테일 어워즈
     </header-basic>
-    <section class="the-cocktail-awards-section">
+    <section class="the-cocktail-awards-section top-view" v>
       <!-- 상단 배너 -->
       <the-cocktail-awards-banner></the-cocktail-awards-banner>
       <section>
@@ -65,7 +65,7 @@ const changeTab = (value: number) =>
 
   .the-cocktail-awards-section {
     width: 100%;
-    margin-top: 16rem;
+    margin-bottom: 24px;
 
     @media #{$tablet} {
       width: 80%;
@@ -93,8 +93,13 @@ const changeTab = (value: number) =>
         }
 
         > div {
-          @include flex-center;
-          gap: 80px;
+          display: grid;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(50%, auto));
+          justify-items: center;
+          justify-content: center;
+          align-items: center;
+          align-content: center;
           @include font($fs-main, $fw-medium);
 
           p {

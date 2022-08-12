@@ -144,7 +144,6 @@ public class NotificationService {
         ApiFuture<QuerySnapshot> future = firstPage.get();
         List<QueryDocumentSnapshot> docs = future.get(30, TimeUnit.SECONDS).getDocuments();
         if(docs.size() <= page){
-            notificationResponseDTOList.add(NotificationResponseDTO.builder().lastSize((long) docs.size()).build());
             result.put("size", page);
             return result;
         }

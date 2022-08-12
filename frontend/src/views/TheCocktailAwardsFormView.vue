@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import { useStore } from "vuex";
-import TheCocktailAwardsForm from "@/components/contest/TheCocktailAwardsForm.vue";
+import TheCocktailAwardsForm from "@/components/cocktailAwards/TheCocktailAwardsForm.vue";
 import { onBeforeMount } from "vue";
 const store = useStore();
 

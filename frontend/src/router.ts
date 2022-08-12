@@ -201,16 +201,23 @@ const routes: any[] = [
     component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
   },
 
+  // contest home
+  {
+    path: "/feeds/awards",
+    name: "TheCocktailAwardsView",
+    component: () => import("@/views/TheCocktailAwardsView.vue"),
+  },
+
   //contest 게시글 form
   {
-    path: "/feeds/contest/form",
+    path: "/feeds/awards/form",
     name: "TheCocktailAwardsFormView",
     component: () => import("@/views/TheCocktailAwardsFormView.vue"),
   },
 
   // contest 게시글 상세
   {
-    path: "/feeds/:feedId/contest",
+    path: "/feeds/:feedId/awards",
     name: "TheCocktailAwardsDescView",
     component: () => import("@/views/TheCocktailAwardsDescView.vue"),
   },

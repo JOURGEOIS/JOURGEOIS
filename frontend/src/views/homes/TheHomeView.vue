@@ -39,7 +39,7 @@
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheHomeViewContainer from "@/components/homes/TheHomeViewContainer.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted } from "vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -128,19 +128,6 @@ onMounted(() => {
 
   // 알림 상태 확인하기
   store.dispatch("notice/checkNotice");
-});
-
-const handleScroll = (event: any) => {
-  const data = {
-    event,
-    // action: "newsFeed/getNewsFeedListData",
-  };
-  store.dispatch("scroll/handleScroll", data);
-};
-
-// db 받아오기
-onBeforeMount(() => {
-  window.addEventListener("scroll", handleScroll);
 });
 
 // 저장된 스크롤 높이로 이동

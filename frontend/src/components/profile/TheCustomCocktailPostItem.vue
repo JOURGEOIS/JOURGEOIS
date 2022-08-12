@@ -25,7 +25,7 @@
         <!-- <p class="cocktail-ingredients">재료: {{ ingredientsString }}</p> -->
         <!-- <p class="cocktail-ingredients">재료: 재료다</p> -->
         <p class="cocktail-description">
-          {{ post.description }}
+          {{ post?.description }}
         </p>
       </div>
     </div>
@@ -33,12 +33,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import RoundImage from "@/components/basics/RoundImage.vue";
 import { calcDateDelta, calcDateDelta2 } from "../../functions/date";
-import { userCustomPostData } from "../../interface"
+import { userCustomPostData } from "../../interface";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -49,8 +49,8 @@ const props = defineProps<{
 
 // const profileImg = props.post.profileImg
 // const nickname = props.post.nickname
-const createTime = props.post.createTime
-const createTimeDelta = calcDateDelta2(createTime);
+// const createTime = props.post.createTime;
+// const createTimeDelta = calcDateDelta2(createTime);
 // const postImg = props.post.postImg
 // const baseCocktail = props.post.baseCocktail
 // const postId = props.post.postId
@@ -66,11 +66,10 @@ const createTimeDelta = calcDateDelta2(createTime);
 //     params: { feedId: postId }
 //   })
 // }
-
 </script>
 
 <style scoped lang="scss">
-.list-item-custom-cocktail{
+.list-item-custom-cocktail {
   @include flex(column);
   width: 100%;
   gap: 10px;
@@ -78,19 +77,19 @@ const createTimeDelta = calcDateDelta2(createTime);
   border-radius: 8px;
   padding: 20px 16px;
   background: $white;
-  box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
 
-  .item-header{
+  .item-header {
     @include flex;
-    width:100%;
-    .user-part{
+    width: 100%;
+    .user-part {
       @include flex;
       align-items: center;
-      width:100%;
+      width: 100%;
       gap: 10px;
 
-      .user-info{
-        @include flex-xy(flex-start,center);
+      .user-info {
+        @include flex-xy(flex-start, center);
         gap: 10px;
         .round-image {
           width: 40px;
@@ -99,10 +98,10 @@ const createTimeDelta = calcDateDelta2(createTime);
       }
     }
   }
-  .item-content-container{
+  .item-content-container {
     @include flex-center;
     gap: 10px;
-    .item-img-part{
+    .item-img-part {
       position: relative;
       height: calc(100%);
       aspect-ratio: auto 1/1;
@@ -111,22 +110,21 @@ const createTimeDelta = calcDateDelta2(createTime);
         size: cover;
         position: center center;
       }
-      
     }
-    .item-text-part{
+    .item-text-part {
       @include flex(column);
       gap: 10px;
-      h1{
+      h1 {
         @include flex-xy(flex-start, end);
-        .material-icons{
-          align-items:baseline;
+        .material-icons {
+          align-items: baseline;
         }
       }
       p {
         display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 1;
-          overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
         &:first-child {
           @include font($fs-md, $fw-medium);
         }

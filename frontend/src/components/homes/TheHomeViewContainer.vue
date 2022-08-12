@@ -7,9 +7,13 @@
     >
     <!-- 유저들의 NEW 커스텀 칵테일 -->
     <the-home-basic-section :data="latestCustomCocktailData">
-      <h1 class="title">
-        유저들의 <span class="important">NEW</span> 커스텀 칵테일
-      </h1>
+      <h1 class="title">유저들의 <span class="important">NEW</span> 칵테일</h1>
+    </the-home-basic-section>
+    <the-home-basic-section :data="latestCustomCocktailData">
+      <h1 class="title">유저들의 <span class="important">NEW</span> 칵테일</h1>
+    </the-home-basic-section>
+    <the-home-basic-section :data="latestCustomCocktailData">
+      <h1 class="title">유저들의 <span class="important">NEW</span> 칵테일</h1>
     </the-home-basic-section>
   </div>
 </template>
@@ -44,7 +48,7 @@ const latestCustomCocktailData = {
 
   .important {
     @include font(17px, $fw-bold);
-    color: $danger-color;
+    color: $red-color;
   }
 }
 </style>

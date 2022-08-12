@@ -85,6 +85,41 @@ export const carousel: Module<CarouselState, RootState> = {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
         });
     },
+
+    // * 전체보기 리스트 클릭
+    clickShowMoreItem: ({}, item: CarouselCocktail) => {
+      const { cocktailId, baseCocktailId, type } = item;
+      // [type] 1 슈커칵 / 0 커칵 / -1 기본칵
+      switch (item.type) {
+        // 슈퍼커스텀칵테일
+        case 1:
+          console.log(1);
+          router.push({
+            name: "TheSuperCustomCocktailDescView",
+            params: { feedId: item.cocktailId },
+          });
+          break;
+        // 커스텀칵테일
+        case 0:
+          console.log(0);
+          router.push({
+            name: "TheCustomCocktailDescView",
+            params: {
+              cocktailId: item.baseCocktailId,
+              feedId: item.cocktailId,
+            },
+          });
+          break;
+        case -1:
+          console.log(-1);
+          router.push({
+            name: "TheCocktailDescView",
+            params: { cocktailId: item.cocktailId },
+          });
+          break;
+      }
+    },
+
     // * 신규 커스텀 칵테일(carousel)
     setLatestCustomCocktails: ({ commit, dispatch }) => {
       axios({

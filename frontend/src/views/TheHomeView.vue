@@ -32,12 +32,6 @@
     @off-modal="offCompeteSignupModal"
     >회원가입이 완료되었습니다.</success-pop-up
   >
-  <!-- <div class="category-container">
-    <router-link to="/user/signup">회원가입</router-link>
-    <router-link to="/user/login">로그인</router-link>
-    <router-link to="/user/my-info">유저정보수정</router-link>
-    <router-link to="/user/my-info/password">비밀번호 변경</router-link>
-  </div> -->
   <nav-bar></nav-bar>
 </template>
 
@@ -147,20 +141,20 @@ const handleScroll = (event: any) => {
 // db 받아오기
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
-  // store.dispatch("newsFeed/getNewsFeedListData");
 });
 
 // 저장된 스크롤 높이로 이동
 onMounted(() => {
-  // const scrollY = computed(() => store.getters["newsFeed/getNewsFeedScrollY"]);
+  const scrollY = computed(() => store.getters["scroll/getHomeScrollY"]);
   setTimeout(() => {
-    // window.scrollTo({ left: 0, top: scrollY.value });
+    window.scrollTo({ left: 0, top: scrollY.value });
   }, 0);
 });
 
 // 스크롤 높이 저장
 onBeforeUnmount(() => {
-  // store.dispatch("newsFeed/setNewsFeedScrollY", window.scrollY);
+  console.log(window.scrollY);
+  store.dispatch("scroll/setHomeScrollY", window.scrollY);
 });
 </script>
 

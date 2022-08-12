@@ -1,6 +1,8 @@
 <template>
   <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-    유저들의 NEW 칵테일</header-basic
+    <h1 class="title">
+      유저들의 <span class="important">NEW</span> 칵테일
+    </h1></header-basic
   >
   <div class="cocktail-list-view top-view-no-margin">
     <div class="the-item-container">
@@ -16,23 +18,15 @@
 </template>
 
 <script setup lang="ts">
-import TheListItemCocktail from "@/components/cocktails/TheListItemCarouselCocktail.vue";
+import TheListItemCarouselCocktail from "@/components/cocktails/TheListItemCarouselCocktail.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { computed, onBeforeMount } from "vue";
+import { computed, onBeforeMount, onUnmounted } from "vue";
+import { CarouselCocktail } from "../../interface";
 const router = useRouter();
 const store = useStore();
-
-// 칵테일 interface
-interface Cocktail {
-  id: number;
-  name: string;
-  img: string | null;
-  alcohol: number | null;
-  baseLiquor: string;
-}
 
 // 전체 칵테일 리스트
 const allLatestCustomCocktails = computed(
@@ -40,29 +34,33 @@ const allLatestCustomCocktails = computed(
 );
 
 // 칵테일 누른 경우 칵테일 상세 페이지로 이동
-const clickCocktail = (item: Cocktail) => {
-  router.push({ name: "TheCocktailDescView", params: { cocktailId: item.id } });
+const clickCocktail = (item: CarouselCocktail) => {
+  store.dispatch("carousel/clickShowMoreItem", item);
 };
 
 const handleScroll = (event: any) => {
   const data = {
     event,
-    action: "searchResult/setWholeCocktail",
+    action: "carousel/setAllLatestCustomCocktails",
   };
   store.dispatch("scroll/handleScroll", data);
 };
 
 // 전체 칵테일 추가 함수
-const setWholeCocktail = () => {
-  store.dispatch("searchResult/setWholeCocktail");
+const setAllLatestCustomCocktails = () => {
+  store.dispatch("carousel/setAllLatestCustomCocktails");
 };
 
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
-  setWholeCocktail();
+  setAllLatestCustomCocktails();
   setTimeout(() => {
-    setWholeCocktail();
+    setAllLatestCustomCocktails();
   }, 100);
+});
+
+onUnmounted(() => {
+  store.dispatch("carousel/removeAllLatestCocktails");
 });
 </script>
 
@@ -77,6 +75,15 @@ onBeforeMount(() => {
     width: 100%;
 
     margin-top: 1rem;
+  }
+}
+
+.title {
+  @include font(20px, $fw-medium);
+
+  .important {
+    @include font(20px, $fw-bold);
+    color: $red-color;
   }
 }
 </style>

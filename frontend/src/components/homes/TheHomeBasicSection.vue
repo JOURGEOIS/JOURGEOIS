@@ -53,6 +53,7 @@ const toggleShowDescription = () => {
 
 // 더보기 클릭
 const clickMore = () => {
+  console.log("눌렀다");
   router.push({ name: props.data.showMoreView });
 };
 </script>

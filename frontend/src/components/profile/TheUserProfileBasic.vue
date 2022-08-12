@@ -36,10 +36,10 @@ const route = useRoute()
 const store = useStore()
 
 // 유저 정보 불러오기
-const userInfo = computed(() => store.getters['personalInfo/getUserInfo'])
-const profileImg = userInfo.value.profileImg
-const nickname = userInfo.value.nickname
-const introduce = userInfo.value.introduce
+const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
+const profileImg = computed(() => userInfo.value.profileImg)
+const nickname = computed(() => userInfo.value.nickname)
+const introduce = computed(() => userInfo.value.introduce)
 </script>
 
 <style scoped lang="scss">

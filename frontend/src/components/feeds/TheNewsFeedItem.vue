@@ -129,15 +129,15 @@ const moveFeedDescription = () => {
     }
   }
   .the-news-feed-image {
+    position: relative;
     width: calc(100% + 32px);
-    margin-left: -16px;
-    padding-bottom: 100%;
-    background-color: $white150;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
     aspect-ratio: 1/1;
-    cursor: pointer;
+    margin: 0 -16px;
+    background-color: $white150;
+    background : {
+      size: cover;
+      position: center center;
+    }
   }
 
   .the-news-feed-cocktail {

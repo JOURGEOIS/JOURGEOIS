@@ -7,7 +7,7 @@ const LOOKUP = "lookup/";
 const POST = "posts/";
 const AWARDS = "awards/";
 const PROFILE = "profile/";
-const CUSTOM = "custom/";
+const HOME = "home/";
 const NOTICE = "notification/auth/";
 
 export default {
@@ -70,17 +70,21 @@ export default {
   },
 
   awards: {
-    joinContest: () => HOST + AWARDS + "/auth",
-    voteContest: () => HOST + AWARDS + "/auth/like",
-    voteCOntestList: () => HOST + AWARDS,
-    resultCOntestList: () => HOST + AWARDS + "/result",
-    contestDetail: () => HOST + AWARDS + "/auth/info",
+    joinContest: () => HOST + AWARDS + "auth",
+    voteContest: () => HOST + AWARDS + "auth/like",
+    contestListVote: () => HOST + AWARDS,
+    contestListNow: () => HOST + AWARDS + "result",
+    contestDesc: () => HOST + AWARDS + "auth/info",
   },
 
-  custom: {
+  homes: {
     // 홈
-    latestCustomCocktail: () => HOST + CUSTOM + "latest5", // 신규 커칵/슈커칵 5개
-    latestCustomCocktailView: () => HOST + CUSTOM + "latest", // 신규 커칵/슈커칵 목록
+    latestCustomCocktail: () => HOST + HOME + "custom/latest5", // 신규 커칵/슈커칵 5개
+    latestCustomCocktailView: () => HOST + HOME + "custom/latest", // 신규 커칵/슈커칵 목록
+    hotCocktail: () => HOST + HOME + "cocktail/hot5", // 주류주아 인기 칵테일 5개
+    hotCocktailView: () => HOST + HOME + "cocktail/hot", // 주류주아 인기 칵테일 목록
+    weeklyHotCocktail: () => HOST + HOME + "custom/weekly5", // 유저의 이번 주 인기 칵테일
+    weeklyHotCocktailView: () => HOST + HOME + "custom/weekly", // 유저의 이번 주 인기 칵테일
   },
 
   notice: {

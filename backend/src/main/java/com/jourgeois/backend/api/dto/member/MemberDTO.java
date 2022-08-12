@@ -20,9 +20,14 @@ public class MemberDTO {
     private Integer followingCnt;
     private Integer postCnt;
     private Integer isPublic;
+    private Integer likes;
+    private Integer iLike;
+    private Long postId;
+    private String baseCocktail;
 
     @Builder
-    public MemberDTO(Long uid, String email, String nickname, String profileImg, String introduce, Integer followerCnt, Integer followingCnt, Integer postCnt, Integer isPublic) {
+    public MemberDTO(Long uid, String email, String nickname, String profileImg, String introduce, Integer followerCnt,
+                     Integer followingCnt, Integer postCnt, Integer isPublic, Integer likes, Integer iLike, Long postId, String baseCocktail) {
         this.uid = uid;
         this.email = email;
         this.nickname = nickname;
@@ -32,6 +37,10 @@ public class MemberDTO {
         this.followingCnt = followingCnt;
         this.postCnt = postCnt;
         this.isPublic = isPublic;
+        this.likes = likes;
+        this.iLike = iLike;
+        this.postId = postId;
+        this.baseCocktail = baseCocktail;
     }
 
     public MemberDTO(Long uid, String email, String name, String nickname, String profileImg, String introduce) {

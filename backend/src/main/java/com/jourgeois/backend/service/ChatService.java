@@ -4,9 +4,8 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.chat.ChatMessageDTO;
-
-import com.jourgeois.backend.api.dto.notification.OpponentDTO;
 import com.jourgeois.backend.api.dto.chat.ChatRoomDTO;
+import com.jourgeois.backend.api.dto.notification.OpponentDTO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.MemberRepository;
 import com.jourgeois.backend.util.S3Util;

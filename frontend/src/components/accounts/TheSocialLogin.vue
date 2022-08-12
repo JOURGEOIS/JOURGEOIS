@@ -55,7 +55,8 @@ const googleAPI = computed(
 
 const clickGoogle = () => {
   const googleClientId = `217608233279-k2op58rvkdtbbteakk7ag0tp5ia54mij.apps.googleusercontent.com`;
-  const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
+  // const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
+  const googleRedirect = `http://localhost:8080/member/login/google/redirect`;
   window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirect}&response_type=code&scope=profile%20email%20openid`;
 };
 

@@ -63,6 +63,12 @@ const description = props.post.description
   @include flex(column);
   width: 100%;
   gap: 10px;
+  border: 1px solid $white100;
+  border-radius: 8px;
+  padding: 16px 12px;
+  background: $white;
+  box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+
   .item-header{
     @include flex;
     width:100%;

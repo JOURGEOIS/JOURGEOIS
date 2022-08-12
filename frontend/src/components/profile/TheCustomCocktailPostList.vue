@@ -1,5 +1,4 @@
 <template>
-  <p>커스텀</p>
   <the-custom-cocktail-post-item
     v-for="(post, id) in userPostListData"
     :key="`main-${id}`"

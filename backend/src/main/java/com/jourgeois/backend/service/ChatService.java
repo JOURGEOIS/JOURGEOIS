@@ -1,6 +1,7 @@
 package com.jourgeois.backend.service;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.chat.ChatMessageDTO;
@@ -13,9 +14,7 @@ import com.jourgeois.backend.util.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -35,37 +34,85 @@ public class ChatService {
         ApiFuture<QuerySnapshot> result = getChatRoomAll.get();
         List<QueryDocumentSnapshot> chatRoomRefs = result.get().getDocuments();
 
-        List<ChatRoomDTO> chatRooms = new ArrayList<>();
+        List<ChatRoomDTO> chatRooms = new LinkedList<>();
 
         for(QueryDocumentSnapshot chatRoomRef : chatRoomRefs) {
-            CollectionReference messages = chatRoomRef.getReference().collection("messages");
+            DocumentReference lastMessageRef = chatRoomRef.get("lastMessage", DocumentReference.class);
 
-            Query getLastMessage = messages.orderBy("timestamp", Query.Direction.DESCENDING).limit(1);
+            System.out.println(lastMessageRef.getId());
 
-            ApiFuture<QuerySnapshot> lastMessage = getLastMessage.get();
-            List<QueryDocumentSnapshot> documents = lastMessage.get().getDocuments();
+            ChatMessageDTO lastMessage = lastMessageRef.get().get().toObject(ChatMessageDTO.class);
 
-            if (!documents.isEmpty()) {
-                ChatMessageDTO chatMessageDTO = documents.get(0).toObject(ChatMessageDTO.class);
                 ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
-                chatRoomDTO.setChatRoomId(messages.getParent().getId());
+                chatRoomDTO.setChatRoomId(lastMessage.getChatRoomId());
 
-                Long opponentUid = chatMessageDTO.getFrom().equals(myUid) ? chatMessageDTO.getTo() : chatMessageDTO.getFrom();
-                Member opponent = memberRepository.findById(opponentUid).orElseThrow(() -> new NoSuchElementException("상대 유저 정보가 없습니다."));
+                List<Long> users = (List<Long>) chatRoomRef.get("users");
+                int opponentUserIdx = (users.indexOf(myUid)^1);
+                Long opponentUserId = users.get(opponentUserIdx);
+                System.out.println("================" + opponentUserId);
+                Member opponent = memberRepository.findById(opponentUserId).orElseThrow(() -> new NoSuchElementException("상대 유저 정보가 없습니다."));
                 OpponentDTO chatOpponentDTO = OpponentDTO.builder()
                         .uid(opponent.getUid())
                         .img(S3Util.s3urlFormatter(opponent.getProfileImg()))
                         .nickname(opponent.getNickname())
                         .build();
                 chatRoomDTO.setOpponent(chatOpponentDTO);
-                chatRoomDTO.setLastMessage(chatMessageDTO);
-                chatRooms.add(chatRoomDTO);
-            }
-
-            System.out.println(chatRooms.get(0));
+                chatRoomDTO.setLastMessage(lastMessage);
+                chatRoomDTO.setHasNewMessage(lastMessage.getSender() != myUid && !lastMessage.getIsRead());chatRooms.add(chatRoomDTO);
         }
 
+        Collections.sort(chatRooms);
+
+//        for(ChatRoomDTO chatRoom : chatRooms) {
+//            System.out.println(chatRoom.toString());
+//        }
 
         return chatRooms;
+    }
+
+    public boolean sendMessage(ChatMessageDTO chatMessage) throws NoSuchElementException, ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        String chatRoomId = chatMessage.getChatRoomId();
+        DocumentReference msg = null;
+        // 새로운 채팅 개시
+        if(chatRoomId == null || chatRoomId.isEmpty()) {
+            msg = db.collection(ROOT_CHAT_COLLECTION_NAME).document().collection("messages").document();
+
+            chatRoomId = msg.getParent().getParent().getId();
+            List<Long> users = new ArrayList<>();
+            users.add(chatMessage.getSender());
+            users.add(chatMessage.getReceiver());
+
+            Map<String, Object> usersFieldValue = new HashMap<>();
+            usersFieldValue.put("users", users);
+            System.out.println(chatRoomId);
+            usersFieldValue.put("lastMessage", msg);
+
+            ApiFuture<WriteResult> result = db.collection(ROOT_CHAT_COLLECTION_NAME).document(chatRoomId).set(usersFieldValue);
+            System.out.println("채팅방 생성 성공 : " + result.get().getUpdateTime());
+
+            chatMessage.setChatRoomId(chatRoomId);
+        }
+        // 기존에 있는 채팅
+        else {
+            msg = db.collection(ROOT_CHAT_COLLECTION_NAME).document(chatRoomId).collection("messages").document();
+            List<Long> users = new ArrayList<>();
+            users.add(chatMessage.getSender());
+            users.add(chatMessage.getReceiver());
+
+            Map<String, Object> usersFieldValue = new HashMap<>();
+            usersFieldValue.put("users", users);
+            System.out.println(chatRoomId);
+            usersFieldValue.put("lastMessage", msg);
+
+            ApiFuture<WriteResult> result = db.collection(ROOT_CHAT_COLLECTION_NAME).document(chatRoomId).set(usersFieldValue);
+            System.out.println("채팅방 갱신 성공 : " + result.get().getUpdateTime());
+        }
+        chatMessage.setTimestamp(Timestamp.now());
+        ApiFuture<WriteResult> result = msg.set(chatMessage);
+
+        System.out.println("메세지 전송 성공 : " + result.get().getUpdateTime());
+        
+        return true;
     }
 }

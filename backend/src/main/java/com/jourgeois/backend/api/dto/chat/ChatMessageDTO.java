@@ -16,8 +16,9 @@ import java.time.LocalDateTime;
 @ToString
 public class ChatMessageDTO {
     // 송신자 정보
-    private Long from;
-    private Long to;
+    private String chatRoomId;
+    private Long sender;
+    private Long receiver;
     // 메세지 정보
     private String message;
     private Boolean isRead;

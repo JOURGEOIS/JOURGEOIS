@@ -69,6 +69,11 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     getRefreshFailPopupStatus: (state) => {
       return state.refreshFailPopupStatus;
     },
+    
+    // 계정 공개 여부
+    getUserPublicMode: (state) => {
+      return state.userInfo.isPublic;
+    }
   },
 
   mutations: {
@@ -91,6 +96,10 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     SET_REFRESH_FAIL: (state, value) => {
       state.refreshFailPopupStatus = value;
     },
+
+    SET_PRIVATE_MODE: (state, privateMode) => {
+      state.userInfo.isPublic = privateMode
+    }
   },
 
   actions: {
@@ -233,5 +242,10 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           }
         });
     },
+
+    // 프로필 공개 설정 
+    savePrivateModeSet: ({ commit }, privateMode) => {
+			commit("SET_PRIVATE_MODE", privateMode);
+		},
   },
 };

@@ -29,11 +29,14 @@ export default {
     naverLogin: () => HOST + ACCOUNTS + "login/naver",
     follow: () => HOST + ACCOUNTS + "auth/follow",
     unfollow: () => HOST + ACCOUNTS + "auth/unfollow",
+    
+    // 프로필
     profileUserInfo: () => HOST + ACCOUNTS + PROFILE + "auth",
     profileCommunity: () => HOST + ACCOUNTS + PROFILE + "auth/post",
     profileCustom: () => HOST + ACCOUNTS + PROFILE + "auth/cocktail",
     profileBookmark: () => HOST + ACCOUNTS + PROFILE + "auth/bookmark",
     profileReview: () => HOST + ACCOUNTS + PROFILE + "auth/comment",
+    profileModeSet: () => HOST + ACCOUNTS + PROFILE + "auth/profile-status",
   },
   email: {
     emailCert: () => HOST + "email/cert",

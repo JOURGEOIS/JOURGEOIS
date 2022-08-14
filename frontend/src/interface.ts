@@ -5,6 +5,7 @@ export interface User {
   profileImg: string;
   introduce: string | null;
   isFollowed: number | null; // 1 : 팔로우중 / 0 : 팔로우X / -1 : me
+  isPublic: number; // 계정 모드: 1: 공개 / 0: 비공개 <= 변경 예정
 }
 
 // 커스텀 칵테일만의 정보

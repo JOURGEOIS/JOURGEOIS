@@ -23,9 +23,7 @@
       ></div>
       <div class="item-text-part">
         <h1 class="cocktail-name"><span class="material-icons"> local_bar </span>{{ title }}</h1>
-        <!-- <h1 class="cocktail-name"><span class="material-icons"> local_bar </span>제목이다제목이다제목이다</h1> -->
         <p class="cocktail-ingredients">재료: {{ ingredients }}</p>
-        <!-- <p class="cocktail-ingredients">재료: 재료다</p> -->
         <p class="cocktail-description">
           {{ description }}
         </p>
@@ -99,7 +97,7 @@ const clickPost = () => {
 
   @include shadow-feed;
   .item-header {
-    @include flex-xy(space-between, center);
+    @include flex-xy(space-between, flex-start);
     gap: 10px;
     margin-bottom: 5px;
 
@@ -131,6 +129,7 @@ const clickPost = () => {
     .cocktail-liked {
       @include flex-xy(flex-start, center);
       @include font-size-sub(13px);
+      padding-top: 5px;
       gap: 4px;
 
       .material-icons {

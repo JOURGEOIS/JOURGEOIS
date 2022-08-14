@@ -82,7 +82,7 @@ const clickPost = () => {
 
   @include shadow-feed;
   .item-header {
-    @include flex-xy(space-between, center);
+    @include flex-xy(space-between, flex-start);
     gap: 10px;
     margin-bottom: 5px;
 
@@ -113,6 +113,7 @@ const clickPost = () => {
     .cocktail-liked {
       @include flex-xy(flex-start, center);
       @include font-size-sub(13px);
+      padding-top: 5px;
       gap: 4px;
 
       .material-icons {
@@ -135,12 +136,15 @@ const clickPost = () => {
       }
     }
     .item-text-part {
-      @include text-overflow-ellipsis;
       @include flex-xy(flex-start, center);
 
       .cocktail-description {
         @include font-size-sub(13px);
-      	@include text-overflow-ellipsis;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
       }
     }
   }

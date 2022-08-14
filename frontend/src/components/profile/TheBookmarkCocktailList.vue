@@ -1,7 +1,15 @@
 <template>
-  <article v-for="bookmark in userBookmarkPostData" :key="bookmark.cocktailId">
-    <the-bookmark-cocktail-item :bookmark = "bookmark"></the-bookmark-cocktail-item>
-  </article>
+  <div class="the-user-bookmark-list">
+    <article 
+      class="the-user-bookmark-item"
+      v-for="bookmark in userBookmarkData" 
+      :key="bookmark.cocktailId"
+    >
+      <the-bookmark-cocktail-item 
+        :bookmark = "bookmark"
+      ></the-bookmark-cocktail-item>
+    </article>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -12,7 +20,7 @@ import { useStore } from "vuex";
 const route = useRoute();
 const store = useStore();
 
-const userBookmarkPostData = computed(() => 
+const userBookmarkData = computed(() => 
   store.getters["profileDesc/getCurrentUserPostBookmark"]
 )
 
@@ -42,7 +50,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.the-cocktail-awards-vote-list {
+.the-user-bookmark-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(50%, auto));
   justify-items: center;

@@ -1,9 +1,9 @@
 <template>
   <!-- 카드 -->
-  <div class="cocktail-bookmark-item-card">
+  <div class="bookmark-item-card">
     <!-- 이미지 -->
     <div
-      class="cocktail-bookmark-item-image"
+      class="bookmark-item-image"
       :style="{ backgroundImage: `url(${originalCocktailImg})` }"
     ></div>
 
@@ -12,7 +12,7 @@
 
     <!-- 상세보기 -->
     <button
-      class="cocktail-bookmark-item-btn detail"
+      class="bookmark-item-btn detail"
       @click="clickDetail"
     >
       상세보기
@@ -52,7 +52,7 @@ const clickDetail = () => {
 </script>
 
 <style scoped lang="scss">
-.cocktail-bookmark-item-card {
+.bookmark-item-card {
   @include flex-xy(center, flex-start);
   flex-wrap: wrap;
   width: 100%;
@@ -63,7 +63,7 @@ const clickDetail = () => {
   padding-bottom: 10px;
   cursor: pointer;
 
-  .cocktail-bookmark-item-image {
+  .bookmark-item-image {
     width: 100%;
     aspect-ratio: 1/1;
     border-radius: 12px 12px 0px 0px;
@@ -82,7 +82,7 @@ const clickDetail = () => {
     @include font($fs-main, $fw-regular);
   }
 
-  .cocktail-bookmark-item-btn {
+  .bookmark-item-btn {
     width: 90%;
     padding: 0.4em;
     border-radius: 6px;

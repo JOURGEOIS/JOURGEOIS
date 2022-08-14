@@ -116,4 +116,15 @@ public class MemberProfilePageService {
 
         return resArr;
     }
+
+    public Boolean switchPublicToPrivate(Long uid){
+        try {
+            Member m = memberRepository.findById(uid).orElseThrow();
+            Integer ispublic = Integer.parseInt(m.getIsPublic()) ^ 1;
+            m.setIsPublic(ispublic.toString());
+            return true;
+        } catch(Exception e){
+            return false;
+        }
+    }
 }

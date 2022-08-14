@@ -65,15 +65,21 @@ import TagBasic from "@/components/basics/TagBasic.vue";
 import RoundImage from "@/components/basics/RoundImage.vue";
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const store = useStore();
 
 const cocktailData = computed(
   () => store.getters["cocktailDesc/getCurrentCocktailData"]
 );
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 // 북마크
-const isBookmarked = ref(false);
 const clickBookMark = () => {
+  if (!isLoggedIn.value) {
+    router.push({ name: "TheLoginView" });
+    return;
+  }
   store.dispatch("cocktailDesc/clickBookMark");
 };
 

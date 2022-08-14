@@ -217,7 +217,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "cocktailDesc/showBookMark",
+              func: "cocktailDesc/fetchBookMarkUserList",
               params: { cocktailId },
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });

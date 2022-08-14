@@ -1,6 +1,6 @@
 <template>
   <div class="the-news-feed-container">
-    <div class="the-news-feed-header">
+    <div class="the-news-feed-header" @click="clickProfileImage">
       <round-image
         :round-image="{ image: newsFeedData.profileImg }"
       ></round-image>
@@ -95,6 +95,16 @@ const moveFeedDescription = () => {
     });
   }
 };
+
+// 프로필 이미지 클릭
+const clickProfileImage = () => {
+  router.push({
+    name: "TheUserProfileView",
+    params: {
+      userId: props.newsFeedData.writer,
+    },
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -107,6 +117,7 @@ const moveFeedDescription = () => {
   .the-news-feed-header {
     @include flex-xy(flex-start, center);
     gap: 8px;
+    cursor: pointer;
 
     .round-image {
       width: 59px;

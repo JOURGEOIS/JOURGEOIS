@@ -7,15 +7,10 @@
     <section class="top-view">
       <the-user-info-change-form></the-user-info-change-form>
       <div class="change-user-info-link">
-        <p @click="toggleLogOutModal(true)">로그아웃</p>
         <router-link to="/user/sign-out">회원탈퇴</router-link>
       </div>
     </section>
   </div>
-  <the-log-out-modal
-    v-if="logOutModalStatus"
-    @off-modal="toggleLogOutModal(false)"
-  ></the-log-out-modal>
   <success-pop-up
     v-if="successPopUpStatus"
     @off-modal="toggleSuccessPopUp(false)"
@@ -31,7 +26,6 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheUserInfoChangeForm from "@/components/accounts/TheUserInfoChangeForm.vue";
-import TheLogOutModal from "@/components/accounts/TheLogOutModal.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -56,13 +50,6 @@ const toggleFailPopUp = (value: boolean) => {
   store.dispatch("account/toggleUserInfoChangeError", value);
 };
 
-// 로그아웃 모달
-const logOutModalStatus = computed(
-  () => store.getters["account/getLogOutModalStatus"]
-);
-const toggleLogOutModal = (value: boolean) =>
-  store.dispatch("account/toggleLogOutModal", value);
-
 // 시간제 모달
 watch(failModalStatus, () => {
   if (failModalStatus.value) {
@@ -84,7 +71,6 @@ watch(successPopUpStatus, () => {
 onMounted(() => {
   toggleSuccessPopUp(false);
   toggleFailPopUp(false);
-  toggleLogOutModal(false);
 });
 </script>
 

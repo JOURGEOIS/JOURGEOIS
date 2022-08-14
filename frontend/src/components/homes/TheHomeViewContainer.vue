@@ -1,5 +1,11 @@
 <template>
   <div class="home-view-container">
+    <!-- 좋아요 기반 추천 칵테일  -->
+    <the-home-basic-section :data="likeRecommendedCocktailData">
+      <h1 class="title">
+        당신을 위한 <span class="important">취향저격</span> 칵테일
+      </h1>
+    </the-home-basic-section>
     <!-- 테마별 추천 칵테일 -->
     <the-theme-section
       ><h1 class="title">
@@ -27,12 +33,6 @@
         유저들의 <span class="important">이번 주 HOT</span> 칵테일
       </h1>
     </the-home-basic-section>
-    <!-- 좋아요 기반 추천 칵테일  -->
-    <!-- <the-home-basic-section :data="likeRecommendedCocktailData">
-      <h1 class="title">
-        당신을 위한 <span class="important">취향저격</span> 칵테일
-      </h1>
-    </the-home-basic-section> -->
   </div>
 </template>
 

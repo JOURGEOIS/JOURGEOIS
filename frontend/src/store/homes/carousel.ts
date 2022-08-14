@@ -460,12 +460,17 @@ export const carousel: Module<CarouselState, RootState> = {
       commit("REMOVE_ALL_WEEKLY_HOT_COCKTAILS");
     },
     // * 좋아요 기반 추천 칵테일
-    setLikeRecommendedCocktails: ({ commit, dispatch }) => {
+    setLikeRecommendedCocktails: ({ commit, dispatch, rootGetters }) => {
+      console.log("b", rootGetters["personalInfo/getUserInfoUserId"]);
       axios({
         url: api.homes.likeRecommendedCocktail(),
         method: "GET",
+        headers: {
+          uid: rootGetters["personalInfo/getUserInfoUserId"],
+        },
       })
         .then((res) => {
+          console.log(res.data);
           commit("SET_LIKE_RECOMMENDED_COCKTAILS", res.data);
         })
         .catch((err) => {
@@ -473,11 +478,19 @@ export const carousel: Module<CarouselState, RootState> = {
           console.error(err.response);
         });
     },
-    setAllLikeRecommendedCocktails: ({ commit, dispatch, getters }) => {
+    setAllLikeRecommendedCocktails: ({
+      commit,
+      dispatch,
+      getters,
+      rootGetters,
+    }) => {
       const page = getters["getAllLikeRecommendedCocktailPage"];
       axios({
         url: api.homes.likeRecommendedCocktailView(),
         method: "GET",
+        headers: {
+          uid: rootGetters["personalInfo/getUserInfoUserId"],
+        },
         params: {
           page,
         },

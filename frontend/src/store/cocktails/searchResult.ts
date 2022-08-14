@@ -161,12 +161,13 @@ export const searchResult: Module<SearchResultState, RootState> = {
 
     // * 검색어 User 검색결과
     setSearchUser: ({ dispatch, commit, getters, rootGetters }, data) => {
+      const uid = rootGetters["personalInfo/getUserInfoUserId"];
+      const headers: { uid: number } | {} = uid ? { uid } : {};
+
       axios({
         url: api.lookups.user(),
         method: "GET",
-        headers: {
-          uid: rootGetters["personalInfo/getUserInfoUserId"],
-        },
+        headers,
         params: {
           keyword: data.keyword,
           page: getters.getSearchUserPage,

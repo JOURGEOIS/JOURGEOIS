@@ -18,7 +18,7 @@
     <div class="part-right">
       <!-- 팔로우/팔로잉 버튼 -->
       <span
-        v-if="isFollowed !== -1"
+        v-if="isFollowed !== -1 && isLoggedIn"
         class="follow-btn"
         :class="{ following: isFollowed, follow: !isFollowed }"
         @click="clickFollowBtn"
@@ -42,6 +42,9 @@ import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
+// 로그인 여부
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 const customCocktailInfo = computed(() => {
   return store.getters["customCocktailInfo/getCustomCocktailDetail"];
@@ -70,11 +73,11 @@ const isUpdated = computed(
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
   router.push({
-    name: 'TheUserProfileView',
+    name: "TheUserProfileView",
     params: {
-      userId: uid.value
-    }
-  })
+      userId: uid.value,
+    },
+  });
 };
 
 // 팔로우/팔로잉 텍스트

@@ -426,6 +426,8 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         .then((response) => {
           // 로딩 off
           commit("SET_LOADING_STATUS", false);
+          // 뉴스피드 날리기
+          dispatch("newsFeed/removeNewsFeedListData");
 
           // 상세 페이지로 이동
           router.replace({
@@ -567,6 +569,8 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         .then((response) => {
           // 로딩 off
           commit("SET_LOADING_STATUS", false);
+          // 뉴스피드 날리기
+          dispatch("newsFeed/removeNewsFeedListData");
 
           router.replace({
             name: "TheCustomCocktailDescView",

@@ -4,9 +4,11 @@
       <div class="user-part">
         <div class="user-info">
           <round-image :round-image="{image: profileImg}"></round-image>
-          <div class="user-nickname">{{ nickname }}</div>
+          <div class="user-nick-time">
+            <div class="user-nickname">{{ nickname }}</div>
+            <div class="created-at">{{ createTimeDelta }}</div>
+          </div>
         </div>
-        <div class="created-at">{{ createTimeDelta }}</div>
       </div>
       <div class="cocktail-liked">
         <span class="material-icons unliked" v-if="!ilike"> favorite </span>
@@ -21,9 +23,7 @@
       ></div>
       <div class="item-text-part">
         <h1 class="cocktail-name"><span class="material-icons"> local_bar </span>{{ title }}</h1>
-        <!-- <h1 class="cocktail-name"><span class="material-icons"> local_bar </span>제목이다제목이다제목이다</h1> -->
         <p class="cocktail-ingredients">재료: {{ ingredients }}</p>
-        <!-- <p class="cocktail-ingredients">재료: 재료다</p> -->
         <p class="cocktail-description">
           {{ description }}
         </p>
@@ -97,7 +97,7 @@ const clickPost = () => {
 
   @include shadow-feed;
   .item-header {
-    @include flex-xy(space-between, center);
+    @include flex-xy(space-between, flex-start);
     gap: 10px;
     margin-bottom: 5px;
 
@@ -114,18 +114,22 @@ const clickPost = () => {
           height: 40px;
         }
 
-        .user-nickname {
-          @include font(17px);
+        .user-nick-time{
+          @include flex(column);
+          .user-nickname {
+            @include font(17px);
+          }
+          .created-at {
+            @include font-size-placeholder(13px);
+          }
         }
-      }
-      .created-at {
-        @include font-size-placeholder(13px);
       }
     }
 
     .cocktail-liked {
       @include flex-xy(flex-start, center);
       @include font-size-sub(13px);
+      padding-top: 5px;
       gap: 4px;
 
       .material-icons {

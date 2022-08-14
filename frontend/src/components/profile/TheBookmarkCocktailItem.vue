@@ -1,10 +1,10 @@
 <template>
   <!-- 카드 -->
-  <div class="cocktail-bookmark-item-card">
+  <div class="bookmark-item-card">
     <!-- 이미지 -->
     <div
-      class="cocktail-bookmark-item-image"
-      :style="{ backgroundImage: originalCocktailImg }"
+      class="bookmark-item-image"
+      :style="{ backgroundImage: `url(${originalCocktailImg})` }"
     ></div>
 
     <!-- 제목 -->
@@ -12,7 +12,7 @@
 
     <!-- 상세보기 -->
     <button
-      class="cocktail-bookmark-item-btn detail"
+      class="bookmark-item-btn detail"
       @click="clickDetail"
     >
       상세보기
@@ -32,19 +32,19 @@ const route = useRoute();
 const store = useStore();
 
 const props = defineProps<{
-  post: userBookmarkData;
+  bookmark: userBookmarkData;
 }>();
 
-const cocktailId = props.post.cocktailId
+const cocktailId = props.bookmark.cocktailId
 
-const originalCocktailImg = props.post.img
-const nameKR = props.post.nameKR
+const originalCocktailImg = props.bookmark.img
+const nameKR = props.bookmark.nameKR
 
 const clickDetail = () => {
   router.push({
     name: "TheCocktailDescView",
     params: {
-      feedId: cocktailId,
+      cocktailId,
     },
   });
 };
@@ -52,7 +52,7 @@ const clickDetail = () => {
 </script>
 
 <style scoped lang="scss">
-.cocktail-bookmark-item-card {
+.bookmark-item-card {
   @include flex-xy(center, flex-start);
   flex-wrap: wrap;
   width: 100%;
@@ -63,7 +63,7 @@ const clickDetail = () => {
   padding-bottom: 10px;
   cursor: pointer;
 
-  .cocktail-bookmark-item-image {
+  .bookmark-item-image {
     width: 100%;
     aspect-ratio: 1/1;
     border-radius: 12px 12px 0px 0px;
@@ -82,7 +82,7 @@ const clickDetail = () => {
     @include font($fs-main, $fw-regular);
   }
 
-  .cocktail-bookmark-item-btn {
+  .bookmark-item-btn {
     width: 90%;
     padding: 0.4em;
     border-radius: 6px;

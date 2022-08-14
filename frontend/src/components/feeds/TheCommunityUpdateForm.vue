@@ -47,12 +47,6 @@ const communityImage = (data: object) => {
   communityImageValue = data;
 };
 
-// const communityImageValue = computed({
-//   get: () =>
-//     store.getters["feedDescInfo/getCommunityDetail"].customCocktail.imgLink,
-//   set: (newValue) => store.dispatch("feedDescInfo/setImgLink", newValue),
-// });
-
 // description input
 const communityDescValue = computed({
   get: () =>

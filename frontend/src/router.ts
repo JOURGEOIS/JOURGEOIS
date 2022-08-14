@@ -68,7 +68,7 @@ const routes: any[] = [
     name: "TheUserProfileView",
     component: () => import("@/views/TheUserProfileView.vue"),
   },
-  
+
   // 프로필 공개 설정 화면
   {
     path: "/user/profile/private",
@@ -259,12 +259,13 @@ const routes: any[] = [
     component: () => import("@/views/homes/TheAllThemeCocktailView.vue"),
   },
 
-  // 주류주아 좋아요 기반 추천 칵테일 리스트
-  // {
-  //   path: "/likeRecommended",
-  //   name: "TheLikeRecommendedCocktailView",
-  //   component: () => import("@/views/homes/TheLikeRecommendedCocktailView.vue"),
-  // },
+  // 주류주아 북마크 기반 추천 칵테일 리스트
+  {
+    path: "/likeRecommended",
+    name: "TheAllLikeRecommendedCocktailView",
+    component: () =>
+      import("@/views/homes/TheAllLikeRecommendedCocktailView.vue"),
+  },
 
   // 알림
   {

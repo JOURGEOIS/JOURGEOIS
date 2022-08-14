@@ -156,7 +156,8 @@ export const notice: Module<NoticeState, RootState> = {
         .then(() => {
           // 팔로우 알림일 경우, 해당 유저의 프로필 페이지로 이동한다.
           if (type === "FOLLOW") {
-            alert("프로필로 이동! 변수명 uid가 uid입니다.");
+            router.push({ name: 'TheUserProfileView', params: { userId: uid } })
+            
           }
           // 댓글, 좋아요 알림일 경우 해당 글로 이동한다.
           else {

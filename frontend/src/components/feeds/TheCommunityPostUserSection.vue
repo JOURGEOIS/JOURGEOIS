@@ -37,9 +37,9 @@ import { User } from "../../interface";
 import { calcDateDelta, compareDate } from "../../functions/date";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
-// import { useRouter, useRoute } from "vue-router";
-// const router = useRouter();
-// const route = useRoute();
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
 const feedDescInfo = computed(() => {
@@ -60,9 +60,7 @@ const isUpdated = computed(
 );
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
-  alert("유저 프로필 페이지로 가라!");
-  // 아직 파일명 및 url 구조 모름... 추가되면 바꾸기
-  // router.push({ name: "TheProfileView", params: { userId: uid } });
+  router.push({ name: 'TheUserProfileView', params: { userId: uid.value } })
 };
 
 // 팔로우/팔로잉 텍스트

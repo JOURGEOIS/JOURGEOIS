@@ -1,6 +1,6 @@
 <template>
   <div class="the-list-item-user">
-    <div class="part-left">
+    <div class="part-left" @click="goProfile">
       <round-image :round-image="userImage"></round-image>
       <div class="user-info-text">
         <h1 class="user-nickname">{{ data?.nickname }}</h1>
@@ -28,7 +28,10 @@
 import RoundImage from "@/components/basics/RoundImage.vue";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter, useRoute } from "vue-router";
 import { User } from "../../interface";
+const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
 const props = defineProps<{
@@ -52,6 +55,15 @@ const clickFollowBtn = () => {
   }
 };
 
+const goProfile = () => {
+  router.push({
+    name: "TheUserProfileView",
+    params: {
+      userId: props.data.uid,
+    },
+  });
+};
+
 // 유저 이미지
 const userImage = {
   image: props.data.profileImg,
@@ -69,15 +81,19 @@ const userImage = {
 
   .part-left {
     @include flex-xy(flex-start, center);
+    @include text-overflow-ellipsis;
     gap: 10px;
     .user-info-text {
       @include flex(column);
+      @include text-overflow-ellipsis;
       gap: 3px;
 
       .user-nickname {
+        @include text-overflow-ellipsis;
         @include font(15px, $fw-medium);
       }
       .user-introduce {
+        @include text-overflow-ellipsis;
         @include font-size-sub(11px);
       }
     }
@@ -93,6 +109,7 @@ const userImage = {
       @include shadow-feed;
       font-size: 14px;
       @include for-click;
+      min-width: 90px;
 
       .follow-icon {
         @include font(17px);

@@ -13,15 +13,15 @@
     <div class="profile-categories">
       <div class="category">
         <p>게시물</p>
-        <p class="category-count">999+</p>
+        <p class="category-count">{{ postCnt }}</p>
       </div>
       <div class="category">
         <p>팔로워</p>
-        <p class="category-count">999+</p>
+        <p class="category-count">{{ followerCnt }}</p>
       </div>
       <div class="category">
         <p>팔로잉</p>
-        <p class="category-count">999+</p>
+        <p class="category-count">{{ followingCnt }}</p>
       </div>
     </div>
   </div>
@@ -40,6 +40,10 @@ const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
 const profileImg = computed(() => userInfo.value.profileImg)
 const nickname = computed(() => userInfo.value.nickname)
 const introduce = computed(() => userInfo.value.introduce)
+const postCnt = computed(() => userInfo.value.postCnt)
+const followerCnt = computed (() => userInfo.value.followerCnt)
+const followingCnt = computed (() => userInfo.value.followingCnt)
+
 </script>
 
 <style scoped lang="scss">

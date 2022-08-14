@@ -6,6 +6,14 @@ import router from "../../router";
 import { CarouselCocktail, HotKeywords } from "../../interface";
 
 export interface CarouselState {
+  // * 테마별 추천 칵테일
+  selectedCategory: string;
+  aloneCocktails: CarouselCocktail[];
+  partyCocktails: CarouselCocktail[];
+  loveCocktails: CarouselCocktail[];
+  specialCocktails: CarouselCocktail[];
+  allThemeCocktails: CarouselCocktail[];
+  allThemeCocktailPage: number;
   // * 급상승 검색어
   hotKeywords: HotKeywords;
   hotKeywordDelta: number[];
@@ -32,6 +40,14 @@ export const carousel: Module<CarouselState, RootState> = {
   namespaced: true,
 
   state: {
+    // * 테마별 추천 칵테일
+    selectedCategory: "ALONE",
+    aloneCocktails: [],
+    partyCocktails: [],
+    loveCocktails: [],
+    specialCocktails: [],
+    allThemeCocktails: [],
+    allThemeCocktailPage: 0,
     // * 급상승 검색어
     hotKeywords: {
       from: "",
@@ -60,6 +76,14 @@ export const carousel: Module<CarouselState, RootState> = {
   },
 
   getters: {
+    // * 테마별 추천 칵테일
+    getSelectedCategory: (state) => state.selectedCategory,
+    getAloneCocktails: (state) => state.aloneCocktails,
+    getPartyCocktails: (state) => state.partyCocktails,
+    getLoveCocktails: (state) => state.loveCocktails,
+    getSpecialCocktails: (state) => state.specialCocktails,
+    getAllThemeCocktails: (state) => state.allThemeCocktails,
+    getAllThemeCocktailPage: (state) => state.allThemeCocktailPage,
     // * 급상승 검색어
     getHotKeywords: (state) => state.hotKeywords,
     getHotKeywordDelta: (state) => state.hotKeywordDelta,
@@ -86,6 +110,36 @@ export const carousel: Module<CarouselState, RootState> = {
   },
 
   mutations: {
+    // * 테마별 추천 칵테일
+    SET_SELECTED_CATEGORY: (state, value: string) => {
+      state.selectedCategory = value;
+    },
+    SET_THEME_COCKTAILS: (
+      state,
+      data: { themeCocktails: CarouselCocktail[]; theme: string }
+    ) => {
+      switch (data.theme) {
+        case "ALONE":
+          state.aloneCocktails = data.themeCocktails;
+        case "PARTY":
+          state.partyCocktails = data.themeCocktails;
+        case "LOVE":
+          state.loveCocktails = data.themeCocktails;
+        case "SPECIAL":
+          state.specialCocktails = data.themeCocktails;
+      }
+    },
+    SET_ALL_THEME_COCKTAILS: (state, themeCocktails: CarouselCocktail[]) => {
+      state.allThemeCocktails.push(...themeCocktails);
+    },
+    SET_ALL_THEME_COCKTAIL_PAGE: (state, value: number) => {
+      state.allThemeCocktailPage = value;
+    },
+    REMOVE_ALL_THEME_COCKTAILS: (state) => {
+      state.allThemeCocktails = [];
+      state.allThemeCocktailPage = 0;
+    },
+
     // * 급상승 검색어
     SET_HOT_KEYWORDS: (state, hotKeywords) => {
       state.hotKeywords = hotKeywords;
@@ -180,6 +234,53 @@ export const carousel: Module<CarouselState, RootState> = {
     },
   },
   actions: {
+    // * 테마별 추천 칵테일
+    setSelectedCategory: ({ commit }, value: string) => {
+      commit("SET_SELECTED_CATEGORY", value);
+    },
+    setThemeCocktails: ({ commit, dispatch }) => {
+      const tags = ["ALONE", "PARTY", "LOVE", "SPECIAL"];
+      tags.forEach((tag) => {
+        setTimeout(() => {
+          axios({
+            url: api.homes.themeCocktail(),
+            method: "GET",
+            params: {
+              tag,
+            },
+          })
+            .then((res) => {
+              commit("SET_THEME_COCKTAILS", {
+                themeCocktails: res.data,
+                theme: tag,
+              });
+            })
+            .catch((err) => {
+              dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+              console.error(err.response);
+            });
+        }, 1000);
+      });
+    },
+    setAllThemeCocktails: ({ commit, dispatch, getters }) => {
+      const page = getters["getAllThemeCocktailPage"];
+      axios({
+        url: api.homes.themeCocktailView(),
+        method: "GET",
+        params: {
+          tag: getters["getSelectedCategory"],
+          page,
+        },
+      })
+        .then((res) => {
+          commit("SET_ALL_THEME_COCKTAILS", res.data);
+          commit("SET_ALL_THEME_COCKTAIL_PAGE", page + 1);
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
     // * 급상승 검색어
     setHotKeywords: ({ commit, dispatch, getters }) => {
       axios({

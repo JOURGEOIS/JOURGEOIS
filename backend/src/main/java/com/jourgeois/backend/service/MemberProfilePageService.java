@@ -113,9 +113,6 @@ public class MemberProfilePageService {
             Map<String, String> res = new HashMap<>();
             res.put("cocktailId", data.getId());
             res.put("nameKR", data.getNameKR());
-            res.put("img", data.getImg());
-            res.put("category", data.getCategory());
-            res.put("tag", data.getTag());
             res.put("comment", data.getComment());
 
             resArr.add(res);

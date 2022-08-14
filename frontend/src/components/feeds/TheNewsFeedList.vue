@@ -1,7 +1,10 @@
 <template>
   <div class="news-feed-list-container">
-    <article v-for="item in newsFeedList" :key="item.postId">
-      <the-news-feed-item :news-feed-data="item"></the-news-feed-item>
+    <article v-for="(item, index) in newsFeedList" :key="item.postId">
+      <the-news-feed-item
+        :news-feed-data="item"
+        :news-feed-index="index"
+      ></the-news-feed-item>
     </article>
   </div>
 </template>

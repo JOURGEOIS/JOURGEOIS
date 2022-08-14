@@ -52,6 +52,7 @@ const store = useStore();
 const props = defineProps<{
   data: {
     isLiked: boolean;
+    postId: number;
   };
 }>();
 
@@ -66,10 +67,9 @@ const clickLikeInner = () => {
 
 // 좋아요 숫자(좋아요한 유저 목록) 클릭
 const clickLikedUsers = () => {
-  const feedId = route.params.feedId;
   router.push({
     name: "TheLikedUserListView",
-    params: { feedId },
+    params: { feedId: props.data.postId },
   });
 };
 </script>

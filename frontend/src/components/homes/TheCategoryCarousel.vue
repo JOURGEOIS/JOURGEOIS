@@ -1,8 +1,8 @@
 <template>
   <div class="carousel">
     <div
-      v-for="(_, idx) in categorys"
-      class="categorys"
+      v-for="(_, idx) in categories"
+      class="categories"
       :class="{ selected: selectedCategory === categoryContents[idx].name }"
       :key="`category-${idx}`"
       @click="clickCategory(idx)"
@@ -47,7 +47,7 @@ const categoryContents = reactive([
   },
 ]);
 
-const categorys = ["", "", "", ""];
+const categories = ["", "", "", ""];
 
 const clickCategory = (idx: number) => {
   store.dispatch("carousel/setSelectedCategory", categoryContents[idx].name);
@@ -64,15 +64,17 @@ const clickCategory = (idx: number) => {
 
 .carousel {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   width: calc(100% + 40px);
-  padding: 0 15px;
-  margin: 0 -20px;
+  padding: 7px 20px;
+  margin: 0 -20px -15px -20px;
+  border-top: 1px solid $unchecked-color;
+  border-bottom: 1px solid $unchecked-color;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
 
-  .categorys {
+  .categories {
     @include flex;
     flex: 0 0 auto;
     gap: 20px;
@@ -99,5 +101,6 @@ const clickCategory = (idx: number) => {
 .selected {
   @include font(16px, $fw-bold);
   color: $primary-color;
+  transition: all 0.5s;
 }
 </style>

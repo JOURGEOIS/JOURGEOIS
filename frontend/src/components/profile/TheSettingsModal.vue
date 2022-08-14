@@ -67,14 +67,12 @@ const clickXIcon = () => {
 
 // 비밀번호 변경
 const changePassword = () => {
-  // store 만들어지면 변경
   store.dispatch("settings/toggleSettingsModal", false);
   router.push({ name: "TheChangePwView" });
 };
 
 // 개인정보 수정
 const editPersonalInfo = () => {
-  // store 만들어지면 변경
   store.dispatch("settings/toggleSettingsModal", false);
   router.push({ name: "TheChangeUserView" });
 };
@@ -83,7 +81,7 @@ const editPersonalInfo = () => {
 const profilePublicSet = () => {
   // store 만들어지면 변경
   store.dispatch("settings/toggleSettingsModal", false);
-  // router.push({ name: "TheChangePwView" });
+  router.push({ name: "TheProfilePrivateSelectView" });
 };
 
 const clickLogout = () => {

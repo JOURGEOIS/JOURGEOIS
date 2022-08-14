@@ -227,7 +227,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
 
     // 칵테일 북마크한 유저 리스트 리셋
     resetBookMarkUserList: ({ commit }) => {
-      commit("ADD_COCKTAIL_BOOKMARK_USER_LIST", []);
+      commit("SET_COCKTAIL_BOOKMARK_USER_LIST", []);
       commit("SET_COCKTAIL_BOOKMARK_USER_PAGE", 0);
     },
   },

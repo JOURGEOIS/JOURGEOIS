@@ -74,8 +74,8 @@ const readNotice = () => {
     type: props.noticeData.notification.type,
     postId: props.noticeData.notification.postId,
     uid: props.noticeData.opponent.uid,
-    postType: props.noticeData.postMetaInfo.type || 0,
-    baseCocktailId: props.noticeData.postMetaInfo?.baseCocktailId || 0,
+    postType: props?.noticeData?.postMetaInfo?.type || 0,
+    baseCocktailId: props?.noticeData?.postMetaInfo?.baseCocktailId || 0,
   }
   store.dispatch("notice/readNotice",data)
 };

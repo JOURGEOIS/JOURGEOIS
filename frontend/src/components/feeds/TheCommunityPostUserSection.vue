@@ -60,7 +60,7 @@ const isUpdated = computed(
 );
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
-  router.push({ name: 'TheUserProfileView', params: { userId: uid } })
+  router.push({ name: 'TheUserProfileView', params: { userId: uid.value } })
 };
 
 // 팔로우/팔로잉 텍스트

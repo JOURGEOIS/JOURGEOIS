@@ -72,7 +72,7 @@ const goProfile = () => {
   router.push({
     name: 'TheUserProfileView',
     params: {
-      userId: uid
+      userId: uid.value
     }
   })
 };

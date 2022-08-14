@@ -1,5 +1,6 @@
 <template>
-  <the-bookmark-cocktail-item></the-bookmark-cocktail-item>
+<div></div>
+  <!-- <the-bookmark-cocktail-item></the-bookmark-cocktail-item> -->
 </template>
 
 <script setup lang="ts">

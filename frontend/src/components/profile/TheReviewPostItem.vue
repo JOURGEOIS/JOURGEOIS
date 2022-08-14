@@ -2,15 +2,14 @@
   <article class="list-item-custom-cocktail" @click="clickPost">
     <div class="item-header">
       <div class="user-part">
+        <span class="material-icons"> local_bar </span>
         {{ nameKR }}
       </div>
     </div>
     <div class="item-content-container">
-      <div class="item-text-part">
-        <p class="cocktail-description">
-          {{ comment }}
-        </p>
-      </div>
+      <p class="cocktail-description">
+        {{ comment }}
+      </p>
     </div>
   </article>
 </template>
@@ -99,23 +98,13 @@ const clickPost = () => {
   .item-content-container {
     @include flex;
     gap: 10px;
-    .item-img-part {
-      height: 100%;
-      aspect-ratio: 1/1;
-      border-radius: 5px;
-      background : {
-        image: url("https://img.freepik.com/premium-photo/two-glasses-with-purple-cocktail-pumpkin-for-halloween-party_79919-1321.jpg");
-        size: cover;
-        position: center center;
-      }
-    }
-    .item-text-part {
-      @include text-overflow-ellipsis;
-
-      .cocktail-description {
-        @include font-size-sub(13px);
-      	@include text-overflow-ellipsis;
-      }
+    .cocktail-description {
+      @include font-size-sub(13px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
   }
 }

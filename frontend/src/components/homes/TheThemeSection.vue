@@ -64,7 +64,7 @@ const specialData = {
   getCarouselFunc: "getSpecialCocktails",
 };
 
-store.dispatch("carousel/setThemeCocktails");
+store.dispatch("carousel/setThemeCocktailsSequential");
 
 const isShowDescription = ref(false);
 
@@ -73,6 +73,7 @@ const toggleShowDescription = () => {
 };
 // 더보기 클릭
 const clickMore = () => {
+  console.log(selectedCategory.value);
   router.push({
     name: "TheAllThemeCocktailView",
     params: { theme: selectedCategory.value },

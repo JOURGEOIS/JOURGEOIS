@@ -29,7 +29,7 @@ public class MemberProfilePageController {
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            MemberDTO result = memberProfilePageService.readMemberProfile(uid);
+            Map<String, String> result = memberProfilePageService.readMemberProfile(uid);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);

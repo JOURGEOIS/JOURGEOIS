@@ -248,6 +248,7 @@ export const carousel: Module<CarouselState, RootState> = {
         },
       })
         .then((res) => {
+          console.log(res.data);
           commit("SET_THEME_COCKTAILS", {
             themeCocktails: res.data,
             theme: tag,
@@ -284,7 +285,7 @@ export const carousel: Module<CarouselState, RootState> = {
           console.error(err.response);
         });
     },
-    removeAllLatestCustomCocktails: ({ commit }) => {
+    removeAllThemeCocktails: ({ commit }) => {
       commit("REMOVE_ALL_THEME_COCKTAILS");
     },
     // * 급상승 검색어

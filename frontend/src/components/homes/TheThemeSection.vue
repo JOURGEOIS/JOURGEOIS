@@ -15,27 +15,56 @@
     <!-- 테마 선택 carousel -->
     <the-category-carousel></the-category-carousel>
     <!-- card carousel -->
-    <!-- <the-card-carousel v-show="" :data="aloneCarouselData"></the-card-carousel> -->
+    <the-card-carousel
+      v-show="selectedCategory === 'ALONE'"
+      :data="aloneData"
+    ></the-card-carousel>
+    <the-card-carousel
+      v-show="selectedCategory === 'PARTY'"
+      :data="partyData"
+    ></the-card-carousel>
+    <the-card-carousel
+      v-show="selectedCategory === 'LOVE'"
+      :data="loveData"
+    ></the-card-carousel>
+    <the-card-carousel
+      v-show="selectedCategory === 'SPECIAL'"
+      :data="specialData"
+    ></the-card-carousel>
 
-    <!-- <article class="article-more-button">
+    <article class="article-more-button">
       <div class="more-button" @click="clickMore">전체 보기</div>
-    </article> -->
+    </article>
   </div>
 </template>
 
 <script setup lang="ts">
 import TheCategoryCarousel from "@/components/homes/TheCategoryCarousel.vue";
 import TheCardCarousel from "@/components/homes/TheCardCarousel.vue";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 
-// const carouselData = {
-//   setCarouselFunc: props.data.setCarouselFunc,
-//   getCarouselFunc: props.data.getCarouselFunc,
-// };
+const selectedCategory = computed(() => {
+  return store.getters["carousel/getSelectedCategory"];
+});
+
+const aloneData = {
+  getCarouselFunc: "getAloneCocktails",
+};
+const partyData = {
+  getCarouselFunc: "getPartyCocktails",
+};
+const loveData = {
+  getCarouselFunc: "getLoveCocktails",
+};
+const specialData = {
+  getCarouselFunc: "getSpecialCocktails",
+};
+
+store.dispatch("carousel/setThemeCocktails");
 
 const isShowDescription = ref(false);
 
@@ -44,7 +73,10 @@ const toggleShowDescription = () => {
 };
 // 더보기 클릭
 const clickMore = () => {
-  // router.push({ name: props.data.showMoreView });
+  router.push({
+    name: "TheAllThemeCocktailView",
+    params: { theme: selectedCategory.value },
+  });
 };
 </script>
 

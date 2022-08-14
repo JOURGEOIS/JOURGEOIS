@@ -7,7 +7,7 @@
   <div class="cocktail-list-view top-view-no-margin">
     <div class="the-item-container">
       <the-list-item-carousel-cocktail
-        v-for="(item, idx) in allLikeRecommendedCocktails"
+        v-for="(item, idx) in likeRecommendedCocktails"
         :key="idx"
         :data="item"
         @click="clickCocktail(item)"
@@ -29,7 +29,7 @@ const router = useRouter();
 const store = useStore();
 
 // 전체 칵테일 리스트
-const allLikeRecommendedCocktails = computed(
+const likeRecommendedCocktails = computed(
   () => store.getters["carousel/getAllLikeRecommendedCocktails"]
 );
 

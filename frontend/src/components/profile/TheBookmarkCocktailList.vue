@@ -1,6 +1,7 @@
 <template>
-<div></div>
-  <!-- <the-bookmark-cocktail-item></the-bookmark-cocktail-item> -->
+  <article v-for="bookmark in userBookmarkPostData" :key="bookmark.cocktailId">
+    <the-bookmark-cocktail-item :bookmark = "bookmark"></the-bookmark-cocktail-item>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -11,7 +12,7 @@ import { useStore } from "vuex";
 const route = useRoute();
 const store = useStore();
 
-const bookmarkPost = computed(() => 
+const userBookmarkPostData = computed(() => 
   store.getters["profileDesc/getCurrentUserPostBookmark"]
 )
 

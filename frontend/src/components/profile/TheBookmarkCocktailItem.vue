@@ -4,7 +4,7 @@
     <!-- 이미지 -->
     <div
       class="cocktail-bookmark-item-image"
-      :style="{ backgroundImage: originalCocktailImg }"
+      :style="{ backgroundImage: `url(${originalCocktailImg})` }"
     ></div>
 
     <!-- 제목 -->
@@ -32,19 +32,19 @@ const route = useRoute();
 const store = useStore();
 
 const props = defineProps<{
-  post: userBookmarkData;
+  bookmark: userBookmarkData;
 }>();
 
-const cocktailId = props.post.cocktailId
+const cocktailId = props.bookmark.cocktailId
 
-const originalCocktailImg = props.post.img
-const nameKR = props.post.nameKR
+const originalCocktailImg = props.bookmark.img
+const nameKR = props.bookmark.nameKR
 
 const clickDetail = () => {
   router.push({
     name: "TheCocktailDescView",
     params: {
-      feedId: cocktailId,
+      cocktailId,
     },
   });
 };

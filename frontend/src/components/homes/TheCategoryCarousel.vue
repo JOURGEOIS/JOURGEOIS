@@ -3,7 +3,7 @@
     <div
       v-for="(_, idx) in categorys"
       class="categorys"
-      :class="{ selected: categoryContents[idx].selected }"
+      :class="{ selected: selectedCategory === categoryContents[idx].name }"
       :key="`category-${idx}`"
       @click="clickCategory(idx)"
     >
@@ -20,18 +20,10 @@ import { CarouselCocktail } from "../../interface";
 const router = useRouter();
 const store = useStore();
 
-// const props = defineProps<{
-//   data: {
-//     setCarouselFunc: string;
-//     getCarouselFunc: string;
-//   };
-// }>();
+const selectedCategory = computed(() => {
+  return store.getters["carousel/getSelectedCategory"];
+});
 
-// const setCarouselFunc: string = props.data.setCarouselFunc;
-// const getCarouselFunc: string = props.data.getCarouselFunc;
-
-// store.dispatch(`carousel/${setCarouselFunc}`);
-// const cocktails = computed(() => store.getters[`carousel/${getCarouselFunc}`]);
 const categoryContents = reactive([
   {
     name: "ALONE",
@@ -58,11 +50,12 @@ const categoryContents = reactive([
 const categorys = ["", "", "", ""];
 
 const clickCategory = (idx: number) => {
-  categoryContents.forEach((content) => {
-    content.selected = false;
-  });
-  categoryContents[idx].selected = true;
-  // store.dispatch("carousel/clickCategory")
+  store.dispatch("carousel/setSelectedCategory", categoryContents[idx].name);
+  // categoryContents.forEach((content) => {
+  //   content.selected = false;
+  // });
+  // categoryContents[idx].selected = true;
+  // // store.dispatch("carousel/clickCategory")
 };
 </script>
 

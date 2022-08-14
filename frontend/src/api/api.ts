@@ -45,6 +45,8 @@ export default {
     cocktailList: () => HOST + COCKTAIL + "list",
     cocktailReview: () => HOST + COCKTAIL + "comment",
     customCocktailList: () => HOST + "cocktail",
+    clickBookMark: () => HOST + COCKTAIL + "auth/bookmark",
+    showBookMarkUser: () => HOST + COCKTAIL + "auth/bookmarklist",
   },
 
   lookups: {
@@ -79,6 +81,8 @@ export default {
 
   homes: {
     // 홈
+    themeCocktail: () => HOST + HOME + "tag5", // 테마별 추천 칵테일 5개
+    themeCocktailView: () => HOST + HOME + "tag", // 테마별 추천 칵테일 목록
     clipVideo: () => HOST + HOME + "clip", // 초보자 추천 동영상 랜덤 링크
     latestCustomCocktail: () => HOST + HOME + "custom/latest5", // 신규 커칵/슈커칵 5개
     latestCustomCocktailView: () => HOST + HOME + "custom/latest", // 신규 커칵/슈커칵 목록

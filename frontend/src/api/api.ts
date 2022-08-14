@@ -45,6 +45,8 @@ export default {
     cocktailList: () => HOST + COCKTAIL + "list",
     cocktailReview: () => HOST + COCKTAIL + "comment",
     customCocktailList: () => HOST + "cocktail",
+    clickBookMark: () => HOST + COCKTAIL + "auth/bookmark",
+    showBookMarkUser: () => HOST + COCKTAIL + "auth/bookmarklist",
   },
 
   lookups: {

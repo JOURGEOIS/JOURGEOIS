@@ -28,22 +28,18 @@
       <div>
         <span
           class="material-icons-outlined bookmark"
-          v-if="!isBookmarked"
+          v-if="!cocktailData.status"
           @click="clickBookMark"
         >
           bookmark_border
         </span>
-        <span
-          class="material-icons bookmark"
-          v-if="isBookmarked"
-          @click="clickBookMark"
-        >
+        <span class="material-icons bookmark" v-else @click="clickBookMark">
           bookmark
         </span>
         <p>북마크</p>
         <!-- 북마크 수: 클릭 시 팔로우한 유저들을 보여주는 목록으로 이동 -->
         <router-link :to="`/cocktail/${cocktailId}/bookmark`">
-          <p class="bookmark">0명</p>
+          <p class="bookmark">{{ cocktailData.count }}</p>
         </router-link>
       </div>
       <!-- 2. 베이스 술 -->
@@ -78,7 +74,7 @@ const cocktailData = computed(
 // 북마크
 const isBookmarked = ref(false);
 const clickBookMark = () => {
-  isBookmarked.value = !isBookmarked.value;
+  store.dispatch("cocktailDesc/clickBookMark");
 };
 
 // 칵테일 id

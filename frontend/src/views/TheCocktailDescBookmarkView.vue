@@ -38,11 +38,6 @@ const bookMarkUserList = computed(
   () => store.getters["cocktailDesc/getCocktailBookMarkUserList"]
 );
 
-// 유저 아이템을 누른 경우 유저 페이지로 이동
-const clickUser = (item: User) => {
-  router.push({ name: "TheUserProfileView", params: { userId: item.uid } });
-};
-
 // 인피니티 스크롤
 const handleScroll = (event: any) => {
   const data = {

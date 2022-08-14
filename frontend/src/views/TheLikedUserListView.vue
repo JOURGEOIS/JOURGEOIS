@@ -18,11 +18,9 @@
 import TheListItemUser from "@/components/cocktails/TheListItemUser.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import axios from "axios";
-import api from "../api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { computed, onBeforeMount } from "vue";
+import { computed, onBeforeMount, onUnmounted } from "vue";
 import { User } from "../interface";
 const router = useRouter();
 const route = useRoute();
@@ -57,6 +55,11 @@ onBeforeMount(() => {
   setTimeout(() => {
     setLikedUsers({ postId: feedId });
   }, 100);
+});
+
+// 리셋
+onUnmounted(() => {
+  store.dispatch("post/resetLikedUserData");
 });
 </script>
 

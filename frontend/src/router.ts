@@ -245,6 +245,13 @@ const routes: any[] = [
     component: () => import("@/views/homes/TheAllWeeklyHotCocktailView.vue"),
   },
 
+  // 주류주아 주간 인기 커스텀칵테일 리스트
+  {
+    path: "/theme/:theme",
+    name: "TheAllThemeCocktailView",
+    component: () => import("@/views/homes/TheAllThemeCocktailView.vue"),
+  },
+
   // 주류주아 좋아요 기반 추천 칵테일 리스트
   // {
   //   path: "/likeRecommended",

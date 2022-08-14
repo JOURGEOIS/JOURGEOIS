@@ -59,6 +59,9 @@ const timestamp = computed(()=> {
 
 // 알림 시간
 const time = computed(() => {
+  return new Date(
+      timestamp.value.seconds * 1000 + timestamp.value.nanoseconds / 1000000,
+    )
   // return calcDateDelta2(timestamp.value.toDate())  
 });
 
@@ -68,10 +71,10 @@ const readNotice = () => {
   const data = {
     notiId: props.noticeData.notification.notificationId,
     type: props.noticeData.notification.type,
+    postId: props.noticeData.notification.postId,
     uid: props.noticeData.opponent.uid,
-    postId: props?.noticeData?.postMetaInfo?.postId || 0, 
-    postType: props?.noticeData?.postMetaInfo?.type || 0,
-    baseCocktailId: props?.noticeData?.postMetaInfo?.baseCocktailId || 0,
+    postType: props.noticeData.postMetaInfo.type || 0,
+    baseCocktailId: props.noticeData.postMetaInfo?.baseCocktailId || 0,
   }
   store.dispatch("notice/readNotice",data)
 };

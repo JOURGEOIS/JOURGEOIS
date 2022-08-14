@@ -142,7 +142,7 @@ export const notice: Module<NoticeState, RootState> = {
 
     // 알림 읽음 처리 (1개)
     readNotice: ({ rootGetters, dispatch }, data) => {
-      const { notiId, type, uid, postId, postType, baseCocktailId } = data;
+      const { notiId, type, postId, uid, postType, baseCocktailId } = data;
       axios({
         url: api.notice.readNotice(),
         method: "put",
@@ -160,7 +160,7 @@ export const notice: Module<NoticeState, RootState> = {
           }
           // 댓글, 좋아요 알림일 경우 해당 글로 이동한다.
           else {
-            if (postType === "post") {
+            if (postType === "Post") {
               // 일반 게시글로 이동
               router.push({
                 name: "TheCommunityDescView",

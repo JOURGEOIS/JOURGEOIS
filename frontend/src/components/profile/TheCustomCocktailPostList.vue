@@ -28,7 +28,6 @@ const handleScroll = (event: any) => {
 
 // 인피니티 스크롤을 연동, 처음 데이터 가져오기
 onBeforeMount(() => {
-  // store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
   window.addEventListener("scroll", handleScroll);
   store.dispatch(
     "profileDesc/getCurrentUserPostCustomData",

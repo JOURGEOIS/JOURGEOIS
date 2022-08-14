@@ -104,4 +104,12 @@ public class MemberProfilePageController {
             return new ResponseEntity(data, HttpStatus.NOT_ACCEPTABLE);
         }
     }
+
+    @PutMapping("/auth/profile-status")
+    public ResponseEntity<?> switchPublicPrivate(HttpServletRequest request) {
+        Long userId = Long.parseLong(((String) request.getAttribute("uid")));
+        Boolean res = memberProfilePageService.switchPublicToPrivate(userId);
+
+        return ResponseEntity.ok().body(res);
+    }
 }

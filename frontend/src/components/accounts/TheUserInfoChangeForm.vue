@@ -109,7 +109,7 @@ const introduceInputData: object = reactive({
   id: "my-change-introduce-input",
   label: "한줄 소개",
   type: "text",
-  maxlength: 30,
+  maxlength: 20,
 });
 const introduceInputValue = introduce ? ref(introduce) : ref("");
 const introduceInputStyle = ref("normal");

@@ -1,11 +1,10 @@
 <template>
-  <h4>
-    북마크
-  </h4>
+  <the-bookmark-cocktail-item></the-bookmark-cocktail-item>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from '@vue/runtime-core';
+import TheBookmarkCocktailItem from '@/components/profile/TheBookmarkCocktailItem.vue';
+import { computed, onBeforeMount, onUnmounted } from '@vue/runtime-core';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
 const route = useRoute();
@@ -15,8 +14,28 @@ const bookmarkPost = computed(() =>
   store.getters["profileDesc/getCurrentUserPostBookmark"]
 )
 
-onMounted(() => {
-  store.dispatch("profileDesc/getCurrentUserPostBookmarkData", route.params.userId )
+// 인피니티 스크롤
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    action: "profileDesc/getCurrentUserPostBookmarkData",
+    data: route.params.userId,
+  };
+  store.dispatch("scroll/handleScroll", data);
+};
+
+// 인피니티 스크롤을 연동, 처음 데이터 가져오기
+onBeforeMount(() => {
+  window.addEventListener("scroll", handleScroll);
+  store.dispatch(
+    "profileDesc/getCurrentUserPostBookmarkData",
+    route.params.userId
+  );
+});
+
+// unmount될 때, 페이지와 리스트를 리셋한다.
+onUnmounted(() => {
+  store.dispatch("profileDesc/resetCurrentUserPost");
 });
 </script>
 

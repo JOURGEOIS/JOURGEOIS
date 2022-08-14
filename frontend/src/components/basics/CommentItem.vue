@@ -2,13 +2,19 @@
 <template>
   <article class="the-comment-article">
     <!-- 프로필 이미지  -->
-    <round-image :round-image="{ image: comment.profileImg }"></round-image>
+    <round-image
+      :round-image="{ image: comment.profileImg }"
+      @click="clickProfileImage"
+      class="the-comment-profile-image"
+    ></round-image>
 
     <!-- 댓글 컨텐츠 -->
     <div class="the-comment-item">
       <div class="the-comment-item-header">
         <!-- 이름 -->
-        <p class="the-comment-item-name">{{ comment.nickname }}</p>
+        <p class="the-comment-item-name" @click="clickProfileImage">
+          {{ comment.nickname }}
+        </p>
 
         <!-- 수정, 삭제 버튼 (본인 일 때에만 보인다. ) -->
         <div
@@ -70,7 +76,9 @@ import TextareaBasic from "@/components/basics/TextareaBasic.vue";
 import { calcDateDelta } from "../../functions/date";
 import { checkBadWord } from "../../functions/checkText";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 const store = useStore();
+const router = useRouter();
 
 interface comment {
   createTime: number[];
@@ -88,6 +96,16 @@ const props = defineProps<{
   comment: comment;
   pageId: number;
 }>();
+
+// 프로필 이미지 클릭
+const clickProfileImage = () => {
+  router.push({
+    name: "TheUserProfileView",
+    params: {
+      userId: props.comment.uid,
+    },
+  });
+};
 
 // 에러 메시지
 const badWordTest = ref(false);
@@ -187,6 +205,7 @@ const clickDelete = (id: number) => {
       width: 100%;
       .the-comment-item-name {
         @include font($fs-md, $fw-medium);
+        cursor: pointer;
       }
 
       .the-comment-item-button {
@@ -230,5 +249,9 @@ form::v-deep(.textarea-container > textarea) {
 .error-message {
   color: $red-color;
   @include font($fs-sm, $fw-medium);
+}
+
+.the-comment-profile-image {
+  cursor: pointer;
 }
 </style>

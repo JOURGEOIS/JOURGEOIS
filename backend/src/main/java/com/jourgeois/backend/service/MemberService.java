@@ -422,11 +422,19 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberDTO findUserInfo(Long uid){
+    public Map<String, String> findUserInfo(Long uid){
         Member member = memberRepository.findById(uid).get();
-        MemberDTO p = new MemberDTO(member.getUid(), member.getEmail(), member.getName(),
-                member.getNickname(), s3Url + member.getProfileImg(), member.getIntroduce());
-        return p;
+
+        Map<String, String> res = new HashMap<>();
+
+        res.put("uid", member.getUid().toString());
+        res.put("email", member.getEmail());
+        res.put("name", member.getName());
+        res.put("nickname", member.getNickname());
+        res.put("profileImg", s3Url + member.getProfileImg());
+        res.put("introduce", member.getIntroduce());
+
+        return res;
 
     }
 

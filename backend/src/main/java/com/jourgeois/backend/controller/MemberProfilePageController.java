@@ -108,8 +108,8 @@ public class MemberProfilePageController {
     @PutMapping("/auth/profile-status")
     public ResponseEntity<?> switchPublicPrivate(HttpServletRequest request) {
         Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-        Boolean res = memberProfilePageService.switchPublicToPrivate(userId);
+        Integer isPublic = memberProfilePageService.switchPublicToPrivate(userId);
 
-        return ResponseEntity.ok().body(res);
+        return ResponseEntity.ok().body(Map.of("isPublic", isPublic));
     }
 }

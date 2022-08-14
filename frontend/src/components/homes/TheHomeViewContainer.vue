@@ -1,7 +1,13 @@
 <template>
   <div class="home-view-container">
+    <!-- 테마별 추천 칵테일 -->
+    <the-theme-section
+      ><h1 class="title">
+        <span class="important">테마별</span> 추천 칵테일
+      </h1></the-theme-section
+    >
     <!-- 초심자들을 위한 영상 추천 -->
-    <!-- <the-video-section><h1 class="title">영상 추천</h1></the-video-section> -->
+    <the-video-section><h1 class="title">영상 추천</h1></the-video-section>
     <the-hot-keyword-section
       ><h1 class="title">
         실시간 <span class="important">급상승</span> 검색어
@@ -35,6 +41,7 @@ import { useStore } from "vuex";
 import TheVideoSection from "@/components/homes/TheVideoSection.vue";
 import TheHomeBasicSection from "@/components/homes/TheHomeBasicSection.vue";
 import TheHotKeywordSection from "@/components/homes/TheHotKeywordSection.vue";
+import TheThemeSection from "@/components/homes/TheThemeSection.vue";
 const store = useStore();
 
 // 유저들의 NEW 커스텀 칵테일

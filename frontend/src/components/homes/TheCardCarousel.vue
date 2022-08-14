@@ -33,7 +33,9 @@ const props = defineProps<{
 const setCarouselFunc: string = props.data.setCarouselFunc;
 const getCarouselFunc: string = props.data.getCarouselFunc;
 
-store.dispatch(`carousel/${setCarouselFunc}`);
+if (setCarouselFunc) {
+  store.dispatch(`carousel/${setCarouselFunc}`);
+}
 const cocktails = computed(() => store.getters[`carousel/${getCarouselFunc}`]);
 
 const clickShowMoreItem = (item: CarouselCocktail) => {

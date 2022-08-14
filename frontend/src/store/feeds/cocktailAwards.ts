@@ -246,12 +246,18 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
     },
 
     getCocktailAwardsVoteList: ({ commit, getters, rootGetters }) => {
+      const uid = rootGetters["personalInfo/getUserInfoUserId"];
+      let headers;
+      if (!uid) {
+        headers = {};
+      } else {
+        headers = { uid };
+      }
+
       axios({
         url: api.awards.contestListVote(),
         method: "get",
-        headers: {
-          uid: rootGetters["personalInfo/getUserInfoUserId"],
-        },
+        headers,
         params: {
           page: getters["getCocktailAwardsVotePage"],
         },

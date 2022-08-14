@@ -1,7 +1,10 @@
 <template>
   <div class="home-view-container">
     <!-- 좋아요 기반 추천 칵테일  -->
-    <the-home-basic-section :data="likeRecommendedCocktailData">
+    <the-home-basic-section
+      v-if="isLoggedIn"
+      :data="likeRecommendedCocktailData"
+    >
       <h1 class="title">
         당신을 위한 <span class="important">취향저격</span> 칵테일
       </h1>
@@ -37,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import TheVideoSection from "@/components/homes/TheVideoSection.vue";
 import TheHomeBasicSection from "@/components/homes/TheHomeBasicSection.vue";
@@ -79,6 +83,9 @@ const likeRecommendedCocktailData = {
   getCarouselFunc: "getLikeRecommendedCocktails",
   showMoreView: "TheAllLikeRecommendedCocktailView",
 };
+
+// 로그인 여부 확인
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 </script>
 
 <style scoped lang="scss">

@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import TheListItemCustomCocktail from "@/components/cocktails/TheListItemCustomCocktail.vue";
 import { useRoute, useRouter } from "vue-router";
-import { computed, onBeforeMount } from "vue";
+import { computed, onBeforeMount, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { CustomCocktail } from "../../interface";
 const router = useRouter();
@@ -78,6 +78,10 @@ onBeforeMount(() => {
 
   // 원본 칵테일 id와 정렬 순서 정보 data로 감싸서
   setCustomCocktails({ asc, originalCocktailId });
+});
+
+onUnmounted(() => {
+  store.dispatch("customCocktailInfo/removeCustomCocktails");
 });
 </script>
 

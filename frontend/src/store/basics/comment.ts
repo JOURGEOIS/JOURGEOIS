@@ -131,8 +131,17 @@ export const comment: Module<Comment, RootState> = {
     },
 
     // 댓글 개수 갱신
-    setCommentCount: ({ commit }, value: number) => {
-      commit("SET_COMMENT_COUNT", value);
+    setCommentCount: ({ commit, getters, rootGetters }, { count, postId }) => {
+      commit("SET_COMMENT_COUNT", count);
+      // 뉴스피드 댓글 개수 갱신
+      console.log(postId);
+      const newsFeedListData = rootGetters["newsFeed/getNewsFeedListData"];
+      console.log(newsFeedListData);
+      newsFeedListData.map((feed: any) => {
+        if (feed.postId === postId) {
+          feed.reviewCount = getters["getCommentCount"];
+        }
+      });
     },
 
     // 리스트와 페이지 리셋
@@ -142,7 +151,7 @@ export const comment: Module<Comment, RootState> = {
     },
 
     // 댓글 작성
-    createComment: ({ rootGetters, dispatch, commit }, data) => {
+    createComment: ({ rootGetters, dispatch }, data) => {
       const { postId } = data;
       axios({
         url: api.post.comment(),
@@ -155,7 +164,7 @@ export const comment: Module<Comment, RootState> = {
         .then((res) => {
           dispatch("resetCommentData");
           dispatch("saveCommentList", postId);
-          dispatch("setCommentCount", res.data.reviewCount);
+          dispatch("setCommentCount", { count: res.data.reviewCount, postId });
         })
         .catch((error) => {
           if (error.response.status !== 401) {

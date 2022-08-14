@@ -2,14 +2,21 @@
   <div class="cocktail-bookmark-view">
     <!-- 헤더 -->
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-      북마크
+      북마크한 유저
     </header-basic>
-    <section class="cocktail-bookmark-section top-view">
+    <section class="cocktail-bookmark-section top-view-no-margin">
       <div class="cocktail-bookmark-none" v-if="bookMarkUserList.length === 0">
         <p>해당 칵테일을 북마크한 유저가 없습니다</p>
         <p class="emoji">😥</p>
       </div>
-      <div class="cocktail-bookmark-exist" v-else></div>
+      <div class="cocktail-bookmark-exist" v-else>
+        <the-list-item-user
+          v-for="(item, idx) in bookMarkUserList"
+          :key="idx"
+          :data="item"
+          @click="clickUser(item)"
+        ></the-list-item-user>
+      </div>
     </section>
   </div>
   <nav-bar></nav-bar>
@@ -17,16 +24,25 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import TheListItemUser from "@/components/cocktails/TheListItemUser.vue";
+import { User } from "../interface";
 import NavBar from "@/components/basics/NavBar.vue";
 import { onUnmounted, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
+const router = useRouter();
 const store = useStore();
 
+// 북마크 유저 리스트
 const bookMarkUserList = computed(
   () => store.getters["cocktailDesc/getCocktailBookMarkUserList"]
 );
+
+// 유저 아이템을 누른 경우 유저 페이지로 이동
+const clickUser = (item: User) => {
+  router.push({ name: "TheUserProfileView", params: { userId: item.uid } });
+};
 
 // 인피니티 스크롤
 const handleScroll = (event: any) => {
@@ -85,6 +101,10 @@ onUnmounted(() => {
         @include font($fs-lg, $fw-bold);
         width: 450px;
       }
+    }
+
+    .cocktail-bookmark-exist {
+      width: 100%;
     }
   }
 }

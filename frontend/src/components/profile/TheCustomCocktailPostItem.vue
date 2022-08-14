@@ -4,9 +4,11 @@
       <div class="user-part">
         <div class="user-info">
           <round-image :round-image="{image: profileImg}"></round-image>
-          <div class="user-nickname">{{ nickname }}</div>
+          <div class="user-nick-time">
+            <div class="user-nickname">{{ nickname }}</div>
+            <div class="created-at">{{ createTimeDelta }}</div>
+          </div>
         </div>
-        <div class="created-at">{{ createTimeDelta }}</div>
       </div>
       <div class="cocktail-liked">
         <span class="material-icons unliked" v-if="!ilike"> favorite </span>
@@ -114,12 +116,15 @@ const clickPost = () => {
           height: 40px;
         }
 
-        .user-nickname {
-          @include font(17px);
+        .user-nick-time{
+          @include flex(column);
+          .user-nickname {
+            @include font(17px);
+          }
+          .created-at {
+            @include font-size-placeholder(13px);
+          }
         }
-      }
-      .created-at {
-        @include font-size-placeholder(13px);
       }
     }
 

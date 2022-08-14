@@ -13,7 +13,7 @@
       {{ data.description }}
     </article>
     <!-- carousel -->
-    <the-card-carousel :data="data"></the-card-carousel>
+    <the-card-carousel :data="carouselData"></the-card-carousel>
     <article class="article-more-button">
       <div class="more-button" @click="clickMore">
         {{ data.moreButtonText }}
@@ -40,7 +40,7 @@ const props = defineProps<{
   };
 }>();
 
-const data = {
+const carouselData = {
   setCarouselFunc: props.data.setCarouselFunc,
   getCarouselFunc: props.data.getCarouselFunc,
 };
@@ -50,7 +50,6 @@ const isShowDescription = ref(false);
 const toggleShowDescription = () => {
   isShowDescription.value = !isShowDescription.value;
 };
-
 // 더보기 클릭
 const clickMore = () => {
   router.push({ name: props.data.showMoreView });

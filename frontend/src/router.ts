@@ -10,7 +10,7 @@ const routes: any[] = [
   {
     path: "/",
     name: "TheHomeView",
-    component: () => import("@/views/TheHomeView.vue"),
+    component: () => import("@/views/homes/TheHomeView.vue"),
   },
 
   // 회원가입 화면
@@ -201,18 +201,27 @@ const routes: any[] = [
     component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
   },
 
-  //contest 게시글 form
+  // cocktailAwards home
   {
-    path: "/feeds/contest/form",
-    name: "TheCocktailAwardsFormView",
-    component: () => import("@/views/TheCocktailAwardsFormView.vue"),
+    path: "/feeds/awards",
+    name: "TheCocktailAwardsView",
+    component: () => import("@/views/cocktailAwards/TheCocktailAwardsView.vue"),
   },
 
-  // contest 게시글 상세
+  // cocktailAwards 게시글 form
   {
-    path: "/feeds/:feedId/contest",
+    path: "/feeds/awards/form",
+    name: "TheCocktailAwardsFormView",
+    component: () =>
+      import("@/views/cocktailAwards/TheCocktailAwardsFormView.vue"),
+  },
+
+  // cocktailAwards 게시글 상세
+  {
+    path: "/feeds/:feedId/awards",
     name: "TheCocktailAwardsDescView",
-    component: () => import("@/views/TheCocktailAwardsDescView.vue"),
+    component: () =>
+      import("@/views/cocktailAwards/TheCocktailAwardsDescView.vue"),
   },
 
   // 신규 커스텀 칵테일 리스트
@@ -221,6 +230,27 @@ const routes: any[] = [
     name: "TheAllLatestCustomCocktailView",
     component: () => import("@/views/homes/TheAllLatestCustomCocktailView.vue"),
   },
+
+  // 주류주아 인기 칵테일 리스트
+  {
+    path: "/hot",
+    name: "TheAllHotCocktailView",
+    component: () => import("@/views/homes/TheAllHotCocktailView.vue"),
+  },
+
+  // 주류주아 주간 인기 커스텀칵테일 리스트
+  {
+    path: "/weeklyHot",
+    name: "TheAllWeeklyHotCocktailView",
+    component: () => import("@/views/homes/TheAllWeeklyHotCocktailView.vue"),
+  },
+
+  // 주류주아 좋아요 기반 추천 칵테일 리스트
+  // {
+  //   path: "/likeRecommended",
+  //   name: "TheLikeRecommendedCocktailView",
+  //   component: () => import("@/views/homes/TheLikeRecommendedCocktailView.vue"),
+  // },
 
   // 알림
   {
@@ -265,6 +295,7 @@ router.beforeEach((to: any, from, next) => {
     "TheSuperCustomCocktailUpdateFormView",
     "TheCocktailAwardsFormView",
     "TheCocktailAwardsDescView",
+    "TheNoticeView",
   ];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지

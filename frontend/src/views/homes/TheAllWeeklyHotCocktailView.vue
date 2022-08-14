@@ -1,0 +1,89 @@
+<template>
+  <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+    <h1 class="title">
+      유저들의 <span class="important">이번 주 HOT</span> 칵테일
+    </h1></header-basic
+  >
+  <div class="cocktail-list-view top-view-no-margin">
+    <div class="the-item-container">
+      <the-list-item-carousel-cocktail
+        v-for="(item, idx) in allWeeklyHotCocktails"
+        :key="idx"
+        :data="item"
+        @click="clickCocktail(item)"
+      ></the-list-item-carousel-cocktail>
+    </div>
+  </div>
+  <nav-bar></nav-bar>
+</template>
+
+<script setup lang="ts">
+import TheListItemCarouselCocktail from "@/components/cocktails/TheListItemCarouselCocktail.vue";
+import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import NavBar from "@/components/basics/NavBar.vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { computed, onBeforeMount, onUnmounted } from "vue";
+import { CarouselCocktail } from "../../interface";
+const router = useRouter();
+const store = useStore();
+
+// 전체 칵테일 리스트
+const allWeeklyHotCocktails = computed(
+  () => store.getters["carousel/getAllWeeklyHotCocktails"]
+);
+
+// 칵테일 누른 경우 칵테일 상세 페이지로 이동
+const clickCocktail = (item: CarouselCocktail) => {
+  store.dispatch("carousel/clickShowMoreItem", item);
+};
+
+const handleScroll = (event: any) => {
+  const data = {
+    event,
+    action: "carousel/setAllWeeklyHotCocktails",
+  };
+  store.dispatch("scroll/handleScroll", data);
+};
+
+// 전체 칵테일 추가 함수
+const setAllWeeklyHotCocktails = () => {
+  store.dispatch("carousel/setAllWeeklyHotCocktails");
+};
+
+onBeforeMount(() => {
+  window.addEventListener("scroll", handleScroll);
+  setAllWeeklyHotCocktails();
+  setTimeout(() => {
+    setAllWeeklyHotCocktails();
+  }, 100);
+});
+
+onUnmounted(() => {
+  store.dispatch("carousel/removeAllWeeklyHotCocktails");
+});
+</script>
+
+<style scoped lang="scss">
+.cocktail-list-view {
+  @include flex(column);
+  @include accountLayOut;
+  justify-content: flex-start;
+  align-items: center;
+  .the-item-container {
+    @include flex(column);
+    width: 100%;
+
+    margin-top: 1rem;
+  }
+}
+
+.title {
+  @include font(20px, $fw-medium);
+
+  .important {
+    @include font(20px, $fw-bold);
+    color: $red-color;
+  }
+}
+</style>

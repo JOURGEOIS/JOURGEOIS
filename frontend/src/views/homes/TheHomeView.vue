@@ -1,9 +1,8 @@
 <template>
   <div class="the-home-view">
     <!-- 헤더 -->
-    <header-basic :success="false" @prevClicked="$router.go(-1)">
-      홈
-    </header-basic>
+    <header-notice :success="false" @prevClicked="$router.go(-1)">
+    </header-notice>
     <section class="top-view-no-margin">
       <the-home-view-container></the-home-view-container>
     </section>
@@ -32,20 +31,14 @@
     @off-modal="offCompeteSignupModal"
     >회원가입이 완료되었습니다.</success-pop-up
   >
-  <!-- <div class="category-container">
-    <router-link to="/user/signup">회원가입</router-link>
-    <router-link to="/user/login">로그인</router-link>
-    <router-link to="/user/my-info">유저정보수정</router-link>
-    <router-link to="/user/my-info/password">비밀번호 변경</router-link>
-  </div> -->
   <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import HeaderNotice from "@/components/basics/HeaderNotice.vue";
 import TheHomeViewContainer from "@/components/homes/TheHomeViewContainer.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted } from "vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
 import { useStore } from "vuex";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -136,31 +129,17 @@ onMounted(() => {
   store.dispatch("notice/checkNotice");
 });
 
-const handleScroll = (event: any) => {
-  const data = {
-    event,
-    // action: "newsFeed/getNewsFeedListData",
-  };
-  store.dispatch("scroll/handleScroll", data);
-};
-
-// db 받아오기
-onBeforeMount(() => {
-  window.addEventListener("scroll", handleScroll);
-  // store.dispatch("newsFeed/getNewsFeedListData");
-});
-
 // 저장된 스크롤 높이로 이동
 onMounted(() => {
-  // const scrollY = computed(() => store.getters["newsFeed/getNewsFeedScrollY"]);
+  const scrollY = computed(() => store.getters["scroll/getHomeScrollY"]);
   setTimeout(() => {
-    // window.scrollTo({ left: 0, top: scrollY.value });
+    window.scrollTo({ left: 0, top: scrollY.value });
   }, 0);
 });
 
 // 스크롤 높이 저장
 onBeforeUnmount(() => {
-  // store.dispatch("newsFeed/setNewsFeedScrollY", window.scrollY);
+  store.dispatch("scroll/setHomeScrollY", window.scrollY);
 });
 </script>
 
@@ -176,11 +155,11 @@ onBeforeUnmount(() => {
     margin-top: 8px;
 
     @media #{$tablet} {
-      width: 60%;
+      width: 80%;
     }
 
     @media #{$pc} {
-      width: 50%;
+      width: 60%;
     }
   }
 }

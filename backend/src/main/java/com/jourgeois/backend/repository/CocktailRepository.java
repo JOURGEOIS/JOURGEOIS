@@ -79,8 +79,8 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 
     @Query("SELECT c.id AS id, c.nameKR AS nameKR, c.img AS img, c.category AS category, c.tag AS tag " +
             "FROM Member AS m JOIN CocktailBookmark AS cb ON cb.memberId.uid = m.uid JOIN Cocktail AS c ON cb.cocktailId.id = c.id " +
-            "WHERE m.uid = :id")
-    Optional<List<CocktailVO>> findBookmarkInProfilePageByUid(Long id);
+            "WHERE m.uid = :id ORDER BY c.nameKR ASC")
+    Optional<List<CocktailVO>> findBookmarkInProfilePageByUid(Long id, Pageable pageable);
 
     @Query(value = "SELECT c_base_liquor as base, c_img as img, c_alcohol as abv, c_name_kr as title, c_id as cocktailId, -1 AS type FROM cocktail WHERE c_tag like concat('%', :tag, '%') limit 5", nativeQuery = true)
     List<HomeCocktailItemVO> getTag5Cocktail(@Param(value = "tag") String tagType);

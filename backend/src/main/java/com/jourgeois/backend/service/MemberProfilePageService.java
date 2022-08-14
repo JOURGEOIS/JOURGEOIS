@@ -119,14 +119,16 @@ public class MemberProfilePageService {
         return resArr;
     }
 
-    public Boolean switchPublicToPrivate(Long uid){
+    public Integer switchPublicToPrivate(Long uid){
         try {
             Member m = memberRepository.findById(uid).orElseThrow();
-            Integer ispublic = Integer.parseInt(m.getIsPublic()) ^ 1;
-            m.setIsPublic(ispublic.toString());
-            return true;
+            Integer isPublic = Integer.parseInt(m.getIsPublic()) ^ 1;
+            m.setIsPublic(isPublic.toString());
+            memberRepository.flush();
+
+            return isPublic;
         } catch(Exception e){
-            return false;
+            return -1;
         }
     }
 }

@@ -8,19 +8,19 @@
     >
     <!-- 초심자들을 위한 영상 추천 -->
     <the-video-section><h1 class="title">영상 추천</h1></the-video-section>
+    <!-- 주류주아 HOT 칵테일  -->
+    <the-home-basic-section :data="hotCocktailData">
+      <h1 class="title">주류주아 <span class="important">HOT</span> 칵테일</h1>
+    </the-home-basic-section>
+    <!-- 유저들의 NEW 커스텀 칵테일 -->
+    <the-home-basic-section :data="latestCustomCocktailData">
+      <h1 class="title">유저들의 <span class="important">NEW</span> 칵테일</h1>
+    </the-home-basic-section>
     <the-hot-keyword-section
       ><h1 class="title">
         실시간 <span class="important">급상승</span> 검색어
       </h1></the-hot-keyword-section
     >
-    <!-- 유저들의 NEW 커스텀 칵테일 -->
-    <the-home-basic-section :data="latestCustomCocktailData">
-      <h1 class="title">유저들의 <span class="important">NEW</span> 칵테일</h1>
-    </the-home-basic-section>
-    <!-- 주류주아 HOT 칵테일  -->
-    <the-home-basic-section :data="hotCocktailData">
-      <h1 class="title">주류주아 <span class="important">HOT</span> 칵테일</h1>
-    </the-home-basic-section>
     <!-- 유저들의 이번 주 HOT 칵테일  -->
     <the-home-basic-section :data="weeklyHotCocktailData">
       <h1 class="title">

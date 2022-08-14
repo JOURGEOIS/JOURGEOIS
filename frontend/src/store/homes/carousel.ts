@@ -238,29 +238,32 @@ export const carousel: Module<CarouselState, RootState> = {
     setSelectedCategory: ({ commit }, value: string) => {
       commit("SET_SELECTED_CATEGORY", value);
     },
-    setThemeCocktails: ({ commit, dispatch }) => {
+    setThemeCocktails: ({ commit, dispatch }, tag: string) => {
+      console.log(tag);
+      axios({
+        url: api.homes.themeCocktail(),
+        method: "GET",
+        params: {
+          tag,
+        },
+      })
+        .then((res) => {
+          commit("SET_THEME_COCKTAILS", {
+            themeCocktails: res.data,
+            theme: tag,
+          });
+        })
+        .catch((err) => {
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          console.error(err.response);
+        });
+    },
+    setThemeCocktailsSequential: async ({ dispatch }) => {
       const tags = ["ALONE", "PARTY", "LOVE", "SPECIAL"];
-      tags.forEach((tag) => {
-        setTimeout(() => {
-          axios({
-            url: api.homes.themeCocktail(),
-            method: "GET",
-            params: {
-              tag,
-            },
-          })
-            .then((res) => {
-              commit("SET_THEME_COCKTAILS", {
-                themeCocktails: res.data,
-                theme: tag,
-              });
-            })
-            .catch((err) => {
-              dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-              console.error(err.response);
-            });
-        }, 1000);
-      });
+      await dispatch("setThemeCocktails", tags[0]);
+      await dispatch("setThemeCocktails", tags[1]);
+      await dispatch("setThemeCocktails", tags[2]);
+      await dispatch("setThemeCocktails", tags[3]);
     },
     setAllThemeCocktails: ({ commit, dispatch, getters }) => {
       const page = getters["getAllThemeCocktailPage"];
@@ -280,6 +283,9 @@ export const carousel: Module<CarouselState, RootState> = {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
           console.error(err.response);
         });
+    },
+    removeAllLatestCustomCocktails: ({ commit }) => {
+      commit("REMOVE_ALL_THEME_COCKTAILS");
     },
     // * 급상승 검색어
     setHotKeywords: ({ commit, dispatch, getters }) => {

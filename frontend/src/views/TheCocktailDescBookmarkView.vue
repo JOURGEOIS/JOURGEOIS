@@ -14,7 +14,6 @@
           v-for="(item, idx) in bookMarkUserList"
           :key="idx"
           :data="item"
-          @click="clickUser(item)"
         ></the-list-item-user>
       </div>
     </section>

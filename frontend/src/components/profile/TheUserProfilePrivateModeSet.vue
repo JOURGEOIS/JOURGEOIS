@@ -42,7 +42,7 @@ const isActive = ref(isActivea.value)
 
 const toggleClick = () => {
   isActive.value = !isActive.value
-  store.dispatch("profileDesc/changePrivateModeSet", 0)
+  store.dispatch("profileDesc/changePrivateModeSet", isActive.value)
 }
 
 const submit = () => {

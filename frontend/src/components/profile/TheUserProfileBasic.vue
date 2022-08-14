@@ -44,6 +44,8 @@ const postCnt = computed(() => userInfo.value.postCnt)
 const followerCnt = computed (() => userInfo.value.followerCnt)
 const followingCnt = computed (() => userInfo.value.followingCnt)
 
+
+
 </script>
 
 <style scoped lang="scss">

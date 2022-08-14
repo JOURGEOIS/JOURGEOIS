@@ -13,18 +13,20 @@ import {
 export interface ProfileDescState {
   currentTab: number;
   currentUserData: userProfileData;
-
+  // 일반 게시글
   currentUserCommunity: userCommunityPostData[];
   currentUserCommunityPage: number;
-  //
+  // 칵테일 게시글
   currentUserCustom: userCustomPostData[];
   currentUserCustomPage: number;
-  //
+  // 후기
   currentUserReview: userPostReviewData[];
   currentUserReviewPage: number;
-
+  // 북마크
   currentUserBookmark: userBookmarkData[];
   currentUserBookmarkPage: number;
+  // 프로필 공개 여부
+  privateModeSet: number;
 }
 
 export const profileDesc: Module<ProfileDescState, RootState> = {
@@ -43,7 +45,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       followerCnt: 0,
       followingCnt: 0,
       postCnt: 0,
-      isPublic: 0,
+      isPublic: 1,
     },
 
     currentUserCommunity: [],
@@ -57,6 +59,8 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
 
     currentUserBookmark: [],
     currentUserBookmarkPage: 0,
+
+    privateModeSet: 1
   },
 
   getters: {
@@ -94,6 +98,10 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     getCurrentUserPostBookmarkPage: (state) => {
       return state.currentUserBookmarkPage;
     },
+
+    getPrivateModeSet: (state) => {
+      return state.privateModeSet
+    }
   },
 
   mutations: {
@@ -146,6 +154,10 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     SET_CURRENT_USER_POST_BOOKMARK_PAGE: (state, value: number) => {
       state.currentUserBookmarkPage = value;
     },
+
+    SET_PRIVATE_MODE: (state, value: number) => {
+      state.privateModeSet = value
+    }
   },
 
   actions: {
@@ -343,6 +355,36 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserPostBookmarkData",
+              params: {
+                uid,
+              },
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+
+    changePrivateModeSet: ({ commit, dispatch, rootGetters }, privateMode) => {
+      const uid = rootGetters["personalInfo/getUserInfoUserId"]
+      axios({
+        url: api.accounts.profileModeSet(),
+        method: "put",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+      })
+        .then((res) => {
+          console.log(res.data.isPublic)
+          const privateMode = res.data.isPublic
+          commit("SET_PRIVATE_MODE", privateMode)
+          // dispatch("personalInfo/savePrivateModeSet", privateMode)
+        })
+        .catch((err) => {
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/changePrivateModeSet",
               params: {
                 uid,
               },

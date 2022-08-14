@@ -241,23 +241,25 @@ export const carousel: Module<CarouselState, RootState> = {
     setThemeCocktails: ({ commit, dispatch }) => {
       const tags = ["ALONE", "PARTY", "LOVE", "SPECIAL"];
       tags.forEach((tag) => {
-        axios({
-          url: api.homes.themeCocktail(),
-          method: "GET",
-          params: {
-            tag,
-          },
-        })
-          .then((res) => {
-            commit("SET_THEME_COCKTAILS", {
-              themeCocktails: res.data,
-              theme: tag,
-            });
+        setTimeout(() => {
+          axios({
+            url: api.homes.themeCocktail(),
+            method: "GET",
+            params: {
+              tag,
+            },
           })
-          .catch((err) => {
-            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
-          });
+            .then((res) => {
+              commit("SET_THEME_COCKTAILS", {
+                themeCocktails: res.data,
+                theme: tag,
+              });
+            })
+            .catch((err) => {
+              dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+              console.error(err.response);
+            });
+        }, 1000);
       });
     },
     setAllThemeCocktails: ({ commit, dispatch, getters }) => {

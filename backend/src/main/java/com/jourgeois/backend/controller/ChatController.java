@@ -39,7 +39,7 @@ public class ChatController {
     }
 
     @PostMapping("/auth/message")
-    public String send(HttpServletRequest request, @RequestBody ChatMessageDTO chatMessageDTO){
+    public ResponseEntity send(HttpServletRequest request, @RequestBody ChatMessageDTO chatMessageDTO){
         Map<String, Object> result = new HashMap<>();
         try {
             Long myUid = Long.valueOf((String) request.getAttribute("uid"));
@@ -47,23 +47,22 @@ public class ChatController {
             chatMessageDTO.setSender(myUid);
             chatMessageDTO.setTimestamp(Timestamp.now());
             chatMessageDTO.setIsRead(false);
-            chatService.sendMessage(chatMessageDTO);
-            return "success";
+            return new ResponseEntity(chatService.sendMessage(chatMessageDTO), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return "fail";
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/auth/message")
-    public ResponseEntity getChatMessages(HttpServletRequest request, @RequestParam(value = "startAfter", defaultValue = "0") Integer startAfter, @RequestParam("roomId") String roomId){
+    public ResponseEntity getChatMessages(HttpServletRequest request, /* @RequestParam(value = "startAfter", defaultValue = "0") Integer startAfter,*/@RequestParam("receiver") Long receiver, @RequestParam(value = "chatRoomId", defaultValue = "") String roomId){
         // uid : /auth 추가해서 request.get("uid")로 받아서 넘겨주십시오.
         // page는 처음엔 0부터 시작이고 넘겨줄 때 size로 값을 넘겨주니, page로 값을 받으면 됨
         // roomId 가 채팅방 key
         try {
             Long myUid = Long.valueOf((String)request.getAttribute("uid"));
 //            Long myUid = 16052L;
-            return new ResponseEntity(chatService.getChatMessages(myUid, /* startAfter, */ roomId), HttpStatus.OK);
+            return new ResponseEntity(chatService.getChatMessages(myUid, receiver,/* startAfter, */ roomId), HttpStatus.OK);
         } catch (ExecutionException | TimeoutException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

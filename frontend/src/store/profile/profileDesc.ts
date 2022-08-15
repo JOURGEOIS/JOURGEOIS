@@ -46,7 +46,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       followerCnt: 0,
       followingCnt: 0,
       postCnt: 0,
-      isPublic: 1,
     },
 
     currentUserCommunity: [],
@@ -61,7 +60,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     currentUserBookmark: [],
     currentUserBookmarkPage: 0,
 
-    privateModeSet: 1
+    privateModeSet: 1,
   },
 
   getters: {
@@ -92,7 +91,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     getCurrentUserPostReviewPage: (state) => {
       return state.currentUserReviewPage;
     },
-    
+
     getCurrentUserPostBookmark: (state) => {
       return state.currentUserBookmark;
     },
@@ -101,8 +100,8 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
 
     getPrivateModeSet: (state) => {
-      return state.privateModeSet
-    }
+      return state.privateModeSet;
+    },
   },
 
   mutations: {
@@ -113,10 +112,16 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       state.currentUserData = value;
     },
 
-    ADD_CURRENT_USER_POST_COMMUNITY: (state, value: userCommunityPostData[]) => {
+    ADD_CURRENT_USER_POST_COMMUNITY: (
+      state,
+      value: userCommunityPostData[]
+    ) => {
       state.currentUserCommunity.push(...value);
     },
-    SET_CURRENT_USER_POST_COMMUNITY: (state, value: userCommunityPostData[]) => {
+    SET_CURRENT_USER_POST_COMMUNITY: (
+      state,
+      value: userCommunityPostData[]
+    ) => {
       state.currentUserCommunity = value;
     },
     SET_CURRENT_USER_POST_COMMUNITY_PAGE: (state, value: number) => {
@@ -157,8 +162,8 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
 
     SET_PRIVATE_MODE: (state, value: number) => {
-      state.privateModeSet = value
-    }
+      state.privateModeSet = value;
+    },
   },
 
   actions: {
@@ -254,7 +259,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       { commit, dispatch, rootGetters, getters },
       uid: number
     ) => {
-      console.log(uid)
+      console.log(uid);
       const page = getters["getCurrentUserPostCustomPage"];
       axios({
         url: api.accounts.profileCustom(),
@@ -268,7 +273,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
           // 받은 데이터를 리스트에 추가하고 page를 늘린다.
           commit("ADD_CURRENT_USER_POST_CUSTOM", res.data);
           commit("SET_CURRENT_USER_POST_CUSTOM_PAGE", page + 1);
@@ -365,8 +370,11 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         });
     },
 
-    changePrivateModeSet: ({ commit, dispatch, rootGetters }, privateMode: number) => {
-      const uid = rootGetters["personalInfo/getUserInfoUserId"]
+    changePrivateModeSet: (
+      { commit, dispatch, rootGetters },
+      privateMode: number
+    ) => {
+      const uid = rootGetters["personalInfo/getUserInfoUserId"];
       axios({
         url: api.accounts.profileModeSet(),
         method: "put",
@@ -375,8 +383,8 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          const privateMode = res.data.isPublic
-          commit("SET_PRIVATE_MODE", privateMode)
+          const privateMode = res.data.isPublic;
+          commit("SET_PRIVATE_MODE", privateMode);
           // dispatch("personalInfo/savePrivateModeSet", privateMode)
         })
         .catch((err) => {

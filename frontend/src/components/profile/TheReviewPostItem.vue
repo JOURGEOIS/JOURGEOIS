@@ -30,8 +30,6 @@ const props = defineProps<{
 const cocktailId = props.review.cocktailId
 
 const comment = props.review.comment
-const tag = props.review.tag;
-const category = props.review.category
 const nameKR = props.review.nameKR
 
 const clickPost = () => {

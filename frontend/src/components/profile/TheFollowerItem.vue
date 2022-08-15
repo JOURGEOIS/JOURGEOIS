@@ -1,27 +1,26 @@
 <template>
   <div class="the-follower-item">
-    <div class="part-left">
+    <div class="part-left" @click="clickUser">
       <round-image :round-image="userImage"></round-image>
       <div class="user-info-text">
         <h1 class="user-nickname">{{ nickname }}</h1>
         <p class="user-introduce">{{ introduce }}</p>
       </div>
       <div class="part-right">
-      <!-- 팔로우/팔로잉 버튼 -->
-      <span
-        v-if="isFollowed !== -1 && isLoggedIn"
-        class="follow-btn"
-        :class="{ following: isFollowed, follow: !isFollowed }"
-        @click="clickFollowBtn"
-      >
-        <span class="material-icons-outlined follow-icon" v-if="!isFollowed">
-          person_add
-        </span>
-        <span class="follow-text">{{ followBtnText }}</span></span
-      >
+        <!-- 팔로우/팔로잉 버튼 -->
+        <span
+          v-if="isFollowed !== -1 && isLoggedIn"
+          class="follow-btn"
+          :class="{ following: isFollowed, follow: !isFollowed }"
+          @click="clickFollowBtn"
+        >
+          <span class="material-icons-outlined follow-icon" v-if="!isFollowed">
+            person_add
+          </span>
+          <span class="follow-text">{{ followBtnText }}</span></span
+        >
+      </div>
     </div>
-    </div>
-
   </div>
 </template>
 
@@ -45,6 +44,11 @@ const introduce = props.follower.introduce
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 const isFollowed = ref(props.follower.isFollowed);
+
+// 계정 클릭 시
+const clickUser = () => {
+  router.push({ name: "TheUserProfileView", params:{userId: uid}})
+};
 
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => {

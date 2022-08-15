@@ -9,7 +9,7 @@
   </div>
 
   <!-- 댓글이 없을 경우 보여지는 화면  -->
-  <div v-else class="the-comment-none">
+  <div v-if="isEmpty" class="the-comment-none">
     <p>댓글이 없습니다</p>
     <p>😥</p>
   </div>
@@ -28,12 +28,19 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, computed, watch, onUnmounted } from "vue";
+import { ref, onBeforeMount, computed, watch, onUnmounted } from "vue";
 import CommentItem from "@/components/basics/CommentItem.vue";
 import CommentDeleteModal from "@/components/modals/CommentDeleteModal.vue";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import { useStore } from "vuex";
 const store = useStore();
+
+const isEmpty = ref(false);
+setTimeout(() => {
+  if (!commentList.value.length) {
+    isEmpty.value = true;
+  }
+}, 200);
 
 // 프롭스
 const props = defineProps<{

@@ -4,7 +4,12 @@
       좋아요한 유저
     </header-basic>
     <div class="the-item-container top-view-no-margin">
+      <div class="like-empty" v-if="isEmpty">
+        <p>해당 게시물의 좋아요 유저가 없습니다</p>
+        <p class="emoji">😥</p>
+      </div>
       <the-list-item-user
+        v-else
         v-for="(item, idx) in likedUsers"
         :key="idx"
         :data="item"
@@ -20,11 +25,18 @@ import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { computed, onBeforeMount, onUnmounted } from "vue";
+import { ref, computed, onBeforeMount, onUnmounted } from "vue";
 import { User } from "../interface";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
+const isEmpty = ref(false);
+setTimeout(() => {
+  if (likedUsers.value.length === 0) {
+    isEmpty.value = true;
+  }
+}, 200);
 
 // navbar 색깔 부여
 store.dispatch("navbar/setNavIconStatus", 3);
@@ -78,6 +90,26 @@ onUnmounted(() => {
     width: 100%;
 
     margin-top: 1rem;
+  }
+}
+
+.like-empty {
+  width: 100%;
+  margin-top: 120px;
+  padding: 64px 16px;
+  border-radius: 16px;
+  background-color: $white200;
+  @include font($fs-main, $fw-bold);
+  align-self: center;
+  text-align: center;
+
+  .emoji {
+    font-size: $fs-xl;
+  }
+
+  @media #{$tablet} {
+    @include font($fs-lg, $fw-bold);
+    width: 450px;
   }
 }
 </style>

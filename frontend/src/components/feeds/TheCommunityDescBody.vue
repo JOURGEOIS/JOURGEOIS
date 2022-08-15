@@ -66,11 +66,10 @@ const clickDelete = () => {
 .the-community-desc-body {
   @include flex(column);
   width: 100%;
-  gap: 10px;
 
   .community-image {
     width: calc(100% + 32px);
-    margin: 10px -16px;
+    margin: 0px -16px;
     aspect-ratio: 1/1;
     background : {
       size: cover;
@@ -87,6 +86,10 @@ const clickDelete = () => {
       padding: 10px;
       @include for-click;
     }
+  }
+
+  .community-description {
+    padding: 10px 0;
   }
 }
 

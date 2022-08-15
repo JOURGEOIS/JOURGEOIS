@@ -94,7 +94,7 @@ const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
   width: calc(100% + 32px);
   margin-left: -16px;
   padding: 10px 0;
-  gap: 20px;
+  gap: 30px;
   background-color: $white150;
 }
 

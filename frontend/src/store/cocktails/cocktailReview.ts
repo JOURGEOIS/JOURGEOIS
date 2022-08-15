@@ -75,7 +75,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     },
 
     // 후기 불러오기
-    getCocktailReview: ({ commit, getters }, cocktailId: number) => {
+    getCocktailReview: ({ commit, dispatch, getters }, cocktailId: number) => {
       axios({
         url: api.cocktail.cocktailReview(),
         method: "GET",
@@ -86,18 +86,29 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       })
         .then((res) => {
           console.log("data: ", res.data);
-          const newCocktailReview = res.data;
-          commit("SET_CURRENT_COCKTAIL_REVIEW", newCocktailReview);
+          commit("SET_CURRENT_COCKTAIL_REVIEW", res.data);
           const page = getters.getReviewCocktailPage;
           commit("SET_REVIEW_COCKTAIL_PAGE", page + 1);
         })
         .catch((err) => {
           console.error(err.response);
+          // if (err.response.status !== 401) {
+          //   // 실패 팝업
+          //   dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          //   console.error(err.response);
+          // } else {
+          //   // refreshToken 재발급
+          //   const obj = {
+          //     func: "cocktailReview/getCocktailReview",
+          //     params: cocktailId,
+          //   };
+          //   dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          // }
         });
     },
     // 후기 생성
     createCocktailReview: (
-      { commit, dispatch, rootGetters, getters },
+      { commit, dispatch, rootGetters },
       { cocktailId, comment }
     ) => {
       const userId = rootGetters["personalInfo/getUserInfoUserId"];
@@ -111,12 +122,23 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       })
         .then((res) => {
           console.log(res.data);
-          commit("RESET_CURRENT_COCKTAIL_REVIEW");
-          commit("SET_REVIEW_COCKTAIL_PAGE", 0);
+          dispatch("resetCocktailReview");
           dispatch("getCocktailReview", cocktailId);
         })
         .catch((err) => {
           console.error(err.res);
+          // if (err.response.status !== 401) {
+          //   // 실패 팝업
+          //   dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+          //   console.error(err.response);
+          // } else {
+          //   // refreshToken 재발급
+          //   const obj = {
+          //     func: "cocktailReview/createCocktailReview",
+          //     params: { cocktailId, comment },
+          //   };
+          //   dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          // }
         });
     },
     // 후기 수정

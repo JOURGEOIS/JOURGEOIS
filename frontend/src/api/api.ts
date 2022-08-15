@@ -49,6 +49,7 @@ export default {
   cocktail: {
     getCocktailData: () => HOST + COCKTAIL + "cocktail",
     cocktailList: () => HOST + COCKTAIL + "list",
+    // cocktailReview: () => HOST + COCKTAIL + "auth/comment",
     cocktailReview: () => HOST + COCKTAIL + "comment",
     customCocktailList: () => HOST + "cocktail",
     clickBookMark: () => HOST + COCKTAIL + "auth/bookmark",

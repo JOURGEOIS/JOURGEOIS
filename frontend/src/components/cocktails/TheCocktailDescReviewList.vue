@@ -13,6 +13,7 @@ import { computed, onBeforeMount, onUnmounted } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 // 칵테일 id
 const cocktailData = computed(
@@ -41,7 +42,9 @@ const getWholeReview = (cocktailId: number) => {
 };
 
 onBeforeMount(() => {
-  window.addEventListener("scroll", handleScroll);
+  if (isLoggedIn.value) {
+    window.addEventListener("scroll", handleScroll);
+  }
   getWholeReview(cocktailId);
 });
 

@@ -123,6 +123,7 @@ const clickBookmarkTab = () =>
 onMounted(() => {
   store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
   toggleLogOutModal(false);
+  store.dispatch("profileDesc/changeCurrentTab", 0);
 });
 
 // 로그아웃 모달

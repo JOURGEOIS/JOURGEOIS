@@ -113,6 +113,7 @@ img {
   position: absolute;
   left: 20%;
   width: 30px;
+  border: 0;
 }
 .social-login {
   @include flex(column);

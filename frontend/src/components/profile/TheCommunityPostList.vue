@@ -28,12 +28,14 @@ const handleScroll = (event: Event) => {
 
 // 인피니티 스크롤을 연동, 처음 데이터 가져오기
 onBeforeMount(() => {
+  console.log("안녕");
   // store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
   window.addEventListener("scroll", handleScroll);
   store.dispatch(
     "profileDesc/getCurrentUserPostCommunityData",
     route.params.userId
   );
+  console.log("잘가");
 });
 
 // unmount될 때, 페이지와 리스트를 리셋한다.

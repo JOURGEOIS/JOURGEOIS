@@ -7,6 +7,7 @@ export interface ModalState {
   failModalAppStatus: boolean;
   errorModalAppStatus: boolean;
   errorModalAppMessage: string;
+  loadingStatus: boolean;
 }
 
 export const modal: Module<ModalState, RootState> = {
@@ -16,6 +17,7 @@ export const modal: Module<ModalState, RootState> = {
     failModalAppStatus: false,
     errorModalAppStatus: false,
     errorModalAppMessage: "",
+    loadingStatus: false,
   },
 
   getters: {
@@ -27,6 +29,9 @@ export const modal: Module<ModalState, RootState> = {
     },
     getErrorModalAppMessage: (state) => {
       return state.errorModalAppMessage;
+    },
+    getLoadingStatus: (state) => {
+      return state.loadingStatus;
     },
   },
 
@@ -40,13 +45,18 @@ export const modal: Module<ModalState, RootState> = {
     SET_ERROR_MODAL_MESSAGE: (state, value: string) => {
       state.errorModalAppMessage = value;
     },
+    SET_LOADING_STATUS: (state, value: boolean) => {
+      state.loadingStatus = value;
+    },
   },
 
   actions: {
     toggleFailModalAppStatus: ({ commit }, value: boolean) => {
       commit("SET_FAIL_MODAL_APP", value);
     },
-
+    toggleLoadingStatus: ({ commit }, value: boolean) => {
+      commit("SET_LOADING_STATUS", value);
+    },
     blinkFailModalAppStatus: ({ commit }) => {
       commit("SET_FAIL_MODAL_APP", true);
       setTimeout(() => {

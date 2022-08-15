@@ -109,7 +109,7 @@ const noticeClick = () => {
   color: $primary400;
 }
 .red-notice {
-  color: $danger-color;
+  color: $red600;
 }
 
 .black-notice {

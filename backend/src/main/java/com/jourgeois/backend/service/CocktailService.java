@@ -189,6 +189,13 @@ public class CocktailService {
     }
 
     public boolean checkUserBookmark(CocktailBookmarkId key){
+        try {
+            System.out.println("============================================================");
+            System.out.println(cocktailBookmarkRepository.findById(key).get().getCocktailId());
+            System.out.println("============================================================");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return cocktailBookmarkRepository.findById(key).isPresent();
     }
 
@@ -209,7 +216,7 @@ public class CocktailService {
         cocktailBookmarkRepository.findByCocktailId(new Cocktail(c_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
 
-            if(member.getIsPublic().equals("1")){
+            
                 FollowPK key = new FollowPK(uid, member.getUid());
 
                 Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
@@ -224,7 +231,6 @@ public class CocktailService {
                         .uid(member.getUid())
                         .profileImg(s3Url+member.getProfileImg())
                         .build());
-            }
         });
         return followersResponse;
     }

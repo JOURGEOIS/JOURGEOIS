@@ -39,6 +39,7 @@ import TheCocktailAwardsBanner from "@/components/cocktailAwards/TheCocktailAwar
 import { defineAsyncComponent, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
+store.dispatch("navbar/setNavIconStatus", 0);
 
 // 동적 컴포넌트 (탭)
 const componentArray = [

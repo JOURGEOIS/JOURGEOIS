@@ -43,17 +43,14 @@ import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import TheCocktailDescDetail from "@/components/cocktails/TheCocktailDescDetail.vue";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
-import {
-  onMounted,
-  defineAsyncComponent,
-  computed,
-  watch,
-  onBeforeMount,
-} from "vue";
+import { onMounted, defineAsyncComponent, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
 const route = useRoute();
+
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
 
 // 동적 컴포넌트 (탭)
 const componentArray = [

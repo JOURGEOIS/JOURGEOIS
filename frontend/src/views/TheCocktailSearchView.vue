@@ -38,11 +38,8 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-// [basic] navbar icon 0번 켜기
-const setNavIconStatus = (index: number) => {
-  store.dispatch("navbar/setNavIconStatus", index);
-};
-setNavIconStatus(3);
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
 
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];

@@ -56,17 +56,22 @@ import NavBar from "@/components/basics/NavBar.vue";
 const route = useRoute();
 const store = useStore();
 
-const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 4);
+
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
 const uid = computed(() => userInfo.value.uid);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
 const myProfile = () => {
   if (userId.value === uid.value) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
-}
+};
 
 // 세팅 모달
 const settingsModalStatus = computed(

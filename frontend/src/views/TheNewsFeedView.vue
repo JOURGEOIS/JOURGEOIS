@@ -20,6 +20,9 @@ import { useStore } from "vuex";
 import { onBeforeMount, onBeforeUnmount, onMounted, computed } from "vue";
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 1);
+
 const handleScroll = (event: any) => {
   const data = {
     event,

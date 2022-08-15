@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import TheUserProfilePrivateModeSet from "@/components/profile/TheUserProfilePrivateModeSet.vue"
+import TheUserProfilePrivateModeSet from "@/components/profile/TheUserProfilePrivateModeSet.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
@@ -28,6 +28,9 @@ import { useStore } from "vuex";
 import { computed, onMounted, watch } from "vue";
 
 const store = useStore();
+
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 4);
 
 // 계정 모드 수정 성공 팝업
 const successPopUpStatus = computed(
@@ -67,7 +70,6 @@ onMounted(() => {
   toggleSuccessPopUp(false);
   toggleFailPopUp(false);
 });
-
 </script>
 
 <style scoped lang="scss">

@@ -42,6 +42,9 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
+
 // 검색 결과
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];

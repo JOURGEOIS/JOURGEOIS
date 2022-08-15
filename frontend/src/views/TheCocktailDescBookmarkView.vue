@@ -33,6 +33,9 @@ const route = useRoute();
 const router = useRouter();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
+
 // 북마크 유저 리스트
 const bookMarkUserList = computed(
   () => store.getters["cocktailDesc/getCocktailBookMarkUserList"]

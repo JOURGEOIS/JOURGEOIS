@@ -36,6 +36,9 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
+
 const originalCocktailId = Number(route.params.cocktailId);
 const feedId = Number(route.params.feedId);
 

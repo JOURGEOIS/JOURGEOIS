@@ -54,6 +54,9 @@ import { useStore } from "vuex";
 const store = useStore();
 const route = useRoute();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
+
 // 동적 컴포넌트 (탭)
 const componentArray = [
   defineAsyncComponent(

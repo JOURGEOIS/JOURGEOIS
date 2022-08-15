@@ -28,6 +28,9 @@ import { CarouselCocktail } from "../../interface";
 const router = useRouter();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 0);
+
 // 전체 칵테일 리스트
 const allHotCocktails = computed(
   () => store.getters["carousel/getAllHotCocktails"]

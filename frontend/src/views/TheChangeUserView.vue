@@ -34,6 +34,9 @@ import { computed, onMounted, watch } from "vue";
 
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 4);
+
 // 개인 정보 수정 성공 팝업
 const successPopUpStatus = computed(
   () => store.getters["account/getUserInfoChangeSuccess"]

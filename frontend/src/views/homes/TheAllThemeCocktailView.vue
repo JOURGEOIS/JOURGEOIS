@@ -40,6 +40,9 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 0);
+
 store.dispatch("carousel/setSelectedCategory", route.params.theme);
 
 // 선택된 테마

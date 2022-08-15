@@ -32,6 +32,9 @@ import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 const router = useRouter();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 4);
+
 // 회원가입view에서 이탈한 경우
 const removeSignUpInfo = () => {
   store.dispatch("signup/removeSignUpInfo");

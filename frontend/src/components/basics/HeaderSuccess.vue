@@ -94,6 +94,7 @@ const submitted = () => {
       letter-spacing: $ls-main;
       @include font($fs-main, $fw-medium);
       background-color: white;
+      color: $main-color;
 
       @media #{$tablet} {
         font-size: $fs-title;

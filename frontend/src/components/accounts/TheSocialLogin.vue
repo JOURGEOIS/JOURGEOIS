@@ -1,7 +1,6 @@
 <template>
   <!-- <hr /> -->
   <div class="social-login">
-    <p>or</p>
     <button-basic
       @click="clickGoogle"
       :button-style="['google-login', 'long', 'small']"

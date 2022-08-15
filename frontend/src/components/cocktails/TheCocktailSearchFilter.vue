@@ -89,7 +89,7 @@ onBeforeRouteLeave((to, from, next) => {
     bottom: 0px;
     width: 100%;
     max-width: 600px;
-    height: 98%;
+    height: 90%;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding: 0 16px;
@@ -97,10 +97,6 @@ onBeforeRouteLeave((to, from, next) => {
 
     @media #{$tablet} {
       width: 64%;
-    }
-
-    @media (min-height: 750px) {
-      height: 90%;
     }
 
     .cocktail-search-filter-header {

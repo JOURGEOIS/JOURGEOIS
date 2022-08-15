@@ -1,5 +1,12 @@
 <template>
   <div class="home-view-container">
+    <!-- 칵테일 어워즈 배너 -->
+    <section class="cocktail-awards-section">
+      <the-cocktail-awards-banner
+        image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_cocktail_awards_banner.png"
+        @click="$router.push({ name: 'TheCocktailAwardsView' })"
+      ></the-cocktail-awards-banner>
+    </section>
     <!-- 좋아요 기반 추천 칵테일  -->
     <the-home-basic-section
       v-if="isLoggedIn"
@@ -46,6 +53,7 @@ import TheVideoSection from "@/components/homes/TheVideoSection.vue";
 import TheHomeBasicSection from "@/components/homes/TheHomeBasicSection.vue";
 import TheHotKeywordSection from "@/components/homes/TheHotKeywordSection.vue";
 import TheThemeSection from "@/components/homes/TheThemeSection.vue";
+import TheCocktailAwardsBanner from "@/components/cocktailAwards/TheCocktailAwardsBanner.vue";
 const store = useStore();
 
 // 유저들의 NEW 커스텀 칵테일
@@ -96,6 +104,12 @@ const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
   padding: 10px 0;
   gap: 30px;
   background-color: $white150;
+}
+
+.cocktail-awards-section {
+  @include shadow-feed;
+  background-color: $white;
+  margin-top: -10px;
 }
 
 .title {

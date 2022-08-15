@@ -4,9 +4,21 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       칵테일 어워즈
     </header-basic>
-    <section class="the-cocktail-awards-section top-view" v>
+    <section class="the-cocktail-awards-section top-view">
       <!-- 상단 배너 -->
-      <the-cocktail-awards-banner></the-cocktail-awards-banner>
+      <section class="the-cocktail-awards-banner">
+        <the-cocktail-awards-banner
+          image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_home_banner.png"
+          @click="$router.push({ name: 'TheCocktailAwardsFormView' })"
+        ></the-cocktail-awards-banner>
+        <button
+          class="the-cocktail-awards-button"
+          @click="$router.push({ name: 'TheCocktailAwardsFormView' })"
+        >
+          <span class="material-icons"> add_circle </span>
+          <p>참여하기</p>
+        </button>
+      </section>
       <section>
         <p>가장 예쁜 칵테일에 투표해주세요</p>
 
@@ -65,6 +77,9 @@ const changeTab = (value: number) =>
   @include accountLayOut;
 
   .the-cocktail-awards-section {
+    @include flex(column);
+    justify-content: center;
+    gap: 48px;
     width: 100%;
     margin-bottom: 24px;
 
@@ -74,6 +89,35 @@ const changeTab = (value: number) =>
 
     @media #{$pc} {
       width: 70%;
+    }
+
+    .the-cocktail-awards-banner {
+      @include flex(column);
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+
+      > div {
+        border-radius: 10px;
+      }
+      .the-cocktail-awards-button {
+        @include flex-center;
+        gap: 4px;
+        width: fit-content;
+        background-color: $white;
+        padding: 4px;
+
+        .material-icons {
+          color: $primary700;
+        }
+
+        p {
+          @include font($fs-main, $fw-bold);
+          color: $navy800;
+          letter-spacing: $ls-main;
+          margin-top: -4px;
+        }
+      }
     }
 
     section {

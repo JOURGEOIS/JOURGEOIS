@@ -18,7 +18,7 @@ public interface MemberVO {
     LocalDateTime getCreateTime();
     String getPostImg();
     String getDescription();
-    Integer getIsPublic();
+    Integer getIsPrivate();
     Integer getLikes();
     Integer getIlike();
     Long getPostId();

@@ -15,8 +15,11 @@ spring:
 =======
 #    username: root
 #    password: 1q2w3e4r!@#
+<<<<<<< HEAD
     
 >>>>>>> a783285eb70dbd4ac41c492abc3901828f5273b5
+=======
+>>>>>>> a6dafce4c4d906dd0ba5deb5cee743f195edf835
 
     hikari:
       auto-commit: false

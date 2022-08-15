@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
+import router from "../../router";
 import {
   userProfileData,
   userCommunityPostData,
@@ -364,7 +365,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         });
     },
 
-    changePrivateModeSet: ({ commit, dispatch, rootGetters }, privateMode) => {
+    changePrivateModeSet: ({ commit, dispatch, rootGetters }, privateMode: number) => {
       const uid = rootGetters["personalInfo/getUserInfoUserId"]
       axios({
         url: api.accounts.profileModeSet(),
@@ -374,7 +375,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data.isPublic)
           const privateMode = res.data.isPublic
           commit("SET_PRIVATE_MODE", privateMode)
           // dispatch("personalInfo/savePrivateModeSet", privateMode)
@@ -386,7 +386,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
             const obj = {
               func: "profileDesc/changePrivateModeSet",
               params: {
-                uid,
+                privateMode,
               },
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });

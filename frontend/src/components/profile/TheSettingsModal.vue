@@ -79,9 +79,8 @@ const editPersonalInfo = () => {
 
 // 프로필 공개 설정
 const profilePublicSet = () => {
-  // store 만들어지면 변경
   store.dispatch("settings/toggleSettingsModal", false);
-  router.push({ name: "TheProfilePrivateSelectView" });
+  router.push({ name: "TheUserProfilePrivateModeView" });
 };
 
 const clickLogout = () => {

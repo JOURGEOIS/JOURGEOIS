@@ -1,7 +1,7 @@
 <template>
   <the-profile-header
     :prev="true"
-    :setting="true"
+    :setting="myProfile()"
     @prevClicked="$router.go(-1)"
   >
     <div>프로필</div>
@@ -55,6 +55,18 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 const route = useRoute();
 const store = useStore();
+
+const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
+const uid = computed(() => userInfo.value.uid);
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+
+const myProfile = () => {
+  if (userId.value === uid.value) {
+    return true
+  } else {
+    return false
+  }
+}
 
 // 세팅 모달
 const settingsModalStatus = computed(

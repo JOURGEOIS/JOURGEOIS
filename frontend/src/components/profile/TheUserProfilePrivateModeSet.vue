@@ -1,5 +1,5 @@
 <template>
-  <div class="the-user-profile-private-select-form">
+  <div class="the-user-profile-private-mode-set">
     <p>계정 공개 범위</p>
     <div class="private-mode-set">
       <p><span class="material-icons-outlined">lock</span>
@@ -11,13 +11,28 @@
       </label>
       </div>
     </div>
+    <button-basic
+      :button-style="[buttonColor, 'long', 'small']"
+      class="buttonStyle"
+      @click="submit"
+    >
+      확인
+    </button-basic>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useStore } from "vuex";
+import ButtonBasic from "@/components/basics/ButtonBasic.vue";
+import { useRouter } from 'vue-router';
 const store = useStore();
+const router = useRouter();
+
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+
+// button-style
+const buttonColor = computed(() => "primary")
 
 const isActivea = computed(() => 
   store.getters["profileDesc/getPrivateModeSet"]
@@ -27,18 +42,29 @@ const isActive = ref(isActivea.value)
 
 const toggleClick = () => {
   isActive.value = !isActive.value
-  if (isActive.value) {
-    store.dispatch("profileDesc/changePrivateModeSet", 0)
-  } else {
-    store.dispatch("profileDesc/changePrivateModeSet", 1)
-  }
+  store.dispatch("profileDesc/changePrivateModeSet", isActive.value)
+}
+
+const submit = () => {
+  router.push({name: "TheUserProfileView", params:{userId: userId.value}})
 }
 </script>
 
 <style scoped lang="scss">
-// .private-mode-set {
-//   @include flex;
-// }
+.the-user-profile-private-mode-set {
+  @include flex(column);
+  width: 100%;
+  gap: 20px;
+  .private-mode-set {
+    @include flex-xy(space-between, center);
+    p {
+      @include flex-center;
+    }
+  }
+  .buttonStyle {
+    margin-top: 20px;
+  }
+}
 .toggleSwitch {
   width: 3rem;
   height: 1.5rem;

@@ -50,7 +50,7 @@ const searchInputValue = computed(() => {
 // 현재 탭
 const currentTab = computed(() => store.getters["searchResult/getCurrentTab"]);
 
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const action = currentTab.value
     ? "searchResult/setSearchUser"
     : "searchResult/setSearchCocktailAll";
@@ -93,6 +93,7 @@ onBeforeMount(async () => {
 onUnmounted(() => {
   // 유저 검색 정보 및 칵테일 검색 정보 제거
   store.dispatch("searchResult/removeSearchResult");
+  window.removeEventListener("scroll", handleScroll);
 });
 
 // 입력창 클릭

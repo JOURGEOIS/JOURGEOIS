@@ -39,8 +39,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter, useRoute } from "vue-router";
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 const navIconStatus = computed(() => store.getters["navbar/getNavIconStatus"]);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
@@ -58,7 +59,11 @@ const clickHome = () => {
 // 뉴스피드 버튼 클릭
 const clickNewsFeed = () => {
   setNavIconStatus(1);
-  router.push({ name: "TheNewsFeedView" });
+  if (route.name === "TheNewsFeedView") {
+    history.go(0);
+  } else {
+    router.push({ name: "TheNewsFeedView" });
+  }
 };
 
 // 게시 버튼 클릭

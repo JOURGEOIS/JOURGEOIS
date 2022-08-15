@@ -112,7 +112,6 @@ export const newsFeed: Module<NewsFeedState, RootState> = {
       { commit, rootGetters, dispatch },
       { index, postId }
     ) => {
-      console.log(index, postId);
       axios({
         url: api.post.toggleLike(),
         method: "post",

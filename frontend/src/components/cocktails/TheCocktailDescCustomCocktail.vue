@@ -51,7 +51,7 @@ const clickCustomCocktail = (item: CustomCocktail) => {
 };
 
 // 스크롤시
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const dataInner = {
     originalCocktailId,
     asc,
@@ -82,6 +82,7 @@ onBeforeMount(() => {
 
 onUnmounted(() => {
   store.dispatch("customCocktailInfo/removeCustomCocktails");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

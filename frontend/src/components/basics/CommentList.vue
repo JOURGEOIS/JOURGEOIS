@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, computed, watch } from "vue";
+import { onBeforeMount, computed, watch, onUnmounted } from "vue";
 import CommentItem from "@/components/basics/CommentItem.vue";
 import CommentDeleteModal from "@/components/modals/CommentDeleteModal.vue";
 import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
@@ -44,7 +44,7 @@ const props = defineProps<{
 const commentList = computed(() => store.getters["comment/getCommentList"]);
 
 // 인피니티 스크롤
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "comment/saveCommentList",
@@ -88,6 +88,11 @@ watch(successPopUpStatus, () => {
   if (successPopUpStatus) {
     setTimeout(() => offSuccessPopUpModal(), 2000);
   }
+});
+
+// 이벤트 연결 끊기
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

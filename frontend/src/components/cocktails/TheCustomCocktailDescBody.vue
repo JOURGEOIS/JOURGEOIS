@@ -30,13 +30,16 @@
       <h1 class="title1">설명</h1>
       <p class="normal-paragraph">{{ description }}</p>
     </article>
+    <!-- 칵테일 재료 섹션 -->
+    <article class="cocktail-ingredients">
+      <h1 class="title1">재료</h1>
+      <p class="normal-paragraph">
+        {{ ingredientString }}
+      </p>
+    </article>
     <!-- 칵테일 레시피 섹션 -->
     <article class="cocktail-recipe">
       <h1 class="title1">제작</h1>
-      <h2 class="title2 ingredients-title">재료</h2>
-      <p class="normal-paragraph ingredients-description">
-        {{ ingredientString }}
-      </p>
       <div class="recipe-line" v-for="(txt, idx) in recipeList" :key="idx">
         <h2 class="title2">{{ idx + 1 }}단계</h2>
         <p class="normal-paragraph">{{ txt }}</p>

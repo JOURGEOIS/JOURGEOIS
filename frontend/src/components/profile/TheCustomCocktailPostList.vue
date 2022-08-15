@@ -32,7 +32,7 @@ const userCustomPostData = computed(
 // }
 
 // 인피니티 스크롤
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "profileDesc/getCurrentUserPostCustomData",
@@ -53,6 +53,7 @@ onBeforeMount(() => {
 // unmount될 때, 페이지와 리스트를 리셋한다.
 onUnmounted(() => {
   store.dispatch("profileDesc/resetCurrentUserPost");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

@@ -5,19 +5,19 @@
 </template>
 
 <script setup lang="ts">
-import TheReviewPostItem from '@/components/profile/TheReviewPostItem.vue';
-import { computed, onBeforeMount, onUnmounted } from '@vue/runtime-core';
-import { useRoute } from 'vue-router';
+import TheReviewPostItem from "@/components/profile/TheReviewPostItem.vue";
+import { computed, onBeforeMount, onUnmounted } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
 const store = useStore();
 
-const userReviewPostData = computed(() => 
-  store.getters["profileDesc/getCurrentUserPostReview"]
-)
+const userReviewPostData = computed(
+  () => store.getters["profileDesc/getCurrentUserPostReview"]
+);
 
 // 인피니티 스크롤
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "profileDesc/getCurrentUserPostReviewData",
@@ -38,6 +38,7 @@ onBeforeMount(() => {
 // unmount될 때, 페이지와 리스트를 리셋한다.
 onUnmounted(() => {
   store.dispatch("profileDesc/resetCurrentUserPost");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

@@ -27,7 +27,7 @@ const route = useRoute();
 const store = useStore();
 
 const feedId = route.params.feedId;
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "post/setLikedUsers",
@@ -60,6 +60,7 @@ onBeforeMount(() => {
 // 리셋
 onUnmounted(() => {
   store.dispatch("post/resetLikedUserData");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

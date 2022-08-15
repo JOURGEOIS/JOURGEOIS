@@ -73,7 +73,6 @@ const toggleShowDescription = () => {
 };
 // 더보기 클릭
 const clickMore = () => {
-  console.log(selectedCategory.value);
   router.push({
     name: "TheAllThemeCocktailView",
     params: { theme: selectedCategory.value },

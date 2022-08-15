@@ -42,17 +42,17 @@ const resetFilter = () => {
 };
 
 // * 뒤로가기 할 때 모달 내려가게 하기
-const getFilterStatus = computed(
-  () => store.getters["cocktailSearch/getFilterStatus"]
-);
+// const getFilterStatus = computed(
+//   () => store.getters["cocktailSearch/getFilterStatus"]
+// );
 
-onBeforeRouteLeave((to, from, next) => {
-  if (getFilterStatus.value) {
-    clickXIcon();
-  } else {
-    next();
-  }
-});
+// onBeforeRouteLeave((to, from, next) => {
+//   if (getFilterStatus.value) {
+//     clickXIcon();
+//   } else {
+//     next();
+//   }
+// });
 </script>
 
 <style scoped lang="scss">

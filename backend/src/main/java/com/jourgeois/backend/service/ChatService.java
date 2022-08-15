@@ -85,7 +85,7 @@ public class ChatService {
     //
     //    // 내가 읽었는지 여부 표시 -> 보낸 사람이 내가 아닌 메세지 중 가장 최근 메세지만 체크
     //    private Boolean isRead;
-    public boolean sendMessage(ChatMessageDTO chatMessage) throws NoSuchElementException, ExecutionException, InterruptedException {
+    public String sendMessage(ChatMessageDTO chatMessage) throws NoSuchElementException, ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         String chatRoomId = chatMessage.getChatRoomId();
         DocumentReference msg = null;
@@ -128,11 +128,21 @@ public class ChatService {
 
         System.out.println("메세지 전송 성공 : " + result.get().getUpdateTime());
 
-        return true;
+        return chatMessage.getChatRoomId();
     }
 
     // uid = 상대방 id
-    public List<ChatMessageResponseDTO> getChatMessages(Long uid, /*int startAfter,*/ String roomId) throws ExecutionException, InterruptedException, TimeoutException {
+    public List<ChatMessageResponseDTO> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
+        /*
+        찾아라!! 채팅방 ID!!
+         */
+        if(roomId.isEmpty()) {
+            roomId = getRoomId(uid, receiver);
+            if(roomId.isEmpty()){
+                return null;
+            }
+        }
+
         Firestore db = FirestoreClient.getFirestore();
         Query firstPage = db.collection(ROOT_CHAT_COLLECTION_NAME)
                 .document(roomId)
@@ -193,5 +203,23 @@ public class ChatService {
         // result.put("size", startAfter+chatRoomRefs.size());
 //        result.put("messages", chatMessageResponseDTOList);
         return chatMessageResponseDTOList;
+    }
+
+    private String getRoomId(Long uid, Long receiver) throws InterruptedException, ExecutionException {
+        String roomId = "";
+        Firestore db = FirestoreClient.getFirestore();
+        Query getChatRoomAll = db.collection(ROOT_CHAT_COLLECTION_NAME).whereArrayContains("users", uid);
+        ApiFuture<QuerySnapshot> result = getChatRoomAll.get();
+        List<QueryDocumentSnapshot> chatRoomRefs = result.get().getDocuments();
+
+        for(QueryDocumentSnapshot chatRoomRef : chatRoomRefs) {
+            List<Long> users = (List<Long>) chatRoomRef.get("users");
+            int opponentUserIdx = (users.indexOf(uid)^1);
+            if(users.get(opponentUserIdx).equals(receiver)) {
+                roomId = chatRoomRef.getId();
+                break;
+            }
+        }
+        return roomId;
     }
 }

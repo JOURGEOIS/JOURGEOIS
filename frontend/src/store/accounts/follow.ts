@@ -51,7 +51,7 @@ export const follow: Module<FollowState, RootState> = {
     SET_FOLLOWEE_USER_PAGE: (state, value) => {
       state.followeeUserPage = value
     },
-    RESET_LIKED_USER_DATA: (state) => {
+    RESET_FOLLOW_USER_DATA: (state) => {
       state.followerUsers = [];
       state.followerUserPage = 0;
       state.followeeUsers = [];
@@ -60,6 +60,10 @@ export const follow: Module<FollowState, RootState> = {
   },
 
   actions: {
+    resetFollowUserData: ({ commit }) => {
+      commit("RESET_FOLLOW_USER_DATA")
+    },
+
     // * 팔로우하기
     follow: ({ dispatch, rootGetters }, data: { uid: number }) => {
       axios({
@@ -125,13 +129,69 @@ export const follow: Module<FollowState, RootState> = {
     },
 
     // 팔로워 목록
-    followerList: ({ commit }, currentUserId) => {
-      axios({})
+    setFollowerList: ({ commit, dispatch, rootGetters, getters }, data) => {
+      console.log(data)
+      axios({
+        url: api.accounts.profileFollower(),
+        method: "GET",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          uid: data.userId,
+          page: getters.getFollowerUserPage,
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          commit("SET_FOLLOWER_USERS", res.data);
+          const page = getters.getFollowerUserPage;
+          commit("SET_FOLLOWER_USER_PAGE", page + 1);
+        })
+        .catch((err) => {
+          console.error(err.response)
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/setFollowerList",
+              params: data
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        })
     },
 
     // 팔로잉 목록
-    followeeList: ({ commit }, currentUserId) => {
-      axios({})
+    setFolloweeList: ({ commit, dispatch, rootGetters, getters }, data) => {
+      axios({
+        url: api.accounts.profileFollowee(),
+        method: "GET",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          uid: data.userId,
+          page: getters.getFolloweeUserPage,
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          commit("SET_FOLLOWEE_USERS", res.data);
+          const page = getters.getReviewCocktailPage;
+          commit("SET_FOLLOWEE_USERS_PAGE", page + 1);
+        })
+        .catch((err) => {
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/setFolloweeList",
+              params: data,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        })
     }
   },
 };

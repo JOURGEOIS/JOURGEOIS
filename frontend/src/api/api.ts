@@ -37,6 +37,8 @@ export default {
     profileBookmark: () => HOST + ACCOUNTS + PROFILE + "auth/bookmark",
     profileReview: () => HOST + ACCOUNTS + PROFILE + "auth/comment",
     profileModeSet: () => HOST + ACCOUNTS + PROFILE + "auth/profile-status",
+    profileFollower: () => HOST + ACCOUNTS + "auth/follower",
+    profileFollowee: () => HOST + ACCOUNTS + "auth/followee",
   },
   email: {
     emailCert: () => HOST + "email/cert",

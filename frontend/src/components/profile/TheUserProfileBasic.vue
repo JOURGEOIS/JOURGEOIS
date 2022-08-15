@@ -15,11 +15,11 @@
         <p>게시물</p>
         <p class="category-count">{{ postCnt }}</p>
       </div>
-      <div class="category">
+      <div class="category" @click="goFollower">
         <p>팔로워</p>
         <p class="category-count">{{ followerCnt }}</p>
       </div>
-      <div class="category">
+      <div class="category" @click="goFollowee">
         <p>팔로잉</p>
         <p class="category-count">{{ followingCnt }}</p>
       </div>
@@ -54,8 +54,9 @@
 <script setup lang="ts">
 import RoundImage from '@/components/basics/RoundImage.vue'
 import { computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+const router = useRouter()
 const route = useRoute()
 const store = useStore()
 
@@ -84,6 +85,14 @@ const privateNickname = () => {
   } else {
     return false
   }
+}
+
+const goFollower = () => {
+  router.push({ name: "TheFollowerListView" , params: { userId: uid.value }});
+}
+
+const goFollowee = () => {
+  router.push({ name: "TheFollowingListView" , params: { userId: uid.value }});
 }
 
 // 팔로우/팔로잉 텍스트

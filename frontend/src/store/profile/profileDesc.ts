@@ -26,8 +26,7 @@ export interface ProfileDescState {
   // 북마크
   currentUserBookmark: userBookmarkData[];
   currentUserBookmarkPage: number;
-  // 프로필 공개 여부
-  privateModeSet: number;
+
 }
 
 export const profileDesc: Module<ProfileDescState, RootState> = {
@@ -37,15 +36,15 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     currentTab: 0,
     currentUserData: {
       uid: 0,
-      email: "",
-      name: null,
-      nickname: "",
-      profileImg: "",
-      profileLink: null,
       introduce: "",
       followerCnt: 0,
       followingCnt: 0,
       postCnt: 0,
+      nickname: "",
+      isPrivate: 0,
+      profileImg: "",
+      email: "",
+      isFollowed: 0,
     },
 
     currentUserCommunity: [],
@@ -60,7 +59,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     currentUserBookmark: [],
     currentUserBookmarkPage: 0,
 
-    privateModeSet: 0,
   },
 
   getters: {
@@ -100,7 +98,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
 
     getPrivateModeSet: (state) => {
-      return state.privateModeSet;
+      return state.currentUserData.isPrivate;
     },
   },
 
@@ -162,7 +160,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
 
     SET_PRIVATE_MODE: (state, value: number) => {
-      state.privateModeSet = value;
+      state.currentUserData.isPrivate = value;
     },
   },
 
@@ -371,8 +369,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
 
     changePrivateModeSet: (
-      { commit, dispatch, rootGetters },
-      privateMode: number
+      { commit, dispatch, rootGetters }
     ) => {
       const uid = rootGetters["personalInfo/getUserInfoUserId"];
       axios({
@@ -393,9 +390,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/changePrivateModeSet",
-              params: {
-                privateMode,
-              },
+              params: {},
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }

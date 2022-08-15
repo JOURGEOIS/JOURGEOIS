@@ -5,7 +5,7 @@
     ></round-image>
     <div class="user-profile-nickname-icon">
       <p class="user-profile-nickname">{{ nickname }}</p>
-      <span class="material-icons-outlined">
+      <span class="material-icons-outlined" v-if="privateNickname()">
         lock
       </span>
     </div>
@@ -70,12 +70,22 @@ const postCnt = computed(() => userInfo.value.postCnt)
 const followerCnt = computed (() => userInfo.value.followerCnt)
 const followingCnt = computed (() => userInfo.value.followingCnt)
 
+const isPrivate = computed(() => userInfo.value.isPrivate)
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 const customCocktailInfo = computed(() => {
   return store.getters["customCocktailInfo/getCustomCocktailDetail"];
 });
 // const uid = computed(() => customCocktailInfo?.value?.followerDTO?.uid);
+
+// 계정 이름 텍스트
+const privateNickname = () => {
+  if (isPrivate.value === 1) {
+    return true
+  } else {
+    return false
+  }
+}
 
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => (isFollowed.value ? "팔로잉" : "팔로우"));
@@ -139,11 +149,12 @@ const clickFollowBtn = () => {
     @include flex-xy(space-between, flex-start);
     width: 100%;
     gap: 25px;
+    margin-top: 25px;
     .follow-btn {
-      width: 47%;
+      width: 48%;
       border: 1px solid $unchecked-color;
       border-radius: 1000px;
-      padding: 0.3em 3em;
+      padding: 0.5em 3em;
       @include flex-xy(center, flex-end);
       gap: 5px;
       @include shadow-feed;
@@ -155,10 +166,10 @@ const clickFollowBtn = () => {
       }
     }
     .chat-btn {
-      width: 47%;
+      width: 48%;
       border: 1px solid $unchecked-color;
       border-radius: 1000px;
-      padding: 0.3em 3em;
+      padding: 0.5em 3em;
       @include flex-xy(center, flex-end);
       gap: 5px;
       @include shadow-feed;

@@ -106,7 +106,7 @@ const noticeClick = () => {
 }
 
 .chat-icon {
-  color: $gray300;
+  color: $primary400;
 }
 .red-notice {
   color: $danger-color;

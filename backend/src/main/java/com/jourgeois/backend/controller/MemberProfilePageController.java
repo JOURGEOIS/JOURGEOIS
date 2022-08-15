@@ -25,11 +25,12 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth")
-    public ResponseEntity<?> readProfile(@RequestParam(value = "uid") Long uid){
+    public ResponseEntity<?> readProfile(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Map<String, String> result = memberProfilePageService.readMemberProfile(uid);
+            Long myUid = Long.valueOf((String) request.getAttribute("uid"));
+            Map<String, Object> result = memberProfilePageService.readMemberProfile(myUid, uid);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);
@@ -45,7 +46,7 @@ public class MemberProfilePageController {
 
         try {
             Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable, "post");
+            List<Map<String, Object>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable, "post");
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);
@@ -61,7 +62,7 @@ public class MemberProfilePageController {
 
         try {
             Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable,"cocktail");
+            List<Map<String, Object>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable,"cocktail");
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);
@@ -108,8 +109,8 @@ public class MemberProfilePageController {
     @PutMapping("/auth/profile-status")
     public ResponseEntity<?> switchPublicPrivate(HttpServletRequest request) {
         Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-        Boolean res = memberProfilePageService.switchPublicToPrivate(userId);
+        Integer isPrivate = memberProfilePageService.switchPublicToPrivate(userId);
 
-        return ResponseEntity.ok().body(res);
+        return ResponseEntity.ok().body(Map.of("isPrivate", isPrivate));
     }
 }

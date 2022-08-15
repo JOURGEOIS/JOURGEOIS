@@ -189,6 +189,13 @@ public class CocktailService {
     }
 
     public boolean checkUserBookmark(CocktailBookmarkId key){
+        try {
+            System.out.println("============================================================");
+            System.out.println(cocktailBookmarkRepository.findById(key).get().getCocktailId());
+            System.out.println("============================================================");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return cocktailBookmarkRepository.findById(key).isPresent();
     }
 

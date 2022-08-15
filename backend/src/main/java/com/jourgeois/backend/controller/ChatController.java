@@ -1,14 +1,14 @@
 package com.jourgeois.backend.controller;
 
+import com.google.cloud.Timestamp;
+import com.jourgeois.backend.api.dto.chat.ChatMessageDTO;
 import com.jourgeois.backend.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -25,11 +25,29 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @GetMapping("/test")
-    public String loadChatRoomTest(){
+    @GetMapping("/chatroom")
+    public ResponseEntity loadChatRoom(/*HttpServletRequest request*/){
         Map<String, Object> result = new HashMap<>();
         try {
-            chatService.loadChatRoom(123123L);
+//            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            Long uid = 16052L;
+            return new ResponseEntity(chatService.loadChatRoom(uid), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/message")
+    public String send(/*HttpServletRequest request,*/ @RequestBody ChatMessageDTO chatMessageDTO){
+        Map<String, Object> result = new HashMap<>();
+        try {
+//            Long myUid = Long.valueOf((String) request.getAttribute("uid"));
+            Long myUid = 21001L;
+            chatMessageDTO.setSender(myUid);
+            chatMessageDTO.setTimestamp(Timestamp.now());
+            chatMessageDTO.setIsRead(false);
+            chatService.sendMessage(chatMessageDTO);
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,13 +55,15 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/test2")
-    public ResponseEntity getChatMessages(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam("roomId") String roomId){
+    @GetMapping("/message")
+    public ResponseEntity getChatMessages(HttpServletRequest request, /*@RequestParam(value = "startAfter", defaultValue = "0") Integer startAfter,*/ @RequestParam("roomId") String roomId){
         // uid : /auth 추가해서 request.get("uid")로 받아서 넘겨주십시오.
         // page는 처음엔 0부터 시작이고 넘겨줄 때 size로 값을 넘겨주니, page로 값을 받으면 됨
         // roomId 가 채팅방 key
         try {
-            return new ResponseEntity(chatService.getChatMessages(1L, page,"ndyaTotGrzzROpvsn1NV"), HttpStatus.OK);
+//            Long myUid = Long.valueOf((String)request.getAttribute("uid"));
+            Long myUid = 16052L;
+            return new ResponseEntity(chatService.getChatMessages(myUid, /* startAfter, */ roomId), HttpStatus.OK);
         } catch (ExecutionException | TimeoutException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

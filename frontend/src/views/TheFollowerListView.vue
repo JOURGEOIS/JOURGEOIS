@@ -26,8 +26,7 @@ const route = useRoute();
 const store = useStore();
 
 const followers = computed(() => store.getters["follow/getFollowerUsers"])
-const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
-const uid = computed(() => userInfo.value.uid)
+const uid = computed(() => route.params.userId)
 
 const handleScroll = (event: Event) => {
   const data = {

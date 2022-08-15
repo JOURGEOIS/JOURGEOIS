@@ -134,6 +134,10 @@ const successVisibility = computed(() => {
     }
 
     .back-icon {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translate(0, -55%);
       user-select: none;
     }
   }

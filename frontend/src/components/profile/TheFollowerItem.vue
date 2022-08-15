@@ -90,6 +90,7 @@ const userImage = {
 <style scoped lang="scss">
 .the-follower-item {
   @include flex-xy(space-between, center);
+  width: 100%;
   padding: 10px;
   gap: 10px;
   border-bottom: 1px solid $seperate-color;

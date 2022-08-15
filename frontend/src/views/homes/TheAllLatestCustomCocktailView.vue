@@ -41,7 +41,7 @@ const clickCocktail = (item: CarouselCocktail) => {
   store.dispatch("carousel/clickShowMoreItem", item);
 };
 
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "carousel/setAllLatestCustomCocktails",
@@ -64,6 +64,7 @@ onBeforeMount(() => {
 
 onUnmounted(() => {
   store.dispatch("carousel/removeAllLatestCustomCocktails");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

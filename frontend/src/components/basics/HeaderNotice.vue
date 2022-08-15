@@ -4,10 +4,16 @@
       class="main-logo"
       src="https://user-images.githubusercontent.com/86189596/184537312-81ae4cbf-b7af-494a-86a8-f6057bfa0820.png"
       alt=""
+      @click="clickHome"
     />
-    <button class="notice-icon" @click="noticeClick">
-      <span class="material-icons" :class="noticeColor"> notifications </span>
-    </button>
+    <div class="notice-header-icon">
+      <button class="notice-icon">
+        <span class="material-icons chat-icon"> mail </span>
+      </button>
+      <button class="notice-icon" @click="noticeClick">
+        <span class="material-icons" :class="noticeColor"> notifications </span>
+      </button>
+    </div>
   </header>
 </template>
 
@@ -15,6 +21,7 @@
 import { useStore } from "vuex";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
+import { clickHome } from "../../functions/clickEvent";
 const router = useRouter();
 const store = useStore();
 
@@ -56,31 +63,26 @@ const noticeClick = () => {
     padding: 12px 20%;
   }
 
-  .material-icons {
-    padding: 0;
-    align-self: center;
-    // margin-top: 5px;
-    @include font($fs-title, $fw-thin);
+  .notice-header-icon {
+    @include flex-center;
+    gap: 10px;
+    margin-top: 5px;
 
-    @media #{$tablet} {
-      font-size: $fs-xl;
+    .material-icons {
+      padding: 0;
+      align-self: center;
       // margin-top: 5px;
-    }
+      @include font($fs-title, $fw-thin);
 
-    @media #{$pc} {
-    }
-    x &:hover {
-      cursor: pointer;
-    }
-  }
+      @media #{$tablet} {
+        font-size: $fs-xl;
+      }
 
-  .header-content {
-    @include font($fs-title, $fw-medium);
-    text-align: center;
-    flex-grow: 1;
-
-    @media #{$tablet} {
-      font-size: $fs-xl;
+      @media #{$pc} {
+      }
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 
@@ -95,7 +97,6 @@ const noticeClick = () => {
     .material-icons {
       padding: 0;
       align-self: center;
-      // margin-top: 5px;
       font-size: 25px;
     }
     @media #{$tablet} {
@@ -104,6 +105,9 @@ const noticeClick = () => {
   }
 }
 
+.chat-icon {
+  color: $gray300;
+}
 .red-notice {
   color: $danger-color;
 }

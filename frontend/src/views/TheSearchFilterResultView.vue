@@ -51,7 +51,7 @@ const clickCocktail = (item: Cocktail) => {
 };
 
 // 스크롤 함수
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "searchResult/setSearchFilter",
@@ -77,6 +77,7 @@ onBeforeMount(() => {
 // 떠날 때, 정보 제거
 onUnmounted(() => {
   store.dispatch("searchResult/removeSearchFilter");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

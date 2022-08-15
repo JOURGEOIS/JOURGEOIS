@@ -30,7 +30,7 @@ const store = useStore();
 store.dispatch("navbar/setNavIconStatus", 3);
 
 const feedId = route.params.feedId;
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "post/setLikedUsers",
@@ -63,6 +63,7 @@ onBeforeMount(() => {
 // 리셋
 onUnmounted(() => {
   store.dispatch("post/resetLikedUserData");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

@@ -19,7 +19,7 @@ import { onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "notice/getNoticeList",

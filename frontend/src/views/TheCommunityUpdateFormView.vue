@@ -1,14 +1,12 @@
 <template>
   <div class="the-community-form-view">
     <!-- 헤더 불러오기 -->
-    <header-basic
-      :prev="true"
-      :success="true"
+    <header-success
       formId="the-community-update-form"
       @prevClicked="$router.go(-1)"
     >
       글수정
-    </header-basic>
+    </header-success>
     <section class="top-view">
       <!-- 폼 풀러오기 -->
       <the-community-update-form
@@ -31,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import HeaderSuccess from "@/components/basics/HeaderSuccess.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import TheCommunityUpdateForm from "@/components/feeds/TheCommunityUpdateForm.vue";

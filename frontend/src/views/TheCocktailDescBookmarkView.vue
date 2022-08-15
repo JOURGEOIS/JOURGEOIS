@@ -42,7 +42,7 @@ const bookMarkUserList = computed(
 );
 
 // 인피니티 스크롤
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "cocktailDesc/fetchBookMarkUserList",
@@ -62,6 +62,7 @@ onBeforeMount(() => {
 // 리스트 리셋
 onUnmounted(() => {
   store.dispatch("cocktailDesc/resetBookMarkUserList");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

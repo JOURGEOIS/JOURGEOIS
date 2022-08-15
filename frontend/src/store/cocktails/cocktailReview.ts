@@ -68,6 +68,12 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
   },
 
   actions: {
+    // 후기 리셋
+    resetCocktailReview: ({ commit }) => {
+      commit("SET_REVIEW_COCKTAIL_PAGE", 0);
+      commit("RESET_CURRENT_COCKTAIL_REVIEW");
+    },
+
     // 후기 불러오기
     getCocktailReview: ({ commit, getters }, cocktailId: number) => {
       axios({

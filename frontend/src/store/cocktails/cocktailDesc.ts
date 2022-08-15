@@ -131,6 +131,11 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
       commit("SET_CURRENT_TAB", value);
     },
 
+    // db리셋
+    resetCocktailDb: ({ commit }) => {
+      commit("SET_CURRENT_COCKTAIL_DATA", {});
+    },
+
     // 칵테일 정보 불러오기
     getCocktailDb: ({ rootGetters, commit }, id: number) => {
       const uid = rootGetters["personalInfo/getUserInfoUserId"];

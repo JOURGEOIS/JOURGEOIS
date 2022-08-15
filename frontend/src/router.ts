@@ -76,6 +76,20 @@ const routes: any[] = [
     component: () => import("@/views/TheUserProfilePrivateModeView.vue"),
   },
 
+  // 팔로워 리스트 보기
+  {
+    path: "/user/follower/:userId",
+    name: "TheFollowerListView",
+    component: () => import("@/views/TheFollowerListView.vue")
+  },
+
+  // 팔로잉 리스트 보기
+  {
+    path: "/user/followee/:userId",
+    name: "TheFollowingListView",
+    component: () => import("@/views/TheFollowingListView.vue")
+  },
+
   // 칵테일 검색 페이지
   {
     path: "/cocktail/search",

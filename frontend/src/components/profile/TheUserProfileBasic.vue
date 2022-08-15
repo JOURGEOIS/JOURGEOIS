@@ -76,7 +76,6 @@ const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 const customCocktailInfo = computed(() => {
   return store.getters["customCocktailInfo/getCustomCocktailDetail"];
 });
-// const uid = computed(() => customCocktailInfo?.value?.followerDTO?.uid);
 
 // 계정 이름 텍스트
 const privateNickname = () => {

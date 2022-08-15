@@ -380,7 +380,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          const privateMode = res.data.isPublic;
+          const privateMode = res.data.isPrivate;
           commit("SET_PRIVATE_MODE", privateMode);
           // dispatch("personalInfo/savePrivateModeSet", privateMode)
         })

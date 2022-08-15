@@ -108,5 +108,6 @@ export default {
 
   chats: {
     chatRoomList: () => HOST + CHAT + "chatroom",
+    chatLogs: () => HOST + CHAT + "message",
   },
 };

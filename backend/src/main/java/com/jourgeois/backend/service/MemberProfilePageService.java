@@ -49,13 +49,13 @@ public class MemberProfilePageService {
         res.put("followerCnt", data.getFollowerCnt().toString());
         res.put("followingCnt", data.getFollowingCnt().toString());
         res.put("postCnt", data.getPostCnt().toString());
-        res.put("isPrivate", data.getIsPrivate().toString());
+        res.put("isPrivate", data.getIsPrivate());
         res.put("isFollowed", myUid.equals(uid) ? -1 : data.getIsFollowed());
         return res;
     }
 
-    public List<Map<String, String>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
-        List<Map<String, String>> resArr = new ArrayList<>();
+    public List<Map<String, Object>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
+        List<Map<String, Object>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
         if(member.getIsPrivate().equals("1") && !member.getUid().equals(userId)){
             return resArr;
@@ -63,7 +63,7 @@ public class MemberProfilePageService {
 
 
         postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType,pageable).forEach(data -> {
-            Map<String, String> res = new HashMap<>();
+            Map<String, Object> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", S3Util.s3urlFormatter(data.getProfileImg()));
             res.put("createTime", data.getCreateTime().toString());
@@ -121,8 +121,8 @@ public class MemberProfilePageService {
     public Integer switchPublicToPrivate(Long uid){
         try {
             Member m = memberRepository.findById(uid).orElseThrow();
-            Integer isPrivate = Integer.parseInt(m.getIsPrivate()) ^ 1;
-            m.setIsPrivate(isPrivate.toString());
+            Integer isPrivate = m.getIsPrivate() ^ 1;
+            m.setIsPrivate(isPrivate);
             memberRepository.flush();
 
             return isPrivate;

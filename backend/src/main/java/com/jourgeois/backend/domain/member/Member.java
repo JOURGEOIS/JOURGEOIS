@@ -37,7 +37,7 @@ public class Member {
     private java.util.Date creationDate;
     private String roles = "ROLE_USER";
     @Column(name = "is_private")
-    private String isPrivate = "0";
+    private Integer isPrivate = 0;
     @Column(name = "sso_id")
     private String SSOId;
 

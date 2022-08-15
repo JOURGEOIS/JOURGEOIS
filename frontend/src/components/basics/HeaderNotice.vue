@@ -7,7 +7,7 @@
       @click="clickHome"
     />
     <div class="notice-header-icon">
-      <button class="notice-icon">
+      <button class="notice-icon" @click="goChat">
         <span class="material-icons chat-icon"> mail </span>
       </button>
       <button class="notice-icon" @click="noticeClick">
@@ -37,6 +37,10 @@ const noticeColor = computed(() => {
 
 const noticeClick = () => {
   router.push({ name: "TheNoticeView" });
+};
+
+const goChat = () => {
+  router.push({ name: "TheChatRoomListView" });
 };
 </script>
 

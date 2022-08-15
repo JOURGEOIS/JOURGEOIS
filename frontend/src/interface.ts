@@ -208,3 +208,24 @@ export interface userBookmarkData {
   category: string;
   nameKR: string;
 }
+
+export interface ChatRoom {
+  chatRoomId: number;
+  opponent: {
+    uid: number;
+    img: string;
+    nickname: string;
+  };
+  lastMessage: {
+    chatRoomId: string;
+    sender: number;
+    receiver: number;
+    message: string;
+    isRead: boolean;
+    timestamp: {
+      seconds: number;
+      nanos: number;
+    };
+  };
+  hasNewMessage: boolean;
+}

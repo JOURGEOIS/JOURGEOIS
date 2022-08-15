@@ -133,15 +133,15 @@ export const comment: Module<Comment, RootState> = {
     // 댓글 개수 갱신
     setCommentCount: ({ commit, getters, rootGetters }, { count, postId }) => {
       commit("SET_COMMENT_COUNT", count);
-      // 뉴스피드 댓글 개수 갱신
-      console.log(postId);
-      const newsFeedListData = rootGetters["newsFeed/getNewsFeedListData"];
-      console.log(newsFeedListData);
-      newsFeedListData.map((feed: any) => {
-        if (feed.postId === postId) {
-          feed.reviewCount = getters["getCommentCount"];
-        }
-      });
+      if (postId) {
+        // 뉴스피드 댓글 개수 갱신
+        const newsFeedListData = rootGetters["newsFeed/getNewsFeedListData"];
+        newsFeedListData.map((feed: any) => {
+          if (feed.postId === postId) {
+            feed.reviewCount = getters["getCommentCount"];
+          }
+        });
+      }
     },
 
     // 리스트와 페이지 리셋

@@ -1,17 +1,21 @@
 <template>
   <article class="list-item-custom-cocktail">
     <div class="item-header">
-      <div class="user-part">
-        <div class="user-info">
-          <round-image :round-image="profileImage"></round-image>
-          <div class="user-nickname">{{ nickname }}</div>
-        </div>
-        <div class="created-at">{{ createTimeDelta }}</div>
+      <div class="left">
+        <round-image :round-image="profileImage"></round-image>
       </div>
-      <div class="cocktail-liked">
-        <span class="material-icons unliked" v-if="!ilike"> favorite </span>
-        <span class="material-icons liked" v-if="ilike"> favorite </span>
-        {{ like }}
+      <div class="middle">
+        <div class="middle1">
+          <div class="user-nickname">{{ nickname }}</div>
+          <div class="cocktail-liked">
+            <span class="material-icons unliked" v-if="!ilike"> favorite </span>
+            <span class="material-icons liked" v-if="ilike"> favorite </span>
+            {{ like }}
+          </div>
+        </div>
+        <div class="middle2">
+          <div class="created-at">{{ createTimeDelta }}</div>
+        </div>
       </div>
     </div>
     <div class="item-content-container">
@@ -52,7 +56,7 @@ const ingredientsString = ingredients.join(", ");
 // 이미지
 const profileImage = reactive({
   image: profileImg,
-  width: "30px",
+  width: "40px",
 });
 </script>
 
@@ -73,34 +77,34 @@ const profileImage = reactive({
 
   @include shadow-feed;
   .item-header {
-    @include flex-xy(space-between, center);
+    @include flex-xy(flex-start, center);
     gap: 10px;
     margin-bottom: 5px;
 
-    .user-part {
-      @include flex-xy(flex-start, center);
-      gap: 10px;
-
-      .user-info {
-        @include flex-xy(flex-start, center);
-        gap: 10px;
-
+    .middle {
+      @include flex(column);
+      flex-grow: 1;
+      .middle1 {
+        @include flex-xy(space-between, center);
         .user-nickname {
-          @include font(17px);
+          @include font(15px);
+        }
+        .cocktail-liked {
+          @include flex-xy(flex-start, flex-end);
+          @include font-size-sub(13px);
+          gap: 4px;
+
+          .material-icons {
+            @include font-size-red(15px);
+          }
         }
       }
-      .created-at {
-        @include font-size-placeholder(13px);
-      }
-    }
-
-    .cocktail-liked {
-      @include flex-xy(flex-start, center);
-      @include font-size-sub(13px);
-      gap: 4px;
-
-      .material-icons {
-        @include font(15px);
+      .middle2 {
+        @include flex;
+        gap: 10px;
+        .created-at {
+          @include font-size-placeholder(13px);
+        }
       }
     }
   }

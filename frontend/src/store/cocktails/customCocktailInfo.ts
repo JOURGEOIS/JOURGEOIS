@@ -159,7 +159,11 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
       })
         .then((res) => {
           const reviewCount = res.data.customCocktail.reviewCount;
-          dispatch("comment/setCommentCount", reviewCount, { root: true });
+          dispatch(
+            "comment/setCommentCount",
+            { count: reviewCount },
+            { root: true }
+          );
           commit("SET_CUSTOM_COCKTAIL_DETAIL", res.data);
         })
         .catch((err) => {

@@ -50,7 +50,7 @@ public class MemberProfilePageService {
         res.put("followerCnt", data.getFollowerCnt().toString());
         res.put("followingCnt", data.getFollowingCnt().toString());
         res.put("postCnt", data.getPostCnt().toString());
-        res.put("isPublic", data.getIsPublic().toString());
+        res.put("isPrivate", data.getIsPrivate().toString());
 
         return res;
     }
@@ -58,7 +58,7 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPublic().equals("0") && !member.getUid().equals(userId)){
+        if(member.getIsPrivate().equals("0") && !member.getUid().equals(userId)){
             return resArr;
         }
 
@@ -103,7 +103,7 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberCocktailComment(Long userId, Long uid, Pageable pageable){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPublic().equals("0") && !member.getUid().equals(userId)){
+        if(member.getIsPrivate().equals("0") && !member.getUid().equals(userId)){
             return resArr;
         }
 
@@ -122,11 +122,11 @@ public class MemberProfilePageService {
     public Integer switchPublicToPrivate(Long uid){
         try {
             Member m = memberRepository.findById(uid).orElseThrow();
-            Integer isPublic = Integer.parseInt(m.getIsPublic()) ^ 1;
-            m.setIsPublic(isPublic.toString());
+            Integer isPrivate = Integer.parseInt(m.getIsPrivate()) ^ 1;
+            m.setIsPrivate(isPrivate.toString());
             memberRepository.flush();
 
-            return isPublic;
+            return isPrivate;
         } catch(Exception e){
             return -1;
         }

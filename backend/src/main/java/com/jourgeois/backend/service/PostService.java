@@ -301,7 +301,7 @@ public class PostService {
         postBookmarkRepository.findByPostId(new Post(p_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
 
-            if(member.getIsPublic().equals("1")){
+            if(member.getIsPrivate().equals("1")){
                 FollowPK key = new FollowPK(uid, member.getUid());
                 Integer status = followRepository.findById(key).isPresent() ? 1 : 0;
                 if(uid.equals(member.getUid())) {

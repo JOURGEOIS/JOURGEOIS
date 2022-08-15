@@ -273,6 +273,13 @@ const routes: any[] = [
     name: "TheNoticeView",
     component: () => import("@/views/TheNoticeView.vue"),
   },
+
+  // ! 채팅
+  {
+    path: "/chats/list",
+    name: "TheChatRoomListView",
+    component: () => import("@/views/chats/TheChatRoomListView.vue"),
+  },
 ];
 
 const router = createRouter({

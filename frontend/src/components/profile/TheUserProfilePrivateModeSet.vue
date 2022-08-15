@@ -41,7 +41,9 @@ const isActivea = computed(() =>
 const isActive = ref(isActivea.value)
 
 const toggleClick = () => {
+  console.log(isActive.value)
   isActive.value = !isActive.value
+  console.log(isActive.value)
   store.dispatch("profileDesc/changePrivateModeSet", isActive.value)
 }
 

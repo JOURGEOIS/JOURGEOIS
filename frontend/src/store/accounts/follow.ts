@@ -73,6 +73,7 @@ export const follow: Module<FollowState, RootState> = {
         },
       })
         .then((res) => {
+          console.log(res.data)
           if (res.data.success) {
           } else {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });

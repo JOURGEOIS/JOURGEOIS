@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useStore } from 'vuex'
-const store = useStore()
+import { useStore } from "vuex";
+const store = useStore();
 
 const props = defineProps<{
   prev: boolean;
@@ -43,8 +43,7 @@ const clicked = () => {
 const clickSet = () => {
   store.dispatch("settings/changeSettingsModalClass", "start");
   store.dispatch("settings/toggleSettingsModal", true);
-}
-
+};
 </script>
 
 <style scoped lang="scss">
@@ -97,7 +96,7 @@ const clickSet = () => {
         font-size: $fs-xl;
       }
     }
-    .material-icons-outlined{
+    .material-icons-outlined {
       padding: 0;
       align-self: center;
       margin-top: 5px;
@@ -115,6 +114,10 @@ const clickSet = () => {
       }
     }
     .back-icon {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translate(0, -55%);
       user-select: none;
     }
   }

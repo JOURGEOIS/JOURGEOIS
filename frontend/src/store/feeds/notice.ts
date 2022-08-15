@@ -5,7 +5,14 @@ import axios from "axios";
 import api from "../../api/api";
 import router from "../../router";
 import { Notice } from "../../interface";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  getDocs,
+  limit,
+} from "firebase/firestore";
 
 export interface NoticeState {
   noticeStatus: boolean;
@@ -78,34 +85,57 @@ export const notice: Module<NoticeState, RootState> = {
     },
 
     // 알림이 있는지 확인한다.
-    checkNotice: ({ rootGetters, commit }) => {
+    checkNotice: ({ rootGetters, dispatch, commit }) => {
       const uid = rootGetters["personalInfo/getUserInfoUserId"];
+      const halfDay = new Date(new Date().setDate(new Date().getDate() - 15)); // 15일
       const q = query(
         collection(database, `jourgeois/${uid}/notification`),
-        orderBy("timestamp", "desc")
+        where("timestamp", ">", halfDay)
       );
       onSnapshot(q, (snapshot) => {
-        // 알림이 없는 경우,
         if (snapshot.empty) {
-          console.log("알림 없음ㅋ");
-          commit("SET_NOTICE_STATUS", false);
+          dispatch("checkUnReadNotice");
           return;
         }
 
-        // 알림이 있는 경우
-        console.log("알림 있음");
         const docs = snapshot.docChanges();
         for (let i = 0; i < docs.length; i++) {
           if (docs[i].type === "added") {
-            commit("SET_NOTICE_STATUS", true);
+            dispatch("checkUnReadNotice");
+            break;
+          } else if (docs[i].type === "modified") {
+            dispatch("checkUnReadNotice");
             break;
           }
         }
       });
     },
 
+    // 15일 이내의 알림 중 읽지 않은 알림이 있는지 다시 확인
+    checkUnReadNotice: async ({ commit, rootGetters }) => {
+      const uid = rootGetters["personalInfo/getUserInfoUserId"];
+      const halfDay = new Date(new Date().setDate(new Date().getDate() - 15)); // 15일
+      const q = query(
+        collection(database, `jourgeois/${uid}/notification`),
+        where("timestamp", ">", halfDay),
+        where("isRead", "==", false),
+        limit(1)
+      );
+      const querySnapshot = await getDocs(q);
+
+      // 읽지 않은 알림이 없으면
+      if (querySnapshot.empty) {
+        commit("SET_NOTICE_STATUS", false);
+      }
+      // 읽지 않은 알림이 있으면
+      else {
+        commit("SET_NOTICE_STATUS", true);
+      }
+    },
+
     // 알림 리스트를 가져온다.
     getNoticeList: ({ rootGetters, commit, getters, dispatch }) => {
+      dispatch("modal/toggleLoadingStatus", true, { root: true });
       const page = getters["getNoticeListPage"];
       axios({
         url: api.notice.getNoticeList(),
@@ -119,14 +149,16 @@ export const notice: Module<NoticeState, RootState> = {
       })
         .then((response) => {
           if (!response.data.list) {
+            dispatch("modal/toggleLoadingStatus", false, { root: true });
             return;
           }
-
           // 데이터 추가
           commit("ADD_NOTICE_LIST", response.data.list);
           commit("SET_NOTICE_LIST_PAGE", page + 10);
+          dispatch("modal/toggleLoadingStatus", false, { root: true });
         })
         .catch((error) => {
+          dispatch("modal/toggleLoadingStatus", false, { root: true });
           if (error.response.status !== 401) {
             console.error(error);
           } else {
@@ -156,8 +188,10 @@ export const notice: Module<NoticeState, RootState> = {
         .then(() => {
           // 팔로우 알림일 경우, 해당 유저의 프로필 페이지로 이동한다.
           if (type === "FOLLOW") {
-            router.push({ name: 'TheUserProfileView', params: { userId: uid } })
-            
+            router.push({
+              name: "TheUserProfileView",
+              params: { userId: uid },
+            });
           }
           // 댓글, 좋아요 알림일 경우 해당 글로 이동한다.
           else {

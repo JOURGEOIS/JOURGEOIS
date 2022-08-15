@@ -27,6 +27,7 @@ import {calcDateDelta2} from "../../functions/date"
 import roundImage from "@/components/basics/RoundImage.vue";
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router';
+// import {toDate} from ""
 const store = useStore();
 const router = useRouter();
 
@@ -60,10 +61,8 @@ const timestamp = computed(()=> {
 
 // 알림 시간
 const time = computed(() => {
-  return new Date(
-      timestamp.value.seconds * 1000 + timestamp.value.nanoseconds / 1000000,
-    )
-  // return calcDateDelta2(timestamp.value.toDate())  
+  const t = new Date(timestamp.value.seconds * 1000).toString()
+  return calcDateDelta2(t)
 });
 
 

@@ -25,11 +25,12 @@ public class MemberProfilePageController {
     }
 
     @GetMapping("/auth")
-    public ResponseEntity<?> readProfile(@RequestParam(value = "uid") Long uid){
+    public ResponseEntity<?> readProfile(HttpServletRequest request, @RequestParam(value = "uid") Long uid){
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Map<String, String> result = memberProfilePageService.readMemberProfile(uid);
+            Long myUid = Long.valueOf((String) request.getAttribute("uid"));
+            Map<String, Object> result = memberProfilePageService.readMemberProfile(myUid, uid);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);

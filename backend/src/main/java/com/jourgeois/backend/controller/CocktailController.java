@@ -114,50 +114,70 @@ public class CocktailController {
         }
     }
 
-    @PostMapping(value = "/comment")
-    public ResponseEntity insertReview(@RequestBody CocktailCommentDTO cocktailCommentDTO) {
+    @PostMapping(value = "/auth/comment")
+    public ResponseEntity insertReview(HttpServletRequest request, @RequestBody CocktailCommentDTO cocktailCommentDTO) {
         // uId, cocktailId, review  정보 받음
-        System.out.println(cocktailCommentDTO.toString());
         try {
-            boolean res = cocktailService.createComment(cocktailCommentDTO);
-            return ResponseEntity.ok().body(Map.of("success", "true"));
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            if(uid != null) {
+                boolean res = cocktailService.createComment(cocktailCommentDTO);
+                return ResponseEntity.ok().body(Map.of("success", res));
+            } else {
+                return ResponseEntity.badRequest().body(Map.of("success", "Authorization is null"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("success", "false"));
         }
     }
 
-    @GetMapping(value = "/comment")
-    public ResponseEntity selectReview(@RequestParam(value = "cocktailId") Long cocktailId,
+    @GetMapping(value = "/auth/comment")
+    public ResponseEntity selectReview(HttpServletRequest request,
+                                       @RequestParam(value = "cocktailId") Long cocktailId,
                                        @PageableDefault(size=10, page = 0) Pageable pageable) {
         // cocktailId, page, page size 정보 받음
         // criteria -> modifiedDate (등록/수정 날짜 기준), likes(좋아요 기준)
         try {
-            List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId, pageable);
-            return ResponseEntity.ok().body(cc);
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            if(uid != null){
+                List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId, pageable);
+                return ResponseEntity.ok().body(cc);
+            } else {
+                return ResponseEntity.badRequest().body(Map.of("success", "Authorization is null"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("result", "none"));
         }
     }
 
-    @PutMapping(value = "/comment")
-    public ResponseEntity updateReview(@RequestBody CocktailCommentDTO cocktailCommentDTO) {
+    @PutMapping(value = "/auth/comment")
+    public ResponseEntity updateReview(HttpServletRequest request, @RequestBody CocktailCommentDTO cocktailCommentDTO) {
         // commentId, comment 받음
         try {
-            cocktailService.updateComment(cocktailCommentDTO);
-            return ResponseEntity.ok().body(Map.of("success", "true"));
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            if(uid != null){
+                cocktailService.updateComment(cocktailCommentDTO);
+                return ResponseEntity.ok().body(Map.of("success", "true"));
+            } else {
+                return ResponseEntity.badRequest().body(Map.of("success", "Authorization is null"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("success", "false"));
         }
     }
 
-    @DeleteMapping(value = "/comment")
-    public ResponseEntity deleteReview(@RequestBody CocktailCommentDTO cDTO) {
+    @DeleteMapping(value = "/auth/comment")
+    public ResponseEntity deleteReview(HttpServletRequest request, @RequestBody CocktailCommentDTO cDTO) {
         try {
-            boolean res = cocktailService.deleteComment(cDTO.getUserId(), cDTO.getCommentId());
-            return ResponseEntity.ok().body(Map.of("success", res));
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+            if(uid != null){
+                boolean res = cocktailService.deleteComment(cDTO.getUserId(), cDTO.getCommentId());
+                return ResponseEntity.ok().body(Map.of("success", res));
+            } else {
+            return ResponseEntity.badRequest().body(Map.of("success", "Authorization is null"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("success", "false"));

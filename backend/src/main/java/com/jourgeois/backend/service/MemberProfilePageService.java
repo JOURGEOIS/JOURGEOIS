@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MemberProfilePageService {
@@ -38,10 +35,12 @@ public class MemberProfilePageService {
         this.s3Url = s3Url;
     }
 
-    public Map<String, String> readMemberProfile(Long uid){
-        MemberVO data = memberRepository.findMemberProfile(uid).orElseThrow();
+    public Map<String, Object> readMemberProfile(Long myUid, Long uid){
+        System.out.println(myUid + " " + uid);
+        MemberVO data = memberRepository.findMemberProfile(myUid, uid).orElseThrow();
 
-        Map<String, String> res = new HashMap<>();
+        System.out.println(data.getIsFollowed());
+        Map<String, Object> res = new HashMap<>();
         res.put("uid", data.getUid().toString());
         res.put("email", data.getEmail());
         res.put("nickname", data.getNickname());
@@ -51,14 +50,14 @@ public class MemberProfilePageService {
         res.put("followingCnt", data.getFollowingCnt().toString());
         res.put("postCnt", data.getPostCnt().toString());
         res.put("isPrivate", data.getIsPrivate().toString());
-
+        res.put("isFollowed", myUid.equals(uid) ? -1 : data.getIsFollowed());
         return res;
     }
 
     public List<Map<String, String>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPrivate().equals("0") && !member.getUid().equals(userId)){
+        if(member.getIsPrivate().equals("1") && !member.getUid().equals(userId)){
             return resArr;
         }
 
@@ -103,7 +102,7 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberCocktailComment(Long userId, Long uid, Pageable pageable){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPrivate().equals("0") && !member.getUid().equals(userId)){
+        if(member.getIsPrivate().equals("1") && !member.getUid().equals(userId)){
             return resArr;
         }
 

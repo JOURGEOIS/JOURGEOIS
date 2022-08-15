@@ -21,6 +21,9 @@ public interface MemberVO {
     Integer getIsPrivate();
     Integer getLikes();
     Integer getIlike();
+
+    Integer getIsFollowed();
+
     Long getPostId();
     String getBaseCocktail();
     String getTitle();

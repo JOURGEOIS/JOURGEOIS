@@ -24,7 +24,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m.uid AS uid, m.nickname AS nickname, m.profileImg AS profileImg, m.isPrivate AS isPrivate, m.introduce AS introduce, m.email AS email, count(m) AS postCnt, " +
             "(SELECT cc.title FROM CustomCocktail AS cc WHERE p.id = cc.id) AS title, " +
             "(select COUNT(ff) FROM Follow AS ff WHERE ff.from.uid = :id) AS followingCnt, " +
-            "(SELECT COUNT(ft) FROM Follow AS ft WHERE ft.to.uid = :id) AS followerCnt " +
+            "(SELECT COUNT(ft) FROM Follow AS ft WHERE ft.to.uid = :id) AS followerCnt, " +
+            "(SELECT COUNT(f) FROM Follow AS f WHERE f.from.uid = :myUid AND f.to.uid = :id) AS isFollowed " +
             "FROM Member AS m JOIN Post AS p ON m.uid = p.member.uid AND p.d_type <> 'cocktail_awards' WHERE m.uid = :id")
-    Optional<MemberVO> findMemberProfile(Long id);
+    Optional<MemberVO> findMemberProfile(Long myUid, Long id);
 }

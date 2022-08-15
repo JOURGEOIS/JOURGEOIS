@@ -31,18 +31,22 @@ const router = useRouter();
 
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
+const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
+const isPrivate = computed(() => store.getters['profileDesc/getPrivateModeSet'])
+
 // button-style
 const buttonColor = computed(() => "primary")
 
-const isActivea = computed(() => 
-  store.getters["profileDesc/getPrivateModeSet"]
-)
-
-const isActive = ref(isActivea.value)
+const isActive = computed(() => {
+  if (isPrivate.value === 1) {
+    return true
+  } else {
+    return false
+  }
+})
 
 const toggleClick = () => {
-  isActive.value = !isActive.value
-  store.dispatch("profileDesc/changePrivateModeSet", isActive.value)
+  store.dispatch("profileDesc/changePrivateModeSet")
 }
 
 const submit = () => {

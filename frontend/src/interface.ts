@@ -155,15 +155,15 @@ export interface HotKeywords {
 // 프로필페이지 유저 정보
 export interface userProfileData {
   uid: number;
-  email: string;
-  name: null;
-  nickname: string;
-  profileImg: string;
-  profileLink: null;
   introduce: string;
   followerCnt: number;
   followingCnt: number;
   postCnt: number;
+  nickname: string;
+  isPrivate: number;
+  profileImg: string;
+  email: string;
+  isFollowed: number;
 }
 
 // 프로필 유저-게시물 정보(일반)
@@ -195,11 +195,8 @@ export interface userCustomPostData {
 
 // 프로필 유저-후기 정보
 export interface userPostReviewData {
-  img: string;
   cocktailId: number;
   comment: string;
-  tag: string;
-  category: string;
   nameKR: string;
 }
 

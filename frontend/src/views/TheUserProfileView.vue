@@ -19,15 +19,12 @@
         </div>
         <div class="user-profile-tab-custom" :class="`index-${index}`">
           <p @click="clickCustomCocktailTab">커스텀</p>
-          <!-- <span>99+</span> -->
         </div>
         <div class="user-profile-tab-review" :class="`index-${index}`">
           <p @click="clickReviewTab">후기</p>
-          <!-- <span>99+</span> -->
         </div>
-        <div class="user-profile-tab-bookmark" :class="`index-${index}`">
+        <div class="user-profile-tab-bookmark" :class="`index-${index}`" v-if="isFollowed === -1">
           <p @click="clickBookmarkTab">북마크</p>
-          <!-- <span>99+</span> -->
         </div>
       </div>
       <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
@@ -63,6 +60,7 @@ const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
 const uid = computed(() => userInfo.value.uid);
+const isFollowed = computed(() => userInfo.value.isFollowed)
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
 const myProfile = () => {

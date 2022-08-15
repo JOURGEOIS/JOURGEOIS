@@ -212,13 +212,11 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           if (res.data.success) {
             // 뉴스피드 날리기
             dispatch("newsFeed/removeNewsFeedListData", {}, { root: true });
-            alert("삭제 성공");
             router.go(-1);
           }
         })
         .catch((err) => {
           if (err.response.status !== 401) {
-            alert("에러 떴다!");
             console.error(err.response);
           } else {
             // refreshToken 재발급

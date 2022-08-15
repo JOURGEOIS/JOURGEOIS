@@ -179,8 +179,8 @@ export const follow: Module<FollowState, RootState> = {
         .then((res) => {
           console.log(res.data)
           commit("SET_FOLLOWEE_USERS", res.data);
-          const page = getters.getReviewCocktailPage;
-          commit("SET_FOLLOWEE_USERS_PAGE", page + 1);
+          const page = getters.getFollowerUserPage;
+          commit("SET_FOLLOWEE_USER_PAGE", page + 1);
         })
         .catch((err) => {
           if (err.response.status !== 401) {

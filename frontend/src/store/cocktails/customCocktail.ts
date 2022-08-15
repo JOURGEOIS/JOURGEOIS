@@ -657,7 +657,6 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
         recipe: recipe.join(" <> "),
       };
 
-      console.log(data);
       // 로딩 on
       commit("SET_LOADING_STATUS", true);
       // 요청 보내기

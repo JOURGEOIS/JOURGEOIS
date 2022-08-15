@@ -60,7 +60,6 @@ export const socialLogin: Module<SocialLoginState, RootState> = {
       })
         .then((res) => {
           const data = res.data;
-          // console.log(data)
           commit("SET_GOOGLE_LOGIN_API", data);
           dispatch("getUserInfo");
         })
@@ -75,7 +74,6 @@ export const socialLogin: Module<SocialLoginState, RootState> = {
         method: "GET",
       })
         .then((res) => {
-          console.log(res.data);
           window.location.href = apiURL;
           commit("SET_GOOGLE_USER_INFO", res.data);
         })

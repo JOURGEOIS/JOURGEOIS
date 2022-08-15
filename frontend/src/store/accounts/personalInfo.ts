@@ -69,11 +69,11 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     getRefreshFailPopupStatus: (state) => {
       return state.refreshFailPopupStatus;
     },
-    
+
     // 계정 공개 여부
     getUserPublicMode: (state) => {
       return state.userInfo.isPublic;
-    }
+    },
   },
 
   mutations: {
@@ -98,8 +98,8 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
     },
 
     SET_PRIVATE_MODE: (state, privateMode) => {
-      state.userInfo.isPublic = privateMode
-    }
+      state.userInfo.isPublic = privateMode;
+    },
   },
 
   actions: {
@@ -121,7 +121,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
 
     // 유저 정보 저장
     saveUserInfo: ({ commit }, data: object) => {
-      console.log(data);
       const jsonUserInfo = JSON.stringify(data);
       localStorage.setItem("userInfo", jsonUserInfo);
       commit("SET_USER_INFO", data);
@@ -156,7 +155,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
         },
       })
         .then((response) => {
-          console.log("토큰 성공");
           const data = response.data;
           const token = {
             accessToken: data.accessToken,
@@ -243,9 +241,9 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
         });
     },
 
-    // 프로필 공개 설정 
+    // 프로필 공개 설정
     savePrivateModeSet: ({ commit }, privateMode) => {
-			commit("SET_PRIVATE_MODE", privateMode);
-		},
+      commit("SET_PRIVATE_MODE", privateMode);
+    },
   },
 };

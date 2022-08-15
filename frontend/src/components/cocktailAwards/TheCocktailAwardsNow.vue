@@ -8,7 +8,7 @@ import TheCocktailAwardsNowList from "@/components/cocktailAwards/TheCocktailAwa
 import { useStore } from "vuex";
 const store = useStore();
 
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "cocktailAwards/getCocktailAwardsNowList",
@@ -26,6 +26,7 @@ onMounted(() => {
 // unMounted될 시, 데이터 리셋
 onUnmounted(() => {
   store.dispatch("cocktailAwards/resetCocktailAwardsList");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

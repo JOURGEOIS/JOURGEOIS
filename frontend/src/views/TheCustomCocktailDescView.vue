@@ -79,7 +79,6 @@ const clickLike = () => {
 
 // 댓글 개수
 const commentCount = computed(() => store.getters["comment/getCommentCount"]);
-console.log(commentCount?.value);
 </script>
 
 <style scoped lang="scss">

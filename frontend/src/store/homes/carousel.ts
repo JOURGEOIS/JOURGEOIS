@@ -461,7 +461,6 @@ export const carousel: Module<CarouselState, RootState> = {
     },
     // * 좋아요 기반 추천 칵테일
     setLikeRecommendedCocktails: ({ commit, dispatch, rootGetters }) => {
-      console.log("b", rootGetters["personalInfo/getUserInfoUserId"]);
       axios({
         url: api.homes.likeRecommendedCocktail(),
         method: "GET",
@@ -470,7 +469,6 @@ export const carousel: Module<CarouselState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_LIKE_RECOMMENDED_COCKTAILS", res.data);
         })
         .catch((err) => {

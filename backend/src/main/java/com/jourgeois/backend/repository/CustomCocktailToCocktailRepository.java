@@ -34,7 +34,7 @@ public interface CustomCocktailToCocktailRepository extends JpaRepository<Custom
             "where p.p_id in (select c.p_id from custom_cocktail_to_cocktail c where c_id = :id)) as test1 left join \n" +
             "(select count(*) as count, p_id as pp from post_bookmark group by p_id having p_id in (select c.p_id from custom_cocktail_to_cocktail c where c_id = :id)) as test2 \n" +
             "on test1.p_id = test2.pp) as result \n" +
-            "on m.uid=result.p_writer where m.is_public = true order by result.p_create_time desc", nativeQuery = true)
+            "on m.uid=result.p_writer where m.is_private = false order by result.p_create_time desc", nativeQuery = true)
     List<PostInfoVO> findByCustomCocktailListOrderbyCreateTime(@Param(value="id") Long id, Pageable pageable);
 
     @Query(value = "select m.uid as uid, m.nickname as nickname, m.profile_img as profileImg\n" +
@@ -49,6 +49,6 @@ public interface CustomCocktailToCocktailRepository extends JpaRepository<Custom
             "where p.p_id in (select c.p_id from custom_cocktail_to_cocktail c where c_id = :id)) as test1 left join \n" +
             "(select count(*) as count, p_id as pp from post_bookmark group by p_id having p_id in (select c.p_id from custom_cocktail_to_cocktail c where c_id = :id)) as test2 \n" +
             "on test1.p_id = test2.pp) as result \n" +
-            "on m.uid=result.p_writer where m.is_public = true order by result.count desc", nativeQuery = true)
+            "on m.uid=result.p_writer where m.is_private = false order by result.count desc", nativeQuery = true)
     List<PostInfoVO> findByCustomCocktailListOrderbyCount(@Param(value="id") Long id, Pageable pageable);
 }

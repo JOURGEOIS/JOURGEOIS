@@ -43,6 +43,7 @@ public class CocktailController {
             CocktailDTO cocktail = cocktailService.readCocktail(id);
             cocktail.setCount(cocktailService.countCocktailBookmark(new Cocktail(id)));
             if (uid != 0) {
+                System.out.println("영이 아님");
                 CocktailBookmarkId key = new CocktailBookmarkId(uid, id);
                 cocktail.setStatus(cocktailService.checkUserBookmark(key) ? 1L : 0L);
             }

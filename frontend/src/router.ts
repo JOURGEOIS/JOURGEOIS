@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, useRouter } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import createStore from "../src/store/index";
 import { computed } from "vue";
 

@@ -6,7 +6,7 @@
     </header-basic>
     <section>
       <div
-        class="the-cocktail-filter-category-item"
+        class="the-cocktail-filter-category-item top-view-no-margin"
         v-for="item in data"
         :key="item.id"
         @click="clickIngredient(item.id)"

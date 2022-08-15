@@ -25,12 +25,12 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @GetMapping("/chatroom")
-    public ResponseEntity loadChatRoom(/*HttpServletRequest request*/){
+    @GetMapping("/auth/chatroom")
+    public ResponseEntity loadChatRoom(HttpServletRequest request){
         Map<String, Object> result = new HashMap<>();
         try {
-//            Long uid = Long.valueOf((String) request.getAttribute("uid"));
-            Long uid = 16052L;
+            Long uid = Long.valueOf((String) request.getAttribute("uid"));
+//            Long uid = 16052L;
             return new ResponseEntity(chatService.loadChatRoom(uid), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,12 +38,12 @@ public class ChatController {
         }
     }
 
-    @PostMapping("/message")
-    public String send(/*HttpServletRequest request,*/ @RequestBody ChatMessageDTO chatMessageDTO){
+    @PostMapping("/auth/message")
+    public String send(HttpServletRequest request, @RequestBody ChatMessageDTO chatMessageDTO){
         Map<String, Object> result = new HashMap<>();
         try {
-//            Long myUid = Long.valueOf((String) request.getAttribute("uid"));
-            Long myUid = 21001L;
+            Long myUid = Long.valueOf((String) request.getAttribute("uid"));
+//            Long myUid = 80030L;
             chatMessageDTO.setSender(myUid);
             chatMessageDTO.setTimestamp(Timestamp.now());
             chatMessageDTO.setIsRead(false);
@@ -55,14 +55,14 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/message")
-    public ResponseEntity getChatMessages(HttpServletRequest request, /*@RequestParam(value = "startAfter", defaultValue = "0") Integer startAfter,*/ @RequestParam("roomId") String roomId){
+    @GetMapping("/auth/message")
+    public ResponseEntity getChatMessages(HttpServletRequest request, @RequestParam(value = "startAfter", defaultValue = "0") Integer startAfter, @RequestParam("roomId") String roomId){
         // uid : /auth 추가해서 request.get("uid")로 받아서 넘겨주십시오.
         // page는 처음엔 0부터 시작이고 넘겨줄 때 size로 값을 넘겨주니, page로 값을 받으면 됨
         // roomId 가 채팅방 key
         try {
-//            Long myUid = Long.valueOf((String)request.getAttribute("uid"));
-            Long myUid = 16052L;
+            Long myUid = Long.valueOf((String)request.getAttribute("uid"));
+//            Long myUid = 16052L;
             return new ResponseEntity(chatService.getChatMessages(myUid, /* startAfter, */ roomId), HttpStatus.OK);
         } catch (ExecutionException | TimeoutException e) {
             throw new RuntimeException(e);

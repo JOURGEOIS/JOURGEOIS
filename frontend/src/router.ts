@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, useRouter } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import createStore from "../src/store/index";
 import { computed } from "vue";
 
@@ -68,12 +68,26 @@ const routes: any[] = [
     name: "TheUserProfileView",
     component: () => import("@/views/TheUserProfileView.vue"),
   },
-  
+
   // 프로필 공개 설정 화면
   {
     path: "/user/profile/private",
-    name: "TheProfilePrivateSelectView",
-    component: () => import("@/views/TheProfilePrivateSelectView.vue"),
+    name: "TheUserProfilePrivateModeView",
+    component: () => import("@/views/TheUserProfilePrivateModeView.vue"),
+  },
+
+  // 팔로워 리스트 보기
+  {
+    path: "/user/follower/:userId",
+    name: "TheFollowerListView",
+    component: () => import("@/views/TheFollowerListView.vue")
+  },
+
+  // 팔로잉 리스트 보기
+  {
+    path: "/user/followee/:userId",
+    name: "TheFollowingListView",
+    component: () => import("@/views/TheFollowingListView.vue")
   },
 
   // 칵테일 검색 페이지
@@ -259,18 +273,26 @@ const routes: any[] = [
     component: () => import("@/views/homes/TheAllThemeCocktailView.vue"),
   },
 
-  // 주류주아 좋아요 기반 추천 칵테일 리스트
-  // {
-  //   path: "/likeRecommended",
-  //   name: "TheLikeRecommendedCocktailView",
-  //   component: () => import("@/views/homes/TheLikeRecommendedCocktailView.vue"),
-  // },
+  // 주류주아 북마크 기반 추천 칵테일 리스트
+  {
+    path: "/likeRecommended",
+    name: "TheAllLikeRecommendedCocktailView",
+    component: () =>
+      import("@/views/homes/TheAllLikeRecommendedCocktailView.vue"),
+  },
 
   // 알림
   {
     path: "/feeds/notice",
     name: "TheNoticeView",
     component: () => import("@/views/TheNoticeView.vue"),
+  },
+
+  // ! 채팅
+  {
+    path: "/chats/list",
+    name: "TheChatRoomListView",
+    component: () => import("@/views/chats/TheChatRoomListView.vue"),
   },
 ];
 

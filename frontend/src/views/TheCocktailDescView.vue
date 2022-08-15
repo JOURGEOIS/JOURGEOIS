@@ -26,9 +26,7 @@
           </div>
         </div>
         <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
-        <keep-alive>
-          <component :is="currentComponent"></component>
-        </keep-alive>
+        <component :is="currentComponent"></component>
       </section>
     </div>
   </div>
@@ -49,11 +47,15 @@ import {
   computed,
   watch,
   onBeforeMount,
+  onUnmounted,
 } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
 const route = useRoute();
+
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
 
 // 동적 컴포넌트 (탭)
 const componentArray = [
@@ -77,7 +79,7 @@ const clickRecipeTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 0);
 const clickReviewTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 1);
 const clickCustomTab = () => store.dispatch("cocktailDesc/changeCurrentTab", 2);
 
-// 동적 라우팅
+// 칵테일 db 불러오기
 onMounted(() => {
   store.dispatch("cocktailDesc/getCocktailDb", route.params.cocktailId);
 });
@@ -100,6 +102,12 @@ watch(successStatus, () => {
 const offSuccessModal = () => {
   store.dispatch("customCocktail/changeAlertStatus", false);
 };
+
+// 리셋
+onUnmounted(() => {
+  store.dispatch("cocktailDesc/changeCurrentTab", 0);
+  store.dispatch("cocktailDesc/resetCocktailDb");
+});
 </script>
 
 <style scoped lang="scss">

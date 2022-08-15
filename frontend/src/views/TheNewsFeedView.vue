@@ -17,10 +17,18 @@ import HeaderNotice from "@/components/basics/HeaderNotice.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import TheNewsFeedList from "@/components/feeds/TheNewsFeedList.vue";
 import { useStore } from "vuex";
-import { onBeforeMount, onBeforeUnmount, onMounted, computed } from "vue";
+import {
+  onBeforeMount,
+  onBeforeUnmount,
+  onMounted,
+  computed,
+  onUnmounted,
+} from "vue";
 const store = useStore();
 
-const handleScroll = (event: any) => {
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 1);
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "newsFeed/getNewsFeedListData",
@@ -49,6 +57,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // 스크롤 위치 기억하기
   store.dispatch("newsFeed/setNewsFeedScrollY", window.scrollY);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

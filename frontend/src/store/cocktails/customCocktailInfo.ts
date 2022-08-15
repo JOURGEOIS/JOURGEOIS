@@ -159,7 +159,11 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
       })
         .then((res) => {
           const reviewCount = res.data.customCocktail.reviewCount;
-          dispatch("comment/setCommentCount", reviewCount, { root: true });
+          dispatch(
+            "comment/setCommentCount",
+            { count: reviewCount },
+            { root: true }
+          );
           commit("SET_CUSTOM_COCKTAIL_DETAIL", res.data);
         })
         .catch((err) => {
@@ -206,13 +210,13 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         .then((res) => {
           // 삭제 성공
           if (res.data.success) {
-            alert("삭제 성공");
+            // 뉴스피드 날리기
+            dispatch("newsFeed/removeNewsFeedListData", {}, { root: true });
             router.go(-1);
           }
         })
         .catch((err) => {
           if (err.response.status !== 401) {
-            alert("에러 떴다!");
             console.error(err.response);
           } else {
             // refreshToken 재발급

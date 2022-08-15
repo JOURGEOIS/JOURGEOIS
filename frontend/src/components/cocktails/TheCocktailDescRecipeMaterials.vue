@@ -64,12 +64,6 @@ const cocktailIngredientsPreview = computed(() => {
   }
 });
 
-// // 더보기 상태
-// interface showMore {
-//   value: boolean;
-// }
-// let showMore: showMore;
-
 const showMoreStatus = computed(() => {
   if (window.innerWidth < 768 && cocktailData?.value?.length <= 3) {
     return false;

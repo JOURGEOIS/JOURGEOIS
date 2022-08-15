@@ -10,16 +10,21 @@
       <the-notice-list></the-notice-list>
     </section>
   </div>
+  <loading-basic v-if="loadingStatus"></loading-basic>
 </template>
 
 <script setup lang="ts">
 import TheNoticeList from "@/components/feeds/TheNoticeList.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
-import { onMounted, onUnmounted } from "vue";
+import LoadingBasic from "@/components/basics/LoadingBasic.vue";
+import { onMounted, onUnmounted, computed } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
-const handleScroll = (event: any) => {
+// 로딩
+const loadingStatus = computed(() => store.getters["modal/getLoadingStatus"]);
+
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "notice/getNoticeList",
@@ -43,6 +48,7 @@ const readNoticeAll = () => {
 // 리셋
 onUnmounted(() => {
   store.dispatch("notice/resetNoticeList");
+  store.dispatch("modal/toggleLoadingStatus", false);
 });
 </script>
 

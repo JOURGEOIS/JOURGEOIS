@@ -35,9 +35,18 @@ export const post: Module<PostState, RootState> = {
     SET_LIKED_USER_PAGE: (state, value) => {
       state.likedUserPage = value;
     },
+    RESET_LIKED_USER_DATA: (state) => {
+      state.likedUsers = [];
+      state.likedUserPage = 0;
+    },
   },
 
   actions: {
+    // 리셋
+    resetLikedUserData: ({ commit }) => {
+      commit("RESET_LIKED_USER_DATA");
+    },
+
     // * 좋아요 누른 유저리스트 추가
     setLikedUsers: ({ commit, dispatch, getters, rootGetters }, data) => {
       axios({

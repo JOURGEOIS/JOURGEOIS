@@ -178,7 +178,13 @@ form {
   @include flex(column);
   align-items: center;
   gap: 32px;
+  overflow-y: scroll;
   user-select: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   > div {
     @include flex(column);

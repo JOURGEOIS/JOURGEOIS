@@ -28,6 +28,9 @@ import { CarouselCocktail } from "../../interface";
 const router = useRouter();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 0);
+
 // 전체 칵테일 리스트
 const allHotCocktails = computed(
   () => store.getters["carousel/getAllHotCocktails"]
@@ -38,7 +41,7 @@ const clickCocktail = (item: CarouselCocktail) => {
   store.dispatch("carousel/clickShowMoreItem", item);
 };
 
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "carousel/setAllHotCocktails",
@@ -61,6 +64,7 @@ onBeforeMount(() => {
 
 onUnmounted(() => {
   store.dispatch("carousel/removeAllHotCocktails");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

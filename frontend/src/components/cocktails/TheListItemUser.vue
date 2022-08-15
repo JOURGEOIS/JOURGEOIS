@@ -10,7 +10,7 @@
     <div class="part-right">
       <!-- 팔로우/팔로잉 버튼 -->
       <span
-        v-if="isFollowed !== -1"
+        v-if="isFollowed !== -1 && isLoggedIn"
         class="follow-btn"
         :class="{ following: isFollowed, follow: !isFollowed }"
         @click="clickFollowBtn"
@@ -37,6 +37,9 @@ const store = useStore();
 const props = defineProps<{
   data: User;
 }>();
+
+// 로그인 여부
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 const isFollowed = ref(props.data.isFollowed);
 

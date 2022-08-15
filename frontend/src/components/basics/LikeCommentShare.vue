@@ -102,7 +102,8 @@ onBeforeRouteLeave((to, from, next) => {
 <style scoped lang="scss">
 .like-comment-share {
   width: calc(100% + 32px);
-  padding: 10px;
+  padding: 10px 0;
+  margin: 0 -16px;
   border-top: 1px solid $unchecked-color;
   border-bottom: 1px solid $unchecked-color;
   @include flex-xy(space-between, center);

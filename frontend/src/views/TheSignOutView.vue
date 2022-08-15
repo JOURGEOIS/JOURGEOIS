@@ -21,6 +21,9 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 4);
+
 // 현재 탭 계산
 const index = computed(() => store.getters["account/getSignOutCurrentTab"]);
 const componentArray = [

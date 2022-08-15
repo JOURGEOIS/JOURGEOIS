@@ -6,7 +6,7 @@
     </header-basic>
     <section>
       <div
-        class="the-cocktail-filter-category-item"
+        class="the-cocktail-filter-category-item top-view-no-margin"
         v-for="item in data"
         :key="item.id"
         @click="clickIngredient(item.id)"
@@ -40,6 +40,9 @@ import { baseAlcohol, liqueur, drinks, ingredients } from "../assets/filter";
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
+
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
 
 // index: url 파라미터
 const index = route.params.category;

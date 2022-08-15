@@ -2,14 +2,12 @@
 <template>
   <div class="the-custom-cocktail-form-view">
     <!-- 헤더 -->
-    <header-basic
-      :prev="true"
-      :success="true"
+    <header-success
       formId="super-custom-cocktail-form"
       @prevClicked="$router.go(-1)"
     >
       커스텀 칵테일 제작
-    </header-basic>
+    </header-success>
     <section class="top-view">
       <the-super-custom-cocktail-form
         id="super-custom-cocktail-form"
@@ -23,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import HeaderSuccess from "@/components/basics/HeaderSuccess.vue";
 import TheSuperCustomCocktailForm from "@/components/feeds/TheSuperCustomCocktailForm.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import LoadingBasic from "@/components/basics/LoadingBasic.vue";

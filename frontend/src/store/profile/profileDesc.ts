@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
+import router from "../../router";
 import {
   userProfileData,
   userCommunityPostData,
@@ -13,18 +14,19 @@ import {
 export interface ProfileDescState {
   currentTab: number;
   currentUserData: userProfileData;
-
+  // 일반 게시글
   currentUserCommunity: userCommunityPostData[];
   currentUserCommunityPage: number;
-  //
+  // 칵테일 게시글
   currentUserCustom: userCustomPostData[];
   currentUserCustomPage: number;
-  //
+  // 후기
   currentUserReview: userPostReviewData[];
   currentUserReviewPage: number;
-
+  // 북마크
   currentUserBookmark: userBookmarkData[];
   currentUserBookmarkPage: number;
+
 }
 
 export const profileDesc: Module<ProfileDescState, RootState> = {
@@ -34,16 +36,15 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     currentTab: 0,
     currentUserData: {
       uid: 0,
-      email: "",
-      name: null,
-      nickname: "",
-      profileImg: "",
-      profileLink: null,
       introduce: "",
       followerCnt: 0,
       followingCnt: 0,
       postCnt: 0,
-      isPublic: 0,
+      nickname: "",
+      isPrivate: 0,
+      profileImg: "",
+      email: "",
+      isFollowed: 0,
     },
 
     currentUserCommunity: [],
@@ -57,6 +58,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
 
     currentUserBookmark: [],
     currentUserBookmarkPage: 0,
+
   },
 
   getters: {
@@ -87,12 +89,16 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     getCurrentUserPostReviewPage: (state) => {
       return state.currentUserReviewPage;
     },
-    
+
     getCurrentUserPostBookmark: (state) => {
       return state.currentUserBookmark;
     },
     getCurrentUserPostBookmarkPage: (state) => {
       return state.currentUserBookmarkPage;
+    },
+
+    getPrivateModeSet: (state) => {
+      return state.currentUserData.isPrivate;
     },
   },
 
@@ -104,10 +110,16 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       state.currentUserData = value;
     },
 
-    ADD_CURRENT_USER_POST_COMMUNITY: (state, value: userCommunityPostData[]) => {
+    ADD_CURRENT_USER_POST_COMMUNITY: (
+      state,
+      value: userCommunityPostData[]
+    ) => {
       state.currentUserCommunity.push(...value);
     },
-    SET_CURRENT_USER_POST_COMMUNITY: (state, value: userCommunityPostData[]) => {
+    SET_CURRENT_USER_POST_COMMUNITY: (
+      state,
+      value: userCommunityPostData[]
+    ) => {
       state.currentUserCommunity = value;
     },
     SET_CURRENT_USER_POST_COMMUNITY_PAGE: (state, value: number) => {
@@ -145,6 +157,10 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
     SET_CURRENT_USER_POST_BOOKMARK_PAGE: (state, value: number) => {
       state.currentUserBookmarkPage = value;
+    },
+
+    SET_PRIVATE_MODE: (state, value: number) => {
+      state.currentUserData.isPrivate = value;
     },
   },
 
@@ -241,7 +257,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       { commit, dispatch, rootGetters, getters },
       uid: number
     ) => {
-      console.log(uid)
+      console.log(uid);
       const page = getters["getCurrentUserPostCustomPage"];
       axios({
         url: api.accounts.profileCustom(),
@@ -255,7 +271,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
           // 받은 데이터를 리스트에 추가하고 page를 늘린다.
           commit("ADD_CURRENT_USER_POST_CUSTOM", res.data);
           commit("SET_CURRENT_USER_POST_CUSTOM_PAGE", page + 1);
@@ -346,6 +362,35 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
               params: {
                 uid,
               },
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
+
+    changePrivateModeSet: (
+      { commit, dispatch, rootGetters }
+    ) => {
+      const uid = rootGetters["personalInfo/getUserInfoUserId"];
+      axios({
+        url: api.accounts.profileModeSet(),
+        method: "put",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+      })
+        .then((res) => {
+          const privateMode = res.data.isPrivate;
+          commit("SET_PRIVATE_MODE", privateMode);
+          // dispatch("personalInfo/savePrivateModeSet", privateMode)
+        })
+        .catch((err) => {
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "profileDesc/changePrivateModeSet",
+              params: {},
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }

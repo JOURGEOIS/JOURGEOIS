@@ -195,7 +195,11 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
       })
         .then((res) => {
           const reviewCount = res.data.customCocktail.reviewCount;
-          dispatch("comment/setCommentCount", reviewCount, { root: true });
+          dispatch(
+            "comment/setCommentCount",
+            { count: reviewCount },
+            { root: true }
+          );
           commit("SET_COMMUNITY_DETAIL", res.data);
         })
         .catch((err) => {

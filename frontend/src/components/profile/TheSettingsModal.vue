@@ -27,7 +27,7 @@
             <div class="btn-text">개인정보 수정</div>
           </article>
           <hr>
-          <article class="profile-public-set set-btn" @click="profilePublicSet">
+          <article class="profile-public-set set-btn" @click="profilePrivateSet">
             <div class="btn-text">프로필 공개 설정</div>
           </article>
           <hr>
@@ -78,10 +78,9 @@ const editPersonalInfo = () => {
 };
 
 // 프로필 공개 설정
-const profilePublicSet = () => {
-  // store 만들어지면 변경
+const profilePrivateSet = () => {
   store.dispatch("settings/toggleSettingsModal", false);
-  router.push({ name: "TheProfilePrivateSelectView" });
+  router.push({ name: "TheUserProfilePrivateModeView" });
 };
 
 const clickLogout = () => {

@@ -224,7 +224,7 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
     },
 
     //======================== READ ========================
-    getCocktailAwardsNowList: ({ commit, getters }) => {
+    fetchCocktailAwardsNowList: ({ commit, getters }) => {
       axios({
         url: api.awards.contestListNow(),
         method: "get",
@@ -245,7 +245,7 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
         });
     },
 
-    getCocktailAwardsVoteList: ({ commit, getters, rootGetters }) => {
+    fetchCocktailAwardsVoteList: ({ commit, getters, rootGetters }) => {
       const uid = rootGetters["personalInfo/getUserInfoUserId"];
       let headers;
       if (!uid) {
@@ -305,10 +305,12 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
           const data = response.data;
           if (index === null) {
             dispatch("changeCocktailVoteDesc", data.status);
+          } else {
+            dispatch("changeCocktailVoteStatus", { index, value: data.status });
           }
-          dispatch("changeCocktailVoteStatus", { index, value: data.status });
         })
         .catch((error) => {
+          console.log(error);
           if (error.response.status !== 401) {
             console.error(error);
           } else {

@@ -23,6 +23,9 @@ import { useStore } from "vuex";
 const store = useStore();
 const index = computed(() => store.getters["password/getChangePwCurrentTab"]);
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 4);
+
 const componentArray = [
   defineAsyncComponent(
     () => import("@/components/accounts/ThePwCheckForm.vue")

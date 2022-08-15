@@ -4,24 +4,37 @@
     <span>커스텀 칵테일 만들기</span>
   </section>
   <section class="custom-cocktail-section">
-    <the-list-item-custom-cocktail
-      v-for="(item, idx) in customCocktails"
-      :key="idx"
-      :data="item"
-      @click="clickCustomCocktail(item)"
-    ></the-list-item-custom-cocktail>
+    <div class="custom-cocktail-container" :class="{ blur: !isLoggedIn }">
+      <the-list-item-custom-cocktail
+        v-for="(item, idx) in customCocktails"
+        :key="idx"
+        :data="item"
+        @click="clickCustomCocktail(item)"
+      ></the-list-item-custom-cocktail>
+    </div>
+    <blur-block
+      v-if="!isLoggedIn"
+      id="custom-cocktail-blur"
+      :class="{ none: customCocktails.length === 0 }"
+    >
+      <p>로그인하고</p>
+      <p>유저들이 만든 칵테일 보기 🎉</p>
+    </blur-block>
   </section>
 </template>
 
 <script setup lang="ts">
 import TheListItemCustomCocktail from "@/components/cocktails/TheListItemCustomCocktail.vue";
+import BlurBlock from "@/components/basics/BlurBlock.vue";
 import { useRoute, useRouter } from "vue-router";
-import { computed, onBeforeMount } from "vue";
+import { computed, onBeforeMount, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { CustomCocktail } from "../../interface";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 // 원본 칵테일 아이디는 현재 칵테일 params
 const originalCocktailId = Number(route.params.cocktailId);
@@ -51,7 +64,7 @@ const clickCustomCocktail = (item: CustomCocktail) => {
 };
 
 // 스크롤시
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const dataInner = {
     originalCocktailId,
     asc,
@@ -74,10 +87,17 @@ const setCustomCocktails = (data: {
 
 onBeforeMount(() => {
   // window 스크롤 이벤트 감지
-  window.addEventListener("scroll", handleScroll);
+  if (isLoggedIn.value) {
+    window.addEventListener("scroll", handleScroll);
+  }
 
   // 원본 칵테일 id와 정렬 순서 정보 data로 감싸서
   setCustomCocktails({ asc, originalCocktailId });
+});
+
+onUnmounted(() => {
+  store.dispatch("customCocktailInfo/removeCustomCocktails");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 
@@ -102,8 +122,23 @@ onBeforeMount(() => {
 }
 
 .custom-cocktail-section {
+  position: relative;
   width: 100%;
-  @include flex(column);
-  gap: 15px;
+
+  .custom-cocktail-container {
+    width: 100%;
+    @include flex(column);
+    gap: 15px;
+  }
+}
+
+.blur {
+  min-height: 180px;
+  filter: blur(6px);
+  -webkit-filter: blur(6px);
+}
+
+.none {
+  top: -10px;
 }
 </style>

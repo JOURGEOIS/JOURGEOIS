@@ -239,7 +239,6 @@ export const carousel: Module<CarouselState, RootState> = {
       commit("SET_SELECTED_CATEGORY", value);
     },
     setThemeCocktails: ({ commit, dispatch }, tag: string) => {
-      console.log(tag);
       axios({
         url: api.homes.themeCocktail(),
         method: "GET",
@@ -248,7 +247,6 @@ export const carousel: Module<CarouselState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_THEME_COCKTAILS", {
             themeCocktails: res.data,
             theme: tag,
@@ -261,10 +259,11 @@ export const carousel: Module<CarouselState, RootState> = {
     },
     setThemeCocktailsSequential: async ({ dispatch }) => {
       const tags = ["ALONE", "PARTY", "LOVE", "SPECIAL"];
-      await dispatch("setThemeCocktails", tags[0]);
-      await dispatch("setThemeCocktails", tags[1]);
-      await dispatch("setThemeCocktails", tags[2]);
-      await dispatch("setThemeCocktails", tags[3]);
+      tags.forEach((tag, i) => {
+        setTimeout(() => {
+          dispatch("setThemeCocktails", tag);
+        }, i * 100);
+      });
     },
     setAllThemeCocktails: ({ commit, dispatch, getters }) => {
       const page = getters["getAllThemeCocktailPage"];
@@ -461,13 +460,15 @@ export const carousel: Module<CarouselState, RootState> = {
       commit("REMOVE_ALL_WEEKLY_HOT_COCKTAILS");
     },
     // * 좋아요 기반 추천 칵테일
-    setLikeRecommendedCocktails: ({ commit, dispatch }) => {
+    setLikeRecommendedCocktails: ({ commit, dispatch, rootGetters }) => {
       axios({
         url: api.homes.likeRecommendedCocktail(),
         method: "GET",
+        headers: {
+          uid: rootGetters["personalInfo/getUserInfoUserId"],
+        },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_LIKE_RECOMMENDED_COCKTAILS", res.data);
         })
         .catch((err) => {
@@ -475,11 +476,19 @@ export const carousel: Module<CarouselState, RootState> = {
           console.error(err.response);
         });
     },
-    setAllLikeRecommendedCocktails: ({ commit, dispatch, getters }) => {
+    setAllLikeRecommendedCocktails: ({
+      commit,
+      dispatch,
+      getters,
+      rootGetters,
+    }) => {
       const page = getters["getAllLikeRecommendedCocktailPage"];
       axios({
         url: api.homes.likeRecommendedCocktailView(),
         method: "GET",
+        headers: {
+          uid: rootGetters["personalInfo/getUserInfoUserId"],
+        },
         params: {
           page,
         },

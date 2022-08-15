@@ -23,7 +23,7 @@ const newsFeedList = computed(
 <style scoped lang="scss">
 .news-feed-list-container {
   @include flex(column);
-  gap: 40px;
+  gap: 30px;
   width: calc(100% + 32px);
   margin-left: -16px;
   background-color: $white150;

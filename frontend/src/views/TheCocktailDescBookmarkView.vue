@@ -5,7 +5,7 @@
       북마크한 유저
     </header-basic>
     <section class="cocktail-bookmark-section top-view-no-margin">
-      <div class="cocktail-bookmark-none" v-if="bookMarkUserList.length === 0">
+      <div class="cocktail-bookmark-none" v-if="isEmpty">
         <p>해당 칵테일을 북마크한 유저가 없습니다</p>
         <p class="emoji">😥</p>
       </div>
@@ -26,7 +26,7 @@ import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheListItemUser from "@/components/cocktails/TheListItemUser.vue";
 import { User } from "../interface";
 import NavBar from "@/components/basics/NavBar.vue";
-import { onUnmounted, onBeforeMount, computed } from "vue";
+import { ref, onUnmounted, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
@@ -35,6 +35,13 @@ const store = useStore();
 
 // navbar 색깔 부여
 store.dispatch("navbar/setNavIconStatus", 3);
+
+const isEmpty = ref(false);
+setTimeout(() => {
+  if (bookMarkUserList.value.length === 0) {
+    isEmpty.value = true;
+  }
+}, 200);
 
 // 북마크 유저 리스트
 const bookMarkUserList = computed(

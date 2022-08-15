@@ -1,21 +1,22 @@
 <template>
   <!-- 헤더 -->
   <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-    커스텀 칵테일
   </header-basic>
   <div class="the-custom-cocktail-desc-view top-view-no-margin">
-    <!-- 제목, 사진, 제조법, 설명 등 커스텀 칵테일 내용 -->
-    <the-custom-cocktail-desc-body></the-custom-cocktail-desc-body>
-    <!-- 댓글 좋아요 공유 부분 -->
-    <like-comment-share @clickLike="clickLike" :data="{ isLiked: isLiked }">
-      <template #like>{{ likeCount }}</template>
-      <template #comment>{{ commentCount }}</template>
-    </like-comment-share>
-    <!-- 댓글 부분 -->
-    <section class="the-custom-cocktail-desc-comment">
-      <comment-form :page-id="feedId"></comment-form>
-      <comment-list :page-id="feedId"></comment-list>
-    </section>
+    <div class="the-custom-cocktail-desc-container">
+      <!-- 제목, 사진, 제조법, 설명 등 커스텀 칵테일 내용 -->
+      <the-custom-cocktail-desc-body></the-custom-cocktail-desc-body>
+      <!-- 댓글 좋아요 공유 부분 -->
+      <like-comment-share @clickLike="clickLike" :data="{ isLiked: isLiked }">
+        <template #like>{{ likeCount }}</template>
+        <template #comment>{{ commentCount }}</template>
+      </like-comment-share>
+      <!-- 댓글 부분 -->
+      <section class="the-custom-cocktail-desc-comment">
+        <comment-form :page-id="feedId"></comment-form>
+        <comment-list :page-id="feedId"></comment-list>
+      </section>
+    </div>
   </div>
   <!-- navbar -->
   <nav-bar></nav-bar>
@@ -90,6 +91,18 @@ const commentCount = computed(() => store.getters["comment/getCommentCount"]);
   justify-content: flex-start;
   align-items: center;
   @include accountLayOut;
+  .the-custom-cocktail-desc-container {
+    width: 100%;
+    margin-top: 8px;
+
+    @media #{$tablet} {
+      width: 80%;
+    }
+
+    @media #{$pc} {
+      width: 60%;
+    }
+  }
 
   .the-custom-cocktail-desc-comment {
     @include flex(column);

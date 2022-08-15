@@ -68,6 +68,13 @@ const routes: any[] = [
     name: "TheUserProfileView",
     component: () => import("@/views/TheUserProfileView.vue"),
   },
+  
+  // 프로필 공개 설정 화면
+  {
+    path: "/user/profile/private",
+    name: "TheProfilePrivateSelectView",
+    component: () => import("@/views/TheProfilePrivateSelectView.vue"),
+  },
 
   // 칵테일 검색 페이지
   {

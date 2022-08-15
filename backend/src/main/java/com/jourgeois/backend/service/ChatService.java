@@ -189,6 +189,14 @@ public class ChatService {
                             .chatMessageDTO(chatMessageDTO)
                             .build());
         }
+
+        Map<String, Object> usersFieldValue = new HashMap<>();
+        usersFieldValue.put("users", users);
+        usersFieldValue.put("lastMessage", msg);
+        usersFieldValue.put("hasNewMessage", false);
+
+        db.collection(ROOT_CHAT_COLLECTION_NAME)
+                .document(roomId).set(usersFieldValue);
         // result.put("size", startAfter+chatRoomRefs.size());
 //        result.put("messages", chatMessageResponseDTOList);
         return chatMessageResponseDTOList;

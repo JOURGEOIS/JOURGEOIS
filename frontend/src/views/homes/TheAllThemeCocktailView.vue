@@ -32,12 +32,15 @@
 import TheListItemCarouselCocktail from "@/components/cocktails/TheListItemCarouselCocktail.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { computed, onBeforeMount, onUnmounted } from "vue";
 import { CarouselCocktail } from "../../interface";
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
+
+store.dispatch("carousel/setSelectedCategory", route.params.theme);
 
 // 선택된 테마
 const selectedCategory = computed(() => {

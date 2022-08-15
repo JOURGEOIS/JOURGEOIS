@@ -29,7 +29,7 @@ public class MemberProfilePageController {
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            MemberDTO result = memberProfilePageService.readMemberProfile(uid);
+            Map<String, String> result = memberProfilePageService.readMemberProfile(uid);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);
@@ -105,11 +105,11 @@ public class MemberProfilePageController {
         }
     }
 
-    @GetMapping("/auth/profile-status")
+    @PutMapping("/auth/profile-status")
     public ResponseEntity<?> switchPublicPrivate(HttpServletRequest request) {
         Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-        Boolean res = memberProfilePageService.switchPublicToPrivate(userId);
+        Integer isPublic = memberProfilePageService.switchPublicToPrivate(userId);
 
-        return ResponseEntity.ok().body(res);
+        return ResponseEntity.ok().body(Map.of("isPublic", isPublic));
     }
 }

@@ -38,14 +38,21 @@ public class MemberProfilePageService {
         this.s3Url = s3Url;
     }
 
-    public MemberDTO readMemberProfile(Long uid){
-        MemberVO memberVO = memberRepository.findMemberProfile(uid).orElseThrow();
+    public Map<String, String> readMemberProfile(Long uid){
+        MemberVO data = memberRepository.findMemberProfile(uid).orElseThrow();
 
-        MemberDTO m = MemberDTO.builder().uid(memberVO.getUid()).email(memberVO.getEmail()).nickname(memberVO.getNickname())
-                .profileImg(S3Util.s3urlFormatter(memberVO.getProfileImg())).introduce(memberVO.getIntroduce()).followerCnt(memberVO.getFollowerCnt())
-                .followingCnt(memberVO.getFollowingCnt()).postCnt(memberVO.getPostCnt()).isPublic(memberVO.getIsPublic()).build();
+        Map<String, String> res = new HashMap<>();
+        res.put("uid", data.getUid().toString());
+        res.put("email", data.getEmail());
+        res.put("nickname", data.getNickname());
+        res.put("profileImg", S3Util.s3urlFormatter(data.getProfileImg()));
+        res.put("introduce", data.getIntroduce());
+        res.put("followerCnt", data.getFollowerCnt().toString());
+        res.put("followingCnt", data.getFollowingCnt().toString());
+        res.put("postCnt", data.getPostCnt().toString());
+        res.put("isPublic", data.getIsPublic().toString());
 
-        return m;
+        return res;
     }
 
     public List<Map<String, String>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
@@ -86,8 +93,6 @@ public class MemberProfilePageService {
             res.put("cocktailId", data.getId());
             res.put("nameKR", data.getNameKR());
             res.put("img", data.getImg());
-            res.put("category", data.getCategory());
-            res.put("tag", data.getTag());
 
             resArr.add(res);
         });
@@ -106,9 +111,6 @@ public class MemberProfilePageService {
             Map<String, String> res = new HashMap<>();
             res.put("cocktailId", data.getId());
             res.put("nameKR", data.getNameKR());
-            res.put("img", data.getImg());
-            res.put("category", data.getCategory());
-            res.put("tag", data.getTag());
             res.put("comment", data.getComment());
 
             resArr.add(res);
@@ -117,14 +119,16 @@ public class MemberProfilePageService {
         return resArr;
     }
 
-    public Boolean switchPublicToPrivate(Long uid){
+    public Integer switchPublicToPrivate(Long uid){
         try {
             Member m = memberRepository.findById(uid).orElseThrow();
-            Integer ispublic = Integer.parseInt(m.getIsPublic()) ^ 1;
-            m.setIsPublic(ispublic.toString());
-            return true;
+            Integer isPublic = Integer.parseInt(m.getIsPublic()) ^ 1;
+            m.setIsPublic(isPublic.toString());
+            memberRepository.flush();
+
+            return isPublic;
         } catch(Exception e){
-            return false;
+            return -1;
         }
     }
 }

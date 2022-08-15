@@ -1,4 +1,3 @@
-import store from "../../store";
 <template>
   <div class="the-notice-item-container">
     <!-- 프로필 이미지  -->
@@ -27,7 +26,9 @@ import { Notice } from "../../interface";
 import {calcDateDelta2} from "../../functions/date"
 import roundImage from "@/components/basics/RoundImage.vue";
 import { useStore } from "vuex";
+import { useRouter } from 'vue-router';
 const store = useStore();
+const router = useRouter();
 
 const props = defineProps<{
   noticeData: Notice;        
@@ -73,8 +74,8 @@ const readNotice = () => {
     type: props.noticeData.notification.type,
     postId: props.noticeData.notification.postId,
     uid: props.noticeData.opponent.uid,
-    postType: props.noticeData.postMetaInfo.type || 0,
-    baseCocktailId: props.noticeData.postMetaInfo?.baseCocktailId || 0,
+    postType: props?.noticeData?.postMetaInfo?.type || 0,
+    baseCocktailId: props?.noticeData?.postMetaInfo?.baseCocktailId || 0,
   }
   store.dispatch("notice/readNotice",data)
 };
@@ -82,7 +83,7 @@ const readNotice = () => {
 // 프로필 클릭시, 해당 유저의 프로필로 이동한다. 
 const clickProfileImage = () => {
   const uid = props.noticeData.notification.uid;
-  alert("프로필로 이동");
+  router.push({ name: 'TheUserProfileView', params: { userId: uid } })
 };
 </script>
 

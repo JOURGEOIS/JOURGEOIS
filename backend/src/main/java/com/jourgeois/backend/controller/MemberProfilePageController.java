@@ -46,7 +46,7 @@ public class MemberProfilePageController {
 
         try {
             Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable, "post");
+            List<Map<String, Object>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable, "post");
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);
@@ -62,7 +62,7 @@ public class MemberProfilePageController {
 
         try {
             Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, String>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable,"cocktail");
+            List<Map<String, Object>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable,"cocktail");
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);

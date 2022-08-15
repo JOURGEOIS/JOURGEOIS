@@ -210,7 +210,7 @@ export interface userBookmarkData {
 }
 
 export interface ChatRoom {
-  chatRoomId: number;
+  chatRoomId: string;
   opponent: {
     uid: number;
     img: string;
@@ -231,7 +231,7 @@ export interface ChatRoom {
 }
 
 export interface Chat {
-  chatRoomId: number;
+  chatRoomId: string;
   sender: number;
   receiver: number;
   message: string;

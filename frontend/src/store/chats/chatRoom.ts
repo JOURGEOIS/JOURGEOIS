@@ -14,6 +14,7 @@ export interface ChatRoomState {
 
   // * 채팅방 1:1 상세
   chatLogs: Chat[];
+  currentChatUserId: number;
   currentChatRoom: ChatRoom;
 }
 
@@ -27,8 +28,9 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
 
     // * 채팅방 1:1 상세
     chatLogs: [],
+    currentChatUserId: 0,
     currentChatRoom: {
-      chatRoomId: 0,
+      chatRoomId: "",
       opponent: {
         uid: 0,
         img: "",
@@ -56,6 +58,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
 
     // * 채팅방 1:1 상세
     getChatLogs: (state) => state.chatLogs,
+    getCurrentChatUserId: (state) => state.currentChatUserId,
     getCurrentChatRoom: (state) => state.currentChatRoom,
   },
 
@@ -80,9 +83,19 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       state.chatLogs.unshift(newChat);
     },
 
+    // * 현재 채팅하려는 유저 ID
+    SET_CURRENT_CHAT_USER_ID: (state, userId: number) => {
+      state.currentChatUserId = userId;
+    },
+
     // * 채팅방 1:1 정보 저장
     SET_CURRENT_CHAT_ROOM: (state, chatRoom: ChatRoom) => {
       state.currentChatRoom = chatRoom;
+    },
+
+    // * 채팅방 id 저장
+    SET_CURRENT_CHAT_ROOM_ID: (state, chatRoomId: string) => {
+      state.currentChatRoom.chatRoomId = chatRoomId;
     },
   },
 
@@ -153,34 +166,41 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
     },
 
     // * 현재 채팅방 채팅 불러와서 저장
-    setChatLogs: ({ commit, getters, rootGetters }) => {
+    setChatLogs: ({ dispatch, commit, getters, rootGetters }) => {
       const currentChatRoom = getters["getCurrentChatRoom"];
       const roomId = currentChatRoom.chatRoomId;
-      const receiver = currentChatRoom.opponent.uid;
+      const receiver = getters["getCurrentChatUserId"];
       axios({
         url: api.chats.chatLogs(),
         method: "GET",
-        headers: rootGetters["personalInfo/getAccessToken"],
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         params: {
           roomId,
           receiver,
         },
       })
         .then((res) => {
-          commit("SET_CHAT_LOG", res.data);
+          console.log(res.data);
+          commit("SET_CHAT_LOGS", res.data);
         })
         .catch((err) => {
-          console.error(err.response);
+          console.error(err);
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "chatRoom/setChatLogs",
+              params: {},
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
 
-    // * 현재 채팅방에 새 메세지 추가
-    addNewChat: ({ commit }, newChat: Chat) => {
-      commit("ADD_NEW_CHAT", newChat);
-    },
-
     // * chatDetail 지속적으로 확인
-    checkChatDetail: async ({ dispatch, getters }) => {
+    checkChatDetail: async ({ commit, getters }) => {
       const currentChatRoom = getters["getCurrentChatRoom"];
       const roomId = currentChatRoom.chatRoomId;
 
@@ -200,7 +220,8 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
               firstLoad = true;
               return;
             }
-            dispatch("addNewChat", arr[i].doc.data());
+            // 현재 채팅방에 새 메세지 추가
+            commit("ADD_NEW_CHAT", arr[i].doc.data());
             console.log("새로운 메세지 있음!!");
             break;
           }
@@ -208,8 +229,16 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       });
     },
 
+    // * 현재 채팅하려는 유저 ID 저장
+    setCurrentChatUserId: ({ commit }, userId: number) => {
+      commit("SET_CURRENT_CHAT_USER_ID", userId);
+    },
+
     // * 새 메세지 전송
-    sendNewChat: ({ getters, rootGetters }, message: string) => {
+    sendNewChat: (
+      { dispatch, commit, getters, rootGetters },
+      message: string
+    ) => {
       const currentChatRoom = getters["getCurrentChatRoom"];
       const roomId = currentChatRoom.chatRoomId;
       const receiver = currentChatRoom.opponent.uid;
@@ -223,7 +252,26 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
         method: "POST",
         headers: rootGetters["personalInfo/getAccessToken"],
         data,
-      });
+      })
+        .then((res) => {
+          // 프로필 페이지에서 바로 메시지 보냈고 이전 채팅 로그가 없는 경우
+          // res.data(새로 만들어진 chatRoomId)를 기반으로 chatRoomId에 저장
+          // checkChatDetail 함수에서 chatRoomId를 기반으로 계속 chatLogs 누적
+          if (!roomId) {
+            commit("SET_CURRENT_CHAT_ROOM_ID", res.data);
+          }
+        })
+        .catch((err) => {
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "chatRoom/sendNewChat",
+              params: message,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
     },
   },
 };

@@ -209,7 +209,7 @@ public class CocktailService {
         cocktailBookmarkRepository.findByCocktailId(new Cocktail(c_id), pageable).forEach(data -> {
             Member member = memberRepository.findById(data.getMemberId().getUid()).orElseThrow();
 
-            if(member.getIsPrivate().equals("1")){
+            if(member.getIsPrivate().equals("0")){
                 FollowPK key = new FollowPK(uid, member.getUid());
 
                 Integer status = followRepository.findById(key).isPresent() ? 1 : 0;

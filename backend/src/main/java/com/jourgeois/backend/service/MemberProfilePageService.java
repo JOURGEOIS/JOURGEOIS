@@ -57,7 +57,7 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPrivate().equals("0") && !member.getUid().equals(userId)){
+        if(member.getIsPrivate().equals("1") && !member.getUid().equals(userId)){
             return resArr;
         }
 
@@ -102,7 +102,7 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberCocktailComment(Long userId, Long uid, Pageable pageable){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPrivate().equals("0") && !member.getUid().equals(userId)){
+        if(member.getIsPrivate().equals("1") && !member.getUid().equals(userId)){
             return resArr;
         }
 

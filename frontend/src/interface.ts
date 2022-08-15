@@ -5,7 +5,6 @@ export interface User {
   profileImg: string;
   introduce: string | null;
   isFollowed: number | null; // 1 : 팔로우중 / 0 : 팔로우X / -1 : me
-  isPublic: number; // 계정 모드: 1: 공개 / 0: 비공개 <= 변경 예정
 }
 
 // 커스텀 칵테일만의 정보
@@ -165,7 +164,6 @@ export interface userProfileData {
   followerCnt: number;
   followingCnt: number;
   postCnt: number;
-  isPublic: number;
 }
 
 // 프로필 유저-게시물 정보(일반)
@@ -182,17 +180,17 @@ export interface userCommunityPostData {
 
 // 프로필 유저-게시물 정보(커칵/슈커칵)
 export interface userCustomPostData {
-  createTime: string
-  baseCocktail: number | null
-  nickname: string
-  description: string
-  ingredients: string
-  postId: number
-  iLike: number
-  profileImg: string
-  title: string
-  postImg: string
-  likes: number
+  createTime: string;
+  baseCocktail: number | null;
+  nickname: string;
+  description: string;
+  ingredients: string;
+  postId: number;
+  iLike: number;
+  profileImg: string;
+  title: string;
+  postImg: string;
+  likes: number;
 }
 
 // 프로필 유저-후기 정보

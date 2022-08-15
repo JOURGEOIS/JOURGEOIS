@@ -2,7 +2,7 @@
   <header class="notice-header-container">
     <img
       class="main-logo"
-      src="https://user-images.githubusercontent.com/86189596/184537312-81ae4cbf-b7af-494a-86a8-f6057bfa0820.png"
+      src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/icon-bold-line-nobackground.png"
       alt=""
       @click="clickHome"
     />

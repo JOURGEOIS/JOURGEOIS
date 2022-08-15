@@ -229,3 +229,15 @@ export interface ChatRoom {
   };
   hasNewMessage: boolean;
 }
+
+export interface Chat {
+  chatRoomId: number;
+  sender: number;
+  receiver: number;
+  message: string;
+  isRead: boolean;
+  timestamp: {
+    seconds: number;
+    nanos: number;
+  };
+}

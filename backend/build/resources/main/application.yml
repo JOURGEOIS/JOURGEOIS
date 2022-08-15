@@ -7,38 +7,11 @@ spring:
       max-file-size: 10MB
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-#    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-<<<<<<< HEAD
-=======
-    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
->>>>>>> Stashed changes
-#    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: nh0455k8613!
-<<<<<<< Updated upstream
-=======
-#    username: root
-#    password:
->>>>>>> dcee45fd509fc0511fd521cd16a9d1a11159d705
-=======
-    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: 1q2w3e4r!@#
-<<<<<<< HEAD
->>>>>>> a783285eb70dbd4ac41c492abc3901828f5273b5
-=======
->>>>>>> Stashed changes
-=======
-    
->>>>>>> a6dafce4c4d906dd0ba5deb5cee743f195edf835
-=======
     url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: nh0455k8613!
->>>>>>> 0640ca90c74c748f5e4d43db670ff63e50aecc72
+# 주석처리 해야혀~
 
     hikari:
       auto-commit: false

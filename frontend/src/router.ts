@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, useRouter } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import createStore from "../src/store/index";
 import { computed } from "vue";
 
@@ -74,6 +74,20 @@ const routes: any[] = [
     path: "/user/profile/private",
     name: "TheUserProfilePrivateModeView",
     component: () => import("@/views/TheUserProfilePrivateModeView.vue"),
+  },
+
+  // 팔로워 리스트 보기
+  {
+    path: "/user/follower/:userId",
+    name: "TheFollowerListView",
+    component: () => import("@/views/TheFollowerListView.vue")
+  },
+
+  // 팔로잉 리스트 보기
+  {
+    path: "/user/followee/:userId",
+    name: "TheFollowingListView",
+    component: () => import("@/views/TheFollowingListView.vue")
   },
 
   // 칵테일 검색 페이지

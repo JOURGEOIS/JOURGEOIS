@@ -9,6 +9,7 @@
             width: '45px',
             height: '45px',
           }"
+          @click="goProfile"
         ></round-image>
       </div>
       <!-- 수정하지 않을 때 -->
@@ -131,6 +132,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from "vue";
+import { useRouter } from "vue-router"
 import { useStore } from "vuex";
 import RoundImage from "@/components/basics/RoundImage.vue";
 import ModalBasic from "@/components/basics/ModalBasic.vue";
@@ -158,11 +160,16 @@ const props = defineProps<{
 
 // 유저 정보 불러오기
 const store = useStore();
+const router = useRouter();
 const userInfo = computed(() => store.getters["personalInfo/getUserInfo"]);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
 const img: string = userInfo.value.profileImg;
 const name: string = userInfo.value.nickname;
+
+const goProfile = () => {
+  router.push({name: "TheUserProfileView", params:{userId: userId.value}})
+}
 
 // 칵테일 날짜
 const calc = calcDateDelta(props.data.createdDate);

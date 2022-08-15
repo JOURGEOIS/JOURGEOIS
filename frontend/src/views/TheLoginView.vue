@@ -53,13 +53,13 @@ section {
   }
 }
 
-section > *:first-child {
-  margin-bottom: 1rem;
+section > * {
+  margin-bottom: 24px;
 }
 
 .login-link {
   @include flex-center();
-  gap: 2rem;
+  gap: 40px;
   color: $sub-color;
   @include font(13px, $fw-regular);
 

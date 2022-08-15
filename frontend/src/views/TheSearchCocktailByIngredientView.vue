@@ -19,15 +19,15 @@
 import TheListItemCocktail from "@/components/cocktails/TheListItemCocktail.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import axios from "axios";
-import api from "../api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { computed, onBeforeMount } from "vue";
-import { ingredients } from "../assets/filter";
+import { computed, onBeforeMount, onUnmounted } from "vue";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
 
 // 칵테일 interface
 interface Cocktail {
@@ -48,7 +48,7 @@ const clickCocktail = (item: Cocktail) => {
   router.push({ name: "TheCocktailDescView", params: { cocktailId: item.id } });
 };
 
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "searchResult/setSearchCocktail",
@@ -68,6 +68,10 @@ onBeforeMount(() => {
   setTimeout(() => {
     setSearchCocktail(ingredientId);
   }, 100);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

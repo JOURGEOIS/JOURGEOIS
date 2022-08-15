@@ -44,6 +44,9 @@ import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 0);
+
 // [basic] navbar icon 0번 켜기
 const setNavIconStatus = (index: number) => {
   store.dispatch("navbar/setNavIconStatus", index);

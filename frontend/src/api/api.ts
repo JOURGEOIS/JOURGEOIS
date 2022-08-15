@@ -9,6 +9,7 @@ const AWARDS = "awards/";
 const PROFILE = "profile/";
 const HOME = "home/";
 const NOTICE = "notification/auth/";
+const CHAT = "chat/auth/";
 
 export default {
   token: {
@@ -29,11 +30,16 @@ export default {
     naverLogin: () => HOST + ACCOUNTS + "login/naver",
     follow: () => HOST + ACCOUNTS + "auth/follow",
     unfollow: () => HOST + ACCOUNTS + "auth/unfollow",
+
+    // 프로필
     profileUserInfo: () => HOST + ACCOUNTS + PROFILE + "auth",
     profileCommunity: () => HOST + ACCOUNTS + PROFILE + "auth/post",
     profileCustom: () => HOST + ACCOUNTS + PROFILE + "auth/cocktail",
     profileBookmark: () => HOST + ACCOUNTS + PROFILE + "auth/bookmark",
     profileReview: () => HOST + ACCOUNTS + PROFILE + "auth/comment",
+    profileModeSet: () => HOST + ACCOUNTS + PROFILE + "auth/profile-status",
+    profileFollower: () => HOST + ACCOUNTS + "auth/follower",
+    profileFollowee: () => HOST + ACCOUNTS + "auth/followee",
   },
   email: {
     emailCert: () => HOST + "email/cert",
@@ -98,5 +104,9 @@ export default {
     readNotice: () => HOST + NOTICE + "read",
     readNoticeAll: () => HOST + NOTICE + "readall",
     getNoticeList: () => HOST + NOTICE + "list",
+  },
+
+  chats: {
+    chatRoomList: () => HOST + CHAT + "chatroom",
   },
 };

@@ -38,11 +38,8 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-// [basic] navbar icon 0번 켜기
-const setNavIconStatus = (index: number) => {
-  store.dispatch("navbar/setNavIconStatus", index);
-};
-setNavIconStatus(3);
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
 
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];
@@ -97,22 +94,22 @@ const clickCloseIcon = () => {
     justify-content: space-between;
     width: 100%;
     margin-top: 1rem;
+  }
+}
 
-    .whole-search-button {
-      position: fixed;
-      left: 50%;
-      transform: translate(-50%, 0);
-      width: 90%;
-      bottom: 100px;
+.whole-search-button {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 90%;
+  bottom: 100px;
 
-      @media #{$tablet} {
-        width: 50%;
-      }
+  @media #{$tablet} {
+    width: 50%;
+  }
 
-      @media #{$pc} {
-        width: 60%;
-      }
-    }
+  @media #{$pc} {
+    width: 40%;
   }
 }
 

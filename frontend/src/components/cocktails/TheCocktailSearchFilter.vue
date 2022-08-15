@@ -42,17 +42,17 @@ const resetFilter = () => {
 };
 
 // * 뒤로가기 할 때 모달 내려가게 하기
-const getFilterStatus = computed(
-  () => store.getters["cocktailSearch/getFilterStatus"]
-);
+// const getFilterStatus = computed(
+//   () => store.getters["cocktailSearch/getFilterStatus"]
+// );
 
-onBeforeRouteLeave((to, from, next) => {
-  if (getFilterStatus.value) {
-    clickXIcon();
-  } else {
-    next();
-  }
-});
+// onBeforeRouteLeave((to, from, next) => {
+//   if (getFilterStatus.value) {
+//     clickXIcon();
+//   } else {
+//     next();
+//   }
+// });
 </script>
 
 <style scoped lang="scss">
@@ -89,7 +89,7 @@ onBeforeRouteLeave((to, from, next) => {
     bottom: 0px;
     width: 100%;
     max-width: 600px;
-    height: 98%;
+    height: 90%;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding: 0 16px;
@@ -97,10 +97,6 @@ onBeforeRouteLeave((to, from, next) => {
 
     @media #{$tablet} {
       width: 64%;
-    }
-
-    @media (min-height: 750px) {
-      height: 90%;
     }
 
     .cocktail-search-filter-header {

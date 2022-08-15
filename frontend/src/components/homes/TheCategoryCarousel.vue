@@ -51,11 +51,6 @@ const categories = ["", "", "", ""];
 
 const clickCategory = (idx: number) => {
   store.dispatch("carousel/setSelectedCategory", categoryContents[idx].name);
-  // categoryContents.forEach((content) => {
-  //   content.selected = false;
-  // });
-  // categoryContents[idx].selected = true;
-  // // store.dispatch("carousel/clickCategory")
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <the-profile-header
     :prev="true"
-    :setting="true"
+    :setting="myProfile()"
     @prevClicked="$router.go(-1)"
   >
     <div>프로필</div>
@@ -19,15 +19,12 @@
         </div>
         <div class="user-profile-tab-custom" :class="`index-${index}`">
           <p @click="clickCustomCocktailTab">커스텀</p>
-          <!-- <span>99+</span> -->
         </div>
         <div class="user-profile-tab-review" :class="`index-${index}`">
           <p @click="clickReviewTab">후기</p>
-          <!-- <span>99+</span> -->
         </div>
-        <div class="user-profile-tab-bookmark" :class="`index-${index}`">
+        <div class="user-profile-tab-bookmark" :class="`index-${index}`" v-if="isFollowed === -1">
           <p @click="clickBookmarkTab">북마크</p>
-          <!-- <span>99+</span> -->
         </div>
       </div>
       <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
@@ -55,6 +52,24 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 const route = useRoute();
 const store = useStore();
+
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 4);
+
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+const uid = computed(() => userInfo.value.uid);
+const isFollowed = computed(() => userInfo.value.isFollowed)
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+
+const myProfile = () => {
+  if (userId.value === uid.value) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 // 세팅 모달
 const settingsModalStatus = computed(
@@ -106,6 +121,7 @@ const clickBookmarkTab = () =>
 onMounted(() => {
   store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
   toggleLogOutModal(false);
+  store.dispatch("profileDesc/changeCurrentTab", 0);
 });
 
 // 로그아웃 모달

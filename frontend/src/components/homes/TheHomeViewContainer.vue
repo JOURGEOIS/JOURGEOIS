@@ -1,5 +1,21 @@
 <template>
   <div class="home-view-container">
+    <!-- 칵테일 어워즈 배너 -->
+    <section class="cocktail-awards-section">
+      <the-cocktail-awards-banner
+        image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_cocktail_awards_banner.png"
+        @click="$router.push({ name: 'TheCocktailAwardsView' })"
+      ></the-cocktail-awards-banner>
+    </section>
+    <!-- 좋아요 기반 추천 칵테일  -->
+    <the-home-basic-section
+      v-if="isLoggedIn"
+      :data="likeRecommendedCocktailData"
+    >
+      <h1 class="title">
+        당신을 위한 <span class="important">취향저격</span> 칵테일
+      </h1>
+    </the-home-basic-section>
     <!-- 테마별 추천 칵테일 -->
     <the-theme-section
       ><h1 class="title">
@@ -27,21 +43,17 @@
         유저들의 <span class="important">이번 주 HOT</span> 칵테일
       </h1>
     </the-home-basic-section>
-    <!-- 좋아요 기반 추천 칵테일  -->
-    <!-- <the-home-basic-section :data="likeRecommendedCocktailData">
-      <h1 class="title">
-        당신을 위한 <span class="important">취향저격</span> 칵테일
-      </h1>
-    </the-home-basic-section> -->
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import TheVideoSection from "@/components/homes/TheVideoSection.vue";
 import TheHomeBasicSection from "@/components/homes/TheHomeBasicSection.vue";
 import TheHotKeywordSection from "@/components/homes/TheHotKeywordSection.vue";
 import TheThemeSection from "@/components/homes/TheThemeSection.vue";
+import TheCocktailAwardsBanner from "@/components/cocktailAwards/TheCocktailAwardsBanner.vue";
 const store = useStore();
 
 // 유저들의 NEW 커스텀 칵테일
@@ -79,6 +91,9 @@ const likeRecommendedCocktailData = {
   getCarouselFunc: "getLikeRecommendedCocktails",
   showMoreView: "TheAllLikeRecommendedCocktailView",
 };
+
+// 로그인 여부 확인
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 </script>
 
 <style scoped lang="scss">
@@ -87,8 +102,14 @@ const likeRecommendedCocktailData = {
   width: calc(100% + 32px);
   margin-left: -16px;
   padding: 10px 0;
-  gap: 20px;
+  gap: 30px;
   background-color: $white150;
+}
+
+.cocktail-awards-section {
+  @include shadow-feed;
+  background-color: $white;
+  margin-top: -10px;
 }
 
 .title {

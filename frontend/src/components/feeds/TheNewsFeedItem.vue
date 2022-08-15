@@ -1,6 +1,6 @@
 <template>
   <div class="the-news-feed-container">
-    <div class="the-news-feed-header">
+    <div class="the-news-feed-header" @click="clickProfileImage">
       <round-image
         :round-image="{ image: newsFeedData.profileImg }"
       ></round-image>
@@ -30,8 +30,11 @@
     <div class="the-news-feed-content" @click="moveFeedDescription">
       <p>{{ newsFeedData.description }}</p>
     </div>
-    <like-comment @clickLike="clickLike" :data="{ isLiked: isLiked }">
-      <template #like>{{ likeCount }}</template>
+    <like-comment
+      @clickLike="clickLike"
+      :data="{ isLiked: newsFeedData.isLiked, postId: newsFeedData.postId }"
+    >
+      <template #like>{{ newsFeedData.likeCount }}</template>
       <template #comment>{{ newsFeedData.reviewCount }}</template>
     </like-comment>
   </div>
@@ -43,27 +46,22 @@ import RoundImage from "@/components/basics/RoundImage.vue";
 import { calcDateDelta } from "../../functions/date";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import { NewsFeed } from "../../interface.js";
-import axios from "axios";
-import router from "../../router";
-const route = useRouter();
+const router = useRouter();
+const store = useStore();
 
 const props = defineProps<{
   newsFeedData: NewsFeed;
+  newsFeedIndex: number;
 }>();
-
-const isLiked = ref(props.newsFeedData.isLiked);
-const likeCount = ref(props.newsFeedData.likeCount);
 
 // 좋아요 클릭
 const clickLike = () => {
-  if (isLiked.value === 0) {
-    isLiked.value = 1;
-    likeCount.value = likeCount.value + 1;
-  } else {
-    isLiked.value = 0;
-    likeCount.value = likeCount.value - 1;
-  }
+  store.dispatch("newsFeed/likeNewsFeedData", {
+    index: props.newsFeedIndex,
+    postId: props.newsFeedData.postId,
+  });
 };
 
 // 상세페이지 이동
@@ -97,6 +95,16 @@ const moveFeedDescription = () => {
     });
   }
 };
+
+// 프로필 이미지 클릭
+const clickProfileImage = () => {
+  router.push({
+    name: "TheUserProfileView",
+    params: {
+      userId: props.newsFeedData.writer,
+    },
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -109,6 +117,7 @@ const moveFeedDescription = () => {
   .the-news-feed-header {
     @include flex-xy(flex-start, center);
     gap: 8px;
+    cursor: pointer;
 
     .round-image {
       width: 59px;

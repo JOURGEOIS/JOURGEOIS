@@ -67,10 +67,10 @@ const clickCard = () => {
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  border-radius: 12px;
-  @include feed;
   padding: 0px;
   padding-bottom: 10px;
+  border-radius: 12px;
+  @include shadow-feed;
   cursor: pointer;
 
   .cocktail-awards-vote-item-image {

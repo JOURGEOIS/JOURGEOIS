@@ -1,7 +1,6 @@
 <template>
   <!-- <hr /> -->
   <div class="social-login">
-    <p>or</p>
     <button-basic
       @click="clickGoogle"
       :button-style="['google-login', 'long', 'small']"
@@ -114,6 +113,7 @@ img {
   position: absolute;
   left: 20%;
   width: 30px;
+  border: 0;
 }
 .social-login {
   @include flex(column);

@@ -109,8 +109,7 @@ const clickIngredient = (item: autoCompleteWord) => {
 
 // 계정 자동완성 클릭 시
 const clickUser = (item: autoCompleteWord) => {
-  alert(item.nameKr);
-  // router.push({ name: "TheProfileView", params: { userId: item.id } });
+  router.push({ name: "TheUserProfileView", params:{userId: item.id}})
 };
 </script>
 <style scoped lang="scss">

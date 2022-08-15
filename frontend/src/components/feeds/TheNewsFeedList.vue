@@ -1,7 +1,10 @@
 <template>
   <div class="news-feed-list-container">
-    <article v-for="item in newsFeedList" :key="item.postId">
-      <the-news-feed-item :news-feed-data="item"></the-news-feed-item>
+    <article v-for="(item, index) in newsFeedList" :key="item.postId">
+      <the-news-feed-item
+        :news-feed-data="item"
+        :news-feed-index="index"
+      ></the-news-feed-item>
     </article>
   </div>
 </template>
@@ -20,7 +23,7 @@ const newsFeedList = computed(
 <style scoped lang="scss">
 .news-feed-list-container {
   @include flex(column);
-  gap: 40px;
+  gap: 30px;
   width: calc(100% + 32px);
   margin-left: -16px;
   background-color: $white150;

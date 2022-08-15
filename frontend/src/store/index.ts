@@ -71,6 +71,9 @@ import { cocktailAwards, CocktailAwardsState } from "./feeds/cocktailAwards";
 // notice
 import { notice, NoticeState } from "../store/feeds/notice";
 
+// chat
+import { chatRoom, ChatRoomState } from "../store/chats/chatRoom";
+
 // 모듈의 state를 공유한다.
 export interface RootState {
   navbar: NavbarState;
@@ -99,6 +102,7 @@ export interface RootState {
   cocktailAwards: CocktailAwardsState;
   carousel: CarouselState;
   notice: NoticeState;
+  chatRoom: ChatRoomState;
 }
 
 // store를 생성한다.
@@ -130,5 +134,6 @@ export default createStore({
     cocktailAwards,
     carousel,
     notice,
+    chatRoom,
   },
 });

@@ -4,7 +4,12 @@
       좋아요한 유저
     </header-basic>
     <div class="the-item-container top-view-no-margin">
+      <div class="like-empty" v-if="isEmpty">
+        <p>해당 게시물의 좋아요 유저가 없습니다</p>
+        <p class="emoji">😥</p>
+      </div>
       <the-list-item-user
+        v-else
         v-for="(item, idx) in likedUsers"
         :key="idx"
         :data="item"
@@ -18,18 +23,26 @@
 import TheListItemUser from "@/components/cocktails/TheListItemUser.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import axios from "axios";
-import api from "../api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { computed, onBeforeMount } from "vue";
+import { ref, computed, onBeforeMount, onUnmounted } from "vue";
 import { User } from "../interface";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+const isEmpty = ref(false);
+setTimeout(() => {
+  if (likedUsers.value.length === 0) {
+    isEmpty.value = true;
+  }
+}, 200);
+
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
+
 const feedId = route.params.feedId;
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "post/setLikedUsers",
@@ -58,6 +71,12 @@ onBeforeMount(() => {
     setLikedUsers({ postId: feedId });
   }, 100);
 });
+
+// 리셋
+onUnmounted(() => {
+  store.dispatch("post/resetLikedUserData");
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
 
 <style scoped lang="scss">
@@ -71,6 +90,26 @@ onBeforeMount(() => {
     width: 100%;
 
     margin-top: 1rem;
+  }
+}
+
+.like-empty {
+  width: 100%;
+  margin-top: 120px;
+  padding: 64px 16px;
+  border-radius: 16px;
+  background-color: $white200;
+  @include font($fs-main, $fw-bold);
+  align-self: center;
+  text-align: center;
+
+  .emoji {
+    font-size: $fs-xl;
+  }
+
+  @media #{$tablet} {
+    @include font($fs-lg, $fw-bold);
+    width: 450px;
   }
 }
 </style>

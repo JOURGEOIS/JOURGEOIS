@@ -1,6 +1,8 @@
 <template>
   <article v-for="post in userCustomPostData" :key="post.postId">
-    <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
+    <the-custom-cocktail-post-item 
+      :post="post"
+    ></the-custom-cocktail-post-item>
   </article>
 </template>
 
@@ -16,8 +18,21 @@ const userCustomPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostCustom"]
 );
 
+// const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
+// const uid = computed(() => userInfo.value.uid);
+// const isPublic = computed(() => userInfo.value.isPublic);
+// const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+// console.log(!isPublic.value, uid.value, userId.value)
+// const isPublicAc = () => {
+//   if (uid.value !== userId.value) {
+//     if (isPublic.value) {
+//       return 
+//     }
+//   }
+// }
+
 // 인피니티 스크롤
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const data = {
     event,
     action: "profileDesc/getCurrentUserPostCustomData",
@@ -38,6 +53,7 @@ onBeforeMount(() => {
 // unmount될 때, 페이지와 리스트를 리셋한다.
 onUnmounted(() => {
   store.dispatch("profileDesc/resetCurrentUserPost");
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 

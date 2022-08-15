@@ -42,6 +42,9 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+// navbar 색깔 부여
+store.dispatch("navbar/setNavIconStatus", 3);
+
 // 검색 결과
 const searchInputValue = computed(() => {
   return store.getters["cocktailSearch/getSearchInputValue"];
@@ -50,7 +53,7 @@ const searchInputValue = computed(() => {
 // 현재 탭
 const currentTab = computed(() => store.getters["searchResult/getCurrentTab"]);
 
-const handleScroll = (event: any) => {
+const handleScroll = (event: Event) => {
   const action = currentTab.value
     ? "searchResult/setSearchUser"
     : "searchResult/setSearchCocktailAll";
@@ -93,6 +96,7 @@ onBeforeMount(async () => {
 onUnmounted(() => {
   // 유저 검색 정보 및 칵테일 검색 정보 제거
   store.dispatch("searchResult/removeSearchResult");
+  window.removeEventListener("scroll", handleScroll);
 });
 
 // 입력창 클릭

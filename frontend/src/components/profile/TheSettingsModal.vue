@@ -27,7 +27,7 @@
             <div class="btn-text">개인정보 수정</div>
           </article>
           <hr>
-          <article class="profile-public-set set-btn" @click="profilePublicSet">
+          <article class="profile-public-set set-btn" @click="profilePrivateSet">
             <div class="btn-text">프로필 공개 설정</div>
           </article>
           <hr>
@@ -78,7 +78,7 @@ const editPersonalInfo = () => {
 };
 
 // 프로필 공개 설정
-const profilePublicSet = () => {
+const profilePrivateSet = () => {
   store.dispatch("settings/toggleSettingsModal", false);
   router.push({ name: "TheUserProfilePrivateModeView" });
 };

@@ -89,6 +89,7 @@ watch(customCocktailInfo?.value?.followerDTO?.isFollowed, () => {
   const isFollowed = computed(
     () => customCocktailInfo?.value?.followerDTO?.isFollowed
   );
+  followingCnt
 });
 
 const clickFollowBtn = () => {

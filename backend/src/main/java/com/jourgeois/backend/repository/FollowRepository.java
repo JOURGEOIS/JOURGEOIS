@@ -23,5 +23,4 @@ public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
             "left join member " +
             "on followee.to_user_id = member.uid", nativeQuery = true)
     List<FollowerVO> getFollweeAll(@Param(value = "uid") Long uid, @Param(value = "me") Long me, Pageable pageable);
-
 }

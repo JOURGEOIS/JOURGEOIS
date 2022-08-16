@@ -134,7 +134,7 @@ export const notice: Module<NoticeState, RootState> = {
     },
 
     // 알림 리스트를 가져온다.
-    getNoticeList: ({ rootGetters, commit, getters, dispatch }) => {
+    fetchNoticeList: ({ rootGetters, commit, getters, dispatch }) => {
       dispatch("modal/toggleLoadingStatus", true, { root: true });
       const page = getters["getNoticeListPage"];
       axios({
@@ -164,7 +164,7 @@ export const notice: Module<NoticeState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "notice/getNoticeList",
+              func: "notice/fetchNoticeList",
               params: {},
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });

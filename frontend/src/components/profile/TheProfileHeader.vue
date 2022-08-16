@@ -97,18 +97,21 @@ const clickSet = () => {
       }
     }
     .material-icons-outlined {
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      transform: translate(0, -30%);
       padding: 0;
-      align-self: center;
-      margin-top: 5px;
       @include font($fs-title, $fw-thin);
 
       @media #{$tablet} {
         font-size: $fs-xl;
-        margin-top: 5px;
+        right: 15%;
+      }
+      @media #{$pc} {
+        right: 20%;
       }
 
-      @media #{$pc} {
-      }
       &:hover {
         cursor: pointer;
       }
@@ -119,6 +122,13 @@ const clickSet = () => {
       left: 16px;
       transform: translate(0, -55%);
       user-select: none;
+
+      @media #{$tablet} {
+        left: 15%;
+      }
+      @media #{$pc} {
+        left: 20%;
+      }
     }
   }
 }

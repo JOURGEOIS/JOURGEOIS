@@ -27,7 +27,7 @@ const loadingStatus = computed(() => store.getters["modal/getLoadingStatus"]);
 const handleScroll = (event: Event) => {
   const data = {
     event,
-    action: "notice/getNoticeList",
+    action: "notice/fetchNoticeList",
     data: {},
   };
   store.dispatch("scroll/handleScroll", data);
@@ -36,7 +36,7 @@ const handleScroll = (event: Event) => {
 // 초기 데이터, 무한 스크롤 연동
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
-  store.dispatch("notice/getNoticeList");
+  store.dispatch("notice/fetchNoticeList");
 });
 
 // 모두 읽기

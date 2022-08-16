@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,4 +29,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "(SELECT COUNT(f) FROM Follow AS f WHERE f.from.uid = :myUid AND f.to.uid = :id) AS isFollowed " +
             "FROM Member AS m JOIN Post AS p ON m.uid = p.member.uid AND p.d_type <> 'cocktail_awards' WHERE m.uid = :id")
     Optional<MemberVO> findMemberProfile(Long myUid, Long id);
+
+    @Query("SELECT m.uid AS uid, m.nickname AS nickname, m.profileImg AS profileImg " +
+            "FROM Member AS m WHERE m.uid = :id")
+    Optional<MemberVO> findMemberForChat(Long id);
 }

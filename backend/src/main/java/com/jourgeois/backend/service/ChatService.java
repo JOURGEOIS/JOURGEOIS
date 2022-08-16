@@ -7,6 +7,7 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.chat.ChatMessageDTO;
 import com.jourgeois.backend.api.dto.chat.ChatMessageResponseDTO;
 import com.jourgeois.backend.api.dto.chat.ChatRoomDTO;
+import com.jourgeois.backend.api.dto.member.MemberVO;
 import com.jourgeois.backend.api.dto.notification.OpponentDTO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.MemberRepository;
@@ -132,7 +133,7 @@ public class ChatService {
     }
 
     // uid = 상대방 id
-    public List<ChatMessageDTO> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
+    public Map<String, Object> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
         /*
         찾아라!! 채팅방 ID!!
          */
@@ -198,9 +199,16 @@ public class ChatService {
             chatMessageDTOList.add(chatMessageDTO);
         }
 
-        // result.put("size", startAfter+chatRoomRefs.size());
-//        result.put("messages", chatMessageResponseDTOList);
-        return chatMessageDTOList;
+        MemberVO opp = memberRepository.findMemberForChat(receiver).orElseThrow(() -> new NoSuchElementException("그런 유저 없다"));
+
+        Map<String, Object> opponentInfo = new HashMap<>();
+        opponentInfo.put("uid", opp.getUid());
+        opponentInfo.put("profileImg", S3Util.s3urlFormatter(opp.getProfileImg()));
+        opponentInfo.put("nicname", opp.getNickname());
+
+        result.put("opponent", opponentInfo);
+        result.put("messages", chatMessageDTOList);
+        return result;
     }
 
     private String getRoomId(Long uid, Long receiver) throws InterruptedException, ExecutionException {

@@ -5,19 +5,20 @@
       <div class="cocktail-desc-review-profile">
         <round-image
           :round-image="{
-            image: data.profileImg,
+            image: review.profileImg,
             width: '45px',
             height: '45px',
           }"
           @click="goProfile"
         ></round-image>
       </div>
+
       <!-- 수정하지 않을 때 -->
       <div v-if="!isEditing" class="cocktail-desc-review-content">
         <div class="cocktail-decs-review-front">
           <div class="cocktail-desc-review-name-time">
-            <p class="cocktail-desc-review-profile-name">
-              {{ data.nickname }}
+            <p class="cocktail-desc-review-profile-name" @click="goProfile">
+              {{ review.nickname }}
             </p>
             <div class="cocktail-desc-review-time-compare">
               <p class="cocktail-desc-review-time">{{ calc }}</p>
@@ -25,7 +26,7 @@
             </div>
           </div>
           <div
-            v-if="userInfo.nickname == data.nickname"
+            v-if="userInfo.nickname == review.nickname"
             class="cocktail-desc-review-button"
           >
             <button-basic
@@ -38,40 +39,14 @@
             <button-basic
               :button-style="[buttonColor, '40px']"
               class="buttonstyle"
-              @click="toggleDeleteModal(true)"
+              @click="clickDeleteReview"
             >
               삭제
             </button-basic>
-            <modal-basic
-              modal-color="white"
-              @offModal="toggleDeleteModal(false)"
-              v-if="deleteModalStatus"
-              class="modal-basic"
-            >
-              <div class="delete-modal-content">
-                <p>정말 삭제 하시겠어요?</p>
-                <div class="delete-modal-button">
-                  <!-- 취소 버튼 -->
-                  <button-basic
-                    :button-style="['main-blank', '50%', 'small']"
-                    @click="toggleDeleteModal(false)"
-                  >
-                    취소
-                  </button-basic>
-                  <!-- 삭제 버튼 -->
-                  <button-basic
-                    :button-style="['primary', '50%', 'small']"
-                    @click="clickDeleteReview"
-                  >
-                    삭제
-                  </button-basic>
-                </div>
-              </div>
-            </modal-basic>
           </div>
         </div>
         <p>
-          {{ data.comment }}
+          {{ review.comment }}
         </p>
       </div>
       <!-- 수정 버튼 누르면 수정폼으로 변환됨. -->
@@ -83,12 +58,12 @@
         <div class="cocktail-decs-review-front">
           <div class="cocktail-desc-review-name-time">
             <p class="cocktail-desc-review-profile-name">
-              {{ data.nickname }}
+              {{ review.nickname }}
             </p>
             <p class="cocktail-desc-review-time">{{ calc }}</p>
           </div>
           <div
-            v-if="userInfo.nickname == data.nickname"
+            v-if="userInfo.nickname == review.nickname"
             class="cocktail-desc-review-button"
           >
             <button-basic
@@ -119,13 +94,6 @@
           </failure-pop-up>
         </div>
       </form>
-      <!-- 수정이 완료되면 팝업 알림 -->
-      <success-pop-up
-        v-if="successPopUpStatus"
-        @offModal="toggleSuccessPopUp(true)"
-      >
-        성공적으로 변경되었습니다
-      </success-pop-up>
     </div>
   </div>
 </template>
@@ -135,13 +103,13 @@ import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useRouter } from "vue-router"
 import { useStore } from "vuex";
 import RoundImage from "@/components/basics/RoundImage.vue";
-import ModalBasic from "@/components/basics/ModalBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import TextareaBasic from "@/components/basics/TextareaBasic.vue";
-import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import { calcDateDelta, compareDate } from "../../functions/date";
 import { checkBadWord } from "../../functions/checkText";
+const store = useStore();
+const router = useRouter();
 
 interface cocktailReviewData {
   commentId: number;
@@ -155,29 +123,23 @@ interface cocktailReviewData {
 }
 
 const props = defineProps<{
-  data: cocktailReviewData;
+  review: cocktailReviewData;
 }>();
 
 // 유저 정보 불러오기
-const store = useStore();
-const router = useRouter();
 const userInfo = computed(() => store.getters["personalInfo/getUserInfo"]);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
 const img: string = userInfo.value.profileImg;
 const name: string = userInfo.value.nickname;
 
-const goProfile = () => {
-  router.push({name: "TheUserProfileView", params:{userId: userId.value}})
-}
-
 // 칵테일 날짜
-const calc = calcDateDelta(props.data.createdDate);
-const modicalc = calcDateDelta(props.data.modifiedDate);
+const calc = calcDateDelta(props.review.createdDate);
+const modicalc = calcDateDelta(props.review.modifiedDate);
 
 // 수정시간 / 생성시간 차이
-const createdDate = props.data.createdDate;
-const modifiedDate = props.data.modifiedDate;
+const createdDate = props.review.createdDate;
+const modifiedDate = props.review.modifiedDate;
 const compare = compareDate(createdDate, modifiedDate);
 // button
 const reviewEditValue = ref("");
@@ -193,13 +155,17 @@ const cocktailData = computed(
 );
 const cocktailId = Number(cocktailData.value.id);
 
+const goProfile = () => {
+  router.push({name: "TheUserProfileView", params:{userId: userId.value}})
+}
+
 // 후기 수정
 const reviewEdit = (data: object) =>
   store.dispatch("cocktailReview/updateCocktailReview", data);
 let oldData = {
   cocktailId,
-  commentId: props.data.commentId,
-  comment: props.data.comment,
+  commentId: props.review.commentId,
+  comment: props.review.comment,
 };
 let isEditing = ref(false);
 
@@ -228,7 +194,7 @@ const failModalStatus = computed(
 );
 
 const toggleFailPopUp = (value: boolean) => {
-  store.dispatch("cocktailDesc/toggleFailPopup", value);
+  store.dispatch("cocktailDesc/toggleFailPopupStatus", value);
 };
 
 watch(failModalStatus, () => {
@@ -239,33 +205,9 @@ watch(failModalStatus, () => {
   }
 });
 
-// 삭제 모달
-const deleteModalStatus = computed(
-  () => store.getters["cocktailReview/getDeleteModalStatus"]
-);
-const toggleDeleteModal = (value: boolean) =>
-  store.dispatch("cocktailReview/toggleDeleteModal", value);
-
-// 리뷰 수정 성공 팝업
-const successPopUpStatus = computed(
-  () => store.getters["cocktailReview/getReviewChangeSuccess"]
-);
-const toggleSuccessPopUp = (value: boolean) => {
-  store.dispatch("cocktailReview/toggleReviewChangeSuccess", value);
-};
-
-watch(successPopUpStatus, () => {
-  if (successPopUpStatus.value) {
-    setTimeout(() => {
-      toggleSuccessPopUp(false);
-    }, 2000);
-  }
-});
-
 // 리셋
 onMounted(() => {
   toggleFailPopUp(false);
-  toggleDeleteModal(false);
 });
 
 const clickEditReview = () => {
@@ -274,7 +216,7 @@ const clickEditReview = () => {
   // 전달할 데이터
   const editData = {
     cocktailId,
-    commentId: props.data.commentId,
+    commentId: props.review.commentId,
     comment: reviewInputValue.value,
   };
   // 제출
@@ -295,10 +237,11 @@ const clickCancel = () => {
 const reviewDelete = (data: object) =>
   store.dispatch("cocktailReview/deleteCocktailReview", data);
 
-const commentId = props.data.commentId;
+const commentId = props.review.commentId;
 
 const clickDeleteReview = () => {
-  reviewDelete({ cocktailId, commentId });
+  store.dispatch("cocktailReview/toggleDeleteModal", true)
+  store.dispatch("cocktailReview/setDeleteReviewId", commentId)
 };
 </script>
 
@@ -308,6 +251,7 @@ const clickDeleteReview = () => {
   width: 100%;
   .cocktail-desc-review-profile-content {
     @include flex;
+    align-items: flex-start;
     width: 100%;
     gap: 12px;
     .cocktail-desc-review-profile {

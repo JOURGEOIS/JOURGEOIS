@@ -7,6 +7,7 @@ import com.google.firebase.cloud.FirestoreClient;
 import com.jourgeois.backend.api.dto.chat.ChatMessageDTO;
 import com.jourgeois.backend.api.dto.chat.ChatMessageResponseDTO;
 import com.jourgeois.backend.api.dto.chat.ChatRoomDTO;
+import com.jourgeois.backend.api.dto.member.MemberVO;
 import com.jourgeois.backend.api.dto.notification.OpponentDTO;
 import com.jourgeois.backend.domain.member.Member;
 import com.jourgeois.backend.repository.MemberRepository;
@@ -132,7 +133,7 @@ public class ChatService {
     }
 
     // uid = 상대방 id
-    public List<ChatMessageResponseDTO> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
+    public Map<String, Object> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
         /*
         찾아라!! 채팅방 ID!!
          */
@@ -191,18 +192,23 @@ public class ChatService {
                 .get();
         List<QueryDocumentSnapshot> chatRoomRefs = query.get().getDocuments();
 
-        List<ChatMessageResponseDTO> chatMessageResponseDTOList = new ArrayList<>();
+        List<ChatMessageDTO> chatMessageDTOList = new ArrayList<>();
         for (DocumentSnapshot document : chatRoomRefs) {
             System.out.println(document.getId());
             ChatMessageDTO chatMessageDTO = document.toObject(ChatMessageDTO.class);
-            chatMessageResponseDTOList.add(ChatMessageResponseDTO.builder()
-                            .chatMessageDTO(chatMessageDTO)
-                            .build());
+            chatMessageDTOList.add(chatMessageDTO);
         }
 
-        // result.put("size", startAfter+chatRoomRefs.size());
-//        result.put("messages", chatMessageResponseDTOList);
-        return chatMessageResponseDTOList;
+        MemberVO opp = memberRepository.findMemberForChat(receiver).orElseThrow(() -> new NoSuchElementException("그런 유저 없다"));
+
+        Map<String, Object> opponentInfo = new HashMap<>();
+        opponentInfo.put("uid", opp.getUid());
+        opponentInfo.put("profileImg", S3Util.s3urlFormatter(opp.getProfileImg()));
+        opponentInfo.put("nicname", opp.getNickname());
+
+        result.put("opponent", opponentInfo);
+        result.put("messages", chatMessageDTOList);
+        return result;
     }
 
     private String getRoomId(Long uid, Long receiver) throws InterruptedException, ExecutionException {
@@ -220,6 +226,7 @@ public class ChatService {
                 break;
             }
         }
+
         return roomId;
     }
 }

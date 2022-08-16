@@ -3,7 +3,6 @@
     <div class="title">
       <img src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/icon-bold-line-nobackground.png" alt="">
     </div>
-    <br />
     <div class="content">
       <p class="d404">404</p>
       <p class="not-found">Cocktail Not Found</p>
@@ -18,14 +17,14 @@
 
 <style scoped lang="scss">
 section {
+  @include flex(column);
   width: 100%;
+  gap: 20px;
 }
 img {
-  width: 200px;
+  width: 150px;
   height: auto;
-}
-br {
-  margin: 20px;
+  margin-top: 10px;
 }
 .content {
   @include flex(column);
@@ -34,7 +33,7 @@ br {
     @include font(100px, $fw-bold)
   }
   .not-found {
-    @include font(50px, $fw-regular)
+    @include font(30px, $fw-regular)
   }
 }
 </style>

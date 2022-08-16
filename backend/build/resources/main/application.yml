@@ -7,10 +7,10 @@ spring:
       max-file-size: 10MB
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#    url: jdbc:mariadb://localhost:3306/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: nh0455k8613!
+    password: 1q2w3e4r!@#
 # 주석처리 해야혀~
 
     hikari:
@@ -40,12 +40,14 @@ jwt:
 server:
   port: 8080
 
+
 logging:
   level:
     com:
       amazonaws:
         util:
           EC2MetadataUtils: error
+
 
 cloud:
   aws:

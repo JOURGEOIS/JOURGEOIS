@@ -26,7 +26,7 @@ import NavBar from "@/components/basics/NavBar.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { ref, computed, onBeforeMount, onUnmounted } from "vue";
-import { User } from "../interface";
+import { User } from "../../interface";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();

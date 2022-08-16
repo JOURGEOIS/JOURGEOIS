@@ -6,20 +6,20 @@
         <h1 class="user-nickname">{{ nickname }}</h1>
         <p class="user-introduce">{{ introduce }}</p>
       </div>
-      <div class="part-right">
-        <!-- 팔로우/팔로잉 버튼 -->
-        <span
-          v-if="isFollowed !== -1 && isLoggedIn"
-          class="follow-btn"
-          :class="{ following: isFollowed, follow: !isFollowed }"
-          @click="clickFollowBtn"
-        >
-          <span class="material-icons-outlined follow-icon" v-if="!isFollowed">
-            person_add
-          </span>
-          <span class="follow-text">{{ followBtnText }}</span></span
-        >
-      </div>
+    </div>
+    <div class="part-right">
+      <!-- 팔로우/팔로잉 버튼 -->
+      <span
+        v-if="isFollowed !== -1 && isLoggedIn"
+        class="follow-btn"
+        :class="{ following: isFollowed, follow: !isFollowed }"
+        @click="clickFollowBtn"
+      >
+        <span class="material-icons-outlined follow-icon" v-if="!isFollowed">
+          person_add
+        </span>
+        <span class="follow-text">{{ followBtnText }}</span>
+      </span>
     </div>
   </div>
 </template>

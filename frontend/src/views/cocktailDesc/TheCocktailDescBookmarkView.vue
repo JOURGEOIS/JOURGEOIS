@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import TheListItemUser from "@/components/cocktails/TheListItemUser.vue";
-import { User } from "../interface";
+import { User } from "../../interface";
 import NavBar from "@/components/basics/NavBar.vue";
 import { ref, onUnmounted, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";

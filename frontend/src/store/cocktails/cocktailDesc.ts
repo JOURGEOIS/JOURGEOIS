@@ -19,6 +19,7 @@ export interface CocktailDescState {
   currentTab: number;
   currentCocktailData: cocktailData;
   failPopupStatus: boolean;
+  successPopupStatus: boolean;
   cocktailBookMarkUserPage: number;
   cocktailBookMarkUserList: CocktailBookMarkUserList[];
 }
@@ -36,12 +37,16 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     // 실패 팝업
     failPopupStatus: false,
 
+    // 성공 팝업
+    successPopupStatus: false,
+
     // 칵테일 북마크 페이지
     cocktailBookMarkUserPage: 0,
 
     // 칵테일 북마크 유저 리스트
     cocktailBookMarkUserList: [],
   },
+
   getters: {
     // 현재 탭
     getCurrentTab: (state) => {
@@ -67,6 +72,11 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     getFailPopupStatus: (state) => {
       return state.failPopupStatus;
     },
+    
+    // 성공 팝업
+    getSuccessPopupStatus: (state) => {
+      return state.successPopupStatus;
+    },
 
     // 칵테일 북마크 페이지
     getCocktailBookMarkUSerPage: (state) => {
@@ -78,6 +88,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
       return state.cocktailBookMarkUserList;
     },
   },
+
   mutations: {
     // 현재 탭 변경
     SET_CURRENT_TAB: (state, value: number) => {
@@ -100,8 +111,13 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     },
 
     //실패 팝업
-    SET_FAIL: (state, value) => {
+    SET_FAIL_POPUP_STATUS: (state, value) => {
       state.failPopupStatus = value;
+    },
+    
+    //성공 팝업
+    SET_SUCCESS_POPUP_STATUS: (state, value) => {
+      state.successPopupStatus = value;
     },
 
     // 칵테일 북마크 페이지 변경
@@ -160,8 +176,13 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
           console.error(error.response);
         });
     },
-    toggleFailPopup: ({ commit }, value: boolean) => {
-      commit("SET_FAIL", value);
+    
+    toggleFailPopupStatus: ({ commit }, value: boolean) => {
+      commit("SET_FAIL_POPUP_STATUS", value);
+    },
+    
+    toggleSuccessPopupStatus: ({ commit }, value: boolean) => {
+      commit("SET_SUCCESS_POPUP_STATUS", value);
     },
 
     // 칵테일 북마크

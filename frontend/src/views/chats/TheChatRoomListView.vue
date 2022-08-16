@@ -49,10 +49,6 @@ const store = useStore();
 // navbar 색깔 부여
 store.dispatch("navbar/setNavIconStatus", 0);
 
-const clickChatRoom = (item: ChatRoom) => {
-  console.log(item);
-};
-
 const chatRoomList = computed(() => store.getters["chatRoom/getChatRoomList"]);
 
 // 현재 탭

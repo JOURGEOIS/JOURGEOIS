@@ -27,8 +27,8 @@
     <div class="part-right" v-if="uid != userId">
       <!-- 팔로우/팔로잉 버튼 -->
       <span
-        v-if="isFollowed !== -1 && isLoggedIn"
         class="follow-btn"
+        v-if="isFollowed !== -1 && isLoggedIn"
         :class="{ following: isFollowed, follow: !isFollowed }"
         @click="clickFollowBtn"
       >
@@ -40,8 +40,7 @@
       <!-- 채팅 버튼 -->
       <span v-if="isLoggedIn" class="chat-btn" @click="clickChatBtn">
         <span class="material-icons chat-icon"> mail </span>
-        <span class="follow-text">채팅</span></span
-      >
+        <span class="follow-text">채팅</span></span>
     </div>
   </div>
 </template>
@@ -69,11 +68,8 @@ const followerCnt = computed(() => userInfo.value.followerCnt);
 const followingCnt = computed(() => userInfo.value.followingCnt);
 
 const isPrivate = computed(() => userInfo.value.isPrivate);
+const isFollowed = computed(() => userInfo.value.isFollowed)
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
-
-const customCocktailInfo = computed(() => {
-  return store.getters["customCocktailInfo/getCustomCocktailDetail"];
-});
 
 // 계정 이름 텍스트
 const privateNickname = () => {
@@ -84,53 +80,48 @@ const privateNickname = () => {
   }
 };
 
+// 팔로우/팔로잉 텍스트
+const followBtnText = computed(() => {
+  if (isFollowed.value === 0) {
+    return "팔로우"
+  } else if (isFollowed.value === 1) {
+    return "팔로잉"
+  }
+});
+
 const goFollower = () => {
+  if (isPrivate.value === 0) {
   router.push({ name: "TheFollowerListView", params: { userId: uid.value } });
+  }
 };
 
 const goFollowee = () => {
-  router.push({ name: "TheFollowingListView", params: { userId: uid.value } });
+  if (isPrivate.value === 0) {
+    router.push({ name: "TheFollowingListView", params: { userId: uid.value } });
+  }
 };
 
-// 팔로우/팔로잉 텍스트
-const followBtnText = computed(() => (isFollowed.value ? "팔로잉" : "팔로우"));
 
-// 팔로우/팔로잉 버튼 클릭
-const isFollowed = computed(
-  () => customCocktailInfo?.value?.followerDTO?.isFollowed
-);
-
-watch(customCocktailInfo?.value?.followerDTO?.isFollowed, () => {
-  const isFollowed = computed(
-    () => customCocktailInfo?.value?.followerDTO?.isFollowed
-  );
+watch(isFollowed.value, () => {
+  isFollowed.value;
   followingCnt;
 });
 
 const clickFollowBtn = () => {
-  if (isFollowed.value) {
+  if (isFollowed.value === 1) {
     store.dispatch("follow/unfollow", { uid: uid.value });
-  } else {
+  } else if (isFollowed.value === 0) {
     store.dispatch("follow/follow", { uid: uid.value });
   }
-
-  store.dispatch("customCocktailInfo/toggleFollowCustomCocktail");
+  store.dispatch("profileDesc/toggleFollowUser");
 };
 
 // 채팅버튼 클릭
 const clickChatBtn = () => {
-  const opponent = {
-    uid: uid.value,
-    img: profileImg.value,
-    nickname: nickname.value,
-  };
-
   router.push({
     name: "TheChatRoomView",
     params: { userId: uid.value },
   });
-
-  store.dispatch("chatRoom/saveCurrentChatRoomOpponent", opponent);
 };
 </script>
 

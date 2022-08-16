@@ -26,6 +26,13 @@ const currentChatLogs = computed(() => store.getters["chatRoom/getChatLogs"]);
   flex-direction: column-reverse;
   gap: 16px;
   width: 100%;
+  overflow-y: scroll;
+
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   article {
     width: 100%;

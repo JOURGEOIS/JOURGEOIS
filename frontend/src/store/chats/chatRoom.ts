@@ -1,4 +1,4 @@
-import { RootState } from "../index";
+import store, { RootState } from "../index";
 import { Module } from "vuex";
 import { database } from "../../plugins/firebase.js";
 import { where, onSnapshot } from "firebase/firestore";
@@ -167,15 +167,11 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       );
       onSnapshot(q, (snapshot) => {
         if (snapshot.empty) {
-          console.log("새로운 메세지가 없습니다!");
         }
         const arr = snapshot.docChanges();
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].type === "modified" || arr[i].type === "added") {
             dispatch("setChatRoomList");
-            console.log(
-              "새로운 채팅방 개설 되었거나 기존 채팅방에 새로운 메세지가 발생한 채팅방 있음!! "
-            );
             break;
           }
         }
@@ -203,11 +199,20 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           receiver,
         },
       })
-        .then((res) => {
-          commit("SET_CHAT_LOGS", res.data);
+        .then((response) => {
+          if (!response.data) {
+            return;
+          }
 
-          if (res.data) {
-            commit("SET_CURRENT_CHAT_ROOM_ID", res.data[0].chatRoomId);
+          // 현재 챗룸 정보 저장
+          if (response.data.messages.length) {
+            commit("SET_CHAT_LOGS", response.data.messages);
+            commit(
+              "SET_CURRENT_CHAT_ROOM_ID",
+              response.data.messages[0].chatRoomId
+            );
+            commit("SET_CURRENT_CHAT_ROOM_OPPONENT", response.data.opponent);
+            store.dispatch("chatRoom/checkChatDetail");
           }
         })
         .catch((err) => {
@@ -224,13 +229,47 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
         });
     },
 
-    // * chatDetail 지속적으로 확인
-    checkChatDetail: async ({ commit, getters }) => {
+    // 새로운 챗로그 확인
+    fetchNewChatLogs: ({ dispatch, commit, getters, rootGetters }) => {
       const currentChatRoom = getters["getCurrentChatRoom"];
       const roomId = currentChatRoom.chatRoomId;
-      console.log("다시 확인", currentChatRoom);
+      const receiver = getters["getCurrentChatUserId"];
+      axios({
+        url: api.chats.chatLogs(),
+        method: "GET",
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
+        params: {
+          roomId,
+          receiver,
+        },
+      })
+        .then((response) => {
+          if (!response.data) {
+            return;
+          }
+          commit("SET_CHAT_LOGS", response.data.messages);
+        })
+        .catch((err) => {
+          console.error(err);
+          if (err.response.status !== 401) {
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "chatRoom/fetchNewChatLogs",
+              params: {},
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
+        });
+    },
 
-      // 채팅방 클리시 getMessageList api 호출 전에 firstLoad를 false로 바꿔주세요.
+    // * chatDetail 지속적으로 확인
+    checkChatDetail: ({ commit, getters }) => {
+      const currentChatRoom = getters["getCurrentChatRoom"];
+      const roomId = currentChatRoom.chatRoomId;
+      // 채팅방 클릭시 getMessageList api 호출 전에 firstLoad를 false로 바꿔주세요.
       let firstLoad = false;
       const q = query(collection(database, `juachat/${roomId}/messages`));
       onSnapshot(q, (snapshot) => {
@@ -241,14 +280,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
         for (let i = 0; i < arr.length; i++) {
           // 채팅방에 새로운 메세지가 추가되면 true
           if (arr[i].type === "added") {
-            if (firstLoad === false) {
-              console.log("처음 로딩");
-              firstLoad = true;
-              return;
-            }
-            // 현재 채팅방에 새 메세지 추가
-            commit("ADD_NEW_CHAT", arr[i].doc.data());
-            console.log("새로운 메세지 있음!!");
+            store.dispatch("chatRoom/fetchNewChatLogs");
             break;
           }
         }
@@ -283,11 +315,12 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           // res.data(새로 만들어진 chatRoomId)를 기반으로 chatRoomId에 저장
           if (!roomId) {
             commit("SET_CURRENT_CHAT_ROOM_ID", response.data);
+            store.dispatch("chatRoom/setChatLogs");
+            store.dispatch("chatRoom/checkChatDetail");
           }
-          dispatch("setChatLogs");
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           if (error.response.status !== 401) {
           } else {
             // refreshToken 재발급

@@ -313,6 +313,13 @@ const routes: any[] = [
     name: "TheChatDetailView",
     component: () => import("@/views/chats/TheChatDetailView.vue"),
   },
+
+  //======================= 404 Page ======================
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/views/NotFoundView.vue")
+  }
 ];
 
 const router = createRouter({

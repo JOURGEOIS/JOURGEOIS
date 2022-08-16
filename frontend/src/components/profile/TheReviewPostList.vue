@@ -1,11 +1,11 @@
 <template>
+  <article v-for="review in userReviewPostData" :key="review.postId">
+    <the-review-post-item :review="review"></the-review-post-item>
+  </article>
   <section>
     <div class="review-post-none" v-if="isEmpty">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
-    <article v-for="review in userReviewPostData" :key="review.postId">
-      <the-review-post-item :review="review"></the-review-post-item>
-    </article>
   </section>
 </template>
 

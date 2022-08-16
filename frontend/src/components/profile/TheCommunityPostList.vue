@@ -1,11 +1,11 @@
 <template>
+  <article v-for="community in userCommunityPostData" :key="community.postId">
+    <the-community-post-item :community="community"></the-community-post-item>
+  </article>
   <section>
     <div class="community-post-none" v-if="isEmpty">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
-    <article v-for="community in userCommunityPostData" :key="community.postId">
-      <the-community-post-item :community="community"></the-community-post-item>
-    </article>
   </section>
 </template>
 

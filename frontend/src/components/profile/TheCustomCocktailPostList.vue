@@ -1,11 +1,11 @@
 <template>
+  <article v-for="post in userCustomPostData" :key="post.postId">
+    <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
+  </article>
   <section>
     <div class="custom-post-none" v-if="isEmpty">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
-    <article v-for="post in userCustomPostData" :key="post.postId">
-      <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
-    </article>
   </section>
 </template>
 

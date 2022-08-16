@@ -8,11 +8,27 @@
       <p class="not-found">Cocktail Not Found</p>
       <p class="message">죄송합니다. 원하는 페이지를 찾을 수 없습니다.</p>
     </div>
+    <!-- 홈으로 돌아가기 -->
+    <button-basic
+      :button-style="['primary', 'long', 'small']"
+      @click="clickHome"
+    >
+      홈으로 돌아가기
+    </button-basic>
   </section>
 </template>
 
 <script setup lang="ts">
+import ButtonBasic from "@/components/basics/ButtonBasic.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
+function clickHome() {
+  router.push({
+    path: "/",
+    name: "TheHomeView",
+  });
+}
 </script>
 
 <style scoped lang="scss">

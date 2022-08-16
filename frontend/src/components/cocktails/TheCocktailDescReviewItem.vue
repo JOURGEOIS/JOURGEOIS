@@ -251,6 +251,7 @@ const clickDeleteReview = () => {
   width: 100%;
   .cocktail-desc-review-profile-content {
     @include flex;
+    align-items: flex-start;
     width: 100%;
     gap: 12px;
     .cocktail-desc-review-profile {

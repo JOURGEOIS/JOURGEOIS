@@ -8,13 +8,16 @@
       <p class="not-found">Cocktail Not Found</p>
       <p class="message">죄송합니다. 원하는 페이지를 찾을 수 없습니다.</p>
     </div>
+    <br>
     <!-- 홈으로 돌아가기 -->
-    <button-basic
-      :button-style="['primary', 'long', 'small']"
-      @click="clickHome"
-    >
-      홈으로 돌아가기
-    </button-basic>
+    <div class="button">
+      <button-basic
+        :button-style="['primary', 'long', 'small']"
+        @click="clickHome"
+      >
+        홈으로 돌아가기
+      </button-basic>
+    </div>
   </section>
 </template>
 
@@ -51,5 +54,8 @@ img {
   .not-found {
     @include font(30px, $fw-regular)
   }
+}
+.button {
+  @include flex-center;
 }
 </style>

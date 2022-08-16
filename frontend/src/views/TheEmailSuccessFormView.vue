@@ -5,16 +5,12 @@
     </header-notice>
     <section class="content top-view">
       <div class="email-image">
-        <!-- <img
-          src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/emailpage2.png"
+        <img
+          src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/mail_success.png"
           alt=""
           class="email-logo"
-        > -->
-        <span class="material-icons-outlined email-icon">
-          drafts
-        </span>
+        >
       </div>
-      <!-- <h1>본인 이메일 인증이 <br /> 완료되었습니다.</h1> -->
       <h1>이메일 인증 완료</h1>
       <hr />
       <p>회원가입 페이지로 돌아가 가입을 진행해주세요.</p> 
@@ -43,11 +39,6 @@ import HeaderNotice from "@/components/basics/HeaderNotice.vue";
         justify-content: center;
         width: 150px;
         height: auto;
-      }
-      .email-icon {
-        @include font(150px, $fw-regular);
-        color: #dedefe;
-        user-select: none;    
       }
     }
     h1 {

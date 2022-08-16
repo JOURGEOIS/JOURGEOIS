@@ -130,6 +130,8 @@ const props = defineProps<{
 const userInfo = computed(() => store.getters["personalInfo/getUserInfo"]);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
+const uid = props.review.userId
+
 const img: string = userInfo.value.profileImg;
 const name: string = userInfo.value.nickname;
 
@@ -156,7 +158,7 @@ const cocktailData = computed(
 const cocktailId = Number(cocktailData.value.id);
 
 const goProfile = () => {
-  router.push({name: "TheUserProfileView", params:{userId: userId.value}})
+  router.push({name: "TheUserProfileView", params:{userId: uid}})
 }
 
 // 후기 수정

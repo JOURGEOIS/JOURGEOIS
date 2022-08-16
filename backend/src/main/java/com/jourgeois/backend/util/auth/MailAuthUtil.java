@@ -13,7 +13,7 @@ import java.util.Random;
 @Component
 public class MailAuthUtil {
 
-    private static final String EMAIL_AUTH_PAGE = "http://13.209.206.237/api/email/cert/verified";
+    private static final String EMAIL_AUTH_PAGE = "https://www.jourgeois.com/api/email/cert/verified";
 
     private static final int TOKEN_LENGTH = 31;
 
@@ -41,7 +41,7 @@ public class MailAuthUtil {
         MimeMessage  message = javaMailSender.createMimeMessage();
 
         message.addRecipients(MimeMessage.RecipientType.TO, emailToken.getEmail()); //보내는 대상
-        message.setSubject("주류쥬아 이메일 인증"); //제목
+        message.setSubject("주류주아 이메일 인증"); //제목
 
         StringBuffer msg = new StringBuffer();
         msg.append("<div style=\"width: 600px; border: 3px solid #202A43; padding: 2em; border-radius: 20px; background-color: #202A43;\">");

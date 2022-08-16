@@ -6,7 +6,7 @@ import axios from "axios";
 import router from "../../router";
 import route from "../../router";
 import { GoogleUserInfo } from "../../interface";
-import KakaoLoginVue from "../../views/KakaoLogin.vue";
+import KakaoLoginVue from "../../views/accounts/KakaoLogin.vue";
 
 export interface SocialLoginState {
   googleLoginApi: string;

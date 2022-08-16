@@ -33,7 +33,7 @@ import NavBar from "@/components/basics/NavBar.vue";
 import { reactive, computed, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { CustomCocktail } from "../interface";
+import { CustomCocktail } from "../../interface";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();

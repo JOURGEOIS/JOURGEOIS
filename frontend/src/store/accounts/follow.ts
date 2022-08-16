@@ -77,7 +77,6 @@ export const follow: Module<FollowState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           if (res.data.success) {
           } else {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
@@ -131,7 +130,6 @@ export const follow: Module<FollowState, RootState> = {
 
     // 팔로워 목록
     setFollowerList: ({ commit, dispatch, rootGetters, getters }, data) => {
-      console.log(data);
       axios({
         url: api.accounts.profileFollower(),
         method: "GET",
@@ -144,7 +142,6 @@ export const follow: Module<FollowState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_FOLLOWER_USERS", res.data);
           const page = getters.getFollowerUserPage;
           commit("SET_FOLLOWER_USER_PAGE", page + 1);
@@ -177,7 +174,6 @@ export const follow: Module<FollowState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_FOLLOWEE_USERS", res.data);
           const page = getters.getFollowerUserPage;
           commit("SET_FOLLOWEE_USER_PAGE", page + 1);

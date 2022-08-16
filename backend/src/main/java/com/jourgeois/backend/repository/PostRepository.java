@@ -28,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "(select count(*) from post_bookmark where post_bookmark.p_id = pid) as likeCount,\n" +
             "(select count(*) from post_bookmark where post_bookmark.p_id = pid and post_bookmark.m_id = :me) as isLiked\n" +
             "from member join\n" +
-            "(select * from (select * from post where p_writer in (select to_user_id from follow where from_user_id = :me) or p_writer = :me AND p_dtype != 'cocktail_awards') as followerFeed left join \n" +
+            "(select * from (select * from post where (p_writer in (select to_user_id from follow where from_user_id = :me) or p_writer = :me) AND p_dtype != 'cocktail_awards') as followerFeed left join \n" +
             "(select * from (select cc_cocktail_ingredients, cc_cocktail_recipe, cc_cocktail_title, custom_cocktail.p_id as cock_p_id, c_id as base_c_id, c_id is null as isSuperCustomCocktail from custom_cocktail \n" +
             "left join custom_cocktail_to_cocktail on custom_cocktail.p_id = custom_cocktail_to_cocktail.p_id) as cocktailFilter left join cocktail on cocktailFilter.base_c_id = cocktail.c_id) as cocktailInfo\n" +
             "on followerFeed.p_id = cocktailInfo.cock_p_id) as postInfo on member.uid = postInfo.p_writer where member.is_private = false order by createTime desc", nativeQuery = true)

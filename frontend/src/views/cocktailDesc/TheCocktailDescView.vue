@@ -4,7 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       칵테일 상세 정보
     </header-basic>
-    <div class="top-view">
+    <div class="container top-view">
       <!-- 칵테일 상세 페이지: 상단부분 -->
       <the-cocktail-desc-detail></the-cocktail-desc-detail>
 
@@ -117,6 +117,10 @@ onUnmounted(() => {
   align-items: center;
   @include accountLayOut;
   margin-bottom: 48px;
+  .container {
+    @include flex(column);
+    width: 100%;
+  }
 
   section {
     @include flex(column);

@@ -100,6 +100,12 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
   },
 
   actions: {
+    // chats room 리셋 (현재 채팅 중인 유저, 채팅 로그)
+    resetChatRoomLogs: ({ commit }) => {
+      commit("SET_CURRENT_CHAT_USER_ID", 0);
+      commit("SET_CHAT_LOGS", []);
+    },
+
     // * 현재 탭 저장
     setCurrentTab: ({ commit }, value: number) => {
       commit("SET_CURRENT_TAB", value);
@@ -237,37 +243,37 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
     // * 새 메세지 전송
     sendNewChat: (
       { dispatch, commit, getters, rootGetters },
-      message: string
+      { receiver, message }
     ) => {
-      const currentChatRoom = getters["getCurrentChatRoom"];
-      const roomId = currentChatRoom.chatRoomId;
-      const receiver = currentChatRoom.opponent.uid;
-      const data = {
-        chatRoomId: roomId,
-        receiver,
-        message,
-      };
+      const roomId = getters["getCurrentChatRoom"].chatRoomId;
+      const data: any = { receiver, message };
+      if (roomId) {
+        data.chatRoomId = roomId;
+      }
       axios({
         url: api.chats.chatLogs(),
         method: "POST",
-        headers: rootGetters["personalInfo/getAccessToken"],
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         data,
       })
-        .then((res) => {
+        .then((response) => {
           // 프로필 페이지에서 바로 메시지 보냈고 이전 채팅 로그가 없는 경우
           // res.data(새로 만들어진 chatRoomId)를 기반으로 chatRoomId에 저장
           // checkChatDetail 함수에서 chatRoomId를 기반으로 계속 chatLogs 누적
           if (!roomId) {
-            commit("SET_CURRENT_CHAT_ROOM_ID", res.data);
+            commit("SET_CURRENT_CHAT_ROOM_ID", response.data);
           }
         })
-        .catch((err) => {
-          if (err.response.status !== 401) {
+        .catch((error) => {
+          console.log(error);
+          if (error.response.status !== 401) {
           } else {
             // refreshToken 재발급
             const obj = {
               func: "chatRoom/sendNewChat",
-              params: message,
+              params: { receiver, message },
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }

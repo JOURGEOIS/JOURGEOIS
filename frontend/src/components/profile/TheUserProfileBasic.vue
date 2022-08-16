@@ -120,8 +120,8 @@ const clickFollowBtn = () => {
 // 채팅버튼 클릭
 const clickChatBtn = () => {
   router.push({
-    name: "TheChatDetailView",
-    params: { userId: userId.value },
+    name: "TheChatRoomView",
+    params: { userId: route.params.userId },
   });
 };
 </script>

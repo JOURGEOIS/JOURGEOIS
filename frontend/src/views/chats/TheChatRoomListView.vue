@@ -1,9 +1,10 @@
 <template>
-  <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-    채팅</header-basic
-  >
-  <div class="chat-room-list-view top-view">
-    <section class="tab-section">
+  <div class="chat-room-list-view">
+    <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+      채팅
+    </header-basic>
+
+    <section class="tab-section top-view">
       <div class="tab-chat-room" :class="`index-${index}`">
         <p @click="clickCocktailTab">채팅</p>
       </div>
@@ -82,9 +83,11 @@ const currentComponent = computed(() => {
   justify-content: flex-start;
   align-items: center;
   @include accountLayOut;
+  margin-bottom: 48px;
   .tab-section {
     @include flex-xy(space-between, center);
     width: 100%;
+
     div {
       @include flex-center;
       position: relative;

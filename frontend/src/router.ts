@@ -310,8 +310,8 @@ const routes: any[] = [
 
   {
     path: "/chats/:userId",
-    name: "TheChatDetailView",
-    component: () => import("@/views/chats/TheChatDetailView.vue"),
+    name: "TheChatRoomView",
+    component: () => import("@/views/chats/TheChatRoomView.vue"),
   },
 
   //======================= 404 Page ======================

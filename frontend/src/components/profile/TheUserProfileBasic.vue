@@ -91,12 +91,19 @@ const followBtnText = computed(() => {
 });
 
 const goFollower = () => {
-  console.log(isFollowed.value)
-  router.push({ name: "TheFollowerListView", params: { userId: uid.value } });
+  if (isPrivate) {
+    return
+  } else {
+    router.push({ name: "TheFollowerListView", params: { userId: uid.value } });
+  }
 };
 
 const goFollowee = () => {
-  router.push({ name: "TheFollowingListView", params: { userId: uid.value } });
+  if (isPrivate) {
+    return
+  } else {
+    router.push({ name: "TheFollowingListView", params: { userId: uid.value } });
+  }
 };
 
 

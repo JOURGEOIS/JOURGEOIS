@@ -10,6 +10,8 @@ export interface FeedDescState {
   // 일반게시글 상세정보
   communityDetail: CustomCocktail;
   communityDetailDefault: CustomCocktail;
+  // 삭제 팝업
+  deleteModalStatus: boolean;
   // 팝업 알림
   alertStatus: boolean;
   // 오류 메시지
@@ -79,6 +81,8 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
         isFollowed: -2,
       },
     },
+    // 삭제 팝업
+    deleteModalStatus: false,
     // 팝업 알림
     alertStatus: false,
     // 오류 메시지
@@ -97,6 +101,8 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     getErrorMessage: (state) => state.errorMessage,
     // 성공 메시지
     getSuccessMessage: (state) => state.successMessage,
+    // 삭제 Modal
+    getDeleteModalStatus: (state) => state.deleteModalStatus,
     // 일반 게시글 세팅
     getImgLink: (state) => state.communityDetail.customCocktail.imgLink,
     getDescription: (state) => state.communityDetail.customCocktail.description,
@@ -123,6 +129,12 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     SET_SUCCESS_MESSAGE: (state, value: string) => {
       state.successMessage = value;
     },
+
+    // 삭제 팝업 세팅
+    SET_DELETE_MODAL_STATUS: (state, value: boolean) => {
+      state.deleteModalStatus = value;
+    },
+
     // 일반 게시글 정보
     SET_IMG_LINK: (state, value: string) =>
       (state.communityDetail.customCocktail.imgLink = value),
@@ -255,6 +267,11 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
         });
+    },
+
+    // 삭제 팝업 세팅
+    toggleDeleteModal: ({commit}, value: boolean) => {
+      commit("SET_DELETE_MODAL_STATUS", value)
     },
 
     // 알럿 팝업

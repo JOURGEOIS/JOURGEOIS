@@ -11,6 +11,8 @@ export interface CustomCocktailInfoState {
   customCocktailPage: number;
   customCocktailDetail: CustomCocktail;
   customCocktailDetailDefault: CustomCocktail;
+  // 삭제 팝업
+  deleteModalStatus: boolean;
 }
 
 export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
@@ -76,6 +78,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         isFollowed: -2,
       },
     },
+    // 삭제 팝업
+    deleteModalStatus: false,
   },
 
   getters: {
@@ -85,6 +89,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     getCustomCocktailDetail: (state) => state.customCocktailDetail,
     getCustomCocktailDetailDefault: (state) =>
       state.customCocktailDetailDefault,
+    // 삭제 Modal
+    getDeleteModalStatus: (state) => state.deleteModalStatus,
   },
 
   mutations: {
@@ -112,6 +118,11 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     // * state에 커스텀칵테일 정보 제거
     REMOVE_CUSTOM_COCKTAIL_DETAIL: (state) => {
       state.customCocktailDetail = state.customCocktailDetailDefault;
+    },
+    
+    // 삭제 팝업 세팅
+    SET_DELETE_MODAL_STATUS: (state, value: boolean) => {
+      state.deleteModalStatus = value;
     },
   },
 
@@ -195,17 +206,14 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     },
 
     // * 커스텀칵테일 게시물 제거
-    removeCustomCocktailPost: ({ dispatch, rootGetters }, params) => {
-      const { postId } = params;
+    removeCustomCocktailPost: ({ dispatch, rootGetters }, postId) => {
       axios({
         url: api.post.postCocktail(),
         method: "DELETE",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
-        data: {
-          postId: postId.value,
-        },
+        data: { postId: postId },
       })
         .then((res) => {
           // 삭제 성공
@@ -222,13 +230,18 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
             // refreshToken 재발급
             const obj = {
               func: "customCocktailInfo/removeCustomCocktailPost",
-              params,
+              params: postId,
             };
             dispatch("personalInfo/requestRefreshToken", obj, {
               root: true,
             });
           }
         });
+    },
+
+    // 삭제 팝업 세팅
+    toggleDeleteModal: ({commit}, value: boolean) => {
+      commit("SET_DELETE_MODAL_STATUS", value)
     },
   },
 };

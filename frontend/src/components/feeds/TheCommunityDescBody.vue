@@ -20,10 +20,17 @@
       <div class="btn delete-btn" @click="clickDelete">삭제</div>
     </article>
   </section>
+  <!-- 게시글 삭제 확인 모달 -->
+  <feeds-delete-modal
+    v-if="deleteModalStatus"
+    :postId="postId"
+    @off-modal="offDeleteModal"
+  ></feeds-delete-modal>
 </template>
 
 <script setup lang="ts">
 import TheCommunityPostUserSection from "@/components/feeds/TheCommunityPostUserSection.vue";
+import FeedsDeleteModal from "@/components/modals/FeedsDeleteModal.vue";
 import { CustomCocktail } from "../../interface";
 import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
@@ -56,9 +63,17 @@ const clickEdit = () => {
   });
 };
 
+const deleteModalStatus = computed(
+  () => store.getters["feedDescInfo/getDeleteModalStatus"]
+);
+
+const offDeleteModal = () => {
+  store.dispatch("feedDescInfo/toggleDeleteModal", false);
+};
+
 // 삭제 클릭
 const clickDelete = () => {
-  store.dispatch("feedDescInfo/deleteCommunityPost", postId.value);
+  store.dispatch("feedDescInfo/toggleDeleteModal", true);
 };
 </script>
 

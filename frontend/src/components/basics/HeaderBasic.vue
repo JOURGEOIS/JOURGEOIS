@@ -10,7 +10,7 @@
 
 <template>
   <header class="header-container">
-    <div>
+    <div class="header-container-div">
       <span class="material-icons back-icon" v-if="prev" @click="clicked">
         arrow_back_ios_new
       </span>
@@ -76,7 +76,7 @@ const successVisibility = computed(() => {
   background-color: $white !important;
   z-index: 5;
 
-  > div {
+  .header-container-div {
     @include flex-center;
     position: relative;
     width: 100vw;
@@ -139,6 +139,13 @@ const successVisibility = computed(() => {
       left: 16px;
       transform: translate(0, -55%);
       user-select: none;
+
+      @media #{$tablet} {
+        left: 15%;
+      }
+      @media #{$pc} {
+        left: 20%;
+      }
     }
   }
 }

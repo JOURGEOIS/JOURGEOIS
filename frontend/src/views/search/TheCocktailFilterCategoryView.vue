@@ -36,7 +36,7 @@ import NavBar from "@/components/basics/NavBar.vue";
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { baseAlcohol, liqueur, drinks, ingredients } from "../assets/filter";
+import { baseAlcohol, liqueur, drinks, ingredients } from "../../assets/filter";
 const route = useRoute();
 const router = useRouter();
 const store = useStore();

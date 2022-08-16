@@ -20,8 +20,6 @@
 import TheListItemCocktail from "@/components/cocktails/TheListItemCocktail.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import axios from "axios";
-import api from "../api/api";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { computed, onBeforeMount, onUnmounted } from "vue";

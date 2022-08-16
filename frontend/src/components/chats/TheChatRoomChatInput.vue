@@ -17,11 +17,13 @@
         <span class="material-icons"> send </span>
       </button>
     </form>
+    <div class="the-chat-room-div"></div>
     <div class="the-chat-room-emoji" v-show="chatRoomStatus">
       <div
         v-for="(emoji, index) in emojiList"
         :key="`emoji-${index}`"
         @click="clickEmoji(emoji)"
+        class="the-chat-room-emoji-item"
       >
         {{ emoji }}
       </div>
@@ -135,11 +137,11 @@ const submitTheChatRoomForm = () => {
 
 .the-chat-room-form {
   @include flex(column);
-  gap: 16px;
   position: fixed;
   bottom: 80px;
   border-radius: 1em 1em 0em 0em;
   width: calc(100% - 32px);
+  background-color: $white;
 
   @media #{$tablet} {
     width: 64%;
@@ -196,7 +198,11 @@ const submitTheChatRoomForm = () => {
       margin-top: 5px;
     }
   }
-
+  .the-chat-room-div {
+    width: 100%;
+    height: 8px;
+    background-color: $white;
+  }
   .the-chat-room-emoji {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(14%, auto));
@@ -210,6 +216,7 @@ const submitTheChatRoomForm = () => {
 
     > div {
       font-size: $fs-lg;
+      cursor: pointer;
     }
   }
 }

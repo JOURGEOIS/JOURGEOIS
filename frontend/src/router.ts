@@ -92,11 +92,18 @@ const routes: any[] = [
     component: () => import("@/views/accounts/TheFollowingListView.vue"),
   },
 
-  // 이메일 인증 페이지
+  // 이메일 인증 성공 페이지
   {
-    path: "/email",
-    name: "TheAuthenticationEmailFormView",
-    component: () => import("@/views/TheAuthenticationEmailFormView.vue")
+    path: "/email/success",
+    name: "TheEmailSuccessFormView",
+    component: () => import("@/views/TheEmailSuccessFormView.vue")
+  },
+  
+  // 이메일 인증 실패 페이지
+  {
+    path: "/email/fail",
+    name: "TheEmailFailFormView",
+    component: () => import("@/views/TheEmailFailFormView.vue")
   },
 
   //======================= search =======================

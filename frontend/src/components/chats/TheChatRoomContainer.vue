@@ -20,7 +20,11 @@ const route = useRoute();
 const store = useStore();
 
 const clickChatRoom = (item: ChatRoom) => {
-  console.log(item);
+  router.push({
+    name: "TheChatRoomView",
+    params: { userId: item.opponent.uid },
+  });
+  store.dispatch("chatRoom/setCurrentChatRoom", item);
 };
 
 const chatRoomList = computed(() => store.getters["chatRoom/getChatRoomList"]);

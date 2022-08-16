@@ -16,25 +16,25 @@
         <!-- 버튼 부분 -->
         <section class="btn-section">
           <!-- 비밀번호 변경 -->
-          <article
-            class="change-password set-btn"
-            @click="changePassword"
-          >
+          <article class="change-password set-btn" @click="changePassword">
             <div class="btn-text">비밀번호 변경</div>
           </article>
-          <hr>
+          <hr />
           <article class="edit-personal-info set-btn" @click="editPersonalInfo">
             <div class="btn-text">개인정보 수정</div>
           </article>
-          <hr>
-          <article class="profile-public-set set-btn" @click="profilePrivateSet">
+          <hr />
+          <article
+            class="profile-public-set set-btn"
+            @click="profilePrivateSet"
+          >
             <div class="btn-text">프로필 공개 설정</div>
           </article>
-          <hr>
+          <hr />
           <article class="logOut set-btn">
             <div @click="clickLogout" class="log-out btn-text">로그아웃</div>
           </article>
-          <hr>
+          <hr />
         </section>
       </div>
     </div>
@@ -59,10 +59,7 @@ const animation = computed(
 const clickXIcon = () => {
   // store 만들어지면 변경
   store.dispatch("settings/changeSettingsModalClass", "end");
-  setTimeout(
-    () => store.dispatch("settings/toggleSettingsModal", false),
-    200
-  );
+  setTimeout(() => store.dispatch("settings/toggleSettingsModal", false), 200);
 };
 
 // 비밀번호 변경
@@ -84,9 +81,9 @@ const profilePrivateSet = () => {
 };
 
 const clickLogout = () => {
-  store.dispatch("settings/toggleSettingsModal", false)
+  store.dispatch("settings/toggleSettingsModal", false);
   store.dispatch("account/toggleLogOutModal", true);
-}
+};
 
 // 아이폰인지 확인
 const deviceType: string = store.getters["navbar/getDeviceType"];
@@ -97,20 +94,6 @@ const isIphone = computed(() => {
 const isAndroid = computed(() => {
   return deviceType === "android";
 });
-
-// const settingsModalStatus = computed(() => 
-//   store.getters["settings/getSettingsModalStatus"]
-// )
-
-//   console.log(settingsModalStatus)
-// onBeforeRouteLeave((to, from, next) => {
-//   if (settingsModalStatus.value) {
-//     clickXIcon();
-//   } else {
-//     // next();
-//   }
-// });
-
 </script>
 
 <style scoped lang="scss">
@@ -160,7 +143,7 @@ const isAndroid = computed(() => {
     @media (min-height: 750px) {
       height: 300px;
     }
-// 헤더 레이아웃
+    // 헤더 레이아웃
     .header-section {
       @include flex-xy(space-between, flex-start);
       margin-top: 24px;
@@ -170,7 +153,7 @@ const isAndroid = computed(() => {
         color: $main-color;
       }
     }
-// 구분선
+    // 구분선
     hr {
       width: calc(100% + 32px);
       margin-left: -16px;
@@ -192,14 +175,14 @@ const isAndroid = computed(() => {
   @include flex-center;
   @include for-click;
   gap: 10px;
-  }
-  .btn-text {
-    @include font-size-sub(15px);
-  }
-  .log-out{
-    color: $red500;
-  }
-  
+}
+.btn-text {
+  @include font-size-sub(15px);
+}
+.log-out {
+  color: $red500;
+}
+
 .start {
   animation: start 0.3s ease-in-out;
 }

@@ -13,7 +13,7 @@
       </div>
     </button-basic>
     <button-basic
-      @click="clickKakao"
+      @click="kakaoLogin"
       :button-style="['kakao-login', 'long', 'small']"
     >
       <div class="button-content">
@@ -44,6 +44,7 @@ import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { computed, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { installGoogleAuth } from '../../GoogleAuth';
 const store = useStore();
 const router = useRouter();
 
@@ -57,7 +58,41 @@ const clickGoogle = () => {
   const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
   // const googleRedirect = `http://localhost:8080/member/login/google/redirect`;
   window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirect}&response_type=code&scope=profile%20email%20openid`;
+  // const getInfo = GoogleAuth.currentUser.get()
 };
+
+// export default defineComponent({
+//   name: 'SignIn',
+//   setup(props, { emit }) {
+//     let gAuth: any;
+//     const user = ref({});
+//     const options = {
+//       clientId: `${process.env.GOOGLE_CLIENT_ID}.apps.googleusercontent.com`,
+//       scope: 'profile email',
+//       prompt: 'select_account'
+//     };
+//     function signIn(): void {
+//       if (!gAuth) return;
+//       gAuth
+//         .signIn()
+//         .then((googleUser: any) => {
+//           user.value = googleUser;
+//         })
+//         .catch((e: any) => {
+//           console.log('error', e);
+//         });
+//     }
+    
+//     function signOut(): void {
+//       if (!gAuth) return;
+//       gAuth.signOut();
+//     }
+//     onMounted(async () => {
+//       gAuth = installGoogleAuth(options);
+//     });
+//     return { user, signIn, signOut };
+//   }
+// });
 
 const clickKakao = () => {
   const kakaoRestApiKey = `f1c36f65322c75f1f28caf1560a306d1`;
@@ -72,31 +107,32 @@ const clickNaver = () => {
   https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirect}&state=1234`;
 };
 
-// const kakaoLogin = () => {
-//   window.Kakao.Auth.login({
-//     scope: "profile_nickname, profile_image, account_email",
-//     success: getKakaoAccount,
-//   });
-// };
-// const getKakaoAccount = () => {
-//   window.Kakao.API.request({
-//     url: "/v2/user/me",
-//     success: (res: any) => {
-//       const kakao_account = res.kakao_account;
-//       const nickname = kakao_account.profile.nickname;
-//       const email = kakao_account.email;
-//       console.log(kakao_account);
-//       console.log("nickname", nickname);
-//       console.log("email", email);
+const kakaoLogin = () => {
+  window.Kakao.Auth.login({
+    scope: "profile_nickname, profile_image, account_email",
+    success: getKakaoAccount,
+  });
+};
+const getKakaoAccount = () => {
+  window.Kakao.API.request({
+    url: "/v2/user/me",
+    success: (res: any) => {
+      const kakao_account = res.kakao_account;
+      const nickname = kakao_account.profile.nickname;
+      const email = kakao_account.email;
+      console.log(kakao_account);
+      console.log("nickname", nickname);
+      console.log("email", email);
+      
 
-//       //로그인 처리 구현
-//       alert("로그인 성공!");
-//     },
-//     fail: (error: any) => {
-//       console.log(error);
-//     },
-//   });
-// };
+      //로그인 처리 구현
+      alert("로그인 성공!");
+    },
+    fail: (error: any) => {
+      console.log(error);
+    },
+  });
+};
 </script>
 
 <style scoped lang="scss">

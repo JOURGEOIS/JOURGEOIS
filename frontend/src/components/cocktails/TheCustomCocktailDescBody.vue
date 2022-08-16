@@ -114,34 +114,30 @@ const clickBaseCocktail = () => {
 
 // 수정 클릭
 const clickEdit = () => {
-  if (confirm("수정하시겠습니까?")) {
-    // 커스텀 칵테일인 경우
-    if (baseCocktail.value) {
-      router.push({
-        name: "TheCustomCocktailUpdateFormView",
-        params: {
-          cocktailId: route.params.cocktailId,
-          feedId: route.params.feedId,
-        },
-      });
-    }
-    // 슈퍼 커스텀 칵테일인 경우
-    else {
-      router.push({
-        name: "TheSuperCustomCocktailUpdateFormView",
-        params: {
-          feedId: route.params.feedId,
-        },
-      });
-    }
+  // 커스텀 칵테일인 경우
+  if (baseCocktail.value) {
+    router.push({
+      name: "TheCustomCocktailUpdateFormView",
+      params: {
+        cocktailId: route.params.cocktailId,
+        feedId: route.params.feedId,
+      },
+    });
+  }
+  // 슈퍼 커스텀 칵테일인 경우
+  else {
+    router.push({
+      name: "TheSuperCustomCocktailUpdateFormView",
+      params: {
+        feedId: route.params.feedId,
+      },
+    });
   }
 };
 
 // 삭제 클릭
 const clickDelete = () => {
-  if (confirm("삭제하시겠습니까?")) {
-    store.dispatch("customCocktailInfo/removeCustomCocktailPost", { postId });
-  }
+  store.dispatch("customCocktailInfo/removeCustomCocktailPost", { postId });
 };
 </script>
 

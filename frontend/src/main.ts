@@ -15,7 +15,7 @@ app.config.globalProperties.$firebase = database;
 app.use(store).use(router);
 app.mount("#app");
 
-window.Kakao.init("a2d41d039ccf5e1e975967a2d68f885f");
+window.Kakao.init("0c777eb20471ff56b13960d5e8534d5e");
 
 declare global {
   interface Window {

@@ -118,10 +118,6 @@ onUnmounted(() => {
   @include accountLayOut;
   margin-bottom: 48px;
 
-  .top-view {
-    width: 100%;
-  }
-
   section {
     @include flex(column);
     justify-content: center;

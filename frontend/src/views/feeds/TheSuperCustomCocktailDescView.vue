@@ -1,6 +1,7 @@
 <template>
   <!-- 헤더 -->
   <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
+    커스텀 칵테일
   </header-basic>
   <div class="the-custom-cocktail-desc-view top-view-no-margin">
     <div class="the-custom-cocktail-desc-container">
@@ -32,7 +33,7 @@ import NavBar from "@/components/basics/NavBar.vue";
 import { reactive, computed, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { CustomCocktail } from "../interface";
+import { CustomCocktail } from "../../interface";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();

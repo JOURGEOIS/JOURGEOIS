@@ -210,7 +210,7 @@ export interface userBookmarkData {
 }
 
 export interface ChatRoom {
-  chatRoomId: number;
+  chatRoomId: string;
   opponent: {
     uid: number;
     img: string;
@@ -228,4 +228,16 @@ export interface ChatRoom {
     };
   };
   hasNewMessage: boolean;
+}
+
+export interface Chat {
+  chatRoomId: string;
+  sender: number;
+  receiver: number;
+  message: string;
+  isRead: boolean;
+  timestamp: {
+    seconds: number;
+    nanos: number;
+  };
 }

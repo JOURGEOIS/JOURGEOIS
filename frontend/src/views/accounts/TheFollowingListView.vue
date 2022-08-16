@@ -1,21 +1,21 @@
 <template>
-  <div class="follower-user-list-view">
+  <div class="followee-user-list-view">
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
-      팔로우한 유저
+      팔로잉한 유저
     </header-basic>
-    <div class="the-follower-container top-view-no-margin">
-      <the-follower-item
-        v-for="(follower, idx) in followers"
-        :key="`follower-${idx}`"
-        :follower="follower"
-      ></the-follower-item>
+    <div class="the-followee-container top-view-no-margin">
+      <the-followee-item
+        v-for="(followee, idx) in followees"
+        :key="`followee-${idx}`"
+        :followee="followee"
+      ></the-followee-item>
     </div>
   </div>
   <nav-bar></nav-bar>
 </template>
 
 <script setup lang="ts">
-import TheFollowerItem from '@/components/profile/TheFollowerItem.vue';
+import TheFolloweeItem from '@/components/profile/TheFolloweeItem.vue';
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import { computed, onBeforeMount, onUnmounted } from '@vue/runtime-core';
@@ -25,28 +25,27 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-const followers = computed(() => store.getters["follow/getFollowerUsers"])
-const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
-const uid = computed(() => userInfo.value.uid)
+const followees = computed(() => store.getters["follow/getFolloweeUsers"])
+const uid = computed(() => route.params.userId)
 
 const handleScroll = (event: Event) => {
   const data = {
     event,
-    action: "follow/setFollowerList",
+    action: "follow/setFolloweeList",
     data: { userId: uid.value },
   };
   store.dispatch("scroll/handleScroll", data);
 };
 
-const setFollowerList = (data: object) => {
-  store.dispatch("follow/setFollowerList", data)
+const setFolloweeList = (data: object) => {
+  store.dispatch("follow/setFolloweeList", data)
 }
 
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
-  setFollowerList({ userId: uid.value });
+  setFolloweeList({ userId: uid.value });
   setTimeout(() => {
-    setFollowerList({ userId: uid.value });
+    setFolloweeList({ userId: uid.value });
   }, 100);
 });
 
@@ -58,12 +57,12 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.follower-user-list-view {
+.followee-user-list-view {
   @include flex(column);
   @include accountLayOut;
   justify-content: flex-start;
   align-items: center;
-  .the-follower-container {
+  .the-followee-container {
     @include flex(column);
     width: 100%;
 

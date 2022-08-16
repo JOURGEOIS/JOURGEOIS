@@ -87,7 +87,7 @@ const failModalStatus = computed(
 );
 
 const toggleFailPopUp = (value: boolean) => {
-  store.dispatch("cocktailDesc/toggleFailPopup", value);
+  store.dispatch("cocktailDesc/toggleFailPopupStatus", value);
 };
 
 watch(failModalStatus, () => {

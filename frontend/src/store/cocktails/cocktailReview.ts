@@ -11,6 +11,7 @@ export interface CocktailReviewState {
   // 현재 칵테일에 달린 리뷰
   currentCocktailReview: cocktailReviewData[];
   reviewCocktailPage: number;
+  deleteReviewId: number;
   // 모달
   deleteModalStatus: boolean;
   reviewChangeSuccess: boolean;
@@ -23,6 +24,8 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     // 현재 칵테일에 달린 리뷰
     currentCocktailReview: [],
     reviewCocktailPage: 0,
+    deleteReviewId: 0,
+
     // 모달
     deleteModalStatus: false,
     reviewChangeSuccess: false,
@@ -34,12 +37,13 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       return state.currentCocktailReview;
     },
     getReviewCocktailPage: (state) => state.reviewCocktailPage,
+    getDeleteReviewId: (state) => state.deleteReviewId,
+    
     // 모달
     getDeleteModalStatus: (state) => {
       return state.deleteModalStatus;
     },
     getReviewChangeSuccess: (state) => {
-      console.log(state.reviewChangeSuccess);
       return state.reviewChangeSuccess;
     },
   },
@@ -53,6 +57,9 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     },
     SET_REVIEW_COCKTAIL_PAGE: (state, value) => {
       state.reviewCocktailPage = value;
+    },
+    SET_DELETE_REVIEW_ID: (state, value: number) => {
+      state.deleteReviewId = value
     },
     // 리뷰 리스트 리셋
     RESET_CURRENT_COCKTAIL_REVIEW: (state) => {
@@ -74,30 +81,39 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       commit("RESET_CURRENT_COCKTAIL_REVIEW");
     },
 
+    setDeleteReviewId: ({ commit }, value: number) => {
+      commit("SET_DELETE_REVIEW_ID", value)
+    },
+
     // 후기 불러오기
-    getCocktailReview: ({ commit, getters }, cocktailId: number) => {
+    getCocktailReview: ({ commit, dispatch, getters, rootGetters },
+      cocktailId: number) => {
       axios({
-        url: api.cocktail.cocktailReview(),
+        url: api.cocktail.cocktailReviewData(),
         method: "GET",
         params: {
           cocktailId,
           page: getters.getReviewCocktailPage,
         },
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
       })
         .then((res) => {
           console.log("data: ", res.data);
-          const newCocktailReview = res.data;
-          commit("SET_CURRENT_COCKTAIL_REVIEW", newCocktailReview);
+          commit("SET_CURRENT_COCKTAIL_REVIEW", res.data);
           const page = getters.getReviewCocktailPage;
           commit("SET_REVIEW_COCKTAIL_PAGE", page + 1);
         })
         .catch((err) => {
           console.error(err.response);
+          // 실패 팝업
+          dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
         });
     },
     // 후기 생성
     createCocktailReview: (
-      { commit, dispatch, rootGetters, getters },
+      { commit, dispatch, rootGetters },
       { cocktailId, comment }
     ) => {
       const userId = rootGetters["personalInfo/getUserInfoUserId"];
@@ -106,46 +122,62 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       axios({
         url: api.cocktail.cocktailReview(),
         method: "POST",
-        headers: {},
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         data: reviewData,
       })
         .then((res) => {
-          console.log(res.data);
-          commit("RESET_CURRENT_COCKTAIL_REVIEW");
-          commit("SET_REVIEW_COCKTAIL_PAGE", 0);
+          dispatch("resetCocktailReview");
           dispatch("getCocktailReview", cocktailId);
         })
         .catch((err) => {
-          console.error(err.res);
+          if (err.response.status !== 401) {
+            // 실패 팝업
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.error(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "cocktailReview/createCocktailReview",
+              params: { cocktailId, comment },
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
     // 후기 수정
     updateCocktailReview: (
-      { commit, dispatch },
+      { commit, dispatch, rootGetters },
       { cocktailId, commentId, comment }
     ) => {
       const editData = { commentId, comment };
-      console.log(editData.commentId);
-      console.log(editData.comment);
       axios({
         url: api.cocktail.cocktailReview(),
         method: "PUT",
-        headers: {},
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         data: editData,
       })
         .then((res) => {
-          console.log("수정");
-          console.log(res.data);
           commit("SET_REVIEW_SUCCESS", true);
-          commit("RESET_CURRENT_COCKTAIL_REVIEW");
-          commit("SET_REVIEW_COCKTAIL_PAGE", 0);
+          dispatch("resetCocktailReview");
           dispatch("getCocktailReview", cocktailId);
-          console.log("3");
-          console.log("4");
         })
         .catch((err) => {
-          console.error(err.res);
-          console.log("에러");
+          if (err.response.status !== 401) {
+            // 실패 팝업
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.error(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "cocktailReview/updateCocktailReview",
+              params: editData,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
     // 후기 삭제
@@ -156,25 +188,39 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       const userId = rootGetters["personalInfo/getUserInfoUserId"];
       const deleteData = { userId, commentId };
       console.log(deleteData.userId);
-      console.log(deleteData.commentId);
+      console.log(cocktailId)
+      console.log(commentId);
       axios({
         url: api.cocktail.cocktailReview(),
         method: "DELETE",
-        headers: {},
+        headers: {
+          Authorization: rootGetters["personalInfo/getAccessToken"],
+        },
         data: deleteData,
       })
         .then((res) => {
           console.log("삭제");
-          commit("RESET_CURRENT_COCKTAIL_REVIEW");
-          commit("SET_REVIEW_COCKTAIL_PAGE", 0);
+          dispatch("resetCocktailReview");
           dispatch("getCocktailReview", cocktailId);
         })
         .catch((err) => {
-          console.error(err.res);
-          console.error(err.data);
+          console.error(err.response);
           console.log("에러");
+          if (err.response.status !== 401) {
+            // 실패 팝업
+            dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
+            console.error(err.response);
+          } else {
+            // refreshToken 재발급
+            const obj = {
+              func: "cocktailReview/deleteCocktailReview",
+              params: deleteData,
+            };
+            dispatch("personalInfo/requestRefreshToken", obj, { root: true });
+          }
         });
     },
+
     toggleDeleteModal: ({ commit }, value: boolean) => {
       commit("SET_DELETE_MODAL", value);
     },

@@ -38,13 +38,8 @@
         <span class="follow-text">{{ followBtnText }}</span></span
       >
       <!-- 채팅 버튼 -->
-      <span
-        v-if="isLoggedIn"
-        class="chat-btn"
-      >
-        <span class="material-icons chat-icon"> 
-          mail 
-        </span>
+      <span v-if="isLoggedIn" class="chat-btn" @click="clickChatBtn">
+        <span class="material-icons chat-icon"> mail </span>
         <span class="follow-text">채팅</span></span
       >
     </div>
@@ -52,26 +47,28 @@
 </template>
 
 <script setup lang="ts">
-import RoundImage from '@/components/basics/RoundImage.vue'
-import { computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-const router = useRouter()
-const route = useRoute()
-const store = useStore()
+import RoundImage from "@/components/basics/RoundImage.vue";
+import { computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+const router = useRouter();
+const route = useRoute();
+const store = useStore();
 
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 // 유저 정보 불러오기
-const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
-const uid = computed(() => userInfo.value.uid)
-const profileImg = computed(() => userInfo.value.profileImg)
-const nickname = computed(() => userInfo.value.nickname)
-const introduce = computed(() => userInfo.value.introduce)
-const postCnt = computed(() => userInfo.value.postCnt)
-const followerCnt = computed (() => userInfo.value.followerCnt)
-const followingCnt = computed (() => userInfo.value.followingCnt)
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+const uid = computed(() => userInfo.value.uid);
+const profileImg = computed(() => userInfo.value.profileImg);
+const nickname = computed(() => userInfo.value.nickname);
+const introduce = computed(() => userInfo.value.introduce);
+const postCnt = computed(() => userInfo.value.postCnt);
+const followerCnt = computed(() => userInfo.value.followerCnt);
+const followingCnt = computed(() => userInfo.value.followingCnt);
 
-const isPrivate = computed(() => userInfo.value.isPrivate)
+const isPrivate = computed(() => userInfo.value.isPrivate);
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 const customCocktailInfo = computed(() => {
@@ -81,19 +78,19 @@ const customCocktailInfo = computed(() => {
 // 계정 이름 텍스트
 const privateNickname = () => {
   if (isPrivate.value === 1) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
-}
+};
 
 const goFollower = () => {
-  router.push({ name: "TheFollowerListView" , params: { userId: uid.value }});
-}
+  router.push({ name: "TheFollowerListView", params: { userId: uid.value } });
+};
 
 const goFollowee = () => {
-  router.push({ name: "TheFollowingListView" , params: { userId: uid.value }});
-}
+  router.push({ name: "TheFollowingListView", params: { userId: uid.value } });
+};
 
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => (isFollowed.value ? "팔로잉" : "팔로우"));
@@ -107,7 +104,7 @@ watch(customCocktailInfo?.value?.followerDTO?.isFollowed, () => {
   const isFollowed = computed(
     () => customCocktailInfo?.value?.followerDTO?.isFollowed
   );
-  followingCnt
+  followingCnt;
 });
 
 const clickFollowBtn = () => {
@@ -120,6 +117,13 @@ const clickFollowBtn = () => {
   store.dispatch("customCocktailInfo/toggleFollowCustomCocktail");
 };
 
+// 채팅버튼 클릭
+const clickChatBtn = () => {
+  router.push({
+    name: "TheChatRoomView",
+    params: { userId: route.params.userId },
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -198,5 +202,4 @@ const clickFollowBtn = () => {
 .follow {
   color: $red400;
 }
-
 </style>

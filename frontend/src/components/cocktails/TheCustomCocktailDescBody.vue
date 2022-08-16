@@ -51,10 +51,17 @@
       <div class="btn delete-btn" @click="clickDelete">삭제</div>
     </article>
   </section>
+  <!-- 게시글 삭제 확인 모달 -->
+  <cocktail-feeds-delete-modal
+    v-if="deleteModalStatus"
+    :postId="postId"
+    @off-modal="offDeleteModal"
+  ></cocktail-feeds-delete-modal>
 </template>
 
 <script setup lang="ts">
 import PostUserSection from "@/components/basics/PostUserSection.vue";
+import CocktailFeedsDeleteModal from "@/components/modals/CocktailFeedsDeleteModal.vue";
 import { CustomCocktail } from "../../interface";
 import { reactive, computed, toRefs, onBeforeMount, watchEffect } from "vue";
 import { useStore } from "vuex";
@@ -135,9 +142,17 @@ const clickEdit = () => {
   }
 };
 
+const deleteModalStatus = computed(
+  () => store.getters["customCocktailInfo/getDeleteModalStatus"]
+);
+
+const offDeleteModal = () => {
+  store.dispatch("customCocktailInfo/toggleDeleteModal", false);
+};
+
 // 삭제 클릭
 const clickDelete = () => {
-  store.dispatch("customCocktailInfo/removeCustomCocktailPost", { postId });
+  store.dispatch("customCocktailInfo/toggleDeleteModal", true);
 };
 </script>
 

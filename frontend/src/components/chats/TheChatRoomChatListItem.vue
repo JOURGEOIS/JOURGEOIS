@@ -3,10 +3,13 @@
   <div v-if="!isMine" class="you the-chat-room-chat-item">
     <round-image
       :round-image="{ image: opponent.img }"
+      @click="clickProfileImage"
       class="the-chat-room-chat-item-image"
     ></round-image>
     <div class="the-chat-room-chat-item-content">
-      <p class="the-chat-room-chat-item-name">{{ opponent.nickname }}</p>
+      <p class="the-chat-room-chat-item-name" @click="clickProfileImage">
+        {{ opponent.nickname }}
+      </p>
       <div class="the-chat-room-chat-item-message">
         <p>{{ chatLog.message }}</p>
       </div>
@@ -28,8 +31,11 @@ import { computed } from "vue";
 import { Chat } from "../../interface";
 import { calcDateDelta2 } from "../../functions/date";
 import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
 import RoundImage from "@/components/basics/RoundImage.vue";
 const store = useStore();
+const router = useRouter();
+const route = useRoute();
 
 const props = defineProps<{
   chatLog: Chat;
@@ -55,6 +61,16 @@ const myUserId = computed(
 const isMine = computed(() => {
   return props.chatLog.sender === Number(myUserId.value);
 });
+
+// 프로필 이미지 클릭 시, 프로필 페이지로 이동
+const clickProfileImage = () => {
+  router.push({
+    name: "TheUserProfileView",
+    params: {
+      userId: route.params.userId,
+    },
+  });
+};
 </script>
 
 <style scoped lang="scss">
@@ -74,6 +90,7 @@ const isMine = computed(() => {
     width: 40px;
     height: 40px;
     flex-shrink: 0;
+    cursor: pointer;
   }
 
   .the-chat-room-chat-item-message {
@@ -107,6 +124,7 @@ const isMine = computed(() => {
 
     .the-chat-room-chat-item-name {
       @include font($fs-sm, $fw-medium);
+      cursor: pointer;
     }
     .the-chat-room-chat-item-message {
       border-radius: 10px 10px 10px 0px;

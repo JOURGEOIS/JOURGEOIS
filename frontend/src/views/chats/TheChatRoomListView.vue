@@ -5,11 +5,19 @@
     </header-basic>
 
     <section class="tab-section top-view">
-      <div class="tab-chat-room" :class="`index-${index}`">
-        <p @click="clickCocktailTab">채팅</p>
+      <div
+        class="tab-chat-room"
+        :class="`index-${index}`"
+        @click="clickCocktailTab"
+      >
+        <p>채팅</p>
       </div>
-      <div class="tab-following" :class="`index-${index}`">
-        <p @click="clickFollowingTab">친구</p>
+      <div
+        class="tab-following"
+        :class="`index-${index}`"
+        @click="clickFollowingTab"
+      >
+        <p>친구</p>
       </div>
     </section>
     <!-- 탭에 따라 변경되는 동적 컴포넌트 -->
@@ -52,8 +60,9 @@ const currentTab = computed(() => store.getters["chatRoom/getCurrentTab"]);
 
 // View 입장 후 Mount 전에
 onBeforeMount(async () => {
-  // 기존 chatList state 초기화
-  store.dispatch("chatRoom/setCurrentTab", 0);
+  // 기존 chatList state 초기화 -> 취소
+  // 뒤로가기시 원래 보던 tab을 그대로 보기 위함
+  // store.dispatch("chatRoom/setCurrentTab", 0);
   store.dispatch("chatRoom/setChatRoomList");
 });
 
@@ -116,6 +125,10 @@ const currentComponent = computed(() => {
         color: $main-color;
       }
     }
+  }
+
+  .dynamic-component-section {
+    width: 100%;
   }
 }
 

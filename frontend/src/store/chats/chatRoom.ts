@@ -93,6 +93,14 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       state.currentChatRoom = chatRoom;
     },
 
+    // 채팅방 1:1 상대방 => 이미지, 닉네임, uid 저장
+    SET_CURRENT_CHAT_ROOM_OPPONENT: (
+      state,
+      opponent: { uid: number; img: string; nickname: string }
+    ) => {
+      state.currentChatRoom.opponent = opponent;
+    },
+
     // * 채팅방 id 저장
     SET_CURRENT_CHAT_ROOM_ID: (state, chatRoomId: string) => {
       state.currentChatRoom.chatRoomId = chatRoomId;
@@ -104,6 +112,14 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
     resetChatRoomLogs: ({ commit }) => {
       commit("SET_CURRENT_CHAT_USER_ID", 0);
       commit("SET_CHAT_LOGS", []);
+    },
+
+    // current chats room의 상대방 정보 저장
+    saveCurrentChatRoomOpponent: (
+      { commit },
+      opponent: { uid: number; img: string; nickname: string }
+    ) => {
+      commit("SET_CURRENT_CHAT_ROOM_OPPONENT", opponent);
     },
 
     // * 현재 탭 저장
@@ -188,8 +204,11 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_CHAT_LOGS", res.data);
+
+          if (res.data) {
+            commit("SET_CURRENT_CHAT_ROOM_ID", res.data[0].chatRoomId);
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -209,6 +228,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
     checkChatDetail: async ({ commit, getters }) => {
       const currentChatRoom = getters["getCurrentChatRoom"];
       const roomId = currentChatRoom.chatRoomId;
+      console.log("다시 확인", currentChatRoom);
 
       // 채팅방 클리시 getMessageList api 호출 전에 firstLoad를 false로 바꿔주세요.
       let firstLoad = false;
@@ -261,10 +281,10 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
         .then((response) => {
           // 프로필 페이지에서 바로 메시지 보냈고 이전 채팅 로그가 없는 경우
           // res.data(새로 만들어진 chatRoomId)를 기반으로 chatRoomId에 저장
-          // checkChatDetail 함수에서 chatRoomId를 기반으로 계속 chatLogs 누적
           if (!roomId) {
             commit("SET_CURRENT_CHAT_ROOM_ID", response.data);
           }
+          dispatch("setChatLogs");
         })
         .catch((error) => {
           console.log(error);

@@ -4,9 +4,14 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       채팅
     </header-basic>
-    <section class="chat-room-section top-view-no-margin">
+    <section
+      class="chat-room-section top-view"
+      :class="{ active: emojiStatus }"
+    >
       <the-chat-room-chat-list></the-chat-room-chat-list>
-      <the-chat-room-chat-input></the-chat-room-chat-input>
+      <the-chat-room-chat-input
+        @click-emoji="clickEmoji"
+      ></the-chat-room-chat-input>
     </section>
   </div>
   <nav-bar></nav-bar>
@@ -19,7 +24,7 @@ import TheChatRoomChatList from "@/components/chats/TheChatRoomChatList.vue";
 import TheChatRoomChatInput from "@/components/chats/TheChatRoomChatInput.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { onUnmounted } from "vue";
+import { onUnmounted, ref, onMounted } from "vue";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -27,6 +32,14 @@ const store = useStore();
 // navbar 색깔 부여
 store.dispatch("navbar/setNavIconStatus", 0);
 
+// 이모지 on, off
+const emojiStatus = ref(false);
+
+const clickEmoji = () => {
+  emojiStatus.value = !emojiStatus.value;
+};
+
+// 채팅 상대방 id
 const currentChatUserId = route.params.userId;
 
 // 현재 채팅 중인 유저 ID를 '현재 채팅 유저 ID'로 저장
@@ -62,6 +75,12 @@ onUnmounted(() => {
   store.dispatch("chatRoom/resetChatRoomLogs");
   store.dispatch("chatRoom/setCurrentChatRoom", resetCurrentChatRoom);
 });
+
+onMounted(() => {
+  setTimeout(() => {
+    window.scrollTo({ left: 0, top: 100 });
+  }, 0);
+});
 </script>
 
 <style scoped lang="scss">
@@ -69,20 +88,32 @@ onUnmounted(() => {
   @include flex(column);
   justify-content: flex-start;
   align-items: center;
+  height: 100vh;
   @include accountLayOut;
+  overflow-y: scroll;
 
   .chat-room-section {
     @include flex(column);
     width: 100%;
-    justify-content: center;
+    height: calc(100% - 176px);
+    justify-content: flex-end;
     align-items: center;
 
     @media #{$tablet} {
       width: 80%;
+      height: calc(100% - 204px);
     }
 
     @media #{$pc} {
       width: 70%;
+    }
+  }
+
+  .active {
+    height: calc(100% - 392px);
+
+    @media #{$tablet} {
+      height: calc(100% - 424px);
     }
   }
 }

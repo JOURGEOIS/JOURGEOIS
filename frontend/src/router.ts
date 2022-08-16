@@ -372,6 +372,8 @@ router.beforeEach((to: any, from, next) => {
     "TheCocktailAwardsFormView",
     "TheCocktailAwardsDescView",
     "TheNoticeView",
+    "TheChatRoomListView",
+    "TheChatRoomView",
   ];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지

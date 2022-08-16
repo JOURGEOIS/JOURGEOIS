@@ -131,7 +131,7 @@ public class CocktailController {
         }
     }
 
-    @GetMapping(value = "/auth/comment")
+    @GetMapping(value = "/comment")
     public ResponseEntity selectReview(@RequestParam(value = "cocktailId") Long cocktailId,
                                        @PageableDefault(size=10, page = 0) Pageable pageable) {
         // cocktailId, page, page size 정보 받음

@@ -3,8 +3,7 @@
   삭제 버튼을 클릭 시, 
   1. 로그아웃 모달 off
   2. 모든 데이터 삭제 
-  3. 홈으로 이동  
-  4. 로그아웃 성공 팝업 
+  3. 뉴스피드로 이동
 -->
 <template>
   <modal-basic modal-color="white" @off-modal="toggleDeleteModalStatus(false)">
@@ -34,39 +33,20 @@
 import ModalBasic from "@/components/basics/ModalBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { useStore } from "vuex";
-import { computed } from "@vue/runtime-core";
 const store = useStore();
-
-interface cocktailReviewData {
-  commentId: number;
-  userId: number;
-  nickname: string;
-  profileImg: string | null;
-  cocktailId: number;
-  comment: string;
-  createdDate: number[];
-  modifiedDate: number[];
-}
 
 // 프롭스
 const props = defineProps<{
-  cocktailId: number;
+  postId: number;
 }>();
 
 const toggleDeleteModalStatus = (value: boolean) => {
-  store.dispatch("cocktailReview/toggleDeleteModal", value);
+  store.dispatch("feedDescInfo/toggleDeleteModal", value);
 };
-
-const commentId = computed(
-  () => store.getters["cocktailReview/getDeleteReviewId"]
-);
 
 const clickDeleteComment = () => {
   toggleDeleteModalStatus(false);
-  store.dispatch("cocktailReview/deleteCocktailReview", {
-    cocktailId: props.cocktailId,
-    commentId: commentId.value,
-  });
+  store.dispatch("feedDescInfo/deleteCommunityPost", props.postId);
 };
 </script>
 

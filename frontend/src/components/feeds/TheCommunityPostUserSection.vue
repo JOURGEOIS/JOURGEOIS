@@ -17,7 +17,7 @@
     <div class="part-right">
       <!-- 팔로우/팔로잉 버튼 -->
       <span
-        v-if="isFollowed !== -1"
+        v-if="isFollowed !== -1 && isLoggedIn"
         class="follow-btn"
         :class="{ following: isFollowed, follow: !isFollowed }"
         @click="clickFollowBtn"
@@ -58,21 +58,29 @@ const updateTime = computed(
 const isUpdated = computed(
   () => feedDescInfo?.value?.customCocktail?.isUpdated
 );
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
+
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
   router.push({ name: 'TheUserProfileView', params: { userId: uid.value } })
 };
 
 // 팔로우/팔로잉 텍스트
-const followBtnText = computed(() => (isFollowed.value ? "팔로잉" : "팔로우"));
+const followBtnText = computed(() => {
+  if(isFollowed.value === 1){
+    return "팔로잉"
+  } else if(isFollowed.value === 0) {
+    "팔로우"
+  };
+  })
 
 // 팔로우/팔로잉 버튼 클릭
 const isFollowed = ref(feedDescInfo?.value?.followerDTO?.isFollowed);
 const clickFollowBtn = () => {
-  if (isFollowed.value) {
+  if (isFollowed.value === 1) {
     store.dispatch("follow/unfollow", { uid });
     isFollowed.value = 0;
-  } else {
+  } else if (isFollowed.value === 0) {
     store.dispatch("follow/follow", { uid });
     isFollowed.value = 1;
   }

@@ -6,10 +6,7 @@
   ></the-cocktail-desc-review-item>
 
   <!-- 수정이 완료되면 팝업 알림 -->
-  <success-pop-up
-    v-if="successPopUpStatus"
-    @offModal="offSuccessPopUpModal"
-  >
+  <success-pop-up v-if="successPopUpStatus" @offModal="offSuccessPopUpModal">
     성공적으로 변경되었습니다
   </success-pop-up>
   <review-delete-modal
@@ -18,7 +15,6 @@
     @offModal="offDeleteModal"
   >
   </review-delete-modal>
-  
 </template>
 
 <script setup lang="ts">
@@ -36,12 +32,10 @@ const cocktailData = computed(
 );
 const cocktailId = Number(cocktailData.value.id);
 
-
 // 칵테일 후기 정보 불러오기
 const cocktailReviewData = computed(
   () => store.getters["cocktailReview/getCurrentCocktailReview"]
 );
-console.log(cocktailReviewData.value)
 // 전체 후기 추가 함수
 const getWholeReview = (cocktailId: number) => {
   store.dispatch("cocktailReview/getCocktailReview", cocktailId);
@@ -64,23 +58,23 @@ onBeforeMount(() => {
     // 리셋
     store.dispatch("cocktailReview/resetCocktailReview");
     store.dispatch("cocktailReview/toggleReviewChangeSuccess", false);
-    store.dispatch("cocktailReview/toggleDeleteModal", false)
+    store.dispatch("cocktailReview/toggleDeleteModal", false);
 
     // 데이터 받기
-    store.dispatch("cocktailReview/getCocktailReview", cocktailId)
+    store.dispatch("cocktailReview/getCocktailReview", cocktailId);
   }
 
   // 시간제 모달
-    watch(successPopUpStatus, () => {
-      if (successPopUpStatus) {
-        setTimeout(() => offSuccessPopUpModal(), 2000);
-      }
-    });
+  watch(successPopUpStatus, () => {
+    if (successPopUpStatus) {
+      setTimeout(() => offSuccessPopUpModal(), 2000);
+    }
+  });
 
-    // 이벤트 연결 끊기
-    onUnmounted(() => {
-      window.removeEventListener("scroll", handleScroll);
-    });
+  // 이벤트 연결 끊기
+  onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
   getWholeReview(cocktailId);
 });
 
@@ -94,20 +88,18 @@ const deleteModalStatus = computed(
 );
 
 const offSuccessPopUpModal = () => {
-  store.dispatch("cocktailReview/toggleReviewChangeSuccess", false)
-}
+  store.dispatch("cocktailReview/toggleReviewChangeSuccess", false);
+};
 
 const offDeleteModal = () => {
-  store.dispatch("cocktailReview/toggleDeleteModal", false)
-}
+  store.dispatch("cocktailReview/toggleDeleteModal", false);
+};
 
 // 리셋
 onUnmounted(() => {
   store.dispatch("cocktailReview/resetCocktailReview");
   window.removeEventListener("scroll", handleScroll);
 });
-
-
 </script>
 
 <style scoped lang="scss"></style>

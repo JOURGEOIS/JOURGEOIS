@@ -1,14 +1,17 @@
 <template>
   <article v-for="post in userCustomPostData" :key="post.postId">
-    <the-custom-cocktail-post-item 
-      :post="post"
-    ></the-custom-cocktail-post-item>
+    <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
   </article>
+  <section>
+    <div class="custom-post-none" v-if="isEmpty && isPrivate">
+      <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
 import TheCustomCocktailPostItem from "@/components/profile/TheCustomCocktailPostItem.vue";
-import { computed, onBeforeMount, onUnmounted } from "vue";
+import { ref, computed, onBeforeMount, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -18,18 +21,17 @@ const userCustomPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostCustom"]
 );
 
-// const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
-// const uid = computed(() => userInfo.value.uid);
-// const isPublic = computed(() => userInfo.value.isPublic);
-// const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
-// console.log(!isPublic.value, uid.value, userId.value)
-// const isPublicAc = () => {
-//   if (uid.value !== userId.value) {
-//     if (isPublic.value) {
-//       return 
-//     }
-//   }
-// }
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+const isPrivate = computed(() => userInfo.value.isPrivate)
+
+const isEmpty = ref(false);
+setTimeout(() => {
+  if (userCustomPostData.value.length === 0) {
+    isEmpty.value = true;
+  }
+}, 200);
 
 // 인피니티 스크롤
 const handleScroll = (event: Event) => {
@@ -62,5 +64,21 @@ article {
   width: 100%;
   @include flex(column);
   gap: 15px;
+}
+.custom-post-none {
+  width: 100%;
+  padding: 64px 70px;
+  border-radius: 16px;
+  background-color: $white200;
+  @include font($fs-main, $fw-bold);
+  text-align: center;
+  p {
+      @include flex-center;
+    }
+
+  @media #{$tablet} {
+    @include font($fs-lg, $fw-bold);
+    width: 450px;
+  }
 }
 </style>

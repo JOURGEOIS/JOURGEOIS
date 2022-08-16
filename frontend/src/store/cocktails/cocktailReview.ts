@@ -38,7 +38,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     },
     getReviewCocktailPage: (state) => state.reviewCocktailPage,
     getDeleteReviewId: (state) => state.deleteReviewId,
-    
+
     // 모달
     getDeleteModalStatus: (state) => {
       return state.deleteModalStatus;
@@ -59,7 +59,7 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
       state.reviewCocktailPage = value;
     },
     SET_DELETE_REVIEW_ID: (state, value: number) => {
-      state.deleteReviewId = value
+      state.deleteReviewId = value;
     },
     // 리뷰 리스트 리셋
     RESET_CURRENT_COCKTAIL_REVIEW: (state) => {
@@ -82,12 +82,14 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     },
 
     setDeleteReviewId: ({ commit }, value: number) => {
-      commit("SET_DELETE_REVIEW_ID", value)
+      commit("SET_DELETE_REVIEW_ID", value);
     },
 
     // 후기 불러오기
-    getCocktailReview: ({ commit, dispatch, getters, rootGetters },
-      cocktailId: number) => {
+    getCocktailReview: (
+      { commit, dispatch, getters, rootGetters },
+      cocktailId: number
+    ) => {
       axios({
         url: api.cocktail.cocktailReviewData(),
         method: "GET",
@@ -100,7 +102,6 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
         },
       })
         .then((res) => {
-          console.log("data: ", res.data);
           commit("SET_CURRENT_COCKTAIL_REVIEW", res.data);
           const page = getters.getReviewCocktailPage;
           commit("SET_REVIEW_COCKTAIL_PAGE", page + 1);
@@ -187,9 +188,6 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
     ) => {
       const userId = rootGetters["personalInfo/getUserInfoUserId"];
       const deleteData = { userId, commentId };
-      console.log(deleteData.userId);
-      console.log(cocktailId)
-      console.log(commentId);
       axios({
         url: api.cocktail.cocktailReview(),
         method: "DELETE",
@@ -199,13 +197,11 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
         data: deleteData,
       })
         .then((res) => {
-          console.log("삭제");
           dispatch("resetCocktailReview");
           dispatch("getCocktailReview", cocktailId);
         })
         .catch((err) => {
           console.error(err.response);
-          console.log("에러");
           if (err.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });

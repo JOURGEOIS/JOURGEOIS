@@ -37,19 +37,19 @@ export const follow: Module<FollowState, RootState> = {
   mutations: {
     SET_FOLLOWER_USERS: (state, newFollowerUsers: User[]) => {
       newFollowerUsers.forEach((newFollowerUsers) => {
-        state.followerUsers.push(newFollowerUsers)
-      })
+        state.followerUsers.push(newFollowerUsers);
+      });
     },
     SET_FOLLOWER_USER_PAGE: (state, value) => {
-      state.followerUserPage = value
+      state.followerUserPage = value;
     },
     SET_FOLLOWEE_USERS: (state, newFolloweeUsers: User[]) => {
       newFolloweeUsers.forEach((newFolloweeUsers) => {
-        state.followeeUsers.push(newFolloweeUsers)
-      })
+        state.followeeUsers.push(newFolloweeUsers);
+      });
     },
     SET_FOLLOWEE_USER_PAGE: (state, value) => {
-      state.followeeUserPage = value
+      state.followeeUserPage = value;
     },
     RESET_FOLLOW_USER_DATA: (state) => {
       state.followerUsers = [];
@@ -61,7 +61,7 @@ export const follow: Module<FollowState, RootState> = {
 
   actions: {
     resetFollowUserData: ({ commit }) => {
-      commit("RESET_FOLLOW_USER_DATA")
+      commit("RESET_FOLLOW_USER_DATA");
     },
 
     // * 팔로우하기
@@ -77,7 +77,6 @@ export const follow: Module<FollowState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data)
           if (res.data.success) {
           } else {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
@@ -131,7 +130,6 @@ export const follow: Module<FollowState, RootState> = {
 
     // 팔로워 목록
     setFollowerList: ({ commit, dispatch, rootGetters, getters }, data) => {
-      console.log(data)
       axios({
         url: api.accounts.profileFollower(),
         method: "GET",
@@ -141,26 +139,25 @@ export const follow: Module<FollowState, RootState> = {
         params: {
           uid: data.userId,
           page: getters.getFollowerUserPage,
-        }
+        },
       })
         .then((res) => {
-          console.log(res.data)
           commit("SET_FOLLOWER_USERS", res.data);
           const page = getters.getFollowerUserPage;
           commit("SET_FOLLOWER_USER_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err.response)
+          console.error(err.response);
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/setFollowerList",
-              params: data
+              params: data,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
-        })
+        });
     },
 
     // 팔로잉 목록
@@ -174,10 +171,9 @@ export const follow: Module<FollowState, RootState> = {
         params: {
           uid: data.userId,
           page: getters.getFolloweeUserPage,
-        }
+        },
       })
         .then((res) => {
-          console.log(res.data)
           commit("SET_FOLLOWEE_USERS", res.data);
           const page = getters.getFollowerUserPage;
           commit("SET_FOLLOWEE_USER_PAGE", page + 1);
@@ -192,7 +188,7 @@ export const follow: Module<FollowState, RootState> = {
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
-        })
-    }
+        });
+    },
   },
 };

@@ -2,9 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import createStore from "../src/store/index";
 import { computed } from "vue";
 
-// 스토어 정의
-const store = createStore;
-
 const routes: any[] = [
   // 홈 화면
   {
@@ -96,14 +93,14 @@ const routes: any[] = [
   {
     path: "/email/success",
     name: "TheEmailSuccessFormView",
-    component: () => import("@/views/TheEmailSuccessFormView.vue")
+    component: () => import("@/views/TheEmailSuccessFormView.vue"),
   },
-  
+
   // 이메일 인증 실패 페이지
   {
     path: "/email/fail",
     name: "TheEmailFailFormView",
-    component: () => import("@/views/TheEmailFailFormView.vue")
+    component: () => import("@/views/TheEmailFailFormView.vue"),
   },
 
   //======================= search =======================
@@ -332,8 +329,8 @@ const routes: any[] = [
   {
     path: "/:pathMatch(.*)*",
     name: "TheNotFoundView",
-    component: () => import("@/views/TheNotFoundView.vue")
-  }
+    component: () => import("@/views/TheNotFoundView.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -345,6 +342,9 @@ const router = createRouter({
     return { top: 0 };
   },
 });
+
+// 스토어 정의
+const store = createStore;
 
 // Navigation Guard 설정
 router.beforeEach((to: any, from, next) => {

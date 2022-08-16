@@ -2,11 +2,16 @@
   <article v-for="review in userReviewPostData" :key="review.postId">
     <the-review-post-item :review="review"></the-review-post-item>
   </article>
+  <section>
+    <div class="review-post-none" v-if="isEmpty && isPrivate">
+      <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
 import TheReviewPostItem from "@/components/profile/TheReviewPostItem.vue";
-import { computed, onBeforeMount, onUnmounted } from "@vue/runtime-core";
+import { ref, computed, onBeforeMount, onUnmounted } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -15,6 +20,16 @@ const store = useStore();
 const userReviewPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostReview"]
 );
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+const isPrivate = computed(() => userInfo.value.isPrivate)
+const isEmpty = ref(false);
+setTimeout(() => {
+  if (userReviewPostData.value.length === 0) {
+    isEmpty.value = true;
+  }
+}, 200);
 
 // 인피니티 스크롤
 const handleScroll = (event: Event) => {
@@ -47,5 +62,21 @@ article {
   width: 100%;
   @include flex(column);
   gap: 15px;
+}
+.review-post-none {
+  width: 100%;
+  padding: 64px 70px;
+  border-radius: 16px;
+  background-color: $white200;
+  @include font($fs-main, $fw-bold);
+  text-align: center;
+  p {
+      @include flex-center;
+    }
+
+  @media #{$tablet} {
+    @include font($fs-lg, $fw-bold);
+    width: 450px;
+  }
 }
 </style>

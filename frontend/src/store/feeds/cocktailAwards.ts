@@ -310,7 +310,7 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
           }
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           if (error.response.status !== 401) {
             console.error(error);
           } else {

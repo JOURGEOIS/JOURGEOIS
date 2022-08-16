@@ -24,7 +24,7 @@ import TheChatRoomChatList from "@/components/chats/TheChatRoomChatList.vue";
 import TheChatRoomChatInput from "@/components/chats/TheChatRoomChatInput.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { onUnmounted, ref, onMounted } from "vue";
+import { onUnmounted, ref, onMounted, computed, watch } from "vue";
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -49,7 +49,6 @@ store.dispatch("chatRoom/setCurrentChatUserId", currentChatUserId);
 store.dispatch("chatRoom/setChatLogs");
 
 // 리셋 (유저 id, 챗룸 정보)
-
 const resetCurrentChatRoom = {
   chatRoomId: "",
   opponent: {
@@ -90,18 +89,17 @@ onMounted(() => {
   align-items: center;
   height: 100vh;
   @include accountLayOut;
-  overflow-y: scroll;
 
   .chat-room-section {
     @include flex(column);
     width: 100%;
-    height: calc(100% - 176px);
+    height: calc(100% - 184px);
     justify-content: flex-end;
     align-items: center;
 
     @media #{$tablet} {
       width: 80%;
-      height: calc(100% - 204px);
+      height: calc(100% - 216px);
     }
 
     @media #{$pc} {

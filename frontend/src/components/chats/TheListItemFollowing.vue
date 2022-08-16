@@ -1,7 +1,10 @@
 <template>
-  <div class="the-followee-item">
+  <div class="the-following-item">
     <div class="part-left">
-      <round-image :round-image="userImage"></round-image>
+      <round-image
+        :round-image="userImage"
+        class="the-following-profile"
+      ></round-image>
       <div class="user-info-text">
         <h1 class="user-nickname">{{ nickname }}</h1>
         <p class="user-introduce">{{ introduce }}</p>
@@ -69,10 +72,11 @@ const userImage = {
 </script>
 
 <style scoped lang="scss">
-.the-followee-item {
+.the-following-item {
   @include flex-xy(space-between, center);
-  padding: 10px;
   gap: 10px;
+  width: 100%;
+  padding: 10px;
   border-bottom: 1px solid $seperate-color;
   @include list-hover;
 
@@ -80,6 +84,10 @@ const userImage = {
     @include flex-xy(flex-start, center);
     @include text-overflow-ellipsis;
     gap: 10px;
+
+    .the-following-profile {
+      flex-shrink: 0;
+    }
     .user-info-text {
       @include flex(column);
       @include text-overflow-ellipsis;
@@ -95,29 +103,5 @@ const userImage = {
       }
     }
   }
-
-  .part-right {
-    .follow-btn {
-      border: 1px solid $unchecked-color;
-      border-radius: 1000px;
-      padding: 0.3em 1em;
-      @include flex-xy(center, flex-end);
-      gap: 5px;
-      @include shadow-feed;
-      font-size: 14px;
-      @include for-click;
-      min-width: 90px;
-
-      .follow-icon {
-        @include font(17px);
-      }
-    }
-  }
-}
-.following {
-  color: $unchecked-color;
-}
-.follow {
-  color: $red400;
 }
 </style>

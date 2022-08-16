@@ -317,9 +317,9 @@ const routes: any[] = [
   //======================= 404 Page ======================
   {
     path: "/:pathMatch(.*)*",
-    name: "NotFound",
-    component: () => import("@/views/NotFoundView.vue"),
-  },
+    name: "TheNotFoundView",
+    component: () => import("@/views/TheNotFoundView.vue")
+  }
 ];
 
 const router = createRouter({

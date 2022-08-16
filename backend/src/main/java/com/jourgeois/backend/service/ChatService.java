@@ -132,7 +132,7 @@ public class ChatService {
     }
 
     // uid = 상대방 id
-    public List<ChatMessageResponseDTO> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
+    public List<ChatMessageDTO> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
         /*
         찾아라!! 채팅방 ID!!
          */
@@ -191,18 +191,16 @@ public class ChatService {
                 .get();
         List<QueryDocumentSnapshot> chatRoomRefs = query.get().getDocuments();
 
-        List<ChatMessageResponseDTO> chatMessageResponseDTOList = new ArrayList<>();
+        List<ChatMessageDTO> chatMessageDTOList = new ArrayList<>();
         for (DocumentSnapshot document : chatRoomRefs) {
             System.out.println(document.getId());
             ChatMessageDTO chatMessageDTO = document.toObject(ChatMessageDTO.class);
-            chatMessageResponseDTOList.add(ChatMessageResponseDTO.builder()
-                            .chatMessageDTO(chatMessageDTO)
-                            .build());
+            chatMessageDTOList.add(chatMessageDTO);
         }
 
         // result.put("size", startAfter+chatRoomRefs.size());
 //        result.put("messages", chatMessageResponseDTOList);
-        return chatMessageResponseDTOList;
+        return chatMessageDTOList;
     }
 
     private String getRoomId(Long uid, Long receiver) throws InterruptedException, ExecutionException {

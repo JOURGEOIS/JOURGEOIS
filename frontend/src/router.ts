@@ -13,215 +13,233 @@ const routes: any[] = [
     component: () => import("@/views/homes/TheHomeView.vue"),
   },
 
+  //======================= accounts =======================
   // 회원가입 화면
   {
     path: "/user/signup",
     name: "TheSignupView",
-    component: () => import("@/views/TheSignupView.vue"),
+    component: () => import("@/views/accounts/TheSignupView.vue"),
   },
 
   // 로그인 화면
   {
     path: "/user/login",
     name: "TheLoginView",
-    component: () => import("@/views/TheLoginView.vue"),
+    component: () => import("@/views/accounts/TheLoginView.vue"),
   },
 
   // 카카오 로그인
   {
     path: "/user/login/kakaologin",
     name: "Kakaologin",
-    component: () => import("@/views/KakaoLogin.vue"),
+    component: () => import("@/views/accounts/KakaoLogin.vue"),
   },
 
-  // 로그아웃 화면
+  // 회원 탈퇴 화면
   {
     path: "/user/sign-out",
     name: "TheSignOutView",
-    component: () => import("@/views/TheSignOutView.vue"),
+    component: () => import("@/views/accounts/TheSignOutView.vue"),
   },
 
   // 유저 정보 수정
   {
     path: "/user/my-info",
     name: "TheChangeUserView",
-    component: () => import("@/views/TheChangeUserView.vue"),
+    component: () => import("@/views/accounts/TheChangeUserView.vue"),
   },
 
   // 비밀번호 찾기 화면
   {
     path: "/user/help/password",
     name: "TheForgotPwView",
-    component: () => import("@/views/TheForgotPwView.vue"),
+    component: () => import("@/views/accounts/TheForgotPwView.vue"),
   },
 
   // 비밀번호 변경 화면
   {
     path: "/user/my-info/password",
     name: "TheChangePwView",
-    component: () => import("@/views/TheChangePwView.vue"),
+    component: () => import("@/views/accounts/TheChangePwView.vue"),
   },
 
   // 유저 프로필로 이동
   {
     path: "/user/profile/:userId",
     name: "TheUserProfileView",
-    component: () => import("@/views/TheUserProfileView.vue"),
+    component: () => import("@/views/accounts/TheUserProfileView.vue"),
   },
 
   // 프로필 공개 설정 화면
   {
     path: "/user/profile/private",
     name: "TheUserProfilePrivateModeView",
-    component: () => import("@/views/TheUserProfilePrivateModeView.vue"),
+    component: () =>
+      import("@/views/accounts/TheUserProfilePrivateModeView.vue"),
   },
 
   // 팔로워 리스트 보기
   {
     path: "/user/follower/:userId",
     name: "TheFollowerListView",
-    component: () => import("@/views/TheFollowerListView.vue"),
+    component: () => import("@/views/accounts/TheFollowerListView.vue"),
   },
 
   // 팔로잉 리스트 보기
   {
     path: "/user/followee/:userId",
     name: "TheFollowingListView",
-    component: () => import("@/views/TheFollowingListView.vue"),
+    component: () => import("@/views/accounts/TheFollowingListView.vue"),
   },
 
+  //======================= search =======================
   // 칵테일 검색 페이지
   {
     path: "/cocktail/search",
     name: "TheCocktailSearchView",
-    component: () => import("@/views/TheCocktailSearchView.vue"),
+    component: () => import("@/views/search/TheCocktailSearchView.vue"),
   },
 
   // 칵테일 검색 결과(재료) 페이지
   {
     path: "/cocktail/search/byingredients/:ingredientId",
     name: "TheSearchCocktailByIngredientView",
-    component: () => import("@/views/TheSearchCocktailByIngredientView.vue"),
+    component: () =>
+      import("@/views/search/TheSearchCocktailByIngredientView.vue"),
   },
 
   // 칵테일 검색 결과 페이지
   {
     path: "/cocktail/search/:searchValue",
     name: "TheSearchResultView",
-    component: () => import("@/views/TheSearchResultView.vue"),
+    component: () => import("@/views/search/TheSearchResultView.vue"),
   },
   // 칵테일 필터 검색 결과 페이지
   {
     path: "/cocktail/search/filter",
     name: "TheSearchFilterResultView",
-    component: () => import("@/views/TheSearchFilterResultView.vue"),
+    component: () => import("@/views/search/TheSearchFilterResultView.vue"),
   },
 
   // 칵테일 전체 리스트 페이지
   {
     path: "/cocktail/whole",
     name: "TheWholeCocktailView",
-    component: () => import("@/views/TheWholeCocktailView.vue"),
+    component: () => import("@/views/search/TheWholeCocktailView.vue"),
   },
 
   // 필터 카테고리
   {
     path: "/cocktail/search/filter/:category",
     name: "TheCocktailFilterCategoryView",
-    component: () => import("@/views/TheCocktailFilterCategoryView.vue"),
+    component: () => import("@/views/search/TheCocktailFilterCategoryView.vue"),
   },
 
   // 칵테일 상세 페이지
   {
     path: "/cocktail/:cocktailId",
     name: "TheCocktailDescView",
-    component: () => import("@/views/TheCocktailDescView.vue"),
+    component: () => import("@/views/cocktailDesc/TheCocktailDescView.vue"),
   },
 
   // 칵테일 상세 페이지 북마크
   {
     path: "/cocktail/:cocktailId/bookmark",
     name: "TheCocktailDescBookmarkView",
-    component: () => import("@/views/TheCocktailDescBookmarkView.vue"),
+    component: () =>
+      import("@/views/cocktailDesc/TheCocktailDescBookmarkView.vue"),
   },
 
   // 커스텀 칵테일 제작 페이지
   {
     path: "/cocktail/:cocktailId/custom/form",
     name: "TheCustomCocktailFormView",
-    component: () => import("@/views/TheCustomCocktailFormView.vue"),
+    component: () =>
+      import("@/views/cocktailDesc/TheCustomCocktailFormView.vue"),
   },
 
   // 커스텀 칵테일 상세 페이지
   {
     path: "/cocktail/:cocktailId/custom/:feedId",
     name: "TheCustomCocktailDescView",
-    component: () => import("@/views/TheCustomCocktailDescView.vue"),
+    component: () =>
+      import("@/views/cocktailDesc/TheCustomCocktailDescView.vue"),
   },
 
   // 커스텀 칵테일 수정
   {
     path: "/cocktail/:cocktailId/custom/:feedId/update",
     name: "TheCustomCocktailUpdateFormView",
-    component: () => import("@/views/TheCustomCocktailUpdateFormView.vue"),
+    component: () =>
+      import("@/views/cocktailDesc/TheCustomCocktailUpdateFormView.vue"),
   },
   ,
   // 좋아요한 유저 리스트 페이지
   {
     path: "/feeds/:feedId/liked",
     name: "TheLikedUserListView",
-    component: () => import("@/views/TheLikedUserListView.vue"),
+    component: () => import("@/views/feeds/TheLikedUserListView.vue"),
   },
 
+  //======================= feeds =======================
   // 뉴스피드 리스트
   {
     path: "/feeds",
     name: "TheNewsFeedView",
-    component: () => import("@/views/TheNewsFeedView.vue"),
+    component: () => import("@/views/feeds/TheNewsFeedView.vue"),
   },
 
   // 뉴스피드 상세 페이지 (커칵, 일반 )
   {
     path: "/feeds/:feedId",
     name: "TheCommunityDescView",
-    component: () => import("@/views/TheCommunityDescView.vue"),
+    component: () => import("@/views/feeds/TheCommunityDescView.vue"),
   },
 
   // 뉴스피드 게시글 form
   {
     path: "/feeds/form",
     name: "TheCommunityFormView",
-    component: () => import("@/views/TheCommunityFormView.vue"),
+    component: () => import("@/views/feeds/TheCommunityFormView.vue"),
   },
 
   // 뉴스피드 게시글 form 수정
   {
     path: "/feeds/:feedId/update",
     name: "TheCommunityUpdateFormView",
-    component: () => import("@/views/TheCommunityUpdateFormView.vue"),
+    component: () => import("@/views/feeds/TheCommunityUpdateFormView.vue"),
   },
 
   // 뉴스피드 상세 페이지 (커칵)
   {
     path: "/feeds/:feedId/custom",
     name: "TheSuperCustomCocktailDescView",
-    component: () => import("@/views/TheSuperCustomCocktailDescView.vue"),
+    component: () => import("@/views/feeds/TheSuperCustomCocktailDescView.vue"),
   },
 
   // 슈커칵 게시글 form
   {
     path: "/feeds/custom/form",
     name: "TheSuperCustomCocktailFormView",
-    component: () => import("@/views/TheSuperCustomCocktailFormView.vue"),
+    component: () => import("@/views/feeds/TheSuperCustomCocktailFormView.vue"),
   },
 
   // 슈커칵 게시글 수정 form
   {
     path: "/feeds/:feedId/custom/update",
     name: "TheSuperCustomCocktailUpdateFormView",
-    component: () => import("@/views/TheSuperCustomCocktailUpdateFormView.vue"),
+    component: () =>
+      import("@/views/feeds/TheSuperCustomCocktailUpdateFormView.vue"),
   },
 
+  // 알림
+  {
+    path: "/feeds/notice",
+    name: "TheNoticeView",
+    component: () => import("@/views/feeds/TheNoticeView.vue"),
+  },
+
+  //======================= cocktailAwards =======================
   // cocktailAwards home
   {
     path: "/feeds/awards",
@@ -245,6 +263,7 @@ const routes: any[] = [
       import("@/views/cocktailAwards/TheCocktailAwardsDescView.vue"),
   },
 
+  //======================= homes =======================
   // 신규 커스텀 칵테일 리스트
   {
     path: "/latestCustom",
@@ -281,13 +300,7 @@ const routes: any[] = [
       import("@/views/homes/TheAllLikeRecommendedCocktailView.vue"),
   },
 
-  // 알림
-  {
-    path: "/feeds/notice",
-    name: "TheNoticeView",
-    component: () => import("@/views/TheNoticeView.vue"),
-  },
-
+  //======================= chats =======================
   // ! 채팅
   {
     path: "/chats/list",

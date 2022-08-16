@@ -92,6 +92,13 @@ const routes: any[] = [
     component: () => import("@/views/accounts/TheFollowingListView.vue"),
   },
 
+  // 이메일 인증 페이지
+  {
+    path: "/email",
+    name: "TheAuthenticationEmailFormView",
+    component: () => import("@/views/TheAuthenticationEmailFormView.vue")
+  },
+
   //======================= search =======================
   // 칵테일 검색 페이지
   {

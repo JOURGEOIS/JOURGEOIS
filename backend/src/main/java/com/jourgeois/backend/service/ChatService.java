@@ -203,8 +203,8 @@ public class ChatService {
 
         Map<String, Object> opponentInfo = new HashMap<>();
         opponentInfo.put("uid", opp.getUid());
-        opponentInfo.put("profileImg", S3Util.s3urlFormatter(opp.getProfileImg()));
-        opponentInfo.put("nicname", opp.getNickname());
+        opponentInfo.put("img", S3Util.s3urlFormatter(opp.getProfileImg()));
+        opponentInfo.put("nickname", opp.getNickname());
 
         result.put("opponent", opponentInfo);
         result.put("messages", chatMessageDTOList);

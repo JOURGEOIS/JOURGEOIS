@@ -62,7 +62,7 @@ public class EmailController {
         try {
             success = emailService.verifyEmail(authForm);
             data.put("success", success);
-            URI location = success ? new URI("https://www.jourgeois.com/email") : new URI("htt[s://www.jourgeois.com");
+            URI location = success ? new URI("https://www.jourgeois.com/email/success") : new URI("https://www.jourgeois.com/email/fail");
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(location);
             return new ResponseEntity(httpHeaders, HttpStatus.SEE_OTHER);

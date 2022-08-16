@@ -67,7 +67,7 @@ const componentArray = [
     () => import("@/components/chats/TheChatRoomContainer.vue")
   ),
   defineAsyncComponent(
-    () => import("@/components/chats/TheFollowerContainer.vue")
+    () => import("@/components/chats/TheFollowingContainer.vue")
   ),
 ];
 

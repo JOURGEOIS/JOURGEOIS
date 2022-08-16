@@ -11,7 +11,7 @@ spring:
 #    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    username: root
 #    password: 1q2w3e4r!@#
-# 주석처리 해야혀~
+# 주석처리 해야혀~ 반드시!!
 
     hikari:
       auto-commit: false

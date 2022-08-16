@@ -132,19 +132,13 @@ public class CocktailController {
     }
 
     @GetMapping(value = "/auth/comment")
-    public ResponseEntity selectReview(HttpServletRequest request,
-                                       @RequestParam(value = "cocktailId") Long cocktailId,
+    public ResponseEntity selectReview(@RequestParam(value = "cocktailId") Long cocktailId,
                                        @PageableDefault(size=10, page = 0) Pageable pageable) {
         // cocktailId, page, page size 정보 받음
         // criteria -> modifiedDate (등록/수정 날짜 기준), likes(좋아요 기준)
         try {
-            Long uid = Long.valueOf((String) request.getAttribute("uid"));
-            if(uid != null){
-                List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId, pageable);
-                return ResponseEntity.ok().body(cc);
-            } else {
-                return ResponseEntity.badRequest().body(Map.of("success", "Authorization is null"));
-            }
+            List<CocktailCommentDTO> cc = cocktailService.readComment(cocktailId, pageable);
+            return ResponseEntity.ok().body(cc);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("result", "none"));

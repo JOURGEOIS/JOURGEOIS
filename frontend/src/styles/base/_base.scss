@@ -70,7 +70,8 @@ a {
 
 body {
   // 스크롤 제거
-  -ms-overflow-style: none;
+  -ms-overflow-style: none ;
+  
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
@@ -110,3 +111,4 @@ input {
   background-position: center;
   background-size: cover;
 }
+

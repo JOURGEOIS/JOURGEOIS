@@ -92,6 +92,20 @@ const routes: any[] = [
     component: () => import("@/views/accounts/TheFollowingListView.vue"),
   },
 
+  // 이메일 인증 성공 페이지
+  {
+    path: "/email/success",
+    name: "TheEmailSuccessFormView",
+    component: () => import("@/views/TheEmailSuccessFormView.vue")
+  },
+  
+  // 이메일 인증 실패 페이지
+  {
+    path: "/email/fail",
+    name: "TheEmailFailFormView",
+    component: () => import("@/views/TheEmailFailFormView.vue")
+  },
+
   //======================= search =======================
   // 칵테일 검색 페이지
   {
@@ -358,6 +372,8 @@ router.beforeEach((to: any, from, next) => {
     "TheCocktailAwardsFormView",
     "TheCocktailAwardsDescView",
     "TheNoticeView",
+    "TheChatRoomListView",
+    "TheChatRoomView",
   ];
 
   // 로그인이 되어있지 않을 때만 가능한 페이지

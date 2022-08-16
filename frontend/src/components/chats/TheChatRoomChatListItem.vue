@@ -73,6 +73,7 @@ const isMine = computed(() => {
   .the-chat-room-chat-item-image {
     width: 40px;
     height: 40px;
+    flex-shrink: 0;
   }
 
   .the-chat-room-chat-item-message {
@@ -92,13 +93,7 @@ const isMine = computed(() => {
   .the-chat-room-chat-item-message {
     border-radius: 10px 10px 0px 10px;
     background: $red300p;
-    /* background-image: linear-gradient(
-      25deg,
-      #998ad3,
-      #9ba1d1,
-      #9ab8cf,
-      #98cecd
-    ); */
+    max-width: 70%;
   }
 }
 .you {
@@ -106,7 +101,9 @@ const isMine = computed(() => {
   gap: 8px;
   .the-chat-room-chat-item-content {
     @include flex-xy(center, flex-start);
+    gap: 4px;
     flex-direction: column;
+    max-width: 70%;
 
     .the-chat-room-chat-item-name {
       @include font($fs-sm, $fw-medium);

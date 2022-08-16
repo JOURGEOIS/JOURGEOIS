@@ -119,18 +119,10 @@ const clickFollowBtn = () => {
 
 // 채팅버튼 클릭
 const clickChatBtn = () => {
-  const opponent = {
-    uid: uid.value,
-    img: profileImg.value,
-    nickname: nickname.value,
-  };
-
   router.push({
     name: "TheChatRoomView",
     params: { userId: uid.value },
   });
-
-  store.dispatch("chatRoom/saveCurrentChatRoomOpponent", opponent);
 };
 </script>
 

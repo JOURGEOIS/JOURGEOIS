@@ -54,15 +54,15 @@ public class MemberProfilePageService {
         return res;
     }
 
-    public List<Map<String, Object>> readMemberCocktailOrPost(Long userId, Long uid, Pageable pageable, String postType){
+    public List<Map<String, Object>> readMemberCocktailOrPost(Long myUid, Long uid, Pageable pageable, String postType){
         List<Map<String, Object>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPrivate().equals("1") && !member.getUid().equals(userId)){
+
+        if(member.getIsPrivate().equals(1) && !member.getUid().equals(myUid)){
             return resArr;
         }
 
-
-        postRepository.findCocktailOrPostInProfilePageByUid(userId, uid, postType,pageable).forEach(data -> {
+        postRepository.findCocktailOrPostInProfilePageByUid(myUid, uid, postType,pageable).forEach(data -> {
             Map<String, Object> res = new HashMap<>();
             res.put("nickname", data.getNickname());
             res.put("profileImg", S3Util.s3urlFormatter(data.getProfileImg()));
@@ -102,7 +102,8 @@ public class MemberProfilePageService {
     public List<Map<String, String>> readMemberCocktailComment(Long userId, Long uid, Pageable pageable){
         List<Map<String, String>> resArr = new ArrayList<>();
         Member member = memberRepository.findById(uid).orElseThrow();
-        if(member.getIsPrivate().equals("1") && !member.getUid().equals(userId)){
+
+        if(member.getIsPrivate().equals(1) && !member.getUid().equals(userId)){
             return resArr;
         }
 

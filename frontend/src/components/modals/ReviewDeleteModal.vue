@@ -34,7 +34,7 @@
 import ModalBasic from "@/components/basics/ModalBasic.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
 import { useStore } from "vuex";
-import { computed } from '@vue/runtime-core';
+import { computed } from "@vue/runtime-core";
 const store = useStore();
 
 interface cocktailReviewData {
@@ -57,16 +57,16 @@ const toggleDeleteModalStatus = (value: boolean) => {
   store.dispatch("cocktailReview/toggleDeleteModal", value);
 };
 
-const commentId = computed(() => store.getters["cocktailReview/getDeleteReviewId"])
+const commentId = computed(
+  () => store.getters["cocktailReview/getDeleteReviewId"]
+);
 
 const clickDeleteComment = () => {
-  console.log(commentId.value)
   toggleDeleteModalStatus(false);
-  store.dispatch("cocktailReview/deleteCocktailReview",
-    {
-      cocktailId: props.cocktailId,
-      commentId: commentId.value
-    });
+  store.dispatch("cocktailReview/deleteCocktailReview", {
+    cocktailId: props.cocktailId,
+    commentId: commentId.value,
+  });
 };
 </script>
 

@@ -129,7 +129,6 @@ const submitCreateReviewForm = () => {
     occurredError.value = true;
     toggleFailPopUp(true);
   } else {
-    console.log("data:", data);
     createReview(data);
 
     // 리셋

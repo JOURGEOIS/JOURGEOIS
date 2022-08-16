@@ -98,7 +98,6 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       state,
       opponent: { uid: number; img: string; nickname: string }
     ) => {
-      console.log("저장");
       state.currentChatRoom.opponent = opponent;
     },
 
@@ -168,15 +167,11 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       );
       onSnapshot(q, (snapshot) => {
         if (snapshot.empty) {
-          console.log("새로운 메세지가 없습니다!");
         }
         const arr = snapshot.docChanges();
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].type === "modified" || arr[i].type === "added") {
             dispatch("setChatRoomList");
-            console.log(
-              "새로운 채팅방 개설 되었거나 기존 채팅방에 새로운 메세지가 발생한 채팅방 있음!! "
-            );
             break;
           }
         }
@@ -285,7 +280,6 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
         for (let i = 0; i < arr.length; i++) {
           // 채팅방에 새로운 메세지가 추가되면 true
           if (arr[i].type === "added") {
-            console.log("하이루 방가방가");
             store.dispatch("chatRoom/fetchNewChatLogs");
             break;
           }
@@ -326,7 +320,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           }
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           if (error.response.status !== 401) {
           } else {
             // refreshToken 재발급

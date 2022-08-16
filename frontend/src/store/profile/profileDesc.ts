@@ -26,7 +26,6 @@ export interface ProfileDescState {
   // 북마크
   currentUserBookmark: userBookmarkData[];
   currentUserBookmarkPage: number;
-
 }
 
 export const profileDesc: Module<ProfileDescState, RootState> = {
@@ -58,7 +57,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
 
     currentUserBookmark: [],
     currentUserBookmarkPage: 0,
-
   },
 
   getters: {
@@ -195,7 +193,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("SET_CURRENT_USER_DATA", res.data);
         })
         .catch((err) => {
@@ -232,7 +229,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("ADD_CURRENT_USER_POST_COMMUNITY", res.data);
           commit("SET_CURRENT_USER_POST_COMMUNITY_PAGE", page + 1);
         })
@@ -257,7 +253,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       { commit, dispatch, rootGetters, getters },
       uid: number
     ) => {
-      console.log(uid);
       const page = getters["getCurrentUserPostCustomPage"];
       axios({
         url: api.accounts.profileCustom(),
@@ -271,7 +266,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           // 받은 데이터를 리스트에 추가하고 page를 늘린다.
           commit("ADD_CURRENT_USER_POST_CUSTOM", res.data);
           commit("SET_CURRENT_USER_POST_CUSTOM_PAGE", page + 1);
@@ -310,7 +304,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("ADD_CURRENT_USER_POST_REVIEW", res.data);
           commit("SET_CURRENT_USER_POST_REVIEW_PAGE", page + 1);
         })
@@ -348,7 +341,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         },
       })
         .then((res) => {
-          console.log(res.data);
           commit("ADD_CURRENT_USER_POST_BOOKMARK", res.data);
           commit("SET_CURRENT_USER_POST_BOOKMARK_PAGE", page + 1);
         })
@@ -368,9 +360,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
         });
     },
 
-    changePrivateModeSet: (
-      { commit, dispatch, rootGetters }
-    ) => {
+    changePrivateModeSet: ({ commit, dispatch, rootGetters }) => {
       const uid = rootGetters["personalInfo/getUserInfoUserId"];
       axios({
         url: api.accounts.profileModeSet(),

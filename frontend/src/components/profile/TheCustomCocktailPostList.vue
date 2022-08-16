@@ -3,7 +3,7 @@
     <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
   </article>
   <section>
-    <div class="custom-post-none" v-if="isEmpty">
+    <div class="custom-post-none" v-if="isEmpty && isPrivate">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
   </section>
@@ -20,6 +20,11 @@ const store = useStore();
 const userCustomPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostCustom"]
 );
+
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+const isPrivate = computed(() => userInfo.value.isPrivate)
 
 const isEmpty = ref(false);
 setTimeout(() => {

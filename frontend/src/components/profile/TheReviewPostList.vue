@@ -3,7 +3,7 @@
     <the-review-post-item :review="review"></the-review-post-item>
   </article>
   <section>
-    <div class="review-post-none" v-if="isEmpty">
+    <div class="review-post-none" v-if="isEmpty && isPrivate">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
   </section>
@@ -20,7 +20,10 @@ const store = useStore();
 const userReviewPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostReview"]
 );
-
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+const isPrivate = computed(() => userInfo.value.isPrivate)
 const isEmpty = ref(false);
 setTimeout(() => {
   if (userReviewPostData.value.length === 0) {

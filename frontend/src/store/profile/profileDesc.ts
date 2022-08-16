@@ -160,6 +160,10 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     SET_PRIVATE_MODE: (state, value: number) => {
       state.currentUserData.isPrivate = value;
     },
+
+    TOGGLE_FOLLOW_USER: (state, value: number) => {
+      state.currentUserData.isFollowed = value;
+    }
   },
 
   actions: {
@@ -385,6 +389,13 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
         });
+    },
+
+    // * 커스텀칵테일 팔로우/언팔로우
+    toggleFollowUser: ({ commit, getters }) => {
+      const userInfo = getters["getCurrentUserData"];
+      const value = userInfo.isFollowed ? 0 : 1;
+      commit("TOGGLE_FOLLOW_USER", value);
     },
   },
 };

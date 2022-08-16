@@ -17,7 +17,7 @@
         <span class="material-icons"> send </span>
       </button>
     </form>
-    <div class="the-chat-room-emoji" v-if="chatRoomStatus">
+    <div class="the-chat-room-emoji" v-show="chatRoomStatus">
       <div
         v-for="(emoji, index) in emojiList"
         :key="`emoji-${index}`"
@@ -82,9 +82,14 @@ const clickEmoji = (item: string) => {
   chatInputValue.value = chatInputValue.value + item;
 };
 
+const emit = defineEmits<{
+  (e: "clickEmoji"): void;
+}>();
+
 // 이모지 on, off
 const changeEmojiStatus = () => {
   chatRoomStatus.value = !chatRoomStatus.value;
+  emit("clickEmoji");
 };
 
 // 채팅 input
@@ -92,9 +97,17 @@ const chatInputValue = ref("");
 
 // 채팅 submit
 const submitTheChatRoomForm = () => {
+  const message = chatInputValue.value.trim();
+
+  // 공란 유효성 검사
+  if (!message) {
+    chatInputValue.value = "";
+    return;
+  }
+
   const data = {
     receiver: Number(route.params.userId),
-    message: chatInputValue.value,
+    message,
   };
   store.dispatch("chatRoom/sendNewChat", data);
   chatInputValue.value = "";
@@ -102,18 +115,47 @@ const submitTheChatRoomForm = () => {
 </script>
 
 <style scoped lang="scss">
+@keyframes start {
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes end {
+  to {
+    transform: translate3d(0, 100%, 0);
+  }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 .the-chat-room-form {
   @include flex(column);
   gap: 16px;
   position: fixed;
   bottom: 80px;
-  width: calc(100% - 36px);
-  max-width: 600px;
+  border-radius: 1em 1em 0em 0em;
+  width: calc(100% - 32px);
+
+  @media #{$tablet} {
+    width: 64%;
+    max-width: 480px;
+  }
+
+  @media #{$pc} {
+    width: 42%;
+    max-width: 700px;
+  }
+  background-color: $white;
 
   form {
     @include flex-xy(flex-start, center);
     gap: 12px;
-    height: 2em;
+    height: 32px;
     padding: 4px 8px;
     border: 1px solid $unchecked-color;
     border-radius: 1em;
@@ -121,7 +163,7 @@ const submitTheChatRoomForm = () => {
 
     input {
       width: 80%;
-      height: 2em;
+      height: 32px;
       border: 0;
       @include font($fs-md, $fw-medium);
       flex-grow: 1;
@@ -164,6 +206,7 @@ const submitTheChatRoomForm = () => {
     align-content: center;
     row-gap: 16px;
     width: 100%;
+    background-color: $white;
 
     > div {
       font-size: $fs-lg;

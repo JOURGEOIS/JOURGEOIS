@@ -66,7 +66,7 @@ article {
 }
 .community-post-none {
   width: 100%;
-  padding: 64px 16px;
+  padding: 64px 70px;
   border-radius: 16px;
   background-color: $white200;
   @include font($fs-main, $fw-bold);

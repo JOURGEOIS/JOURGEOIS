@@ -61,8 +61,8 @@ public class MemberProfilePageController {
         Map<String, Boolean> data = new HashMap<>();
 
         try {
-            Long userId = Long.parseLong(((String) request.getAttribute("uid")));
-            List<Map<String, Object>> result = memberProfilePageService.readMemberCocktailOrPost(userId, uid, pageable,"cocktail");
+            Long myUid = Long.parseLong(((String) request.getAttribute("uid")));
+            List<Map<String, Object>> result = memberProfilePageService.readMemberCocktailOrPost(myUid, uid, pageable,"cocktail");
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println(e);

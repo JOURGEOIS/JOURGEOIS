@@ -35,7 +35,7 @@
 import RoundImage from "@/components/basics/RoundImage.vue";
 import { User } from "../../interface";
 import { calcDateDelta, compareDate } from "../../functions/date";
-import { ref, computed } from "vue";
+import { watchEffect, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
@@ -67,7 +67,12 @@ const goProfile = () => {
 
 // 팔로우/팔로잉 버튼 클릭
 const a = computed(() => feedDescInfo?.value?.followerDTO?.isFollowed);
+console.log(a.value);
 const isFollowed = ref(a.value);
+watchEffect(() => {
+  console.log(a.value);
+  isFollowed.value = a.value;
+});
 
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => {

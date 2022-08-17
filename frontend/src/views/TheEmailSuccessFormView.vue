@@ -1,9 +1,9 @@
 <template>
   <div class="email-form-view">
-    <!-- 헤더 -->
-    <header-notice :success="false">
-    </header-notice>
-    <section class="content top-view">
+    <section class="content">
+      <div class="title">
+        <img src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/icon-bold-line-nobackground.png" alt="">
+      </div>
       <div class="email-image">
         <img
           src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/mail_success.png"
@@ -24,6 +24,17 @@ import HeaderNotice from "@/components/basics/HeaderNotice.vue";
 </script>
 
 <style scoped lang="scss">
+section {
+  @include flex(column);
+  width: 100%;
+  gap: 20px;
+}
+img {
+  width: 150px;
+  height: auto;
+  margin-top: 10px;
+}
+
 .email-form-view {
   @include flex(column);
   justify-content: flex-start;

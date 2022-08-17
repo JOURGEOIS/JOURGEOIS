@@ -81,11 +81,11 @@ const clickXIcon = () => {
 };
 
 // 개발환경 URL
-const url = encodeURI(window.location.href);
+// const url = encodeURI(window.location.href);
 // 서비스 환경 URL
-// const originUrl = encodeURI(window.location.href);
-// const path = originUrl.split("http://127.0.0.1:5173").splice(1).pop();
-// const url = "http://jourgeois.com" + path;
+const originUrl = encodeURI(window.location.href);
+const path = originUrl.split("http://127.0.0.1:5173").splice(1).pop();
+const url = "http://jourgeois.com" + path;
 
 // 링크 복사 클릭
 const clickShareLink = () => {

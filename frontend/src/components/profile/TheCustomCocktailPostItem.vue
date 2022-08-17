@@ -13,7 +13,7 @@
       <div class="cocktail-liked">
         <span class="material-icons unliked" v-if="!ilike"> favorite </span>
         <span class="material-icons liked" v-if="ilike"> favorite </span>
-        {{ ilike }}
+        {{ likes }}
       </div>
     </div>
     <div class="item-content-container">

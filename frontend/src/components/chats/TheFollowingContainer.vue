@@ -45,7 +45,7 @@ onBeforeMount(() => {
   setFolloweeList({ userId: uid.value });
   setTimeout(() => {
     setFolloweeList({ userId: uid.value });
-  }, 200);
+  }, 500);
 });
 
 // 리셋

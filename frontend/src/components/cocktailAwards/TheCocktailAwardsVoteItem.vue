@@ -36,6 +36,9 @@ const props = defineProps<{
   cocktailAwardsVoteRank: number;
 }>();
 
+// 로그인인지 확인
+const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
+
 // 이미지 링크
 const imageUrl = computed(() => {
   return `url(${props.cocktailAwardsVoteItem.imgLink})`;
@@ -43,11 +46,16 @@ const imageUrl = computed(() => {
 
 // 투표
 const clickVote = () => {
-  const data = {
-    index: props.cocktailAwardsVoteRank,
-    postId: props.cocktailAwardsVoteItem.postId,
-  };
-  store.dispatch("cocktailAwards/voteCocktail", data);
+  if (!isLoggedIn.value) {
+    router.push({ name: "TheLoginView" });
+    return;
+  } else {
+    const data = {
+      index: props.cocktailAwardsVoteRank,
+      postId: props.cocktailAwardsVoteItem.postId,
+    };
+    store.dispatch("cocktailAwards/voteCocktail", data);
+  }
 };
 
 // 클릭

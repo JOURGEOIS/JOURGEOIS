@@ -76,7 +76,8 @@ const clickShowMoreItem = (item: CarouselCocktail) => {
     }
     .carousel-text {
       width: 100%;
-      @include font-size-sub(12px);
+      @include font(14px, $fw-medium);
+      // color: $sub-color;
     }
   }
 }

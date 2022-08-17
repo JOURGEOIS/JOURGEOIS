@@ -103,7 +103,7 @@ const clickMore = () => {
 
 .article-description {
   margin-top: -20px;
-  @include font(13px, $fw-regular);
+  @include font(14px, $fw-regular);
   color: $sub-color;
 }
 
@@ -114,7 +114,7 @@ const clickMore = () => {
     padding: 10px;
     border: 1px solid $unchecked-color;
     border-radius: 5px;
-    @include font(12px, $fw-medium);
+    @include font(14px, $fw-medium);
     color: $primary-color;
     @include shadow-feed;
     @include for-click;

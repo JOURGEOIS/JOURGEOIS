@@ -47,5 +47,7 @@ const imageWidth = ref(props.roundImage.width);
   background-color: $white200;
   background-position: center;
   background-size: cover;
+
+  flex-shrink: 0;
 }
 </style>

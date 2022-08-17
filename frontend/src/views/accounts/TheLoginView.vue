@@ -14,7 +14,7 @@
           <p>회원가입</p>
         </router-link>
       </div>
-      <the-social-login></the-social-login>
+      <!-- <the-social-login></the-social-login> -->
     </section>
   </div>
 </template>

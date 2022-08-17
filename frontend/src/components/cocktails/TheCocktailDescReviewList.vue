@@ -36,6 +36,7 @@ const cocktailId = Number(cocktailData.value.id);
 const cocktailReviewData = computed(
   () => store.getters["cocktailReview/getCurrentCocktailReview"]
 );
+
 // 전체 후기 추가 함수
 const getWholeReview = (cocktailId: number) => {
   store.dispatch("cocktailReview/getCocktailReview", cocktailId);
@@ -54,27 +55,7 @@ const handleScroll = (event: Event) => {
 onBeforeMount(() => {
   if (isLoggedIn.value) {
     window.addEventListener("scroll", handleScroll);
-
-    // 리셋
-    store.dispatch("cocktailReview/resetCocktailReview");
-    store.dispatch("cocktailReview/toggleReviewChangeSuccess", false);
-    store.dispatch("cocktailReview/toggleDeleteModal", false);
-
-    // 데이터 받기
-    store.dispatch("cocktailReview/getCocktailReview", cocktailId);
   }
-
-  // 시간제 모달
-  watch(successPopUpStatus, () => {
-    if (successPopUpStatus) {
-      setTimeout(() => offSuccessPopUpModal(), 2000);
-    }
-  });
-
-  // 이벤트 연결 끊기
-  onUnmounted(() => {
-    window.removeEventListener("scroll", handleScroll);
-  });
   getWholeReview(cocktailId);
 });
 
@@ -97,8 +78,19 @@ const offDeleteModal = () => {
 
 // 리셋
 onUnmounted(() => {
+  // 리셋
   store.dispatch("cocktailReview/resetCocktailReview");
+  store.dispatch("cocktailReview/toggleReviewChangeSuccess", false);
+  store.dispatch("cocktailReview/toggleDeleteModal", false);
+
   window.removeEventListener("scroll", handleScroll);
+});
+
+// 시간제 모달
+watch(successPopUpStatus, () => {
+  if (successPopUpStatus) {
+    setTimeout(() => offSuccessPopUpModal(), 2000);
+  }
 });
 </script>
 

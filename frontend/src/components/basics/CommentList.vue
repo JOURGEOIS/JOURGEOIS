@@ -9,10 +9,10 @@
   </div>
 
   <!-- 댓글이 없을 경우 보여지는 화면  -->
-  <div v-if="isEmpty" class="the-comment-none">
+  <!-- <div v-if="isEmpty" class="the-comment-none">
     <p>댓글이 없습니다</p>
     <p>😥</p>
-  </div>
+  </div> -->
 
   <!-- 댓글 수정 성공 팝업 -->
   <success-pop-up v-if="successPopUpStatus" @off-modal="offSuccessPopUpModal">
@@ -35,12 +35,13 @@ import SuccessPopUp from "@/components/modals/SuccessPopUp.vue";
 import { useStore } from "vuex";
 const store = useStore();
 
-const isEmpty = ref(false);
-setTimeout(() => {
-  if (!commentList.value.length) {
-    isEmpty.value = true;
-  }
-}, 200);
+// const isEmpty = computed(() => {
+//   if (!commentList.value.length) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// });
 
 // 프롭스
 const props = defineProps<{
@@ -110,12 +111,12 @@ onUnmounted(() => {
   width: 100%;
   margin-bottom: 40px;
 }
-
+/* 
 .the-comment-none {
   @include flex-center;
   gap: 4px;
   @include font($fs-main, $fw-regular);
   color: $sub-color;
   margin-bottom: 72px;
-}
+} */
 </style>

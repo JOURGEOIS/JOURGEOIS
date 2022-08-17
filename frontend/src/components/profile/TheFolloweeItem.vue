@@ -1,7 +1,10 @@
 <template>
   <div class="the-followee-item">
     <div class="part-left" @click="clickUser">
-      <round-image :round-image="userImage"></round-image>
+      <round-image
+        :round-image="userImage"
+        class="the-followee-profile-image"
+      ></round-image>
       <div class="user-info-text">
         <h1 class="user-nickname">{{ nickname }}</h1>
         <p class="user-introduce">{{ introduce }}</p>
@@ -38,8 +41,8 @@ const props = defineProps<{
   followee: User;
 }>();
 
-const nickname = props.followee.nickname
-const introduce = props.followee.introduce
+const nickname = props.followee.nickname;
+const introduce = props.followee.introduce;
 // 로그인 여부
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
@@ -47,17 +50,17 @@ const isFollowed = ref(props.followee.isFollowed);
 
 // 계정 클릭 시
 const clickUser = () => {
-  router.push({ name: "TheUserProfileView", params:{userId: uid}})
+  router.push({ name: "TheUserProfileView", params: { userId: uid } });
 };
 
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => {
   if (isFollowed.value === 1) {
-    return "팔로잉"
+    return "팔로잉";
   } else if (isFollowed.value === 0) {
-    return "팔로우"
+    return "팔로우";
   }
-})
+});
 
 // 팔로우/팔로잉 버튼 클릭
 const uid = props.followee.uid;
@@ -90,8 +93,9 @@ const userImage = {
 <style scoped lang="scss">
 .the-followee-item {
   @include flex-xy(space-between, center);
-  padding: 10px;
   gap: 10px;
+  width: 100%;
+  padding: 10px;
   border-bottom: 1px solid $seperate-color;
   @include list-hover;
 
@@ -138,5 +142,9 @@ const userImage = {
 }
 .follow {
   color: $red400;
+}
+
+.the-followee-profile-image {
+  flex-shrink: 0;
 }
 </style>

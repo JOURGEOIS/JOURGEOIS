@@ -9,7 +9,7 @@
     </section>
     <!-- 좋아요 기반 추천 칵테일  -->
     <the-home-basic-section
-      v-if="isLoggedIn"
+      v-if="isLoggedIn && isBookMarked"
       :data="likeRecommendedCocktailData"
     >
       <h1 class="title">
@@ -94,6 +94,11 @@ const likeRecommendedCocktailData = {
 
 // 로그인 여부 확인
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
+
+// 좋아요 여부 확인
+const isBookMarked = computed(
+  () => store.getters["carousel/getLikeRecommendedCocktails"].length
+);
 </script>
 
 <style scoped lang="scss">

@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import TheFollowerItem from '@/components/profile/TheFollowerItem.vue';
+import TheFollowerItem from "@/components/profile/TheFollowerItem.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
 import { ref, computed, onBeforeMount, onUnmounted } from '@vue/runtime-core';
@@ -29,8 +29,8 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-const followers = computed(() => store.getters["follow/getFollowerUsers"])
-const uid = computed(() => route.params.userId)
+const followers = computed(() => store.getters["follow/getFollowerUsers"]);
+const uid = computed(() => route.params.userId);
 
 const isEmpty = ref(false);
 setTimeout(() => {
@@ -49,15 +49,15 @@ const handleScroll = (event: Event) => {
 };
 
 const setFollowerList = (data: object) => {
-  store.dispatch("follow/setFollowerList", data)
-}
+  store.dispatch("follow/setFollowerList", data);
+};
 
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setFollowerList({ userId: uid.value });
   setTimeout(() => {
     setFollowerList({ userId: uid.value });
-  }, 100);
+  }, 500);
 });
 
 // 리셋

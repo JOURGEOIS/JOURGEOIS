@@ -12,6 +12,7 @@ export interface CocktailReviewState {
   currentCocktailReview: cocktailReviewData[];
   reviewCocktailPage: number;
   deleteReviewId: number;
+
   // 모달
   deleteModalStatus: boolean;
   reviewChangeSuccess: boolean;

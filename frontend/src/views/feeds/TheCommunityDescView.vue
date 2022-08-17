@@ -102,9 +102,7 @@ const commentCount = computed(() => store.getters["comment/getCommentCount"]);
 
   .the-community-desc-comment {
     @include flex(column);
-    gap: 40px;
     width: 100%;
-    margin-top: 20px;
   }
 }
 </style>

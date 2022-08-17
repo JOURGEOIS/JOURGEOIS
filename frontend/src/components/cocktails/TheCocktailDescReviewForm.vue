@@ -172,9 +172,10 @@ const submitCreateReviewForm = () => {
       padding: 0px;
       gap: 12px;
       .buttonstyle {
-        @include font($fs-xs, $fw-regular);
+        @include font($fs-sm, $fw-medium);
         padding: 37px 0px;
         background-color: white;
+        color: $main-color;
       }
     }
   }

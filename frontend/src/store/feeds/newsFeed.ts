@@ -132,7 +132,7 @@ export const newsFeed: Module<NewsFeedState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.error(error);
+            error;
           } else {
             // refreshToken 재발급
             const obj = {

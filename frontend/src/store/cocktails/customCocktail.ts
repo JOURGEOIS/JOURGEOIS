@@ -233,7 +233,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           commit("SET_ORIGINAL_COCKTAIL_INGREDIENTS", ingredients);
           commit("SET_ORIGINAL_COCKTAIL_RECIPE", recipe);
         })
-        .catch((error) => console.error(error));
+        .catch((error) => error);
     },
 
     // 사진 업로드 임시 저장
@@ -284,7 +284,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
             commit("SET_SEARCH_INGREDIENTS_LIST", ingredients);
           }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => error);
     },
 
     // 검색 자동완성 리스트 리셋하기
@@ -778,7 +778,7 @@ export const customCocktail: Module<CustomCocktailState, RootState> = {
           });
         })
         .catch((error) => {
-          console.error(error);
+          error;
           // 로딩 off
           commit("SET_LOADING_STATUS", false);
 

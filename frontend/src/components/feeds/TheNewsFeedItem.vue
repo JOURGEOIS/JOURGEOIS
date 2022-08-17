@@ -143,7 +143,7 @@ const clickProfileImage = () => {
     aspect-ratio: 1/1;
     margin: 0 -10px;
     margin-bottom: 8px;
-    border-radius: 0px;
+    border-radius: 10px;
     background-color: $white150;
     background : {
       size: cover;

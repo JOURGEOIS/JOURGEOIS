@@ -70,7 +70,6 @@ export const post: Module<PostState, RootState> = {
           // 실패 시, 홈으로 이동 후 에러 모달 on
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -100,7 +99,6 @@ export const post: Module<PostState, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

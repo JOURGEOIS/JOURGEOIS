@@ -21,7 +21,9 @@
               {{ review.nickname }}
             </p>
             <div class="cocktail-desc-review-time-compare">
-              <p class="cocktail-desc-review-time">{{ calc }}</p>
+              <p class="cocktail-desc-review-time">
+                {{ calc }}
+              </p>
               <p class="cocktail-desc-review-compare">{{ compare }}</p>
             </div>
           </div>
@@ -60,7 +62,7 @@
             <p class="cocktail-desc-review-profile-name">
               {{ review.nickname }}
             </p>
-            <p class="cocktail-desc-review-time">{{ calc }}</p>
+            <!-- <p class="cocktail-desc-review-time">{{ calc }}</p> -->
           </div>
           <div
             v-if="userInfo.nickname == review.nickname"
@@ -100,7 +102,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from "vue";
-import { useRouter } from "vue-router"
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import RoundImage from "@/components/basics/RoundImage.vue";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
@@ -130,7 +132,7 @@ const props = defineProps<{
 const userInfo = computed(() => store.getters["personalInfo/getUserInfo"]);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
-const uid = props.review.userId
+const uid = props.review.userId;
 
 const img: string = userInfo.value.profileImg;
 const name: string = userInfo.value.nickname;
@@ -158,8 +160,8 @@ const cocktailData = computed(
 const cocktailId = Number(cocktailData.value.id);
 
 const goProfile = () => {
-  router.push({name: "TheUserProfileView", params:{userId: uid}})
-}
+  router.push({ name: "TheUserProfileView", params: { userId: uid } });
+};
 
 // 후기 수정
 const reviewEdit = (data: object) =>
@@ -242,8 +244,8 @@ const reviewDelete = (data: object) =>
 const commentId = props.review.commentId;
 
 const clickDeleteReview = () => {
-  store.dispatch("cocktailReview/toggleDeleteModal", true)
-  store.dispatch("cocktailReview/setDeleteReviewId", commentId)
+  store.dispatch("cocktailReview/toggleDeleteModal", true);
+  store.dispatch("cocktailReview/setDeleteReviewId", commentId);
 };
 </script>
 
@@ -289,10 +291,11 @@ const clickDeleteReview = () => {
         }
         .cocktail-desc-review-button {
           @include flex;
+          margin-top: 1px;
 
           .buttonstyle {
-            @include font($fs-sm, $fw-regular);
-            color: $navy400;
+            @include font(13px, $fw-regular);
+            color: $sub-color;
             padding: 0px;
           }
         }

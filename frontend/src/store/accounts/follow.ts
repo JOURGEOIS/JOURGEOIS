@@ -147,7 +147,6 @@ export const follow: Module<FollowState, RootState> = {
           commit("SET_FOLLOWER_USER_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err.response);
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급

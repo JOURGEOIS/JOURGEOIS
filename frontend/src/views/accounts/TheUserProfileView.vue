@@ -32,9 +32,7 @@
         </div>
       </div>
       <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
-      <keep-alive>
-        <component :is="currentComponent"></component>
-      </keep-alive>
+      <component :is="currentComponent"></component>
     </section>
   </div>
   <the-log-out-modal
@@ -127,13 +125,6 @@ const clickReviewTab = () => store.dispatch("profileDesc/changeCurrentTab", 2);
 const clickBookmarkTab = () =>
   store.dispatch("profileDesc/changeCurrentTab", 3);
 
-// 동적 라우팅 및 리셋
-onMounted(() => {
-  store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
-  toggleLogOutModal(false);
-  store.dispatch("profileDesc/changeCurrentTab", 0);
-});
-
 // 로그아웃 모달
 const logOutModalStatus = computed(
   () => store.getters["account/getLogOutModalStatus"]
@@ -147,7 +138,24 @@ const buttonColor = computed(() => {
   return "sub-blank";
 });
 
-onUnmounted(() => {});
+// 동적 라우팅 및 리셋
+onMounted(() => {
+  store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
+  toggleLogOutModal(false);
+  store.dispatch("profileDesc/changeCurrentTab", 0);
+});
+
+onUnmounted(() => {
+  store.dispatch("profileDesc/resetCurrentUserData");
+});
+
+const paramsUserId = computed(() => route.params.userId);
+
+watch(paramsUserId, () => {
+  store.dispatch("profileDesc/getCurrentUserData", paramsUserId.value);
+  toggleLogOutModal(false);
+  store.dispatch("profileDesc/changeCurrentTab", 0);
+});
 </script>
 
 <style scoped lang="scss">

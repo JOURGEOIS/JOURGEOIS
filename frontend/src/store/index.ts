@@ -6,7 +6,6 @@ import { post, PostState } from "../store/basics/post";
 import { share, ShareState } from "../store/basics/share";
 import { account, AccountState } from "../store/accounts/account";
 import { signup, SignupState } from "../store/accounts/signup";
-import { socialLogin, SocialLoginState } from "../store/accounts/socialLogin";
 import { password, PasswordState } from "../store/accounts/password";
 import { follow, FollowState } from "../store/accounts/follow";
 import { carousel, CarouselState } from "../store/homes/carousel";
@@ -83,7 +82,6 @@ export interface RootState {
   share: ShareState;
   account: AccountState;
   signup: SignupState;
-  socialLogin: SocialLoginState;
   personalInfo: PersonalInfoState;
   password: PasswordState;
   follow: FollowState;
@@ -115,7 +113,6 @@ export default createStore({
     share,
     account,
     signup,
-    socialLogin,
     personalInfo,
     password,
     follow,

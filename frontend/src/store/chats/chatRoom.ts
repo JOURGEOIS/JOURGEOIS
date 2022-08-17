@@ -143,7 +143,6 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           if (err.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -216,7 +215,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           }
         })
         .catch((err) => {
-          console.error(err);
+          err;
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
@@ -252,7 +251,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           commit("SET_CHAT_LOGS", response.data.messages);
         })
         .catch((err) => {
-          console.error(err);
+          err;
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
@@ -320,7 +319,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           }
         })
         .catch((error) => {
-          console.error(error);
+          error;
           if (error.response.status !== 401) {
           } else {
             // refreshToken 재발급

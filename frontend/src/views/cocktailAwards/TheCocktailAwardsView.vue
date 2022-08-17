@@ -20,7 +20,10 @@
         </button>
       </section>
       <section>
-        <p>가장 예쁜 칵테일에 투표해주세요</p>
+        <p>
+          가장 <span class="primary-title">눈길을 끄는</span> 칵테일에
+          투표해주세요
+        </p>
 
         <!-- 탭 : 탭을 선택하면 해당 탭으로 컴포넌트를 바꾼다.  -->
         <div class="the-cocktail-awards-tab">
@@ -178,6 +181,10 @@ const changeTab = (value: number) =>
         }
       }
     }
+  }
+
+  .primary-title {
+    font-weight: 700;
   }
 }
 </style>

@@ -193,6 +193,22 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       commit("SET_CURRENT_USER_POST_BOOKMARK_PAGE", 0);
     },
 
+    // 프로필 정보 리셋
+    resetCurrentUserData: ({ commit }) => {
+      commit("SET_CURRENT_USER_DATA", {
+        uid: 0,
+        introduce: "",
+        followerCnt: 0,
+        followingCnt: 0,
+        postCnt: 0,
+        nickname: "",
+        isPrivate: 0,
+        profileImg: "",
+        email: "",
+        isFollowed: 0,
+      });
+    },
+
     // 프로필 정보 가져오기
     getCurrentUserData: ({ commit, dispatch, rootGetters }, uid: number) => {
       axios({
@@ -209,15 +225,12 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           commit("SET_CURRENT_USER_DATA", res.data);
         })
         .catch((err) => {
-          console.error(err);
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserData",
-              params: {
-                uid,
-              },
+              params: uid,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
@@ -229,6 +242,8 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       { commit, dispatch, getters, rootGetters },
       uid: number
     ) => {
+      console.log("ㅇㅅㅇ");
+      console.log(uid);
       const page = getters["getCurrentUserPostCommunityPage"];
       axios({
         url: api.accounts.profileCommunity(),
@@ -246,15 +261,12 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           commit("SET_CURRENT_USER_POST_COMMUNITY_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err);
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserPostCommunityData",
-              params: {
-                uid,
-              },
+              params: uid,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
@@ -284,15 +296,12 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           commit("SET_CURRENT_USER_POST_CUSTOM_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err);
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserPostCustomData",
-              params: {
-                uid,
-              },
+              params: uid,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
@@ -321,15 +330,12 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           commit("SET_CURRENT_USER_POST_REVIEW_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err);
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserPostReviewData",
-              params: {
-                uid,
-              },
+              params: uid,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
@@ -358,15 +364,12 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
           commit("SET_CURRENT_USER_POST_BOOKMARK_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err);
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
             const obj = {
               func: "profileDesc/getCurrentUserPostBookmarkData",
-              params: {
-                uid,
-              },
+              params: uid,
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }

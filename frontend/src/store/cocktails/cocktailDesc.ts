@@ -72,7 +72,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     getFailPopupStatus: (state) => {
       return state.failPopupStatus;
     },
-    
+
     // 성공 팝업
     getSuccessPopupStatus: (state) => {
       return state.successPopupStatus;
@@ -114,7 +114,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
     SET_FAIL_POPUP_STATUS: (state, value) => {
       state.failPopupStatus = value;
     },
-    
+
     //성공 팝업
     SET_SUCCESS_POPUP_STATUS: (state, value) => {
       state.successPopupStatus = value;
@@ -172,15 +172,13 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
         .then((response) => {
           commit("SET_CURRENT_COCKTAIL_DATA", response.data);
         })
-        .catch((error) => {
-          console.error(error.response);
-        });
+        .catch((error) => {});
     },
-    
+
     toggleFailPopupStatus: ({ commit }, value: boolean) => {
       commit("SET_FAIL_POPUP_STATUS", value);
     },
-    
+
     toggleSuccessPopupStatus: ({ commit }, value: boolean) => {
       commit("SET_SUCCESS_POPUP_STATUS", value);
     },
@@ -204,7 +202,6 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.error(error);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -239,7 +236,7 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.error(error);
+            error;
           } else {
             // refreshToken 재발급
             const obj = {

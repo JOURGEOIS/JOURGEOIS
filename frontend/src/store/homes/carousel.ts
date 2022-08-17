@@ -252,9 +252,8 @@ export const carousel: Module<CarouselState, RootState> = {
             theme: tag,
           });
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     setThemeCocktailsSequential: async ({ dispatch }) => {
@@ -279,9 +278,8 @@ export const carousel: Module<CarouselState, RootState> = {
           commit("SET_ALL_THEME_COCKTAILS", res.data);
           commit("SET_ALL_THEME_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     removeAllThemeCocktails: ({ commit }) => {
@@ -315,8 +313,7 @@ export const carousel: Module<CarouselState, RootState> = {
           const date = rawDate.split("-").splice(1, 2).join(".");
           commit("SET_HOT_KEYWORD_DATE", date);
         })
-        .catch((err) => {
-          console.error(err.response);
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
         });
     },
@@ -361,9 +358,8 @@ export const carousel: Module<CarouselState, RootState> = {
         .then((res) => {
           commit("SET_LATEST_CUSTOM_COCKTAILS", res.data);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     setAllLatestCustomCocktails: ({ commit, dispatch, getters }) => {
@@ -379,9 +375,8 @@ export const carousel: Module<CarouselState, RootState> = {
           commit("SET_ALL_LATEST_CUSTOM_COCKTAILS", res.data);
           commit("SET_ALL_LATEST_CUSTOM_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     removeAllLatestCustomCocktails: ({ commit }) => {
@@ -397,9 +392,8 @@ export const carousel: Module<CarouselState, RootState> = {
         .then((res) => {
           commit("SET_HOT_COCKTAILS", res.data);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     setAllHotCocktails: ({ commit, dispatch, getters }) => {
@@ -415,9 +409,8 @@ export const carousel: Module<CarouselState, RootState> = {
           commit("SET_ALL_HOT_COCKTAILS", res.data);
           commit("SET_ALL_HOT_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     removeAllHotCocktails: ({ commit }) => {
@@ -433,9 +426,8 @@ export const carousel: Module<CarouselState, RootState> = {
         .then((res) => {
           commit("SET_WEEKLY_HOT_COCKTAILS", res.data);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     setAllWeeklyHotCocktails: ({ commit, dispatch, getters }) => {
@@ -451,9 +443,8 @@ export const carousel: Module<CarouselState, RootState> = {
           commit("SET_ALL_WEEKLY_HOT_COCKTAILS", res.data);
           commit("SET_ALL_WEEKLY_HOT_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     removeAllWeeklyHotCocktails: ({ commit }) => {
@@ -471,9 +462,8 @@ export const carousel: Module<CarouselState, RootState> = {
         .then((res) => {
           commit("SET_LIKE_RECOMMENDED_COCKTAILS", res.data);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     setAllLikeRecommendedCocktails: ({
@@ -497,9 +487,8 @@ export const carousel: Module<CarouselState, RootState> = {
           commit("SET_ALL_LIKE_RECOMMENDED_COCKTAILS", res.data);
           commit("SET_ALL_LIKE_RECOMMENDED_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-          console.error(err.response);
         });
     },
     removeLikeRecommendedCocktails: ({ commit }) => {

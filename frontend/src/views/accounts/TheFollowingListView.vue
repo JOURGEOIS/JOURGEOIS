@@ -9,6 +9,7 @@
         <p class="emoji">😥</p>
       </div>
       <the-followee-item
+        v-else
         v-for="(followee, idx) in followees"
         :key="`followee-${idx}`"
         :followee="followee"
@@ -22,7 +23,7 @@
 import TheFolloweeItem from "@/components/profile/TheFolloweeItem.vue";
 import HeaderBasic from "@/components/basics/HeaderBasic.vue";
 import NavBar from "@/components/basics/NavBar.vue";
-import { ref, computed, onBeforeMount, onUnmounted } from '@vue/runtime-core';
+import { ref, computed, onBeforeMount, onUnmounted } from "@vue/runtime-core";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 const router = useRouter();

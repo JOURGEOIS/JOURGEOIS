@@ -105,6 +105,16 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
     SET_CURRENT_CHAT_ROOM_ID: (state, chatRoomId: string) => {
       state.currentChatRoom.chatRoomId = chatRoomId;
     },
+
+    // * 로컬 채팅 추가
+    UNSHIFT_NEW_CHAT: (state, newChat: Chat) => {
+      state.chatLogs.unshift(newChat);
+    },
+
+    // * 로컬 채팅 제거
+    SHIFT_NEW_CHAT: (state) => {
+      state.chatLogs.shift();
+    },
   },
 
   actions: {
@@ -143,7 +153,6 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           if (err.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -216,7 +225,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           }
         })
         .catch((err) => {
-          console.error(err);
+          err;
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
@@ -252,7 +261,7 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           commit("SET_CHAT_LOGS", response.data.messages);
         })
         .catch((err) => {
-          console.error(err);
+          err;
           if (err.response.status !== 401) {
           } else {
             // refreshToken 재발급
@@ -302,6 +311,23 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       if (roomId) {
         data.chatRoomId = roomId;
       }
+      // 로컬에서 임시 반영
+      let seconds = new Date().getTime() / 1000;
+      const newMessage: Chat = {
+        chatRoomId: roomId,
+        isRead: false,
+        message,
+        receiver,
+        sender: +rootGetters["personalInfo/getUserInfoUserId"],
+        timestamp: {
+          nanos: 0,
+          seconds,
+        },
+      };
+      // 새 메세지를 chatLogs에 추가(unshift)
+      commit("UNSHIFT_NEW_CHAT", newMessage);
+
+      //  서버로 요청
       axios({
         url: api.chats.chatLogs(),
         method: "POST",
@@ -320,8 +346,11 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           }
         })
         .catch((error) => {
-          console.error(error);
+          error;
           if (error.response.status !== 401) {
+            // 새 메세지를 chatLogs에서 삭제(shift)
+            commit("SHIFT_NEW_CHAT");
+            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

@@ -160,7 +160,6 @@ export const notice: Module<NoticeState, RootState> = {
         .catch((error) => {
           dispatch("modal/toggleLoadingStatus", false, { root: true });
           if (error.response.status !== 401) {
-            console.error(error);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -227,7 +226,7 @@ export const notice: Module<NoticeState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.error(error);
+            error;
           } else {
             // refreshToken 재발급
             const obj = {
@@ -251,7 +250,7 @@ export const notice: Module<NoticeState, RootState> = {
         .then(() => {})
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.error(error);
+            error;
           } else {
             // refreshToken 재발급
             const obj = {

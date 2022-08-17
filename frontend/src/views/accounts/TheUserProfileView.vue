@@ -23,14 +23,16 @@
         <div class="user-profile-tab-review" :class="`index-${index}`">
           <p @click="clickReviewTab">후기</p>
         </div>
-        <div class="user-profile-tab-bookmark" :class="`index-${index}`" v-if="isFollowed === -1">
+        <div
+          class="user-profile-tab-bookmark"
+          :class="`index-${index}`"
+          v-if="isFollowed === -1"
+        >
           <p @click="clickBookmarkTab">북마크</p>
         </div>
       </div>
       <!-- 동적 컴포넌트: 탭에 따라 변경된다. -->
-      <keep-alive>
-        <component :is="currentComponent"></component>
-      </keep-alive>
+      <component :is="currentComponent"></component>
     </section>
   </div>
   <the-log-out-modal
@@ -41,7 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, watch, onMounted } from "vue";
+import {
+  computed,
+  defineAsyncComponent,
+  watch,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { useStore } from "vuex";
 import TheUserProfileBasic from "@/components/profile/TheUserProfileBasic.vue";
@@ -60,7 +68,7 @@ const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
 const uid = computed(() => userInfo.value.uid);
-const isFollowed = computed(() => userInfo.value.isFollowed)
+const isFollowed = computed(() => userInfo.value.isFollowed);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
 const myProfile = () => {
@@ -117,13 +125,6 @@ const clickReviewTab = () => store.dispatch("profileDesc/changeCurrentTab", 2);
 const clickBookmarkTab = () =>
   store.dispatch("profileDesc/changeCurrentTab", 3);
 
-// 동적 라우팅 및 리셋
-onMounted(() => {
-  store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
-  toggleLogOutModal(false);
-  store.dispatch("profileDesc/changeCurrentTab", 0);
-});
-
 // 로그아웃 모달
 const logOutModalStatus = computed(
   () => store.getters["account/getLogOutModalStatus"]
@@ -135,6 +136,25 @@ const toggleLogOutModal = (value: boolean) =>
 // 버튼 색깔
 const buttonColor = computed(() => {
   return "sub-blank";
+});
+
+// 동적 라우팅 및 리셋
+onMounted(() => {
+  store.dispatch("profileDesc/getCurrentUserData", route.params.userId);
+  toggleLogOutModal(false);
+  store.dispatch("profileDesc/changeCurrentTab", 0);
+});
+
+onUnmounted(() => {
+  store.dispatch("profileDesc/resetCurrentUserData");
+});
+
+const paramsUserId = computed(() => route.params.userId);
+
+watch(paramsUserId, () => {
+  store.dispatch("profileDesc/getCurrentUserData", paramsUserId.value);
+  toggleLogOutModal(false);
+  store.dispatch("profileDesc/changeCurrentTab", 0);
 });
 </script>
 

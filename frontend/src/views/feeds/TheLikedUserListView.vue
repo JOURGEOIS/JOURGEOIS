@@ -69,7 +69,7 @@ onBeforeMount(() => {
   setLikedUsers({ postId: feedId });
   setTimeout(() => {
     setLikedUsers({ postId: feedId });
-  }, 100);
+  }, 500);
 });
 
 // 리셋

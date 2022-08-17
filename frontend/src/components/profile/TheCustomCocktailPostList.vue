@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import TheCustomCocktailPostItem from "@/components/profile/TheCustomCocktailPostItem.vue";
-import { ref, computed, onBeforeMount, onUnmounted } from "vue";
+import { ref, computed, onBeforeMount, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -24,7 +24,7 @@ const userCustomPostData = computed(
 const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
-const isPrivate = computed(() => userInfo.value.isPrivate)
+const isPrivate = computed(() => userInfo.value.isPrivate);
 
 const isEmpty = ref(false);
 setTimeout(() => {
@@ -57,6 +57,14 @@ onUnmounted(() => {
   store.dispatch("profileDesc/resetCurrentUserPost");
   window.removeEventListener("scroll", handleScroll);
 });
+
+const paramsUserId = computed(() => route.params.userId);
+watch(paramsUserId, () => {
+  store.dispatch(
+    "profileDesc/getCurrentUserPostCustomData",
+    paramsUserId.value
+  );
+});
 </script>
 
 <style scoped lang="scss">
@@ -73,8 +81,8 @@ article {
   @include font($fs-main, $fw-bold);
   text-align: center;
   p {
-      @include flex-center;
-    }
+    @include flex-center;
+  }
 
   @media #{$tablet} {
     @include font($fs-lg, $fw-bold);

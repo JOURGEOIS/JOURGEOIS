@@ -68,7 +68,7 @@ axios({
 
   .article-description {
     margin-top: -20px;
-    @include font(13px, $fw-regular);
+    @include font(14px, $fw-regular);
     color: $sub-color;
   }
 

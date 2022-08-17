@@ -83,14 +83,14 @@ const submitCommentForm = () => {
 <style scoped lang="scss">
 .comment-form {
   @include flex-xy(flex-start, center);
-  gap: 4px;
+  gap: 10px;
   width: 100%;
   padding: 32px 0px;
 
   > .round-image {
     flex-shrink: 0;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
 
     @media #{$tablet} {
       width: 50px;
@@ -113,6 +113,10 @@ const submitCommentForm = () => {
     &:focus {
       outline: none;
       border: 1px solid $main-color;
+    }
+
+    &::placeholder {
+      @include font(13px);
     }
   }
 

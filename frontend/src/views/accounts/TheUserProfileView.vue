@@ -23,7 +23,11 @@
         <div class="user-profile-tab-review" :class="`index-${index}`">
           <p @click="clickReviewTab">후기</p>
         </div>
-        <div class="user-profile-tab-bookmark" :class="`index-${index}`" v-if="isFollowed === -1">
+        <div
+          class="user-profile-tab-bookmark"
+          :class="`index-${index}`"
+          v-if="isFollowed === -1"
+        >
           <p @click="clickBookmarkTab">북마크</p>
         </div>
       </div>
@@ -41,7 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, watch, onMounted } from "vue";
+import {
+  computed,
+  defineAsyncComponent,
+  watch,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { useStore } from "vuex";
 import TheUserProfileBasic from "@/components/profile/TheUserProfileBasic.vue";
@@ -60,7 +70,7 @@ const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
 const uid = computed(() => userInfo.value.uid);
-const isFollowed = computed(() => userInfo.value.isFollowed)
+const isFollowed = computed(() => userInfo.value.isFollowed);
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
 const myProfile = () => {
@@ -136,6 +146,8 @@ const toggleLogOutModal = (value: boolean) =>
 const buttonColor = computed(() => {
   return "sub-blank";
 });
+
+onUnmounted(() => {});
 </script>
 
 <style scoped lang="scss">

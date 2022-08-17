@@ -142,7 +142,8 @@ const clickProfileImage = () => {
     width: calc(100% + 20px);
     aspect-ratio: 1/1;
     margin: 0 -10px;
-    border-radius: 10px;
+    margin-bottom: 8px;
+    border-radius: 0px;
     background-color: $white150;
     background : {
       size: cover;
@@ -165,6 +166,7 @@ const clickProfileImage = () => {
   .the-news-feed-content {
     @include font($fs-md, $fw-medium);
     cursor: pointer;
+    margin-bottom: 8px;
 
     p {
       display: -webkit-box;

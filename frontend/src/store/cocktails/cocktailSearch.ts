@@ -187,9 +187,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
         .then((res) => {
           commit("SET_POPULAR_SEARCH_WORDS", res.data);
         })
-        .catch((err) => {
-          console.error(err.response);
-        });
+        .catch(() => {});
     },
 
     // * 검색 자동완성 list 모두 state 저장
@@ -224,7 +222,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
           });
           commit("SET_AUTO_COMPLETE_SEARCH_WORDS", autoCompleteWords);
         })
-        .catch((err) => console.error(err.response));
+        .catch(() => {});
     },
 
     //========================
@@ -275,9 +273,7 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
         .then((response) => {
           commit("SET_SEARCH_RESULT_CNT", response.data);
         })
-        .catch((error) => {
-          console.error(error.response);
-        });
+        .catch(() => {});
     },
 
     // 필터 재료 추가

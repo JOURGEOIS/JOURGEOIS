@@ -108,7 +108,6 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           commit("SET_REVIEW_COCKTAIL_PAGE", page + 1);
         })
         .catch((err) => {
-          console.error(err.response);
           // 실패 팝업
           dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
         });
@@ -137,7 +136,6 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           if (err.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -171,12 +169,11 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           if (err.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
               func: "cocktailReview/updateCocktailReview",
-              params: editData,
+              params: { cocktailId, commentId, comment },
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }
@@ -202,16 +199,14 @@ export const cocktailReview: Module<CocktailReviewState, RootState> = {
           dispatch("getCocktailReview", cocktailId);
         })
         .catch((err) => {
-          console.error(err.response);
           if (err.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
               func: "cocktailReview/deleteCocktailReview",
-              params: deleteData,
+              params: { cocktailId, commentId },
             };
             dispatch("personalInfo/requestRefreshToken", obj, { root: true });
           }

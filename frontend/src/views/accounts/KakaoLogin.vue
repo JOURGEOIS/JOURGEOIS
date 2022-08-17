@@ -40,7 +40,7 @@ export default {
           alert("로그인 성공!");
         },
         fail: (error) => {
-          console.error(error);
+          error;
         },
       });
     },

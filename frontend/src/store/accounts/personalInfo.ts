@@ -190,7 +190,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           if (error.response.status !== 401) {
             // 실패 팝업
             dispatch("account/toggleUserInfoChangeError", true, { root: true });
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -229,7 +228,6 @@ export const personalInfo: Module<PersonalInfoState, RootState> = {
           if (error.response.status !== 401) {
             // 실패 팝업
             dispatch("account/toggleUserInfoChangeError", true, { root: true });
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

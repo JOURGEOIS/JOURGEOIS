@@ -182,7 +182,6 @@ export const searchResult: Module<SearchResultState, RootState> = {
           // 실패 시, 홈으로 이동 후 에러 모달 on
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -219,9 +218,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
           const page = getters.getSearchCocktailPage;
           commit("SET_SEARCH_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => {
-          console.error(err.response);
-        });
+        .catch((err) => {});
     },
 
     // * 검색어 Cocktail 검색결과
@@ -251,7 +248,6 @@ export const searchResult: Module<SearchResultState, RootState> = {
           // 실패 시, 홈으로 이동 후 에러 모달 on
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -296,7 +292,6 @@ export const searchResult: Module<SearchResultState, RootState> = {
           // 실패 시, 홈으로 이동 후 에러 모달 on
           if (err.response.status !== 401) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -331,7 +326,7 @@ export const searchResult: Module<SearchResultState, RootState> = {
           commit("SET_SEARCH_FILTER", response.data);
           commit("SET_SEARCH_FILTER_PAGE", page + 1);
         })
-        .catch((error) => console.error(error));
+        .catch((error) => error);
     },
 
     removeSearchFilter: ({ commit }) => {

@@ -167,6 +167,7 @@ const clickProfileImage = () => {
     margin-bottom: 8px;
     @include font($fs-md, $fw-medium);
     cursor: pointer;
+    margin-bottom: 8px;
 
     p {
       display: -webkit-box;

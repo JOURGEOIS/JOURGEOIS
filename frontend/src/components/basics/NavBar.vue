@@ -83,6 +83,7 @@ const clickSearch = () => {
 // 프로필 버튼 클릭
 const clickProfile = () => {
   setNavIconStatus(4);
+  store.dispatch("profileDesc/resetCurrentUserPost");
   router.push({
     name: "TheUserProfileView",
     params: { userId: userId.value || 0 },

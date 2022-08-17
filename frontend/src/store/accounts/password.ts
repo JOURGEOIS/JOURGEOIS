@@ -217,10 +217,8 @@ export const password: Module<PasswordState, RootState> = {
           }
         })
         .catch((error) => {
-          console.error(error.response.status);
           if (error.response.status !== 401) {
             failStatus.value = true;
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -256,7 +254,6 @@ export const password: Module<PasswordState, RootState> = {
         .catch((error) => {
           if (error.response.status !== 401) {
             failStatus.value = true;
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

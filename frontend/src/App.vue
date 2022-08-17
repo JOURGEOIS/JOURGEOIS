@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import FailurePopUpApp from "@/components/modals/FailurePopUpApp.vue";
+import SuccessPopUpApp from "@/components/modals/SuccessPopUpApp.vue";
 import FailurePopUp from "@/components/modals/FailurePopUp.vue";
 import TheCreatePostModal from "@/components/feeds/TheCreatePostModal.vue";
 import ShareModal from "@/components/basics/ShareModal.vue";

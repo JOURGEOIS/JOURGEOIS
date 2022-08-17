@@ -1,13 +1,14 @@
 <template>
-  <div class="signup-view">
+  <header-basic
+    :prev="true"
+    @prevClicked="clickPrevIconSignupPage"
+    :success="false"
+  >
+    회원가입
+  </header-basic>
+  <div class="signup-view top-view-no-margin">
     <progress-bar :progress="progress"></progress-bar>
-    <header-basic
-      :prev="true"
-      @prevClicked="clickPrevIconSignupPage"
-      :success="false"
-    >
-      회원가입
-    </header-basic>
+
     <section class="signup-section">
       <signup-page1 v-if="currentPage === 0" />
       <signup-page2 v-if="currentPage === 1" />

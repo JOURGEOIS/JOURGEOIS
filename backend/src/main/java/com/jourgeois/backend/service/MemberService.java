@@ -536,9 +536,14 @@ public class MemberService {
     }
 
     public List<FollowerDTO> getFollowerAll(Long uid, Long me, Pageable pageable) throws NumberFormatException{
-        List<FollowerVO> followers = followRepository.getFollwerAll(uid, me, pageable);
-
+        Member member = memberRepository.findById(uid).orElseThrow();
         List<FollowerDTO> followersResponse = new ArrayList<>();
+
+        if(member.getIsPrivate().equals(1) && !member.getUid().equals(me)){
+            return followersResponse;
+        }
+
+        List<FollowerVO> followers = followRepository.getFollwerAll(uid, me, pageable);
 
         followers.forEach((follower) -> {
             FollowerDTO followerDTO = FollowerDTO.builder()
@@ -554,9 +559,14 @@ public class MemberService {
     }
 
     public Object getFolloweeAll(Long uid, Long me, Pageable pageable) {
-        List<FollowerVO> followers = followRepository.getFollweeAll(uid, me, pageable);
-
+        Member member = memberRepository.findById(uid).orElseThrow();
         List<FollowerDTO> followeesResponse = new ArrayList<>();
+
+        if(member.getIsPrivate().equals(1) && !member.getUid().equals(me)){
+            return followeesResponse;
+        }
+
+        List<FollowerVO> followers = followRepository.getFollweeAll(uid, me, pageable);
 
         followers.forEach((follower) -> {
             FollowerDTO followerDTO = FollowerDTO.builder()

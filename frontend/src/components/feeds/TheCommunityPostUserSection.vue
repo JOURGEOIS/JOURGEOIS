@@ -62,20 +62,22 @@ const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 // 작성자 프로필로 이동 함수
 const goProfile = () => {
-  router.push({ name: 'TheUserProfileView', params: { userId: uid.value } })
+  router.push({ name: "TheUserProfileView", params: { userId: uid.value } });
 };
+
+// 팔로우/팔로잉 버튼 클릭
+const a = computed(() => feedDescInfo?.value?.followerDTO?.isFollowed);
+const isFollowed = ref(a.value);
 
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => {
-  if(isFollowed.value === 1){
-    return "팔로잉"
-  } else if(isFollowed.value === 0) {
-    "팔로우"
-  };
-  })
+  if (isFollowed.value === 1) {
+    return "팔로잉";
+  } else if (isFollowed.value === 0) {
+    return "팔로우";
+  }
+});
 
-// 팔로우/팔로잉 버튼 클릭
-const isFollowed = ref(feedDescInfo?.value?.followerDTO?.isFollowed);
 const clickFollowBtn = () => {
   if (isFollowed.value === 1) {
     store.dispatch("follow/unfollow", { uid });

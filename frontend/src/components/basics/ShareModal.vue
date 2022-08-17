@@ -90,7 +90,6 @@ const url = "https://jourgeois.com" + path;
 // 링크 복사 클릭
 const clickShareLink = () => {
   navigator.clipboard.writeText(window.location.href);
-  alert("링크가 복사되었습니다.");
 };
 
 // 카카오톡 공유 클릭

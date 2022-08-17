@@ -3,7 +3,7 @@
     <!-- 칵테일 어워즈 배너 -->
     <section class="cocktail-awards-section">
       <the-cocktail-awards-banner
-        image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_cocktail_awards_banner.png"
+        image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_home_banner.gif"
         @click="$router.push({ name: 'TheCocktailAwardsView' })"
       ></the-cocktail-awards-banner>
     </section>

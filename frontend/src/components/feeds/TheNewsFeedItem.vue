@@ -139,14 +139,16 @@ const clickProfileImage = () => {
   }
   .the-news-feed-image {
     position: relative;
-    width: calc(100% + 32px);
+    width: calc(100% + 20px);
     aspect-ratio: 1/1;
-    margin: 0 -16px;
+    margin: 0 -10px;
+    border-radius: 10px;
     background-color: $white150;
     background : {
       size: cover;
       position: center center;
     }
+    @include shadow-popup2;
   }
 
   .the-news-feed-cocktail {

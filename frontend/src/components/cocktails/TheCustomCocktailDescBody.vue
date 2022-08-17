@@ -180,11 +180,11 @@ const clickDelete = () => {
           @include font-size-navy(15px);
         }
         .base-cocktail {
-          @include font-size-navy(12px);
+          @include font-size-navy(13px);
         }
       }
       .base-cocktail-name {
-        @include font(12px);
+        @include font(13px);
       }
     }
   }
@@ -223,13 +223,13 @@ const clickDelete = () => {
 }
 
 .title2 {
-  @include font(13px, $fw-medium);
+  @include font(15px, $fw-medium);
   color: $navy500;
   user-select: none;
 }
 
 .ingredients-title {
-  @include font(13px, $fw-bold);
+  @include font(15px, $fw-bold);
   color: $navy600;
 }
 

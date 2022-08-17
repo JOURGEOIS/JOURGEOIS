@@ -35,7 +35,6 @@
       </div>
     </button-basic>
   </div> -->
-  <div class="">hi</div>
 </template>
 
 <script setup lang="ts">
@@ -59,7 +58,7 @@
 //   const googleRedirect = `https://jourgeois.com/api/member/login/google/redirect`;
 //   // const googleRedirect = `http://localhost:8080/member/login/google/redirect`;
 //   window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleRedirect}&response_type=code&scope=profile%20email%20openid`;
-// const getInfo = GoogleAuth.currentUser.get()
+//   // const getInfo = GoogleAuth.currentUser.get()
 // };
 
 // export default defineComponent({
@@ -136,7 +135,7 @@
 </script>
 
 <style scoped lang="scss">
-hr {
+/* hr {
   @include hr;
   width: 100%;
 }
@@ -190,5 +189,5 @@ img {
 
 .naver-login-bg {
   background-color: rgb(3, 199, 90);
-}
+} */
 </style>

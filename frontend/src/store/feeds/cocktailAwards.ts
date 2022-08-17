@@ -241,7 +241,7 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
           commit("SET_COCKTAIL_AWARDS_NOW_PAGE", page + 1);
         })
         .catch((error) => {
-          console.error(error);
+          error;
         });
     },
 
@@ -271,7 +271,7 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
           commit("SET_COCKTAIL_AWARDS_VOTE_PAGE", page + 1);
         })
         .catch((error) => {
-          console.error(error);
+          error;
         });
     },
 
@@ -310,9 +310,9 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
           }
         })
         .catch((error) => {
-          console.error(error);
+          error;
           if (error.response.status !== 401) {
-            console.error(error);
+            error;
           } else {
             // refreshToken 재발급
             const obj = {
@@ -346,7 +346,7 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
         })
         .catch((error) => {
           if (error.response.status !== 401) {
-            console.error(error);
+            error;
           } else {
             // refreshToken 재발급
             const obj = {

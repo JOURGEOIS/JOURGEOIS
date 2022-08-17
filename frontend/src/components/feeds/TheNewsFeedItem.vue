@@ -142,6 +142,7 @@ const clickProfileImage = () => {
     width: calc(100% + 20px);
     aspect-ratio: 1/1;
     margin: 0 -10px;
+    margin-bottom: 8px;
     border-radius: 10px;
     margin-bottom: 8px;
     background-color: $white150;
@@ -167,6 +168,7 @@ const clickProfileImage = () => {
     margin-bottom: 8px;
     @include font($fs-md, $fw-medium);
     cursor: pointer;
+    margin-bottom: 8px;
 
     p {
       display: -webkit-box;

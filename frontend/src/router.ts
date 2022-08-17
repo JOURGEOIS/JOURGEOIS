@@ -26,11 +26,11 @@ const routes: any[] = [
   },
 
   // 카카오 로그인
-  {
-    path: "/user/login/kakaologin",
-    name: "Kakaologin",
-    component: () => import("@/views/accounts/KakaoLogin.vue"),
-  },
+  // {
+  //   path: "/user/login/kakaologin",
+  //   name: "Kakaologin",
+  //   component: () => import("@/views/accounts/KakaoLogin.vue"),
+  // },
 
   // 회원 탈퇴 화면
   {

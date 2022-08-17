@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import TheBookmarkCocktailItem from "@/components/profile/TheBookmarkCocktailItem.vue";
-import { computed, onBeforeMount, onUnmounted } from "@vue/runtime-core";
+import { computed, onBeforeMount, onUnmounted, watch } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -47,6 +47,14 @@ onBeforeMount(() => {
 onUnmounted(() => {
   store.dispatch("profileDesc/resetCurrentUserPost");
   window.removeEventListener("scroll", handleScroll);
+});
+
+const paramsUserId = computed(() => route.params.userId);
+watch(paramsUserId, () => {
+  store.dispatch(
+    "profileDesc/getCurrentUserPostBookmarkData",
+    paramsUserId.value
+  );
 });
 </script>
 

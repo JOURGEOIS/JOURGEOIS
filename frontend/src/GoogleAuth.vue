@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <button @click="signIn">login</button>
   <button @click="signOut">log out</button>
   <div>{{ user }}</div>
@@ -38,4 +38,4 @@ export default defineComponent({
     return { user, signIn, signOut };
   }
 });
-</script>
+</script> -->

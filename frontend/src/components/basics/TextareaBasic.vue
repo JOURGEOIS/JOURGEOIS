@@ -34,49 +34,49 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 
 // props.data의 타입을 정의한 인터페이스
 export interface dataObject {
-  button: boolean
-  placeholder: string
-  type: string
-  maxlength: number
-  isDisabled: boolean
+  button: boolean;
+  placeholder: string;
+  type: string;
+  maxlength: number;
+  isDisabled: boolean;
 }
 
 const props = defineProps<{
-  data: dataObject
-  textareaStyle?: string
-  modelValue: string
-}>()
+  data: dataObject;
+  textareaStyle?: string;
+  modelValue: string;
+}>();
 
 // props.data.button의 값에 따라 x버튼이 보이는지 안보이는지 설정할 수 있다.
 const buttonVisibility = computed(() => {
   if (props.data.button) {
-    return 'visible'
+    return "visible";
   } else {
-    return 'hidden'
+    return "hidden";
   }
-})
+});
 
 const textareaColor = computed(() => {
-  if (props.textareaStyle === 'normal') {
-    return 'normal-textarea'
-  } else if (props.textareaStyle === 'error') {
-    return 'error-textarea'
+  if (props.textareaStyle === "normal") {
+    return "normal-textarea";
+  } else if (props.textareaStyle === "error") {
+    return "error-textarea";
   } else {
-    return ''
+    return "";
   }
-})
+});
 
 // textarea.value emit하기
 const emit = defineEmits<{
-  (event: 'update:modelValue', value: string): void
-}>()
+  (event: "update:modelValue", value: string): void;
+}>();
 const emitValue = (event: Event) => {
-  emit('update:modelValue', (event.target as HTMLInputElement).value)
-}
+  emit("update:modelValue", (event.target as HTMLInputElement).value);
+};
 </script>
 
 <style scoped lang="scss">
@@ -88,7 +88,7 @@ const emitValue = (event: Event) => {
 
 textarea {
   @include font($fs-sm, $fw-medium);
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 
   flex-grow: 1;
   width: 100%;
@@ -104,9 +104,9 @@ textarea {
   }
 
   &::placeholder {
-    @include font($fs-sm, $fw-medium);
-    font-family: 'Noto Sans KR', sans-serif;
-    color: $placeholder-color;
+    @include font(13px, $fw-medium);
+    font-family: "Noto Sans KR", sans-serif;
+    color: $white400;
   }
 }
 

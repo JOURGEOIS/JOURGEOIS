@@ -8,7 +8,7 @@
       <!-- 상단 배너 -->
       <section class="the-cocktail-awards-banner">
         <the-cocktail-awards-banner
-          image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_home_banner.png"
+          image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_cocktail_award_banner.gif"
           @click="$router.push({ name: 'TheCocktailAwardsFormView' })"
         ></the-cocktail-awards-banner>
         <button

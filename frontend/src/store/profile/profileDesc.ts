@@ -98,6 +98,10 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     getPrivateModeSet: (state) => {
       return state.currentUserData.isPrivate;
     },
+
+    getCurrentUserDataFollower: (state) => {
+      return state.currentUserData.followerCnt;
+    },
   },
 
   mutations: {
@@ -106,6 +110,11 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
     },
     SET_CURRENT_USER_DATA: (state, value: userProfileData) => {
       state.currentUserData = value;
+    },
+
+    // 팔로워 수 실시간 변경
+    SET_CURRENT_USER_FOLLOWER_COUNT: (state, value: number) => {
+      state.currentUserData.followerCnt = value;
     },
 
     ADD_CURRENT_USER_POST_COMMUNITY: (
@@ -163,7 +172,7 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
 
     TOGGLE_FOLLOW_USER: (state, value: number) => {
       state.currentUserData.isFollowed = value;
-    }
+    },
   },
 
   actions: {
@@ -396,6 +405,17 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       const userInfo = getters["getCurrentUserData"];
       const value = userInfo.isFollowed ? 0 : 1;
       commit("TOGGLE_FOLLOW_USER", value);
+    },
+
+    changeFollowerCount: ({ commit, getters }, status) => {
+      const count = Number(getters["getCurrentUserDataFollower"]);
+      // 증가
+      if (status) {
+        commit("SET_CURRENT_USER_FOLLOWER_COUNT", count + 1);
+      } else {
+        // 감소
+        commit("SET_CURRENT_USER_FOLLOWER_COUNT", count - 1);
+      }
     },
   },
 };

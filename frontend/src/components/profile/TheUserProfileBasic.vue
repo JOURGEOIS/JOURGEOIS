@@ -35,12 +35,13 @@
         <span class="material-icons-outlined follow-icon" v-if="!isFollowed">
           person_add
         </span>
-        <span class="follow-text">{{ followBtnText }}</span></span
-      >
+        <span class="follow-text">{{ followBtnText }}</span>
+      </span>
       <!-- 채팅 버튼 -->
       <span v-if="isLoggedIn" class="chat-btn" @click="clickChatBtn">
         <span class="material-icons chat-icon"> mail </span>
-        <span class="follow-text">채팅</span></span>
+        <span class="follow-text">채팅</span></span
+      >
     </div>
   </div>
 </template>
@@ -68,7 +69,7 @@ const followerCnt = computed(() => userInfo.value.followerCnt);
 const followingCnt = computed(() => userInfo.value.followingCnt);
 
 const isPrivate = computed(() => userInfo.value.isPrivate);
-const isFollowed = computed(() => userInfo.value.isFollowed)
+const isFollowed = computed(() => userInfo.value.isFollowed);
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 // 계정 이름 텍스트
@@ -83,24 +84,26 @@ const privateNickname = () => {
 // 팔로우/팔로잉 텍스트
 const followBtnText = computed(() => {
   if (isFollowed.value === 0) {
-    return "팔로우"
+    return "팔로우";
   } else if (isFollowed.value === 1) {
-    return "팔로잉"
+    return "팔로잉";
   }
 });
 
 const goFollower = () => {
   if (isPrivate.value === 0) {
-  router.push({ name: "TheFollowerListView", params: { userId: uid.value } });
+    router.push({ name: "TheFollowerListView", params: { userId: uid.value } });
   }
 };
 
 const goFollowee = () => {
   if (isPrivate.value === 0) {
-    router.push({ name: "TheFollowingListView", params: { userId: uid.value } });
+    router.push({
+      name: "TheFollowingListView",
+      params: { userId: uid.value },
+    });
   }
 };
-
 
 watch(isFollowed.value, () => {
   isFollowed.value;
@@ -110,8 +113,10 @@ watch(isFollowed.value, () => {
 const clickFollowBtn = () => {
   if (isFollowed.value === 1) {
     store.dispatch("follow/unfollow", { uid: uid.value });
+    store.dispatch("profileDesc/changeFollowerCount", false);
   } else if (isFollowed.value === 0) {
     store.dispatch("follow/follow", { uid: uid.value });
+    store.dispatch("profileDesc/changeFollowerCount", true);
   }
   store.dispatch("profileDesc/toggleFollowUser");
 };

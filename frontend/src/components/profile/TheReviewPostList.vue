@@ -11,7 +11,13 @@
 
 <script setup lang="ts">
 import TheReviewPostItem from "@/components/profile/TheReviewPostItem.vue";
-import { ref, computed, onBeforeMount, onUnmounted } from "@vue/runtime-core";
+import {
+  ref,
+  computed,
+  onBeforeMount,
+  onUnmounted,
+  watch,
+} from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -23,7 +29,7 @@ const userReviewPostData = computed(
 const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
-const isPrivate = computed(() => userInfo.value.isPrivate)
+const isPrivate = computed(() => userInfo.value.isPrivate);
 const isEmpty = ref(false);
 setTimeout(() => {
   if (userReviewPostData.value.length === 0) {
@@ -55,6 +61,14 @@ onUnmounted(() => {
   store.dispatch("profileDesc/resetCurrentUserPost");
   window.removeEventListener("scroll", handleScroll);
 });
+
+const paramsUserId = computed(() => route.params.userId);
+watch(paramsUserId, () => {
+  store.dispatch(
+    "profileDesc/getCurrentUserPostReviewData",
+    paramsUserId.value
+  );
+});
 </script>
 
 <style scoped lang="scss">
@@ -71,8 +85,8 @@ article {
   @include font($fs-main, $fw-bold);
   text-align: center;
   p {
-      @include flex-center;
-    }
+    @include flex-center;
+  }
 
   @media #{$tablet} {
     @include font($fs-lg, $fw-bold);

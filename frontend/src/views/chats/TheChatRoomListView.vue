@@ -62,6 +62,11 @@ onBeforeMount(async () => {
   store.dispatch("chatRoom/setChatRoomList");
 });
 
+// Unmounted되면 Snapshot 닫기
+onUnmounted(() => {
+  store.dispatch("chatRoom/checkChatRoomList");
+});
+
 // 탭 클릭
 const clickCocktailTab = () => store.dispatch("chatRoom/setCurrentTab", 0);
 const clickFollowingTab = () => store.dispatch("chatRoom/setCurrentTab", 1);

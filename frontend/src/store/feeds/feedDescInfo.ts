@@ -270,8 +270,8 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     },
 
     // 삭제 팝업 세팅
-    toggleDeleteModal: ({commit}, value: boolean) => {
-      commit("SET_DELETE_MODAL_STATUS", value)
+    toggleDeleteModal: ({ commit }, value: boolean) => {
+      commit("SET_DELETE_MODAL_STATUS", value);
     },
 
     // 알럿 팝업

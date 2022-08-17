@@ -119,7 +119,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     REMOVE_CUSTOM_COCKTAIL_DETAIL: (state) => {
       state.customCocktailDetail = state.customCocktailDetailDefault;
     },
-    
+
     // 삭제 팝업 세팅
     SET_DELETE_MODAL_STATUS: (state, value: boolean) => {
       state.deleteModalStatus = value;
@@ -146,7 +146,7 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
           const page = getters.getCustomCocktailPage;
           commit("SET_CUSTOM_COCKTAIL_PAGE", page + 1);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => err);
     },
     removeCustomCocktails: ({ commit }) => {
       commit("REMOVE_CUSTOM_COCKTAILS");
@@ -179,7 +179,6 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         })
         .catch((err) => {
           if (err.response.status !== 401) {
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -225,7 +224,6 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
         })
         .catch((err) => {
           if (err.response.status !== 401) {
-            console.error(err.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -240,8 +238,8 @@ export const customCocktailInfo: Module<CustomCocktailInfoState, RootState> = {
     },
 
     // 삭제 팝업 세팅
-    toggleDeleteModal: ({commit}, value: boolean) => {
-      commit("SET_DELETE_MODAL_STATUS", value)
+    toggleDeleteModal: ({ commit }, value: boolean) => {
+      commit("SET_DELETE_MODAL_STATUS", value);
     },
   },
 };

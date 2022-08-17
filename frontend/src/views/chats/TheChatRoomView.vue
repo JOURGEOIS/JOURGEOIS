@@ -71,6 +71,7 @@ const resetCurrentChatRoom = {
 };
 
 onUnmounted(() => {
+  store.dispatch("chatRoom/checkChatDetail");
   store.dispatch("chatRoom/resetChatRoomLogs");
   store.dispatch("chatRoom/setCurrentChatRoom", resetCurrentChatRoom);
 });

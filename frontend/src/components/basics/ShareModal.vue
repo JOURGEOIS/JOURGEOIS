@@ -5,7 +5,7 @@
       <div
         class="container"
         :class="animation"
-        :style="[isIphone ? { height: '350px' } : { height: '300px' }]"
+        :style="[isIphone ? { height: '350px' } : { height: '220px' }]"
       >
         <!-- filter: header -->
         <section class="header-section">
@@ -84,13 +84,12 @@ const clickXIcon = () => {
 // const url = encodeURI(window.location.href);
 // 서비스 환경 URL
 const originUrl = encodeURI(window.location.href);
-const path = originUrl.split("http://127.0.0.1:5173").splice(1).pop();
-const url = "http://jourgeois.com" + path;
+const path = originUrl.split("https://jourgeois.com").splice(1).pop();
+const url = "https://jourgeois.com" + path;
 
 // 링크 복사 클릭
 const clickShareLink = () => {
   navigator.clipboard.writeText(window.location.href);
-  alert("링크가 복사되었습니다.");
 };
 
 // 카카오톡 공유 클릭

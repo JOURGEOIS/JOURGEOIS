@@ -43,7 +43,7 @@ axios({
     videoLink.value = res.data.url;
   })
   .catch((err) => {
-    console.error(err.response);
+    err.response;
   });
 </script>
 

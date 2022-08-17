@@ -40,8 +40,8 @@
       <!-- 채팅 버튼 -->
       <span v-if="isLoggedIn" class="chat-btn" @click="clickChatBtn">
         <span class="material-icons chat-icon"> mail </span>
-        <span class="follow-text">채팅</span></span
-      >
+        <span class="follow-text">채팅</span>
+      </span>
     </div>
   </div>
 </template>

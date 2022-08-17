@@ -170,7 +170,6 @@ export const comment: Module<Comment, RootState> = {
           if (error.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -205,7 +204,6 @@ export const comment: Module<Comment, RootState> = {
           if (error.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -240,7 +238,6 @@ export const comment: Module<Comment, RootState> = {
           if (error.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {
@@ -272,7 +269,6 @@ export const comment: Module<Comment, RootState> = {
           if (error.response.status !== 401) {
             // 실패 팝업
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

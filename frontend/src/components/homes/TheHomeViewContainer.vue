@@ -67,7 +67,7 @@ const latestCustomCocktailData = {
 
 // 주류주아 HOT 칵테일
 const hotCocktailData = {
-  description: "주류주아 기본 칵테일 중 북마크와 댓글 개수가 가장 많은 칵테일",
+  description: "북마크와 댓글 개수가 가장 많은 칵테일",
   moreButtonText: "전체 보기",
   setCarouselFunc: "setHotCocktails",
   getCarouselFunc: "getHotCocktails",

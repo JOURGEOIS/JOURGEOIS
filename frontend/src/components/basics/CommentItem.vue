@@ -209,7 +209,7 @@ const clickDelete = (id: number) => {
       }
 
       .the-comment-item-button {
-        @include font(14px, $fw-regular);
+        @include font(15px, $fw-regular);
         color: $sub-color;
 
         span {

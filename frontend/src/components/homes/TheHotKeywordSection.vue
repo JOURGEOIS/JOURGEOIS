@@ -90,14 +90,14 @@ const clickRankItem = (item: HotKeyword) => {
       gap: 5px;
 
       .standard-time {
-        @include font-size-sub(13px);
+        @include font-size-sub(14px);
       }
       .icon-info {
         @include font-size-placeholder(19px);
       }
     }
     .line-description {
-      @include font(13px, $fw-regular);
+      @include font(14px, $fw-regular);
       color: $sub-color;
     }
   }
@@ -113,12 +113,12 @@ const clickRankItem = (item: HotKeyword) => {
       .rank-item-number {
         @include flex;
         flex-grow: 0;
-        @include font(15px, $fw-medium);
+        @include font(16px, $fw-medium);
       }
       .rank-item-content {
         @include flex-xy(space-between, center);
         flex-grow: 1;
-        @include font(13px);
+        @include font(14px);
       }
     }
   }

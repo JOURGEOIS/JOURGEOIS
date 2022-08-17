@@ -83,13 +83,15 @@ const clickDelete = () => {
   width: 100%;
 
   .community-image {
-    width: calc(100% + 32px);
-    margin: 0px -16px;
+    width: calc(100% + 16px);
+    margin: 0 -8px;
     aspect-ratio: 1/1;
+    border-radius: 10px;
     background : {
       size: cover;
       position: center center;
     }
+    @include shadow-image;
   }
 
   .community-host-section {

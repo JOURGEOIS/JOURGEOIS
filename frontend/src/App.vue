@@ -13,7 +13,8 @@
   </success-pop-up>
   <the-create-post-modal v-if="createFeedModalStatus"></the-create-post-modal>
   <share-modal v-if="shareModalStatus"></share-modal>
-  <top-button></top-button>
+  <top-button></top-button> 
+  <div class="bottom-area"></div>
 </template>
 
 <script setup lang="ts">
@@ -84,7 +85,7 @@ onMounted(() => {
   justify-content: center;
   margin-left: $margin-mobile;
   margin-right: $margin-mobile;
-  margin-bottom: 60px;
+  padding-bottom: 60px !important;
 }
 
 .top-view {
@@ -101,4 +102,6 @@ onMounted(() => {
   //   margin-top: 74px !important;
   // }
 }
+
+
 </style>

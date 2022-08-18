@@ -82,10 +82,10 @@ public class JwtTokenProvider implements InitializingBean {
             return true;
         } catch (ExpiredJwtException e){
             // 만료된 경우에는 refresh token을 확인하기 위해
-            System.out.println("만료된 토큰입니다.");
+//            System.out.println("만료된 토큰입니다.");
             throw e;
         } catch (JwtException | IllegalArgumentException e) {
-            log.info("jwtException : {}", e);
+//            log.info("jwtException : {}", e);
             throw e;
         }
     }

@@ -71,6 +71,7 @@ const followingCnt = computed(() => userInfo.value.followingCnt);
 const isPrivate = computed(() => userInfo.value.isPrivate);
 const isFollowed = computed(() => userInfo.value.isFollowed);
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
+const isMine = computed(() => uid.value === userId.value)
 
 // 계정 이름 텍스트
 const privateNickname = () => {
@@ -91,13 +92,16 @@ const followBtnText = computed(() => {
 });
 
 const goFollower = () => {
-  if (isPrivate.value === 0) {
-    router.push({ name: "TheFollowerListView", params: { userId: uid.value } });
+  console.log(isMine.value)
+  if (isMine.value || isPrivate.value === 0) {
+    router.push({ 
+      name: "TheFollowerListView", 
+      params: { userId: uid.value } });
   }
 };
 
 const goFollowee = () => {
-  if (isPrivate.value === 0) {
+  if (isMine.value || isPrivate.value === 0) {
     router.push({
       name: "TheFollowingListView",
       params: { userId: uid.value },

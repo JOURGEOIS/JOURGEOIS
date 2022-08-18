@@ -17,14 +17,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         String exception = (String) request.getAttribute("exception");
 
         if(exception.equals("ExpiredJwt")){
-            System.out.println("만료된 인증키");
+//            System.out.println("만료된 인증키");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }else if(exception.equals("Exception")){
-            System.out.println("잘못된 접근");
+//            System.out.println("잘못된 접근");
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
         else {
-            System.out.println("잘못된 접근");
+//            System.out.println("잘못된 접근");
             response.sendError(HttpServletResponse.SC_FORBIDDEN, authException.getMessage());
         }
     }

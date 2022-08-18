@@ -2,8 +2,8 @@
   <article v-for="post in userCustomPostData" :key="post.postId">
     <the-custom-cocktail-post-item :post="post"></the-custom-cocktail-post-item>
   </article>
-  <section>
-    <div class="custom-post-none" v-if="isEmpty && isPrivate">
+  <section v-if="!isMine">
+    <div class="custom-post-none" v-if="isPrivate">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
   </section>
@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import TheCustomCocktailPostItem from "@/components/profile/TheCustomCocktailPostItem.vue";
-import { ref, computed, onBeforeMount, onUnmounted, watch } from "vue";
+import { computed, onBeforeMount, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -21,17 +21,17 @@ const userCustomPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostCustom"]
 );
 
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+
 const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
+
+const uid = computed(() => userInfo.value.uid)
+
 const isPrivate = computed(() => userInfo.value.isPrivate);
 
-const isEmpty = ref(false);
-setTimeout(() => {
-  if (userCustomPostData.value.length === 0) {
-    isEmpty.value = true;
-  }
-}, 200);
+const isMine = computed(() => userInfo.value.userId === userId.value)
 
 // 인피니티 스크롤
 const handleScroll = (event: Event) => {

@@ -109,6 +109,7 @@ onBeforeRouteLeave((to, from, next) => {
 <style scoped lang="scss">
 #nav-bar {
   position: fixed;
+  left:0;
   bottom: 0;
   margin-bottom: -1px;
   @include flex-xy(space-around, center);

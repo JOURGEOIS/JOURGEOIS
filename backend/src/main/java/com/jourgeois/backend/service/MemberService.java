@@ -128,7 +128,7 @@ public class MemberService {
         }
     }
 
-    public UserDetails loginUser(String email, String password){
+    public UserDetails loginUser(String email, String password) {
         Member member = memberRepository.findByEmail(email).get();
         UserDetails userDetails = myUserDetailsService.loadUserByUsername(member.getUid().toString());
 

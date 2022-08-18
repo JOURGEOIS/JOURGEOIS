@@ -252,7 +252,7 @@ public class PostController {
 
     @GetMapping(value="/auth/like/list")
     public ResponseEntity getLikeList(HttpServletRequest request, @RequestParam(value = "postId") Long p_id,
-                            @PageableDefault(size=10, page=0) Pageable pageable){
+                            @PageableDefault(size=15, page=0) Pageable pageable){
         Map<String, String> data = new HashMap<>();
         try {
             Long uid = Long.valueOf((String) request.getAttribute("uid"));

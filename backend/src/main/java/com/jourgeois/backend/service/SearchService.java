@@ -38,7 +38,7 @@ public class SearchService {
 
     public List<SearchCocktailDTO> searchByCocktailAll(String name, int page){
         List<SearchCocktailDTO> list = new ArrayList<>();
-        cocktailRepository.findCocktailBySearch(name, page*10).forEach(data ->
+        cocktailRepository.findCocktailBySearch(name, page*15).forEach(data ->
                 list.add(SearchCocktailDTO.builder()
                         .id(data.getId())
                         .img(data.getImg())
@@ -49,7 +49,7 @@ public class SearchService {
     }
     public List<SearchCocktailDTO> searchByCocktail(Long name, int page){
         List<SearchCocktailDTO> list = new ArrayList<>();
-        cocktailRepository.findByMaterialContaining(name, page*10).forEach(data ->
+        cocktailRepository.findByMaterialContaining(name, page*15).forEach(data ->
                 list.add(SearchCocktailDTO.builder()
                         .id(data.getId())
                         .img(data.getImg())
@@ -127,7 +127,7 @@ public class SearchService {
         List<SearchCocktailDTO> list = new ArrayList<>();
         if(searchFilterDto.getMaterials().size()==0){
             cocktailRepository.findByTypeAndAlcoholBetween(type, searchFilterDto.getAbv()[0], high
-                    ,searchFilterDto.getPage()*10, 10)
+                    ,searchFilterDto.getPage()*15, 15)
                     .forEach(data ->
                             list.add(SearchCocktailDTO.builder()
                                     .id(data.getId())
@@ -137,7 +137,7 @@ public class SearchService {
                                     .baseLiquor(data.getBaseLiquor()).build()));
         }else{
             cocktailRepository.findByFilterInfo(type, searchFilterDto.getAbv()[0], high,
-                    searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size(),searchFilterDto.getPage()*10).forEach(data ->
+                    searchFilterDto.getMaterials(), searchFilterDto.getMaterials().size(),searchFilterDto.getPage()*15).forEach(data ->
                     list.add(SearchCocktailDTO.builder()
                             .id(data.getId())
                             .img(data.getImg())

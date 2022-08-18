@@ -27,11 +27,11 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 
     @Query(nativeQuery = true, value="select * from cocktail where c_name_kr LIKE CONCAT('%',:name,'%') or c_name LIKE CONCAT('%',:name,'%') union " +
             "select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id in " +
-            "(select m_id from material where m_name_kr LIKE CONCAT('%',:name,'%') or m_name LIKE CONCAT('%',:name,'%'))) order by c_name_kr limit 10 offset :page")
+            "(select m_id from material where m_name_kr LIKE CONCAT('%',:name,'%') or m_name LIKE CONCAT('%',:name,'%'))) order by c_name_kr limit 15 offset :page")
     List<Cocktail> findCocktailBySearch(@Param("name") String name, @Param("page") int page);
 
     @Query(nativeQuery = true, value = "select * from cocktail where c_id in (select distinct c_id from cocktail_to_material where m_id=:id)" +
-            " order by c_name_kr limit 10 offset :page")
+            " order by c_name_kr limit 15 offset :page")
     List<Cocktail> findByMaterialContaining(@Param("id") Long id, @Param("page") int page);
 
     @Query(nativeQuery = true, value="select count(*) from cocktail where c_id in \n" +
@@ -50,7 +50,7 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
             "(select c_id from cocktail_to_material where m_id in :materials) c \n" +
             "group by c_id having count(c.c_id)=:sum)\n" +
             "and c_type=:type\n" +
-            "and c_alcohol between :abvlow and :abvhigh limit 10 offset :page")
+            "and c_alcohol between :abvlow and :abvhigh limit 15 offset :page")
     List<Cocktail> findByFilterInfo(@Param("type") String type, @Param("abvlow") int abvlow, @Param("abvhigh") int abvhigh,
                                     @Param("materials") List<Integer> materials, @Param("sum") int sum, @Param("page") int page);
 

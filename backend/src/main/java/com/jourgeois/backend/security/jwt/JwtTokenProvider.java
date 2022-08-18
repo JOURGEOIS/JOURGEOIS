@@ -70,9 +70,9 @@ public class JwtTokenProvider implements InitializingBean {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        System.out.println("claims.getSubject(): " + claims.getSubject());
+//        System.out.println("claims.getSubject(): " + claims.getSubject());
         UserDetails userDetails = myUserDetailsService.loadUserByUsername(claims.getSubject());
-        System.out.println("userDetails" + userDetails);
+//        System.out.println("userDetails" + userDetails);
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 

@@ -54,7 +54,12 @@ public class ChatService {
                 int opponentUserIdx = (users.indexOf(myUid)^1);
                 Long opponentUserId = users.get(opponentUserIdx);
 //                System.out.println("================" + opponentUserId);
-                Member opponent = memberRepository.findById(opponentUserId).orElseThrow(() -> new NoSuchElementException("상대 유저 정보가 없습니다."));
+                Member opponent = memberRepository.findById(opponentUserId).orElse(null);
+
+                // 탈퇴한 유저라면 채팅방 목록을 보내지 않는다.
+                if(opponent == null) {
+                    continue;
+                }
                 OpponentDTO chatOpponentDTO = OpponentDTO.builder()
                         .uid(opponent.getUid())
                         .img(S3Util.s3urlFormatter(opponent.getProfileImg()))
@@ -85,9 +90,20 @@ public class ChatService {
     public String sendMessage(ChatMessageDTO chatMessage) throws NoSuchElementException, ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         String chatRoomId = chatMessage.getChatRoomId();
+
+        if(chatRoomId == null || chatRoomId.isEmpty()) {
+            chatRoomId = getRoomId(chatMessage.getSender(), chatMessage.getReceiver());
+            chatMessage.setChatRoomId(chatRoomId);
+        }
+
         DocumentReference msg = null;
+
+        Long receiver = chatMessage.getReceiver();
+
+        memberRepository.findById(receiver).orElseThrow(() -> new NoSuchElementException());
+
         // 새로운 채팅 개시
-        if (chatRoomId == null || chatRoomId.isEmpty()) {
+        if (chatRoomId.isEmpty()) {
             msg = db.collection(ROOT_CHAT_COLLECTION_NAME).document().collection("messages").document();
 
             chatRoomId = msg.getParent().getParent().getId();
@@ -127,7 +143,7 @@ public class ChatService {
     }
 
     // uid = 상대방 id
-    public Map<String, Object> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
+    public Map<String, Object> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws NoSuchElementException, ExecutionException, InterruptedException, TimeoutException {
 
         // 채팅방 ID 찾기
         if(roomId.isEmpty()) {

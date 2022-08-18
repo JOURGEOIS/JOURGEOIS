@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -48,6 +49,8 @@ public class ChatController {
             chatMessageDTO.setTimestamp(Timestamp.now());
             chatMessageDTO.setIsRead(false);
             return new ResponseEntity(chatService.sendMessage(chatMessageDTO), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity("존재하지 않는 회원입니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -63,10 +66,15 @@ public class ChatController {
             Long myUid = Long.valueOf((String)request.getAttribute("uid"));
 //            Long myUid = 16052L;
             return new ResponseEntity(chatService.getChatMessages(myUid, receiver,/* startAfter, */ roomId), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return new ResponseEntity("존재하지 않는 유저입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ExecutionException | TimeoutException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return new ResponseEntity("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

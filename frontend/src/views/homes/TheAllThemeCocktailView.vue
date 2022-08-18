@@ -76,9 +76,6 @@ const setAllThemeCocktails = () => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setAllThemeCocktails();
-  setTimeout(() => {
-    setAllThemeCocktails();
-  }, 100);
 });
 
 onUnmounted(() => {

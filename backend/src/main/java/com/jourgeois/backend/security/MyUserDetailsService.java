@@ -36,11 +36,9 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserDetails createUserDetails(Member member) {
         // 권한 관리 테이블로 만든 깃
         // -> https://github.com/szerhusenBC/jwt-spring-security-demo/blob/master/src/main/java/org/zerhusen/security/model/User.java
-        System.out.println("!!!!!!야!!!!!!!");
         List<SimpleGrantedAuthority> grantedAuthorities = member.getRoleList().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority))
                 .collect(Collectors.toList());
-        System.out.println("UserDetails: " + grantedAuthorities);
         return new User(member.getUid().toString(),
                 member.getPassword(),
                 grantedAuthorities);

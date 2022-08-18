@@ -20,7 +20,6 @@ public class AuthController {
 
     @PostMapping("/token")
     public TokenResponseDTO reissueAccessToken(@RequestBody Map<String, String> token){
-        System.out.println("token: " + token.get("token"));
         return tokenService.reissueAccessToken(token.get("token"));
     }
 }

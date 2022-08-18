@@ -43,7 +43,6 @@ public class CocktailController {
             CocktailDTO cocktail = cocktailService.readCocktail(id);
             cocktail.setCount(cocktailService.countCocktailBookmark(new Cocktail(id)));
             if (uid != 0) {
-                System.out.println("영이 아님");
                 CocktailBookmarkId key = new CocktailBookmarkId(uid, id);
                 cocktail.setStatus(cocktailService.checkUserBookmark(key) ? 1L : 0L);
             }
@@ -55,64 +54,64 @@ public class CocktailController {
 
     }
 
-    @PostMapping(value = "/cocktail")
-    public ResponseEntity createCocktail(@RequestBody Cocktail cocktail) {
-        try {
-            boolean res = cocktailService.createCocktail(cocktail);
-            return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("result", "false"));
-        }
-    }
+//    @PostMapping(value = "/cocktail")
+//    public ResponseEntity createCocktail(@RequestBody Cocktail cocktail) {
+//        try {
+//            boolean res = cocktailService.createCocktail(cocktail);
+//            return ResponseEntity.ok().body(res);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.badRequest().body(Map.of("result", "false"));
+//        }
+//    }
 
-    @PutMapping(value = "/cocktail")
-    public ResponseEntity<?> updateCocktail(@RequestParam(value = "id") Long id) {
-            Cocktail cocktail = null;
-//            (@RequestBody Cocktail cocktail) {
-        Map<String, Boolean> data = new HashMap<>();
-        try {
-            System.out.println();
-            boolean res = cocktailService.updateCocktail(cocktail);
-            data.put("success", res);
-            return new ResponseEntity<>(data, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            data.put("success", false);
-            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PutMapping(value = "/cocktail")
+//    public ResponseEntity<?> updateCocktail(@RequestParam(value = "id") Long id) {
+//            Cocktail cocktail = null;
+////            (@RequestBody Cocktail cocktail) {
+//        Map<String, Boolean> data = new HashMap<>();
+//        try {
+//            System.out.println();
+//            boolean res = cocktailService.updateCocktail(cocktail);
+//            data.put("success", res);
+//            return new ResponseEntity<>(data, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            data.put("success", false);
+//            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     //수정중
-    @Transactional
-    @DeleteMapping(value = "/cocktail")
-    public ResponseEntity<?> deleteCocktail(@RequestBody Map<String, Long> idMap) {
-        Map<String, Boolean> data = new HashMap<>();
-        Long id = idMap.get("id");
-        try {
-            boolean res = cocktailService.deleteCocktail(id);
-            data.put("success", res);
-            return new ResponseEntity<>(data, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            data.put("success", false);
-            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @Transactional
+//    @DeleteMapping(value = "/cocktail")
+//    public ResponseEntity<?> deleteCocktail(@RequestBody Map<String, Long> idMap) {
+//        Map<String, Boolean> data = new HashMap<>();
+//        Long id = idMap.get("id");
+//        try {
+//            boolean res = cocktailService.deleteCocktail(id);
+//            data.put("success", res);
+//            return new ResponseEntity<>(data, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            data.put("success", false);
+//            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
-    @PostMapping(value = "/material")
-    public ResponseEntity insertMaterial(@RequestBody Material material) {
-        Map<String, Boolean> data = new HashMap<>();
-        try {
-            boolean res = cocktailService.insertMaterial(material);
-            data.put("success", res);
-            return new ResponseEntity<>(data, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            data.put("success", false);
-            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping(value = "/material")
+//    public ResponseEntity insertMaterial(@RequestBody Material material) {
+//        Map<String, Boolean> data = new HashMap<>();
+//        try {
+//            boolean res = cocktailService.insertMaterial(material);
+//            data.put("success", res);
+//            return new ResponseEntity<>(data, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            data.put("success", false);
+//            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @PostMapping(value = "/auth/comment")
     public ResponseEntity insertReview(HttpServletRequest request, @RequestBody CocktailCommentDTO cocktailCommentDTO) {

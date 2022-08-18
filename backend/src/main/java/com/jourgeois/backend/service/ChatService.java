@@ -43,7 +43,7 @@ public class ChatService {
         for(QueryDocumentSnapshot chatRoomRef : chatRoomRefs) {
             DocumentReference lastMessageRef = chatRoomRef.get("lastMessage", DocumentReference.class);
 
-            System.out.println(lastMessageRef.getId());
+//            System.out.println(lastMessageRef.getId());
 
             ChatMessageDTO lastMessage = lastMessageRef.get().get().toObject(ChatMessageDTO.class);
 
@@ -53,7 +53,7 @@ public class ChatService {
                 List<Long> users = (List<Long>) chatRoomRef.get("users");
                 int opponentUserIdx = (users.indexOf(myUid)^1);
                 Long opponentUserId = users.get(opponentUserIdx);
-                System.out.println("================" + opponentUserId);
+//                System.out.println("================" + opponentUserId);
                 Member opponent = memberRepository.findById(opponentUserId).orElseThrow(() -> new NoSuchElementException("상대 유저 정보가 없습니다."));
                 OpponentDTO chatOpponentDTO = OpponentDTO.builder()
                         .uid(opponent.getUid())
@@ -68,10 +68,6 @@ public class ChatService {
         }
 
         Collections.sort(chatRooms);
-
-        for(ChatRoomDTO chatRoom : chatRooms) {
-            System.out.println(chatRoom.toString());
-        }
 
         return chatRooms;
     }
@@ -101,11 +97,10 @@ public class ChatService {
 
             Map<String, Object> usersFieldValue = new HashMap<>();
             usersFieldValue.put("users", users);
-//            System.out.println(chatRoomId);
             usersFieldValue.put("lastMessage", msg);
 
             ApiFuture<WriteResult> result = db.collection(ROOT_CHAT_COLLECTION_NAME).document(chatRoomId).set(usersFieldValue);
-            System.out.println("채팅방 생성 성공 : " + result.get().getUpdateTime());
+//            System.out.println("채팅방 생성 성공 : " + result.get().getUpdateTime());
 
             chatMessage.setChatRoomId(chatRoomId);
         }
@@ -118,25 +113,23 @@ public class ChatService {
 
             Map<String, Object> usersFieldValue = new HashMap<>();
             usersFieldValue.put("users", users);
-//            System.out.println(chatRoomId);
             usersFieldValue.put("lastMessage", msg);
 
             ApiFuture<WriteResult> result = db.collection(ROOT_CHAT_COLLECTION_NAME).document(chatRoomId).set(usersFieldValue);
-            System.out.println("채팅방 갱신 성공 : " + result.get().getUpdateTime());
+//            System.out.println("채팅방 갱신 성공 : " + result.get().getUpdateTime());
         }
         chatMessage.setTimestamp(Timestamp.now());
         ApiFuture<WriteResult> result = msg.set(chatMessage);
 
-        System.out.println("메세지 전송 성공 : " + result.get().getUpdateTime());
+//        System.out.println("메세지 전송 성공 : " + result.get().getUpdateTime());
 
         return chatMessage.getChatRoomId();
     }
 
     // uid = 상대방 id
     public Map<String, Object> getChatMessages(Long uid, /*int startAfter,*/ Long receiver, String roomId) throws ExecutionException, InterruptedException, TimeoutException {
-        /*
-        찾아라!! 채팅방 ID!!
-         */
+
+        // 채팅방 ID 찾기
         if(roomId.isEmpty()) {
             roomId = getRoomId(uid, receiver);
             if(roomId.isEmpty()){
@@ -194,7 +187,6 @@ public class ChatService {
 
         List<ChatMessageDTO> chatMessageDTOList = new ArrayList<>();
         for (DocumentSnapshot document : chatRoomRefs) {
-            System.out.println(document.getId());
             ChatMessageDTO chatMessageDTO = document.toObject(ChatMessageDTO.class);
             chatMessageDTOList.add(chatMessageDTO);
         }

@@ -31,7 +31,7 @@ const uid = computed(() => userInfo.value.uid);
 
 const isPrivate = computed(() => userInfo.value.isPrivate);
 
-const isMine = computed(() => userInfo.value.userId === userId.value);
+const isMine = computed(() => uid.value === userId.value)
 
 // 인피니티 스크롤
 const handleScroll = (event: Event) => {

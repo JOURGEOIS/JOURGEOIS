@@ -72,10 +72,32 @@ onUnmounted(() => {
   store.dispatch("chatRoom/resetChatRoomLogs");
   store.dispatch("chatRoom/setCurrentChatRoom", resetCurrentChatRoom);
   document.body.style.overflow = "unset";
+  document.body.removeEventListener("scroll", (event) => {
+    event.preventDefault();
+  });
+  document.body.removeEventListener("mousedown", (event) => {
+    event.preventDefault();
+  });
+  document.body.removeEventListener("touchmove", (event) => {
+    event.preventDefault();
+  });
 });
 
 onMounted(() => {
+  setTimeout(() => {
+    window.scrollTo({ left: 0, top: 100 });
+  }, 0);
+
   document.body.style.overflow = "hidden";
+  document.body.addEventListener("scroll", (event) => {
+    event.preventDefault();
+  });
+  document.body.addEventListener("mousedown", (event) => {
+    event.preventDefault();
+  });
+  document.body.addEventListener("touchmove", (event) => {
+    event.preventDefault();
+  });
 });
 </script>
 
@@ -92,9 +114,9 @@ onMounted(() => {
     @include flex(column);
     align-items: center;
     position: absolute;
-    top: 80px;
+    top: 144px;
     width: 100%;
-    height: calc(100% - 232px);
+    height: calc(100% - 224px);
 
     @media #{$tablet} {
       width: 80%;
@@ -106,7 +128,7 @@ onMounted(() => {
   }
 
   > .active {
-    height: calc(100% - 440px);
+    height: calc(100% - 432px);
   }
 }
 </style>

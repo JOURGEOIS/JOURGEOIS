@@ -48,7 +48,7 @@ const clickShowMoreItem = (item: CarouselCocktail) => {
 
 .carousel {
   display: flex;
-  gap: 5px;
+  gap: 8px;
   width: calc(100% + 40px);
   padding: 0 16px;
   margin: 0 -20px;
@@ -71,9 +71,11 @@ const clickShowMoreItem = (item: CarouselCocktail) => {
         size: cover;
         position: center center;
       }
-      border-radius: 5px;
+      border-radius: 10px;
       border: 1px solid $white200;
+      @include shadow-feed;
     }
+
     .carousel-text {
       width: 100%;
       @include font(14px, $fw-medium);

@@ -98,6 +98,7 @@ export const follow: Module<FollowState, RootState> = {
 
     // * 언팔로우하기
     unfollow: ({ dispatch, rootGetters }, data) => {
+      console.log(data.uid);
       axios({
         url: api.accounts.follow(),
         method: "DELETE",
@@ -109,8 +110,7 @@ export const follow: Module<FollowState, RootState> = {
         },
       })
         .then((res) => {
-          if (res.data.success) {
-          } else {
+          if (!res.data.success) {
             dispatch("modal/blinkFailModalAppStatus", {}, { root: true });
           }
         })
@@ -173,6 +173,7 @@ export const follow: Module<FollowState, RootState> = {
         },
       })
         .then((res) => {
+          console.log(res.data);
           commit("SET_FOLLOWEE_USERS", res.data);
           const page = getters.getFollowerUserPage;
           commit("SET_FOLLOWEE_USER_PAGE", page + 1);

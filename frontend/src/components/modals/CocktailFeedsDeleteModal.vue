@@ -47,7 +47,6 @@ const toggleDeleteModalStatus = (value: boolean) => {
 const clickDeleteComment = () => {
   toggleDeleteModalStatus(false);
   store.dispatch("customCocktailInfo/removeCustomCocktailPost", props.postId);
-  console.log(props.postId)
 };
 </script>
 

@@ -54,14 +54,14 @@ const time = computed(() => {
   @include flex-xy(space-between, center);
   padding: 10px;
   gap: 10px;
-  width: 100;
+  width: 100%;
   border-bottom: 1px solid $seperate-color;
   @include list-hover;
   position: relative;
 
   .part-left {
     @include flex-xy(flex-start, center);
-    width: 100;
+    flex-grow: 1;
     gap: 10px;
     @include text-overflow-ellipsis;
 
@@ -96,7 +96,10 @@ const time = computed(() => {
 
   .part-right {
     align-self: flex-start;
+    width: 40px;
+    flex-shrink: 0;
     .chat-room-time {
+      width: 100%;
       @include font($fs-sm, $fw-regular);
     }
   }

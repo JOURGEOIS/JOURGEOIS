@@ -65,9 +65,6 @@ const ingredientId = Number(route.params.ingredientId);
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setSearchCocktail(ingredientId);
-  setTimeout(() => {
-    setSearchCocktail(ingredientId);
-  }, 100);
 });
 
 onUnmounted(() => {

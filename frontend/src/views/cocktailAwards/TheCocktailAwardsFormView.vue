@@ -1,14 +1,12 @@
 <template>
   <div class="the-contest-form-view">
     <!-- 헤더 -->
-    <header-basic
-      :prev="true"
-      :success="true"
+    <header-success
       formId="contest-cocktail-form"
       @prevClicked="$router.go(-1)"
     >
       칵테일 어워즈 참여하기
-    </header-basic>
+    </header-success>
     <section class="top-view">
       <the-cocktail-awards-form
         id="contest-cocktail-form"
@@ -18,15 +16,20 @@
 </template>
 
 <script setup lang="ts">
-import HeaderBasic from "@/components/basics/HeaderBasic.vue";
+import HeaderSuccess from "@/components/basics/HeaderSuccess.vue";
 import { useStore } from "vuex";
 import TheCocktailAwardsForm from "@/components/cocktailAwards/TheCocktailAwardsForm.vue";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, onUnmounted } from "vue";
 const store = useStore();
 
 onBeforeMount(() => {
   store.dispatch("modal/toggleErrorModalAppStatus", false);
   store.dispatch("modal/changeErrorModalMessage", "");
+});
+
+// vuex 초기화
+onUnmounted(() => {
+  store.dispatch("customCocktail/resetCocktailData");
 });
 </script>
 

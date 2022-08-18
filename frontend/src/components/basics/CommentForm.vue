@@ -87,7 +87,7 @@ const submitCommentForm = () => {
   width: 100%;
   padding: 32px 0px;
 
-  > .round-image {
+  .round-image {
     flex-shrink: 0;
     width: 35px;
     height: 35px;
@@ -100,6 +100,7 @@ const submitCommentForm = () => {
 
   .comment-input {
     flex-grow: 1;
+    width: 50%;
     height: 40px;
     padding: 0 8px;
     border: none;

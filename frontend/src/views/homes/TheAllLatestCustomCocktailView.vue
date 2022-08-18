@@ -57,9 +57,6 @@ const setAllLatestCustomCocktails = () => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setAllLatestCustomCocktails();
-  setTimeout(() => {
-    setAllLatestCustomCocktails();
-  }, 100);
 });
 
 onUnmounted(() => {

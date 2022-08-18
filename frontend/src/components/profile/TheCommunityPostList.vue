@@ -2,8 +2,8 @@
   <article v-for="community in userCommunityPostData" :key="community.postId">
     <the-community-post-item :community="community"></the-community-post-item>
   </article>
-  <section>
-    <div class="community-post-none" v-if="isEmpty && isPrivate">
+  <section v-if="!isMine">
+    <div class="community-post-none" v-if="isPrivate">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
   </section>
@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import TheCommunityPostItem from "@/components/profile/TheCommunityPostItem.vue";
-import { ref, computed, onBeforeMount, onUnmounted, watch } from "vue";
+import { computed, onBeforeMount, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const route = useRoute();
@@ -20,18 +20,16 @@ const store = useStore();
 const userCommunityPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostCommunity"]
 );
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
 const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
+const uid = computed(() => userInfo.value.uid)
+
 const isPrivate = computed(() => userInfo.value.isPrivate);
 
-const isEmpty = ref(false);
-setTimeout(() => {
-  if (userCommunityPostData.value.length === 0) {
-    isEmpty.value = true;
-  }
-}, 200);
+const isMine = computed(() => uid.value === userId.value)
 
 // 인피니티 스크롤
 const handleScroll = (event: Event) => {

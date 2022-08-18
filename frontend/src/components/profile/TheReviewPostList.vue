@@ -2,8 +2,8 @@
   <article v-for="review in userReviewPostData" :key="review.postId">
     <the-review-post-item :review="review"></the-review-post-item>
   </article>
-  <section>
-    <div class="review-post-none" v-if="isEmpty && isPrivate">
+  <section v-if="!isMine">
+    <div class="review-post-none" v-if="isPrivate">
       <p><span class="material-icons-outlined">lock</span>비공개 계정입니다.</p>
     </div>
   </section>
@@ -12,7 +12,6 @@
 <script setup lang="ts">
 import TheReviewPostItem from "@/components/profile/TheReviewPostItem.vue";
 import {
-  ref,
   computed,
   onBeforeMount,
   onUnmounted,
@@ -26,16 +25,16 @@ const store = useStore();
 const userReviewPostData = computed(
   () => store.getters["profileDesc/getCurrentUserPostReview"]
 );
+const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
+
+const uid = computed(() => userInfo.value.uid)
+
 const isPrivate = computed(() => userInfo.value.isPrivate);
-const isEmpty = ref(false);
-setTimeout(() => {
-  if (userReviewPostData.value.length === 0) {
-    isEmpty.value = true;
-  }
-}, 200);
+
+const isMine = computed(() => userInfo.value.userId === userId.value)
 
 // 인피니티 스크롤
 const handleScroll = (event: Event) => {

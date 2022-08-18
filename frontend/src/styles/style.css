@@ -33,6 +33,9 @@ div, span, article, section, header, footer, p, ul, li, fieldset, legend, label,
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
 
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
@@ -94,16 +97,16 @@ input {
 
 .material-icons {
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .material-icons-outlined {
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 button {

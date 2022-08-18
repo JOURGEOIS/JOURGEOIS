@@ -41,14 +41,14 @@ store.dispatch("navbar/setNavIconStatus", 0);
 const feedId = Number(route.params.feedId);
 const nickname = computed(() => feedDescInfo?.value?.followerDTO?.nickname);
 
-const getCommunityDetail = () => {
-  store.dispatch("feedDescInfo/getCommunityDetail", {
+const setCommunityDetail = () => {
+  store.dispatch("feedDescInfo/setCommunityDetail", {
     feedId,
   });
 };
 
 onMounted(() => {
-  getCommunityDetail();
+  setCommunityDetail();
 });
 
 onUnmounted(() => {
@@ -69,7 +69,7 @@ const isLiked = computed(() => feedDescInfo?.value?.customCocktail?.ilike);
 const clickLike = () => {
   const params = {
     postId: feedId,
-    func: "feedDescInfo/getCommunityDetail",
+    func: "feedDescInfo/setCommunityDetail",
     data: { feedId },
   };
   store.dispatch("post/toggleLike", params);

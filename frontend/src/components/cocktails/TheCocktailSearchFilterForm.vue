@@ -39,7 +39,9 @@
     <div v-show="statusAlcohol">
       <p>도수</p>
       <!-- 멀티 레인지 슬라이더 -->
-      <the-cocktail-search-filter-slider></the-cocktail-search-filter-slider>
+      <div class="cocktail-search-filter-strength">
+        <the-cocktail-search-filter-slider></the-cocktail-search-filter-slider>
+      </div>
       <div class="class-search-filter-alcohol-info">
         <div>
           <p>
@@ -229,6 +231,11 @@ form {
         }
       }
     }
+
+    .cocktail-search-filter-strength {
+      width: 100%;
+    }
+
     .class-search-filter-alcohol-info {
       @include flex(column);
       align-items: flex-end;

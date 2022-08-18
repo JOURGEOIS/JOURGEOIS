@@ -2,13 +2,19 @@
   <div class="the-user-profile-private-mode-set">
     <p>계정 공개 범위</p>
     <div class="private-mode-set">
-      <p><span class="material-icons-outlined">lock</span>
+      <p>
+        <span class="material-icons-outlined">lock</span>
         비공개 계정
       </p>
       <div class="toggle normal">
-        <label for="toggle" class="toggleSwitch" :class="{active: isActive}" @click="toggleClick">
-        <span class="toggleButton"></span>
-      </label>
+        <label
+          for="toggle"
+          class="toggleSwitch"
+          :class="{ active: isActive }"
+          @click="toggleClick"
+        >
+          <span class="toggleButton"></span>
+        </label>
       </div>
     </div>
     <button-basic
@@ -22,36 +28,53 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
 import ButtonBasic from "@/components/basics/ButtonBasic.vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 
 const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 
-const userInfo = computed(() => store.getters['profileDesc/getCurrentUserData'])
-const isPrivate = computed(() => store.getters['profileDesc/getPrivateModeSet'])
+const userInfo = computed(
+  () => store.getters["profileDesc/getCurrentUserData"]
+);
+const isPrivate = computed(
+  () => store.getters["profileDesc/getPrivateModeSet"]
+);
 
 // button-style
-const buttonColor = computed(() => "primary")
+const buttonColor = computed(() => "primary");
 
 const isActive = computed(() => {
   if (isPrivate.value === 1) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
-})
+});
 
 const toggleClick = () => {
-  store.dispatch("profileDesc/changePrivateModeSet")
-}
+  store.dispatch("profileDesc/changePrivateModeSet");
+};
 
 const submit = () => {
-  router.push({name: "TheUserProfileView", params:{userId: userId.value}})
-}
+  router.push({ name: "TheUserProfileView", params: { userId: userId.value } });
+};
+
+// 내 uid
+const myUid = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
+
+// 데이터 받기
+onBeforeMount(() => {
+  store.dispatch("profileDesc/getCurrentUserData", myUid.value);
+});
+
+//리셋
+onMounted(() => {
+  store.dispatch("profileDesc/resetCurrentUserData");
+});
 </script>
 
 <style scoped lang="scss">
@@ -84,7 +107,7 @@ const submit = () => {
   height: 1rem;
   position: absolute;
   top: 50%;
-  left: .2rem;
+  left: 0.2rem;
   transform: translateY(-50%);
   border-radius: 50%;
   background: $primary300;
@@ -100,7 +123,8 @@ const submit = () => {
   background: $white;
 }
 
-.toggleSwitch, .toggleButton {
+.toggleSwitch,
+.toggleButton {
   transition: all 0.2s ease-in;
 }
 </style>

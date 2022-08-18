@@ -25,11 +25,11 @@ const userId = computed(() => store.getters["personalInfo/getUserInfoUserId"]);
 const userInfo = computed(
   () => store.getters["profileDesc/getCurrentUserData"]
 );
-const uid = computed(() => userInfo.value.uid)
+const uid = computed(() => userInfo.value.uid);
 
 const isPrivate = computed(() => userInfo.value.isPrivate);
 
-const isMine = computed(() => uid.value === userId.value)
+const isMine = computed(() => uid.value === userId.value);
 
 // 인피니티 스크롤
 const handleScroll = (event: Event) => {
@@ -77,14 +77,14 @@ article {
   padding: 64px 70px;
   border-radius: 16px;
   background-color: $white200;
-  @include font($fs-main, $fw-bold);
+  @include font($fs-main, $fw-medium);
   text-align: center;
   p {
     @include flex-center;
   }
 
   @media #{$tablet} {
-    @include font($fs-lg, $fw-bold);
+    @include font($fs-lg, $fw-medium);
     width: 450px;
   }
 }

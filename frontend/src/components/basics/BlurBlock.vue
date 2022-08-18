@@ -38,7 +38,7 @@ import { clickLogin } from "../../functions/clickEvent";
 
   @media #{$tablet} {
     width: 300px;
-    top: 136px;
+    top: 30px;
   }
 
   article {

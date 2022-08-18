@@ -4,10 +4,7 @@
     <header-basic :prev="true" :success="false" @prevClicked="$router.go(-1)">
       채팅
     </header-basic>
-    <section
-      class="chat-room-section top-view"
-      :class="{ active: emojiStatus }"
-    >
+    <section class="chat-room-section" :class="{ active: emojiStatus }">
       <the-chat-room-chat-list></the-chat-room-chat-list>
       <the-chat-room-chat-input
         @click-emoji="clickEmoji"
@@ -74,12 +71,11 @@ onUnmounted(() => {
   store.dispatch("chatRoom/checkChatDetail");
   store.dispatch("chatRoom/resetChatRoomLogs");
   store.dispatch("chatRoom/setCurrentChatRoom", resetCurrentChatRoom);
+  document.body.style.overflow = "unset";
 });
 
 onMounted(() => {
-  setTimeout(() => {
-    window.scrollTo({ left: 0, top: 100 });
-  }, 0);
+  document.body.style.overflow = "hidden";
 });
 </script>
 
@@ -89,31 +85,20 @@ onMounted(() => {
   justify-content: flex-start;
   align-items: center;
   height: 100vh;
+  position: relative;
   @include accountLayOut;
 
   .chat-room-section {
     @include flex(column);
-    width: 100%;
-    height: calc(100% - 184px);
-    justify-content: flex-end;
     align-items: center;
-
-    @media #{$tablet} {
-      width: 80%;
-      height: calc(100% - 216px);
-    }
-
-    @media #{$pc} {
-      width: 70%;
-    }
+    position: absolute;
+    top: 80px;
+    width: 100%;
+    height: calc(100% - 216px);
   }
 
-  .active {
-    height: calc(100% - 392px);
-
-    @media #{$tablet} {
-      height: calc(100% - 424px);
-    }
+  > .active {
+    height: calc(100% - 424px);
   }
 }
 </style>

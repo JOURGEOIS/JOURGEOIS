@@ -33,8 +33,6 @@
 //           const kakao_account = res.kakao_account;
 //           const nickname = kakao_account.profile.nickname;
 //           const email = kakao_account.email;
-//           console.log("nickname", nickname);
-//           console.log("email", email);
 
 //           //로그인 처리 구현
 //           alert("로그인 성공!");

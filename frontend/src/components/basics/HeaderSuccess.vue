@@ -107,6 +107,11 @@ const submitted = () => {
 
     .back-icon {
       user-select: none;
+      width: 30.2667px;
+
+      @media #{$tablet} {
+        width: 35.8px;
+      }
     }
   }
 }

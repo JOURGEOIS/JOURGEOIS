@@ -55,9 +55,6 @@ const setFolloweeList = (data: object) => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setFolloweeList({ userId: uid.value });
-  setTimeout(() => {
-    setFolloweeList({ userId: uid.value });
-  }, 500);
 });
 
 // 리셋

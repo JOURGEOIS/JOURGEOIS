@@ -350,7 +350,6 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
           if (error.response.status !== 401) {
             // 새 메세지를 chatLogs에서 삭제(shift)
             commit("SHIFT_NEW_CHAT");
-            console.error(error.response);
           } else {
             // refreshToken 재발급
             const obj = {

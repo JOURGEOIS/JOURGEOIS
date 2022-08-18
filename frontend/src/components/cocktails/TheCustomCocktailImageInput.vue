@@ -102,10 +102,11 @@ label[for="custom-cocktail-image-input"] {
   }
   > div {
     position: relative;
-    width: calc(100% + 32px);
+    width: calc(100% + 16px);
     aspect-ratio: 1/1;
-    margin: 0 -16px;
+    margin: 0 -8px;
     background-color: $white150;
+    border-radius: 10px;
     background : {
       size: cover;
       position: center center;

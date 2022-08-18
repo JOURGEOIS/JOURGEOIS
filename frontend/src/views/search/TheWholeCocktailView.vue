@@ -63,9 +63,6 @@ const setWholeCocktail = () => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setWholeCocktail();
-  setTimeout(() => {
-    setWholeCocktail();
-  }, 100);
 });
 
 onUnmounted(() => {

@@ -173,6 +173,7 @@ export const account: Module<AccountState, RootState> = {
     // 회원 탈퇴: 본인 인증
     submitSignOutAuth: ({ rootGetters, commit, dispatch }, params) => {
       const { pwInputValue, failStatus } = params;
+      console.log(params.pwInputValue);
       axios({
         url: api.accounts.changePassword(),
         method: "post",
@@ -183,8 +184,12 @@ export const account: Module<AccountState, RootState> = {
           passwordOld: pwInputValue.value,
         },
       })
-        .then(() => {
-          commit("SET_SIGN_OUT_TAB", 1);
+        .then((response) => {
+          if (response.data.success) {
+            commit("SET_SIGN_OUT_TAB", 1);
+          } else {
+            failStatus.value = true;
+          }
         })
         .catch((error) => {
           if (error.response.status !== 401) {

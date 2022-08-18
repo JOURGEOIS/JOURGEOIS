@@ -57,9 +57,6 @@ const setAllLikeRecommendedCocktails = () => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setAllLikeRecommendedCocktails();
-  setTimeout(() => {
-    setAllLikeRecommendedCocktails();
-  }, 100);
 });
 
 onUnmounted(() => {

@@ -58,7 +58,7 @@ const offFailurePopUp = () => {
 
 // 모달 초기화 및 db 요청
 onBeforeMount(() => {
-  store.dispatch("feedDescInfo/getCommunityDetail", {
+  store.dispatch("feedDescInfo/setCommunityDetail", {
     feedId: route.params.feedId,
   });
   store.dispatch("createFeed/changeAlertStatus", false);

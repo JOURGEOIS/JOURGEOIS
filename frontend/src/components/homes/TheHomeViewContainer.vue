@@ -3,41 +3,42 @@
     <!-- 칵테일 어워즈 배너 -->
     <section class="cocktail-awards-section">
       <the-cocktail-awards-banner
-        class="home-cocktail-awards-banner"
         image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_home_banner.gif"
         @click="$router.push({ name: 'TheCocktailAwardsView' })"
       ></the-cocktail-awards-banner>
     </section>
-    <!-- 좋아요 기반 추천 칵테일  -->
-    <the-home-basic-section
-      v-if="isLoggedIn && isBookMarked"
-      :data="likeRecommendedCocktailData"
+    <!-- 실시간 인기 급상승 검색어 -->
+    <the-hot-keyword-section
+      ><h1 class="title">
+        실시간 <span class="important">급상승</span> 검색어
+      </h1></the-hot-keyword-section
     >
-      <h1 class="title">
-        당신을 위한 <span class="important">취향저격</span> 칵테일
-      </h1>
-    </the-home-basic-section>
     <!-- 테마별 추천 칵테일 -->
     <the-theme-section
       ><h1 class="title">
         <span class="important">테마별</span> 추천 칵테일
       </h1></the-theme-section
     >
+    <!-- 좋아요 기반 추천 칵테일  -->
+    <the-home-basic-section
+      v-if="isLoggedIn && bookmarkList.length"
+      :data="likeRecommendedCocktailData"
+    >
+      <h1 class="title">
+        당신을 위한 <span class="important">취향저격</span> 칵테일
+      </h1>
+    </the-home-basic-section>
     <!-- 초심자들을 위한 영상 추천 -->
     <the-video-section><h1 class="title">영상 추천</h1></the-video-section>
     <!-- 주류주아 HOT 칵테일  -->
     <the-home-basic-section :data="hotCocktailData">
       <h1 class="title">주류주아 <span class="important">HOT</span> 칵테일</h1>
     </the-home-basic-section>
+
     <!-- 유저들의 NEW 커스텀 칵테일 -->
     <the-home-basic-section :data="latestCustomCocktailData">
       <h1 class="title">유저들의 <span class="important">NEW</span> 칵테일</h1>
     </the-home-basic-section>
-    <the-hot-keyword-section
-      ><h1 class="title">
-        실시간 <span class="important">급상승</span> 검색어
-      </h1></the-hot-keyword-section
-    >
     <!-- 유저들의 이번 주 HOT 칵테일  -->
     <the-home-basic-section :data="weeklyHotCocktailData">
       <h1 class="title">
@@ -97,8 +98,8 @@ const likeRecommendedCocktailData = {
 const isLoggedIn = computed(() => store.getters["personalInfo/isLoggedIn"]);
 
 // 좋아요 여부 확인
-const isBookMarked = computed(
-  () => store.getters["carousel/getLikeRecommendedCocktails"].length
+const bookmarkList = computed(
+  () => store.getters["carousel/getLikeRecommendedCocktails"]
 );
 </script>
 
@@ -116,7 +117,6 @@ const isBookMarked = computed(
   @include shadow-feed;
   background-color: $white;
   margin-top: -10px;
-  border-radius: 0px 0px 10px 10px;
 }
 
 .title {

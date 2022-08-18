@@ -89,13 +89,16 @@ const clickSignOut = () => {
 <style scoped lang="scss">
 .sign-out-content {
   @include flex(column);
+  justify-content: center;
+  align-items: center;
   gap: 100px;
   margin-top: 16px;
-  font-weight: $fw-medium;
+  font-weight: $fw-regular;
 
   .sign-out-context {
     @include flex(column);
     justify-content: center;
+    width: 90%;
     margin-bottom: 40px;
 
     span {
@@ -116,7 +119,7 @@ const clickSignOut = () => {
   }
 
   button {
-    @include shadow-modal;
+    @include shadow-popup1;
   }
 }
 

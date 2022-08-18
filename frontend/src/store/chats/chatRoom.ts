@@ -124,6 +124,10 @@ export const chatRoom: Module<ChatRoomState, RootState> = {
       commit("SET_CHAT_LOGS", []);
     },
 
+    resetChatRoomList: ({ commit }) => {
+      commit("SET_CHAT_ROOM_LIST", []);
+    },
+
     // current chats room의 상대방 정보 저장
     saveCurrentChatRoomOpponent: (
       { commit },

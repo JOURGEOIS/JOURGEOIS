@@ -70,7 +70,7 @@ watch(paramsUserId, () => {
   width: 100%;
 
   @media #{$tablet} {
-    grid-template-columns: repeat(auto-fill, minmax(33.33333%, auto));
+    grid-template-columns: repeat(auto-fill, minmax(25%, auto));
   }
 
   article {

@@ -65,25 +65,14 @@ public class CocktailService {
     }
     public CocktailDTO readCocktail(Long id) throws Exception {
         CocktailVO cocktailInfo = cocktailRepository.findCocktailById(id).orElseThrow(() -> new Exception("CocktailService.readCocktail.cInfo"));
-        String cupInfo = cocktailRepository.findCocktailCupById(id).orElse("adassd");
+        String cupInfo = cocktailRepository.findCocktailCupById(id).orElseThrow(() -> new Exception("CocktailService.readCocktail.cInfo"));
         ArrayList<String> materialsInfo = cocktailRepository.findAllMaterialsByCocktailId(id).orElseThrow(() -> new Exception("CocktailService.readCocktail.materialsInfo"));
-
-        System.out.println(cocktailInfo.getId());
-        System.out.println(cocktailInfo.getName());
-        System.out.println(cocktailInfo.getRecipe());
-        System.out.println(cocktailInfo.getTag());
 
         CocktailDTO cocktailDTO = CocktailDTO.builder().id(cocktailInfo.getId()).name(cocktailInfo.getName()).nameKR(cocktailInfo.getNameKR())
                 .alcohol(cocktailInfo.getAlcohol()).cupName(cupInfo).tag(cocktailInfo.getTag()).baseLiquor(cocktailInfo.getBaseLiquor())
                 .category(cocktailInfo.getCategory()).recipe(cocktailInfo.getRecipe()).img(cocktailInfo.getImg()).materials(materialsInfo).build();
 
         return cocktailDTO;
-    }
-
-
-    public boolean updateCocktail(Cocktail cocktail) throws Exception {
-
-        return true;
     }
 
     public boolean deleteCocktail(Long id) {
@@ -96,16 +85,17 @@ public class CocktailService {
         }
     }
 
-    public boolean insertMaterial(Material material){
-        try {
-            //materialRepository.save(material);
-            return true;
-        } catch(Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
+    // DB에 재료로 추가시 사용
+//    public boolean insertMaterial(Material material){
+//        try {
+//            //materialRepository.save(material);
+//            return true;
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//    }
 
     public boolean createComment(CocktailCommentDTO cDTO) {
         try{
@@ -189,18 +179,10 @@ public class CocktailService {
     }
 
     public boolean checkUserBookmark(CocktailBookmarkId key){
-        try {
-            System.out.println("============================================================");
-            System.out.println(cocktailBookmarkRepository.findById(key).get().getCocktailId());
-            System.out.println("============================================================");
-        } catch (Exception e) {
-            System.out.println(e);
-        }
         return cocktailBookmarkRepository.findById(key).isPresent();
     }
 
     public boolean checkCocktailUid(Long uid){
-        System.out.println(cocktailRepository.findById(uid).isPresent());
         return cocktailRepository.findById(uid).isPresent();
     }
 

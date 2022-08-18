@@ -5,7 +5,6 @@ import com.jourgeois.backend.security.jwt.JwtAccessDeniedHandler;
 import com.jourgeois.backend.security.jwt.JwtAuthenticationEntryPoint;
 import com.jourgeois.backend.security.jwt.JwtTokenFilterConfigurer;
 import com.jourgeois.backend.security.jwt.JwtTokenProvider;
-import com.jourgeois.backend.security.oauth2.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

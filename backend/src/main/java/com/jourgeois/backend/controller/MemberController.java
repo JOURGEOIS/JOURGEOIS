@@ -400,7 +400,7 @@ public class MemberController {
     @GetMapping("/auth/follower")
     public ResponseEntity getFollowerAll(HttpServletRequest request,
                                          @RequestParam Long uid,
-                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+                                         @PageableDefault(size=15, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
             Long me = Long.valueOf((String) request.getAttribute("uid"));
@@ -421,7 +421,7 @@ public class MemberController {
     @GetMapping("/auth/followee")
     public ResponseEntity getFolloweeAll(HttpServletRequest request,
                                          @RequestParam Long uid,
-                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+                                         @PageableDefault(size=15, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
             Long me = Long.valueOf((String) request.getAttribute("uid"));

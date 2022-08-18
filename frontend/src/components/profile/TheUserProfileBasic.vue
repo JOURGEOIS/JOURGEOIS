@@ -105,11 +105,6 @@ const goFollowee = () => {
   }
 };
 
-watch(isFollowed.value, () => {
-  isFollowed.value;
-  followingCnt;
-});
-
 const clickFollowBtn = () => {
   if (isFollowed.value === 1) {
     store.dispatch("follow/unfollow", { uid: uid.value });

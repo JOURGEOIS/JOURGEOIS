@@ -57,9 +57,6 @@ const setAllWeeklyHotCocktails = () => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setAllWeeklyHotCocktails();
-  setTimeout(() => {
-    setAllWeeklyHotCocktails();
-  }, 100);
 });
 
 onUnmounted(() => {

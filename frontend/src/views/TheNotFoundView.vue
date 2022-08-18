@@ -1,14 +1,17 @@
 <template>
   <section>
     <div class="title">
-      <img src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/icon-bold-line-nobackground.png" alt="">
+      <img
+        src="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/icon-bold-line-nobackground.png"
+        alt=""
+      />
     </div>
     <div class="content">
       <p class="d404">404</p>
       <p class="not-found">Cocktail Not Found</p>
       <p class="message">죄송합니다. 원하는 페이지를 찾을 수 없습니다.</p>
     </div>
-    <br>
+    <br />
     <!-- 홈으로 돌아가기 -->
     <div class="button">
       <button-basic
@@ -49,10 +52,10 @@ img {
   @include flex(column);
   @include flex-center;
   .d404 {
-    @include font(100px, $fw-bold)
+    @include font(100px, $fw-bold);
   }
   .not-found {
-    @include font(30px, $fw-regular)
+    @include font(30px, $fw-regular);
   }
 }
 .button {

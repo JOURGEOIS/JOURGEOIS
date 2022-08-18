@@ -57,9 +57,6 @@ const setAllHotCocktails = () => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setAllHotCocktails();
-  setTimeout(() => {
-    setAllHotCocktails();
-  }, 100);
 });
 
 onUnmounted(() => {

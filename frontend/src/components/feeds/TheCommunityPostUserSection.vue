@@ -67,10 +67,8 @@ const goProfile = () => {
 
 // 팔로우/팔로잉 버튼 클릭
 const a = computed(() => feedDescInfo?.value?.followerDTO?.isFollowed);
-console.log(a.value);
 const isFollowed = ref(a.value);
 watchEffect(() => {
-  console.log(a.value);
   isFollowed.value = a.value;
 });
 
@@ -85,10 +83,10 @@ const followBtnText = computed(() => {
 
 const clickFollowBtn = () => {
   if (isFollowed.value === 1) {
-    store.dispatch("follow/unfollow", { uid });
+    store.dispatch("follow/unfollow", { uid: uid.value });
     isFollowed.value = 0;
   } else if (isFollowed.value === 0) {
-    store.dispatch("follow/follow", { uid });
+    store.dispatch("follow/follow", { uid: uid.value });
     isFollowed.value = 1;
   }
 };

@@ -242,8 +242,6 @@ export const profileDesc: Module<ProfileDescState, RootState> = {
       { commit, dispatch, getters, rootGetters },
       uid: number
     ) => {
-      console.log("ㅇㅅㅇ");
-      console.log(uid);
       const page = getters["getCurrentUserPostCommunityPage"];
       axios({
         url: api.accounts.profileCommunity(),

@@ -66,9 +66,6 @@ const setLikedUsers = (data: object) => {
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   setLikedUsers({ postId: feedId });
-  setTimeout(() => {
-    setLikedUsers({ postId: feedId });
-  }, 500);
 });
 
 // 리셋

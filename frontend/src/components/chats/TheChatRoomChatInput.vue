@@ -3,7 +3,7 @@
     <form @submit.prevent="submitTheChatRoomForm">
       <input
         type="text"
-        maxlength="40"
+        maxlength="60"
         placeholder="메세지를 입력해주세요"
         v-model="chatInputValue"
       />

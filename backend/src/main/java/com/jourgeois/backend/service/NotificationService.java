@@ -53,7 +53,7 @@ public class NotificationService {
         notificationDTO.setTimestamp(Timestamp.now());
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
-        System.out.println("Create Follow Notification - " + result.get().getUpdateTime());
+//        System.out.println("Create Follow Notification - " + result.get().getUpdateTime());
 
         return true;
     }
@@ -72,7 +72,7 @@ public class NotificationService {
 
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
-        System.out.println("Create Like Notification - " + result.get().getUpdateTime());
+//        System.out.println("Create Like Notification - " + result.get().getUpdateTime());
 
         return true;
     }
@@ -90,7 +90,7 @@ public class NotificationService {
         notificationDTO.setTimestamp(Timestamp.now());
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
-        System.out.println("Create Comment Notification - " + result.get().getUpdateTime());
+//        System.out.println("Create Comment Notification - " + result.get().getUpdateTime());
 
         return true;
     }
@@ -101,7 +101,7 @@ public class NotificationService {
 
         ApiFuture<WriteResult> future = docRef.update("isRead", true);
         WriteResult result = future.get();
-        System.out.println("changeToBeRead result - " + result);
+//        System.out.println("changeToBeRead result - " + result);
 
         return true;
     }
@@ -116,10 +116,6 @@ public class NotificationService {
         }
 
         ApiFuture<List<WriteResult>> future = batch.commit();
-
-        for(WriteResult result : future.get()) {
-            System.out.println("Update time : " + result.getUpdateTime());
-        }
 
         return true;
     }

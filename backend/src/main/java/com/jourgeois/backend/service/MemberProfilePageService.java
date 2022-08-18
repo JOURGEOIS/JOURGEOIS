@@ -36,10 +36,8 @@ public class MemberProfilePageService {
     }
 
     public Map<String, Object> readMemberProfile(Long myUid, Long uid){
-        System.out.println(myUid + " " + uid);
         MemberVO data = memberRepository.findMemberProfile(myUid, uid).orElseThrow();
 
-        System.out.println(data.getIsFollowed());
         Map<String, Object> res = new HashMap<>();
         res.put("uid", data.getUid().toString());
         res.put("email", data.getEmail());

@@ -31,8 +31,6 @@ public class MailAuthUtil {
     }
 
     public static boolean isValidToken(String token, EmailToken emailToken) {
-        System.out.println(token);
-        System.out.println(emailToken.getToken());
         return !emailToken.isVerified() && token.equals(emailToken.getToken());
     }
 

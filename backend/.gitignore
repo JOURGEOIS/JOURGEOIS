@@ -38,4 +38,3 @@ out/
 
 ### local ###
 # **/src/main/resources/application.yml
-**/src/main/java/com/jourgeios/backend/config/RedisConfig.java

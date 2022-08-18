@@ -149,14 +149,20 @@ public class NotificationService {
                 .whereGreaterThan("timestamp", halfday)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .startAt(lastDoc)
-                .limit(10)
+                .limit(15)
                 .get();
         List<QueryDocumentSnapshot> documents = query.get().getDocuments();
 
         for (DocumentSnapshot document : documents) {
             NotificationDTO notificationDTO = document.toObject(NotificationDTO.class);
             Long opponentUid = notificationDTO.getUid();
-            Member opponent = memberRepository.findById(opponentUid).orElseThrow(()-> new NoSuchElementException("상대 유저 정보가 없습니다."));
+            Member opponent = memberRepository.findById(opponentUid).orElse(null);
+
+            // 존재하지 않는 유저의 알림이면 보내지 않음
+            if(opponent == null) {
+                continue;
+            }
+
             OpponentDTO notiOpponentDTO = OpponentDTO.builder()
                     .uid(opponent.getUid())
                     .img(S3Util.s3urlFormatter(opponent.getProfileImg()))

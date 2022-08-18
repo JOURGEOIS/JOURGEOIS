@@ -100,6 +100,7 @@ watch(successPopUpStatus, () => {
 
 // 이벤트 연결 끊기
 onUnmounted(() => {
+  store.dispatch("comments/resetCommentData");
   window.removeEventListener("scroll", handleScroll);
 });
 </script>

@@ -94,7 +94,7 @@ onMounted(() => {
     position: absolute;
     top: 80px;
     width: 100%;
-    height: calc(100% - 248px);
+    height: calc(100% - 232px);
 
     @media #{$tablet} {
       width: 80%;
@@ -106,7 +106,7 @@ onMounted(() => {
   }
 
   > .active {
-    height: calc(100% - 456px);
+    height: calc(100% - 440px);
   }
 }
 </style>

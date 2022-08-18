@@ -61,7 +61,6 @@ const time = computed(() => {
 
   .part-left {
     @include flex-xy(flex-start, center);
-    flex-grow: 1;
     gap: 10px;
     @include text-overflow-ellipsis;
 
@@ -96,7 +95,9 @@ const time = computed(() => {
 
   .part-right {
     align-self: flex-start;
-    width: 40px;
+    text-align: right;
+
+    flex-grow: 1;
     flex-shrink: 0;
     .chat-room-time {
       width: 100%;

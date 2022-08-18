@@ -261,9 +261,10 @@ export const comment: Module<Comment, RootState> = {
           postReviewId: getters["getDeleteCommentId"],
         },
       })
-        .then(() => {
+        .then((res) => {
           dispatch("resetCommentData");
           dispatch("saveCommentList", id);
+          // dispatch("setCommentCount", { count: res.data.reviewCount, getters["getDeleteCommentId"] });
         })
         .catch((error) => {
           if (error.response.status !== 401) {

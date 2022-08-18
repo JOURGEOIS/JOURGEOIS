@@ -107,6 +107,7 @@ const clickDelete = () => {
 
   .community-description {
     padding: 10px 0;
+    margin: 16px 0px;
   }
 }
 

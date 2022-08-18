@@ -4,12 +4,11 @@
       좋아요한 유저
     </header-basic>
     <div class="the-item-container top-view-no-margin">
-      <div class="like-empty" v-if="isEmpty">
+      <!-- <div class="like-empty" v-if="isEmpty">
         <p>해당 게시물의 좋아요 유저가 없습니다</p>
         <p class="emoji">😥</p>
-      </div>
+      </div> -->
       <the-list-item-user
-        v-else
         v-for="(item, idx) in likedUsers"
         :key="idx"
         :data="item"
@@ -31,12 +30,12 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-const isEmpty = ref(false);
-setTimeout(() => {
-  if (likedUsers.value.length === 0) {
-    isEmpty.value = true;
-  }
-}, 200);
+// const isEmpty = ref(false);
+// setTimeout(() => {
+//   if (likedUsers.value.length === 0) {
+//     isEmpty.value = true;
+//   }
+// }, 200);
 
 // navbar 색깔 부여
 store.dispatch("navbar/setNavIconStatus", 3);

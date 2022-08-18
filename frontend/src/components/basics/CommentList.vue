@@ -64,12 +64,6 @@ const handleScroll = (event: Event) => {
 // 마운트 되기 전에 댓글 정보 받기
 onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
-
-  // 리셋
-  store.dispatch("comment/resetCommentData");
-  store.dispatch("comment/toggleSuccessPopUpStatus", false);
-  store.dispatch("comment/toggleDeleteModalStatus", false);
-
   // 데이터 받기
   store.dispatch("comment/saveCommentList", props.pageId);
 });
@@ -100,7 +94,10 @@ watch(successPopUpStatus, () => {
 
 // 이벤트 연결 끊기
 onUnmounted(() => {
-  store.dispatch("comments/resetCommentData");
+  // 리셋
+  store.dispatch("comment/toggleSuccessPopUpStatus", false);
+  store.dispatch("comment/toggleDeleteModalStatus", false);
+  store.dispatch("comment/resetCommentData");
   window.removeEventListener("scroll", handleScroll);
 });
 </script>

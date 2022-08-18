@@ -52,7 +52,6 @@ public class S3Util {
         File uploadFile = convert(multipartFile, dirName, imgType)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         upload(uploadFile, dirName, imgType);
-        System.out.println(uploadFile.getName());
         return URLEncoder.encode(imgType.getValue() + "/" + dirName + "/" + doFilterFilename(uploadFile.getName()), "UTF-8");
     }
 
@@ -70,7 +69,6 @@ public class S3Util {
         putS3(uploadFile, fileName); // s3로 업로드
         try {
             File tmp_img = new File(IMG_TMP + "/" + imgType.getValue() + "/" + dirName);
-            System.out.println(tmp_img.getPath());
             removeFiles(tmp_img);
         } catch (NullPointerException e) {
             System.out.println("삭제할 파일 없음");
@@ -96,18 +94,13 @@ public class S3Util {
     // 로컬에 파일 업로드 하기
     public Optional<File> convert(MultipartFile file, Long dirName, ImgType imgType) throws IOException {
         String folderPath = IMG_TMP + "/" + imgType.getValue() + "/" + dirName + "/";
-        System.out.println(folderPath);
         File makeFolder = new File(folderPath);
         if(!makeFolder.exists()){
-            System.out.println("폴더 생기니?");
             makeFolder.mkdirs();
-            System.out.println("폴더 만들었음");
         }
 
         File convertFile = new File(folderPath + Long.toString(System.nanoTime()) + "_" + this.doFilterFilename(file.getOriginalFilename()));
-        System.out.println(convertFile.getAbsolutePath());
         URL url = ResourceUtils.getURL(folderPath);
-        System.out.println("url임" + url);
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
                 fos.write(file.getBytes());

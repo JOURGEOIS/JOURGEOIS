@@ -92,10 +92,14 @@ function checkBirthFormat(text: string) {
   const year = Number(Y);
   const month = Number(M);
   const day = Number(D);
+  const std = new Date(year, month - 1, day).getTime();
   const now = new Date();
+  const nowTime = now.getTime();
 
   if (isNaN(year) || isNaN(month) || isNaN(day)) return false;
   if (1900 > year || year > now.getFullYear()) return false;
+  // 만 14세 이상이 아니라면 false
+  if (nowTime <= std + 4.4 * 1e11) return false;
   if (month > 12 || month < 1) return false;
   if (day > 31 || day < 1) return false;
   return true;

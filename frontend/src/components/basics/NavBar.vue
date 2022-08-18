@@ -135,4 +135,5 @@ onBeforeRouteLeave((to, from, next) => {
 .unselected {
   color: $sub-color;
 }
+
 </style>

@@ -338,10 +338,11 @@ export const cocktailSearch: Module<CocktailSearchState, RootState> = {
     },
 
     // 필터 재료 리셋
-    resetSearchFilterIngredients: ({ getters, commit }) => {
+    resetSearchFilterIngredients: ({ getters, commit, dispatch }) => {
       const data = getters["getSearchFilterData"];
       data.materials = [];
       commit("SET_SEARCH_FILTER_DATA", data);
+      dispatch("searchFilterResultCnt");
     },
   },
 };

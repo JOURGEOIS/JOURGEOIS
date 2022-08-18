@@ -315,6 +315,7 @@ form {
   border-radius: 10px;
   padding: 12px;
   bottom: 70px;
+  margin-bottom: 100px;
   @include font(13px, $fw-bold);
 
   @media (min-height: 750px) {

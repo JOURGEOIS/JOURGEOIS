@@ -4,12 +4,11 @@
       팔로우한 유저
     </header-basic>
     <div class="the-follower-container top-view-no-margin">
-      <div class="follower-post-none" v-if="isEmpty">
+      <!-- <div class="follower-post-none" v-if="isEmpty">
         <p>팔로우한 유저가 없습니다.</p>
         <p class="emoji">😥</p>
-      </div>
+      </div> -->
       <the-follower-item
-        v-else
         v-for="(follower, idx) in followers"
         :key="`follower-${idx}`"
         :follower="follower"
@@ -33,12 +32,12 @@ const store = useStore();
 const followers = computed(() => store.getters["follow/getFollowerUsers"]);
 const uid = computed(() => route.params.userId);
 
-const isEmpty = ref(false);
-setTimeout(() => {
-  if (followers.value.length === 0) {
-    isEmpty.value = true;
-  }
-}, 200);
+// const isEmpty = ref(false);
+// setTimeout(() => {
+//   if (followers.value.length === 0) {
+//     isEmpty.value = true;
+//   }
+// }, 200);
 
 const handleScroll = (event: Event) => {
   const data = {

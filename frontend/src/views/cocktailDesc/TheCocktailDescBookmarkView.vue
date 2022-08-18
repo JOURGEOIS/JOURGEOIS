@@ -5,11 +5,11 @@
       북마크한 유저
     </header-basic>
     <section class="cocktail-bookmark-section top-view-no-margin">
-      <div class="cocktail-bookmark-none" v-if="isEmpty">
+      <!-- <div class="cocktail-bookmark-none" v-if="isEmpty">
         <p>해당 칵테일을 북마크한 유저가 없습니다</p>
         <p class="emoji">😥</p>
-      </div>
-      <div class="cocktail-bookmark-exist" v-else>
+      </div> -->
+      <div class="cocktail-bookmark-exist">
         <the-list-item-user
           v-for="(item, idx) in bookMarkUserList"
           :key="idx"
@@ -36,12 +36,12 @@ const store = useStore();
 // navbar 색깔 부여
 store.dispatch("navbar/setNavIconStatus", 3);
 
-const isEmpty = ref(false);
-setTimeout(() => {
-  if (bookMarkUserList.value.length === 0) {
-    isEmpty.value = true;
-  }
-}, 200);
+// const isEmpty = ref(false);
+// setTimeout(() => {
+//   if (bookMarkUserList.value.length === 0) {
+//     isEmpty.value = true;
+//   }
+// }, 200);
 
 // 북마크 유저 리스트
 const bookMarkUserList = computed(

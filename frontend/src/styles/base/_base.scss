@@ -37,8 +37,9 @@ div, span, article, section, header, footer, p, ul, li, fieldset, legend, label,
   box-sizing: border-box; 
 };
 
+
 html {
-    height: 100%;
+  height: calc(100% - 60px);
 };
 
 

@@ -6,7 +6,7 @@
         class="container"
         :class="animation"
         :style="[
-          isIphone || isAndroid ? { height: '350px' } : { height: '250px' },
+          isIphone || isAndroid ? { height: '350px' } : { height: '230px' },
         ]"
       >
         <!-- filter: header -->

@@ -30,7 +30,7 @@ export interface SignupState {
 export const signup: Module<SignupState, RootState> = {
   namespaced: true,
   state: {
-    currentPage: 0,
+    currentPage: 3,
     totalPage: 3,
     serviceUseModalStatus: false,
     personalInfoUseModalStatus: false,

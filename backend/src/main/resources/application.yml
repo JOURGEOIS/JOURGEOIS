@@ -23,8 +23,8 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
   redis:
     host: redis
     port: 6379

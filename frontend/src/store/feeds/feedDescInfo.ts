@@ -193,7 +193,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
     },
 
     // 일반게시글 상세정보 불러오기
-    getCommunityDetail: (
+    setCommunityDetail: (
       { commit, dispatch, rootGetters },
       params: { feedId: number }
     ) => {
@@ -220,7 +220,7 @@ export const feedDescInfo: Module<FeedDescState, RootState> = {
           } else {
             // refreshToken 재발급
             const obj = {
-              func: "feedDescInfo/getCommunityDetail",
+              func: "feedDescInfo/setCommunityDetail",
               params,
             };
             dispatch("personalInfo/requestRefreshToken", obj, {

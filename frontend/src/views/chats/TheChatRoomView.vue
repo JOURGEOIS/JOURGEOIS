@@ -72,15 +72,6 @@ onUnmounted(() => {
   store.dispatch("chatRoom/resetChatRoomLogs");
   store.dispatch("chatRoom/setCurrentChatRoom", resetCurrentChatRoom);
   document.body.style.overflow = "unset";
-  document.body.removeEventListener("scroll", (event) => {
-    event.preventDefault();
-  });
-  document.body.removeEventListener("mousedown", (event) => {
-    event.preventDefault();
-  });
-  document.body.removeEventListener("touchmove", (event) => {
-    event.preventDefault();
-  });
 });
 
 onMounted(() => {
@@ -89,15 +80,6 @@ onMounted(() => {
   }, 0);
 
   document.body.style.overflow = "hidden";
-  document.body.addEventListener("scroll", (event) => {
-    event.preventDefault();
-  });
-  document.body.addEventListener("mousedown", (event) => {
-    event.preventDefault();
-  });
-  document.body.addEventListener("touchmove", (event) => {
-    event.preventDefault();
-  });
 });
 </script>
 

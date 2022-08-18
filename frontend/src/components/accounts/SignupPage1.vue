@@ -8,13 +8,13 @@
         :contents="allCheckerContent"
         @clickCheckIcon="switchAllIsChecked"
       />
-      <div
+      <!-- <div
         class="description"
         v-for="(description, idx) in descriptionList"
         :key="idx"
       >
         {{ description }}
-      </div>
+      </div> -->
       <hr class="hr1" />
       <agree-checker
         :contents="agreeContents[0]"
@@ -91,14 +91,16 @@ const agreeContents = reactive([
   {
     order: 2,
     isChecked: isChecked2,
-    checkContent: "[필수] 주류주아 서비스 이용 약관",
+    // checkContent: "[필수] 주류주아 서비스 이용 약관",
+    checkContent: "주류주아 서비스 이용 약관",
     isModalBtn: true,
     modalContent: "modal content 2",
   },
   {
     order: 3,
     isChecked: isChecked3,
-    checkContent: "[필수] 개인정보 수집 및 이용 동의",
+    // checkContent: "[필수] 개인정보 수집 및 이용 동의",
+    checkContent: "개인정보 수집 및 이용 동의",
     isModalBtn: true,
     modalContent: "modal content 3",
   },
@@ -163,8 +165,9 @@ const buttonColor = computed(() => {
 
   .hr1 {
     @include hr;
-    margin-left: 30px;
-    width: calc(100% - 30px);
+    // margin-left: 30px;
+    // width: calc(100% - 30px);
+    width: 100%;
   }
 }
 </style>

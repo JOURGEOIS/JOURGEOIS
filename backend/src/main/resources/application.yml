@@ -8,10 +8,8 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
 #    url: jdbc:mariadb://localhost:3306/test?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#    url: jdbc:mariadb://localhost:3307/juadb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 #    username: root
 #    password:
-# 주석처리 해야혀~ 반드시!!
 
     hikari:
       auto-commit: false
@@ -22,15 +20,13 @@ spring:
       pool-name: pool-backend
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
   redis:
     host: redis
-#    host: localhost
-#    password: 1q2w3e4r!@#
     port: 6379
 
 jwt:
@@ -55,5 +51,4 @@ cloud:
       auto: false
 
 firebase-configuration-file: ./serviceAccountKey.json
-# 정리 한 번 합시다..
 

@@ -60,17 +60,16 @@ public class SearchStatistics {
             searchTrend.setTo(toFormatted);
             searchTrend.setKeywords(cur_hot);
             searchTrend.setDelta(new ArrayList());
-            System.out.println("현재 로그 조회 성공");
-//            System.out.println(prev.getFrom());
+//            System.out.println("현재 로그 조회 성공");
 
             // 이전 기록 가져옴
             SearchTrendDto prev = redisService.getHotKeywords("cur");
 
-            System.out.println("이전 로그 조회 성공");
+//            System.out.println("이전 로그 조회 성공");
 
             // 이전 기록이 없으면 현재 기록을 이전 기록과 현재 기록에 등록
             if (prev == null) {
-                System.out.println("통계가 없음");
+//                System.out.println("통계가 없음");
                 for (int i = 0; i < cur_hot.size(); i++)
                     searchTrend.getDelta().add(Integer.valueOf(-1));
                 redisService.setHotKeywords("prev", searchTrend);
@@ -90,7 +89,6 @@ public class SearchStatistics {
                         searchTrend.getDelta().add(Integer.valueOf(prev_rank - cur_rank));
                     }
                 }
-                System.out.println(searchTrend.getFrom());
                 redisService.setHotKeywords("cur", searchTrend);
             }
         } catch (Exception e) {
@@ -118,13 +116,13 @@ public class SearchStatistics {
             searchTrend.setTo(toFormatted);
             searchTrend.setKeywords(cur_hot);
             searchTrend.setDelta(new ArrayList());
-            System.out.println("현재 로그 조회 성공");
+//            System.out.println("현재 로그 조회 성공");
 //            System.out.println(prev.getFrom());
             SearchTrendDto prev = redisService.getWeeklyHotKeywords("cur");
 
-            System.out.println("이전 로그 조회 성공");
+//            System.out.println("이전 로그 조회 성공");
             if (prev == null) {
-                System.out.println("통계가 없음");
+//                System.out.println("통계가 없음");
                 for (int i = 0; i < cur_hot.size(); i++)
                     searchTrend.getDelta().add(Integer.valueOf(-1));
                 redisService.setWeeklyHotKeywords("prev", searchTrend);
@@ -144,7 +142,6 @@ public class SearchStatistics {
                         searchTrend.getDelta().add(Integer.valueOf(prev_rank - cur_rank));
                     }
                 }
-                System.out.println(searchTrend.getFrom());
                 redisService.setWeeklyHotKeywords("cur", searchTrend);
             }
         } catch (Exception e) {

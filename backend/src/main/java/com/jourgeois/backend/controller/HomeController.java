@@ -36,7 +36,7 @@ public class HomeController {
 
     @GetMapping(value="/liquor")
     public ResponseEntity recommenderLiquor(@RequestHeader(value = "uid", defaultValue = "-1") Long uid,
-                                            @PageableDefault(size=10, page=0) Pageable pageable){
+                                            @PageableDefault(size=15, page=0) Pageable pageable){
         try{
             return new ResponseEntity(homeService.recommenderLiquor(uid, pageable), HttpStatus.OK);
         } catch (Exception e){
@@ -75,7 +75,7 @@ public class HomeController {
     }
 
     @GetMapping(value = "/cocktail/hot")
-    public ResponseEntity hotCocktailAll(@PageableDefault(size=10, page = 0) Pageable pageable) {
+    public ResponseEntity hotCocktailAll(@PageableDefault(size=15, page = 0) Pageable pageable) {
         try{
             return new ResponseEntity(homeService.getHotCocktail(pageable), HttpStatus.OK);
         } catch (Exception e){
@@ -95,7 +95,7 @@ public class HomeController {
     }
 
     @GetMapping(value = "/custom/weekly")
-    public ResponseEntity weeklyHotCustomCocktail(@PageableDefault(size=10, page = 0) Pageable pageable) {
+    public ResponseEntity weeklyHotCustomCocktail(@PageableDefault(size=15, page = 0) Pageable pageable) {
         try{
             return new ResponseEntity(homeService.getWeeklyHotCustomCocktail(pageable), HttpStatus.OK);
         } catch (Exception e){
@@ -131,7 +131,7 @@ public class HomeController {
     }
 
     @GetMapping(value = "/tag")
-    public ResponseEntity TagCocktail(@RequestParam("tag") String tagType, @PageableDefault(size=10, page = 0) Pageable pageable) {
+    public ResponseEntity TagCocktail(@RequestParam("tag") String tagType, @PageableDefault(size=15, page = 0) Pageable pageable) {
         try{
             TagType tag = TagType.valueOf(tagType);
             return new ResponseEntity(homeService.getTagCocktail(tag, pageable), HttpStatus.OK);

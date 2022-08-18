@@ -15,26 +15,41 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2', 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
-    implementation 'io.swagger.core.v3:swagger-annotations:2.2.0' // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
+
+//    implementation 'io.swagger.core.v3:swagger-annotations:2.2.0' // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
+
+    /*
+    데이터베이스
+     */
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // mariaDB
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation'com.google.code.gson:gson:2.8.7'
 
+    // 외부 API
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // aws
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
     // firebase
     implementation 'com.google.firebase:firebase-admin:9.0.0'
 }

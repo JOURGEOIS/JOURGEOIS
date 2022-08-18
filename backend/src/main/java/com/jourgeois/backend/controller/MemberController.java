@@ -46,19 +46,16 @@ public class MemberController {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    MemberController(MemberService memberService, NotificationService notificationService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider, SocialLoginConfigUtils configUtils) {
+    MemberController(MemberService memberService, NotificationService notificationService, S3Util s3Uploader, JwtTokenProvider jwtTokenProvider/*, SocialLoginConfigUtils configUtils*/) {
         this.memberService = memberService;
         this.notificationService = notificationService;
         this.s3Uploader = s3Uploader;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.configUtils = configUtils;
+//        this.configUtils = configUtils;
     }
 
     @PostMapping(value = "/signUp")
     public ResponseEntity<?> signUp(@RequestBody Member member){
-        System.out.println("===========================");
-        System.out.println(member.toString());
-        System.out.println("===========================");
         Map<String, Boolean> data = new HashMap<>();
         // 이메일 중복, 닉네임 중복 재 검사
         boolean flag = memberService.checkEmail(member.getEmail()) && memberService.checkNickname(member.getNickname());
@@ -79,7 +76,6 @@ public class MemberController {
     //이메일 중복 체크 메소드
     @GetMapping(value = "/signup/checkEmail")
     public @ResponseBody ResponseEntity<?> checkEmail(@RequestParam String email){
-        System.out.println("[/signup/emailCheck] email = " + email);
         Map<String, Boolean> data = new HashMap<>();
 
         try {
@@ -110,7 +106,6 @@ public class MemberController {
         public ResponseEntity<?> login(@RequestBody Map<String, String> loginForm) {
             String email = loginForm.get("email");
             String password = loginForm.get("password");
-            System.out.println(email + " " + password);
 
             Map<String, Object> data = new HashMap<>();
             UserDetails userDetails = memberService.loginUser(email, password);
@@ -122,154 +117,152 @@ public class MemberController {
     /*
     =================================================================== google login
      */
-    private final SocialLoginConfigUtils configUtils;
+//    private final SocialLoginConfigUtils configUtils;
 
-    @GetMapping(value = "/login/google")
-    public ResponseEntity<Object> moveGoogleInitUrl() {
-        String authUrl = configUtils.googleInitUrl();
-        try {
-            URI redirectUri = new URI(authUrl);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(redirectUri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+//    @GetMapping(value = "/login/google")
+//    public ResponseEntity<Object> moveGoogleInitUrl() {
+//        String authUrl = configUtils.googleInitUrl();
+//        try {
+//            URI redirectUri = new URI(authUrl);
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.setLocation(redirectUri);
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ResponseEntity.badRequest().build();
+//    }
 
-        return ResponseEntity.badRequest().build();
-    }
+//    @GetMapping(value = "/login/google/redirect")
+//    public ResponseEntity<?> redirectGoogleLogin(@RequestParam(value = "code") String authCode) {
+//
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        GoogleLoginRequest requestParams = GoogleLoginRequest.builder()
+//                .clientId(configUtils.getGoogleClientId())
+//                .clientSecret(configUtils.getGoogleSecret())
+//                .code(authCode)
+//                .redirectUri(configUtils.getGoogleRedirectUri())
+//                .grantType("authorization_code")
+//                .build();
+//
+//        try {
+//            // Http Header 설정
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//            headers.setAccessControlAllowOrigin("*");
+//            HttpEntity<GoogleLoginRequest> httpRequestEntity = new HttpEntity<>(requestParams, headers);
+//            ResponseEntity<String> apiResponseJson = restTemplate.postForEntity(configUtils.getGoogleAuthUrl() + "/token", httpRequestEntity, String.class);
+//
+//            // ObjectMapper를 통해 String to Object로 변환
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+//            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // NULL이 아닌 값만 응답받기(NULL인 경우는 생략)
+//            GoogleLoginResponse googleLoginResponse = objectMapper.readValue(apiResponseJson.getBody(), new TypeReference<GoogleLoginResponse>() {});
+//
+//            // 사용자의 정보는 JWT Token으로 저장되어 있고, Id_Token에 값을 저장한다.
+//            String jwtToken = googleLoginResponse.getIdToken();
+//
+//            // JWT Token을 전달해 JWT 저장된 사용자 정보 확인
+//            String requestUrl = UriComponentsBuilder.fromHttpUrl(configUtils.getGoogleAuthUrl() + "/tokeninfo").queryParam("id_token", jwtToken).toUriString();
+//
+//            String resultJson = restTemplate.getForObject(requestUrl, String.class);
+//
+//            if(resultJson != null) {
+//                GoogleLoginDTO googleLoginInfo = objectMapper.readValue(resultJson, new TypeReference<GoogleLoginDTO>() {});
+//                googleLoginInfo.setEmail("google/"+googleLoginInfo.getEmail());
+//
+//
+//                Map<String, Object> data = new HashMap<>();
+//                UserDetails userDetails = memberService.loginUser(googleLoginInfo);
+//
+//                data.put("token", memberService.createToken(userDetails));
+//                data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+//
+//                return ResponseEntity.ok().body(data);
+//            }
+//            else {
+//                throw new Exception("Google OAuth failed!");
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ResponseEntity.ok().body(null);
+//    }
 
-    @GetMapping(value = "/login/google/redirect")
-    public ResponseEntity<?> redirectGoogleLogin(@RequestParam(value = "code") String authCode) {
-        // HTTP 통신을 위해 RestTemplate 활용
-        System.out.println("Google authCde :" + authCode);
+//    @GetMapping(value = "/login/kakao")
+//    public ResponseEntity<?> moveKakaoInitUrl() {
+//        String authUrl = configUtils.kakaoInitUrl();
+//        try {
+//            URI redirectUri = new URI(authUrl);
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.setLocation(redirectUri);
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ResponseEntity.ok().body(null);
+//    }
 
+//    @GetMapping(value = "/login/kakao/redirect")
+//    public ResponseEntity<?> redirectKakaoLogin(@RequestParam String code) {
+//
+//        System.out.println("Kakao Code : " + code);
+//        try {
+//            String accessToken = memberService.getSocialAccessToken(code, "kakao");
+//            Map<String, Object> kakaoUserInfo = memberService.getSocialUserInfo(accessToken, "kakao");
+//            UserDetails userDetails = memberService.loginSocialUser(kakaoUserInfo, "kakao");
+//            Map<String, Object> data = new HashMap<>();
+//
+//            data.put("token", memberService.createToken(userDetails));
+//            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+//
+//            return ResponseEntity.ok().body(data);
+//
+//        } catch (Exception e){
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//    }
 
-        RestTemplate restTemplate = new RestTemplate();
-        GoogleLoginRequest requestParams = GoogleLoginRequest.builder()
-                .clientId(configUtils.getGoogleClientId())
-                .clientSecret(configUtils.getGoogleSecret())
-                .code(authCode)
-                .redirectUri(configUtils.getGoogleRedirectUri())
-                .grantType("authorization_code")
-                .build();
+//    @RequestMapping(value = "/login/naver", method = {RequestMethod.GET, RequestMethod.POST})
+//    public ResponseEntity<?> moveNaverInitUrl() {
+//        String authUrl = configUtils.naverInitUrl();
+//        try {
+//            URI redirectUri = new URI(authUrl);
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.setLocation(redirectUri);
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ResponseEntity.ok().body(null);
+//    }
 
-        try {
-            // Http Header 설정
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccessControlAllowOrigin("*");
-            HttpEntity<GoogleLoginRequest> httpRequestEntity = new HttpEntity<>(requestParams, headers);
-            ResponseEntity<String> apiResponseJson = restTemplate.postForEntity(configUtils.getGoogleAuthUrl() + "/token", httpRequestEntity, String.class);
-
-            // ObjectMapper를 통해 String to Object로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // NULL이 아닌 값만 응답받기(NULL인 경우는 생략)
-            GoogleLoginResponse googleLoginResponse = objectMapper.readValue(apiResponseJson.getBody(), new TypeReference<GoogleLoginResponse>() {});
-
-            // 사용자의 정보는 JWT Token으로 저장되어 있고, Id_Token에 값을 저장한다.
-            String jwtToken = googleLoginResponse.getIdToken();
-
-            // JWT Token을 전달해 JWT 저장된 사용자 정보 확인
-            String requestUrl = UriComponentsBuilder.fromHttpUrl(configUtils.getGoogleAuthUrl() + "/tokeninfo").queryParam("id_token", jwtToken).toUriString();
-
-            String resultJson = restTemplate.getForObject(requestUrl, String.class);
-
-            if(resultJson != null) {
-                GoogleLoginDTO googleLoginInfo = objectMapper.readValue(resultJson, new TypeReference<GoogleLoginDTO>() {});
-                googleLoginInfo.setEmail("google/"+googleLoginInfo.getEmail());
-
-
-                Map<String, Object> data = new HashMap<>();
-                UserDetails userDetails = memberService.loginUser(googleLoginInfo);
-
-                data.put("token", memberService.createToken(userDetails));
-                data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
-
-                return ResponseEntity.ok().body(data);
-            }
-            else {
-                throw new Exception("Google OAuth failed!");
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return ResponseEntity.ok().body(null);
-    }
-
-    @GetMapping(value = "/login/kakao")
-    public ResponseEntity<?> moveKakaoInitUrl() {
-        String authUrl = configUtils.kakaoInitUrl();
-        try {
-            URI redirectUri = new URI(authUrl);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(redirectUri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return ResponseEntity.ok().body(null);
-    }
-
-    @GetMapping(value = "/login/kakao/redirect")
-    public ResponseEntity<?> redirectKakaoLogin(@RequestParam String code) {
-
-        System.out.println("Kakao Code : " + code);
-        try {
-            String accessToken = memberService.getSocialAccessToken(code, "kakao");
-            Map<String, Object> kakaoUserInfo = memberService.getSocialUserInfo(accessToken, "kakao");
-            UserDetails userDetails = memberService.loginSocialUser(kakaoUserInfo, "kakao");
-            Map<String, Object> data = new HashMap<>();
-
-            data.put("token", memberService.createToken(userDetails));
-            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
-
-            return ResponseEntity.ok().body(data);
-
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-    @RequestMapping(value = "/login/naver", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<?> moveNaverInitUrl() {
-        String authUrl = configUtils.naverInitUrl();
-        try {
-            URI redirectUri = new URI(authUrl);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(redirectUri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return ResponseEntity.ok().body(null);
-    }
-
-    @GetMapping(value = "/login/naver/redirect")
-    public ResponseEntity<?> redirectNaverLogin(@RequestParam String code) {
-
-        System.out.println("Naver Code : " + code);
-        try {
-            String accessToken = memberService.getSocialAccessToken(code, "naver");
-            Map<String, Object> naverUserInfo = memberService.getSocialUserInfo(accessToken, "naver");
-            System.out.println(naverUserInfo.get("email"));
-            UserDetails userDetails = memberService.loginSocialUser(naverUserInfo, "naver");
-
-            Map<String, Object> data = new HashMap<>();
-
-            data.put("token", memberService.createToken(userDetails));
-            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
-
-            return ResponseEntity.ok().body(data);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+//    @GetMapping(value = "/login/naver/redirect")
+//    public ResponseEntity<?> redirectNaverLogin(@RequestParam String code) {
+//
+//        System.out.println("Naver Code : " + code);
+//        try {
+//            String accessToken = memberService.getSocialAccessToken(code, "naver");
+//            Map<String, Object> naverUserInfo = memberService.getSocialUserInfo(accessToken, "naver");
+//            System.out.println(naverUserInfo.get("email"));
+//            UserDetails userDetails = memberService.loginSocialUser(naverUserInfo, "naver");
+//
+//            Map<String, Object> data = new HashMap<>();
+//
+//            data.put("token", memberService.createToken(userDetails));
+//            data.put("userInfo", memberService.findUserInfo(Long.valueOf(userDetails.getUsername())));
+//
+//            return ResponseEntity.ok().body(data);
+//        } catch (Exception e){
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//    }
 
     @GetMapping("/auth/logout")
     public HttpStatus logout(HttpServletRequest  request){
@@ -407,7 +400,7 @@ public class MemberController {
     @GetMapping("/auth/follower")
     public ResponseEntity getFollowerAll(HttpServletRequest request,
                                          @RequestParam Long uid,
-                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+                                         @PageableDefault(size=15, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
             Long me = Long.valueOf((String) request.getAttribute("uid"));
@@ -428,7 +421,7 @@ public class MemberController {
     @GetMapping("/auth/followee")
     public ResponseEntity getFolloweeAll(HttpServletRequest request,
                                          @RequestParam Long uid,
-                                         @PageableDefault(size=10, page = 0) Pageable pageable) {
+                                         @PageableDefault(size=15, page = 0) Pageable pageable) {
         Map<String, String> data = new HashMap<>();
         try {
             Long me = Long.valueOf((String) request.getAttribute("uid"));

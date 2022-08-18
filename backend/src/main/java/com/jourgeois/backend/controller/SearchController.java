@@ -40,7 +40,6 @@ public class SearchController {
 
             this.redisService.setRecentKeyword(uid, keyword);
 
-            System.out.println("keyword:"+keyword);
             if(!keyword.isEmpty() || keyword != null) {
                 this.searchHistoryService.writeSearchHistory(keyword);
             }
@@ -53,7 +52,6 @@ public class SearchController {
     @GetMapping(value="/cocktailall")
     public ResponseEntity searchByKeywordAll(@RequestHeader(value = "uid", defaultValue = "-1") Long uid, @RequestParam(value = "keyword") String keyword,
                                              @RequestParam(value = "page") int page) {
-        System.out.println(keyword);
         if (keyword.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
@@ -70,7 +68,7 @@ public class SearchController {
 
     @GetMapping(value="/user")
     public ResponseEntity searchByUsers(@RequestHeader(value = "uid", defaultValue = "0") Long uid, @RequestParam(value = "keyword") String keyword,
-                              @PageableDefault(size=10, sort="name", direction = Sort.Direction.ASC) Pageable pageable){
+                              @PageableDefault(size=15, sort="name", direction = Sort.Direction.ASC) Pageable pageable){
         System.out.println(keyword);
         if (keyword.isEmpty())
             return ResponseEntity.status(HttpStatus.OK).body(null);
@@ -78,7 +76,7 @@ public class SearchController {
     }
 
     @GetMapping(value="/cocktailwhole")
-    public ResponseEntity searchByCocktailWhole(@PageableDefault(size=10) Pageable pageable){
+    public ResponseEntity searchByCocktailWhole(@PageableDefault(size=15) Pageable pageable){
         return new ResponseEntity(searchService.CocktailList(pageable), HttpStatus.CREATED);
     }
 
@@ -92,13 +90,11 @@ public class SearchController {
 
     @PostMapping(value = "/filter")
     public ResponseEntity filterCount(@RequestBody SearchFilterDTO searchFilterDto){
-        System.out.println(searchFilterDto.toString());
         return new ResponseEntity(searchService.filterCount(searchFilterDto), HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/filter/list")
     public ResponseEntity filterList(@RequestBody SearchFilterDTO searchFilterDto){
-        System.out.println(searchFilterDto.toString());
         return new ResponseEntity(searchService.filterList(searchFilterDto), HttpStatus.CREATED);
     }
 

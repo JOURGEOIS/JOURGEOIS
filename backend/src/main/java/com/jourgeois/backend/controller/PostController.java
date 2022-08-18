@@ -39,7 +39,6 @@ public class PostController {
 
     @PostMapping("/auth")
     public ResponseEntity postPost(HttpServletRequest request, @ModelAttribute PostDTO post) {
-        System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
 
@@ -77,7 +76,6 @@ public class PostController {
 
     @PutMapping("/auth")
     public ResponseEntity editPost(HttpServletRequest request, @ModelAttribute PostDTO post) {
-        System.out.println("Request: " + post.toString());
 
         Map<String, String> result = new HashMap<>();
 
@@ -141,7 +139,6 @@ public class PostController {
     // 댓글
     @PostMapping("/auth/review")
     public ResponseEntity postReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
-        System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, Object> result = new HashMap<>();
 
@@ -167,7 +164,6 @@ public class PostController {
 
     @PutMapping("/auth/review")
     public ResponseEntity editReview(HttpServletRequest request, @RequestBody PostReviewDTO postReviewDTO) {
-        System.out.println("Request: " + postReviewDTO.toString());
 
         Map<String, Object> result = new HashMap<>();
         if(postReviewDTO.getReview() == null || postReviewDTO.getReview().isEmpty()) {
@@ -191,7 +187,6 @@ public class PostController {
 
     @DeleteMapping("/auth/review")
     public ResponseEntity deleteReview(HttpServletRequest request, @RequestBody Map<String, Long> postDeleteReq) {
-        System.out.println("Request: " + postDeleteReq.toString());
 
         Map<String, Object> result = new HashMap<>();
         try{
@@ -211,7 +206,6 @@ public class PostController {
     public ResponseEntity getReviewAll(HttpServletRequest request, @RequestParam(value = "postId") Long p_id,
                                         @RequestParam(value = "asc", defaultValue = "false") Boolean asc,
                                         @PageableDefault(size=10, page = 0) Pageable pageable){
-        System.out.println("p_id: " + p_id);
 
         Map<String, String> result = new HashMap<>();
         if (p_id == null){
@@ -258,7 +252,7 @@ public class PostController {
 
     @GetMapping(value="/auth/like/list")
     public ResponseEntity getLikeList(HttpServletRequest request, @RequestParam(value = "postId") Long p_id,
-                            @PageableDefault(size=10, page=0) Pageable pageable){
+                            @PageableDefault(size=15, page=0) Pageable pageable){
         Map<String, String> data = new HashMap<>();
         try {
             Long uid = Long.valueOf((String) request.getAttribute("uid"));

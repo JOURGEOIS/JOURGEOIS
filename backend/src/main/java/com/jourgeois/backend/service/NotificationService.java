@@ -53,7 +53,7 @@ public class NotificationService {
         notificationDTO.setTimestamp(Timestamp.now());
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
-        System.out.println("Create Follow Notification - " + result.get().getUpdateTime());
+//        System.out.println("Create Follow Notification - " + result.get().getUpdateTime());
 
         return true;
     }
@@ -72,7 +72,7 @@ public class NotificationService {
 
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
-        System.out.println("Create Like Notification - " + result.get().getUpdateTime());
+//        System.out.println("Create Like Notification - " + result.get().getUpdateTime());
 
         return true;
     }
@@ -90,7 +90,7 @@ public class NotificationService {
         notificationDTO.setTimestamp(Timestamp.now());
 
         ApiFuture<WriteResult> result = docRef.set(notificationDTO);
-        System.out.println("Create Comment Notification - " + result.get().getUpdateTime());
+//        System.out.println("Create Comment Notification - " + result.get().getUpdateTime());
 
         return true;
     }
@@ -101,7 +101,7 @@ public class NotificationService {
 
         ApiFuture<WriteResult> future = docRef.update("isRead", true);
         WriteResult result = future.get();
-        System.out.println("changeToBeRead result - " + result);
+//        System.out.println("changeToBeRead result - " + result);
 
         return true;
     }
@@ -116,10 +116,6 @@ public class NotificationService {
         }
 
         ApiFuture<List<WriteResult>> future = batch.commit();
-
-        for(WriteResult result : future.get()) {
-            System.out.println("Update time : " + result.getUpdateTime());
-        }
 
         return true;
     }
@@ -153,14 +149,20 @@ public class NotificationService {
                 .whereGreaterThan("timestamp", halfday)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .startAt(lastDoc)
-                .limit(10)
+                .limit(15)
                 .get();
         List<QueryDocumentSnapshot> documents = query.get().getDocuments();
 
         for (DocumentSnapshot document : documents) {
             NotificationDTO notificationDTO = document.toObject(NotificationDTO.class);
             Long opponentUid = notificationDTO.getUid();
-            Member opponent = memberRepository.findById(opponentUid).orElseThrow(()-> new NoSuchElementException("상대 유저 정보가 없습니다."));
+            Member opponent = memberRepository.findById(opponentUid).orElse(null);
+
+            // 존재하지 않는 유저의 알림이면 보내지 않음
+            if(opponent == null) {
+                continue;
+            }
+
             OpponentDTO notiOpponentDTO = OpponentDTO.builder()
                     .uid(opponent.getUid())
                     .img(S3Util.s3urlFormatter(opponent.getProfileImg()))

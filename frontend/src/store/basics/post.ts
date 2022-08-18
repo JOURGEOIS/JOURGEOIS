@@ -2,7 +2,7 @@ import { Module } from "vuex";
 import { RootState } from "../index";
 import axios from "axios";
 import api from "../../api/api";
-import { User } from "../../interface";
+import { User, NewsFeed } from "../../interface";
 
 export interface PostState {
   // * 좋아요 누른 유저리스트
@@ -85,16 +85,18 @@ export const post: Module<PostState, RootState> = {
     // params에는 postId(feedId), 좋아요 후 새로 불러오는 set actions
     // data에는 set actions에 인자 객체를 넣는다.
     toggleLike: ({ rootGetters, dispatch }, params) => {
+      console.log(params);
       axios({
         url: api.post.toggleLike(),
         method: "POST",
         headers: {
           Authorization: rootGetters["personalInfo/getAccessToken"],
         },
-        data: { postId: params.postId, uid: 41003 },
+        data: { postId: params.postId },
       })
         .then((res) => {
           dispatch(params.func, params.data, { root: true });
+          dispatch("newsFeed/removeNewsFeedListData", {}, { root: true });
         })
         .catch((error) => {
           if (error.response.status !== 401) {

@@ -3,6 +3,7 @@
     <!-- 칵테일 어워즈 배너 -->
     <section class="cocktail-awards-section">
       <the-cocktail-awards-banner
+        class="home-cocktail-awards-banner"
         image-url="https://jourgeois-profile-image.s3.ap-northeast-2.amazonaws.com/default/jurjeois_home_banner.gif"
         @click="$router.push({ name: 'TheCocktailAwardsView' })"
       ></the-cocktail-awards-banner>
@@ -115,6 +116,7 @@ const isBookMarked = computed(
   @include shadow-feed;
   background-color: $white;
   margin-top: -10px;
+  border-radius: 0px 0px 10px 10px;
 }
 
 .title {

@@ -8,6 +8,8 @@ export interface ModalState {
   errorModalAppStatus: boolean;
   errorModalAppMessage: string;
   loadingStatus: boolean;
+  successModalAppStatus: boolean;
+  successModalAppMessage: string;
 }
 
 export const modal: Module<ModalState, RootState> = {
@@ -18,6 +20,8 @@ export const modal: Module<ModalState, RootState> = {
     errorModalAppStatus: false,
     errorModalAppMessage: "",
     loadingStatus: false,
+    successModalAppStatus: false,
+    successModalAppMessage: "",
   },
 
   getters: {
@@ -33,6 +37,12 @@ export const modal: Module<ModalState, RootState> = {
     getLoadingStatus: (state) => {
       return state.loadingStatus;
     },
+    getSuccessModalAppStatus: (state) => {
+      return state.successModalAppStatus;
+    },
+    getSuccessModalAppMessage: (state) => {
+      return state.successModalAppMessage;
+    },
   },
 
   mutations: {
@@ -47,6 +57,12 @@ export const modal: Module<ModalState, RootState> = {
     },
     SET_LOADING_STATUS: (state, value: boolean) => {
       state.loadingStatus = value;
+    },
+    SET_SUCCESS_MODAL_APP: (state, value: boolean) => {
+      state.successModalAppStatus = value;
+    },
+    SET_SUCCESS_MODAL_MESSAGE: (state, value: string) => {
+      state.successModalAppMessage = value;
     },
   },
 
@@ -74,6 +90,18 @@ export const modal: Module<ModalState, RootState> = {
       setTimeout(() => {
         commit("SET_ERROR_MODAL_APP", false);
       }, 2000);
+    },
+    toggleSuccessModalAppStatus: ({ commit }, value: boolean) => {
+      commit("SET_SUCCESS_MODAL_APP", value);
+    },
+    blinkSuccessModalAppStatus: ({ commit }) => {
+      commit("SET_SUCCESS_MODAL_APP", true);
+      setTimeout(() => {
+        commit("SET_SUCCESS_MODAL_APP", false);
+      }, 2000);
+    },
+    changeSuccessModalMessage: ({ commit }, value: string) => {
+      commit("SET_SUCCESS_MODAL_MESSAGE", value);
     },
   },
 };

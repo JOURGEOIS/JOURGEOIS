@@ -14,22 +14,24 @@
       :style="{ backgroundImage: `url(${newsFeedData.postImg})` }"
       @click="moveFeedDescription"
     ></div>
-    <div
-      class="the-news-feed-cocktail"
-      v-if="newsFeedData.type === 'cocktail'"
-      @click="moveFeedDescription"
-    >
-      <span class="material-icons"> local_bar </span>
-      <p v-if="!newsFeedData.isSuperCustomCocktail">
-        [{{ newsFeedData.baseCocktailName }}]
-      </p>
-      <p>
-        {{ newsFeedData.cocktailTitle }}
-      </p>
-    </div>
-    <div class="the-news-feed-content" @click="moveFeedDescription">
-      <p>{{ newsFeedData.description }}</p>
-    </div>
+    <article class="the-news-feed-article">
+      <div
+        class="the-news-feed-cocktail"
+        v-if="newsFeedData.type === 'cocktail'"
+        @click="moveFeedDescription"
+      >
+        <span class="material-icons"> local_bar </span>
+        <p v-if="!newsFeedData.isSuperCustomCocktail">
+          [{{ newsFeedData.baseCocktailName }}]
+        </p>
+        <p>
+          {{ newsFeedData.cocktailTitle }}
+        </p>
+      </div>
+      <div class="the-news-feed-content" @click="moveFeedDescription">
+        <p>{{ newsFeedData.description }}</p>
+      </div>
+    </article>
     <like-comment
       @clickLike="clickLike"
       :data="{ isLiked: newsFeedData.isLiked, postId: newsFeedData.postId }"
@@ -152,30 +154,36 @@ const clickProfileImage = () => {
     @include shadow-image;
   }
 
-  .the-news-feed-cocktail {
-    @include flex-xy(flex-start, center);
-    gap: 4px;
-    @include font($fs-md, $fw-medium);
-    color: $gray200;
-    cursor: pointer;
+  .the-news-feed-article {
+    @include flex(column);
+    margin-bottom: 8px;
 
-    .material-icons {
-      color: $primary500p;
+    gap: 8px;
+    .the-news-feed-cocktail {
+      @include flex-xy(flex-start, center);
+      gap: 4px;
+      @include font($fs-md, $fw-medium);
+      color: $gray200;
+      cursor: pointer;
+
+      .material-icons {
+        color: $primary500p;
+      }
     }
-  }
-  .the-news-feed-content {
-    margin-bottom: 8px;
-    @include font($fs-md, $fw-medium);
-    cursor: pointer;
-    margin-bottom: 8px;
+    .the-news-feed-content {
+      @include font($fs-md, $fw-regular);
+      color: $sub-color;
 
-    p {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      span {
-        color: $white400;
+      cursor: pointer;
+
+      p {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        span {
+          color: $white400;
+        }
       }
     }
   }

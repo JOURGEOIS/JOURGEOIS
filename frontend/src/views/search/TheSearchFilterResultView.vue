@@ -67,9 +67,6 @@ onBeforeMount(() => {
   window.addEventListener("scroll", handleScroll);
   store.dispatch("cocktailSearch/submitSearchFilter");
   setSearchFilter();
-  setTimeout(() => {
-    setSearchFilter();
-  }, 1000);
 });
 
 // 떠날 때, 정보 제거

@@ -19,9 +19,10 @@ const image = computed(() => {
 <style scoped lang="scss">
 .the-cocktail-awards-banner {
   width: 100%;
+  margin: 0 auto;
   aspect-ratio: 2/1;
+  border-radius: 10px;
   background: {
-    color: $primary700;
     repeat: none;
     size: cover;
     position: center center;

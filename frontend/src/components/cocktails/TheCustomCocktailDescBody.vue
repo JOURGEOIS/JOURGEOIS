@@ -191,7 +191,7 @@ const clickDelete = () => {
 
   .cocktail-image {
     width: calc(100% + 16px);
-    margin: 0 -8px;
+    margin: 0px -8px 8px -8px;
     aspect-ratio: 1/1;
     border-radius: 10px;
     background : {

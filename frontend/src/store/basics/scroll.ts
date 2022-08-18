@@ -38,8 +38,8 @@ export const scroll: Module<ScrollState, RootState> = {
         const { scrollHeight, scrollTop, clientHeight } =
           data.event.target.scrollingElement;
         const isAtTheBottom =
-          scrollHeight < scrollTop + clientHeight + 10 &&
-          scrollHeight > scrollTop + clientHeight - 10;
+          scrollHeight < scrollTop + clientHeight + 70 &&
+          scrollHeight > scrollTop + clientHeight - 70;
         if (isAtTheBottom) {
           dispatch(data.action, data.data, { root: true });
         }

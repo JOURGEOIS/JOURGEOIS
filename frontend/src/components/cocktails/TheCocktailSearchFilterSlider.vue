@@ -148,8 +148,10 @@ watch(sliderRightValue, () => {
 <style scoped lang="scss">
 .cocktail-search-filter-slider-container {
   @include flex(column);
+  align-items: center;
+  margin: 0 auto;
   gap: 32px;
-  width: 100%;
+  width: 95%;
   .cocktail-search-filter-slider-input {
     @include flex(column);
     position: relative;

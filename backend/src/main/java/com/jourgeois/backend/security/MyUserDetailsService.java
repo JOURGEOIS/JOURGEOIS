@@ -29,7 +29,6 @@ public class MyUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findById(Long.parseLong(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Member uid : " + username + " was not found"));
 
-        System.out.println(member.getEmail());
         return createUserDetails(member);
     }
 

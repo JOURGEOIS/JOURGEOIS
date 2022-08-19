@@ -231,7 +231,6 @@ export const cocktailDesc: Module<CocktailDescState, RootState> = {
         },
       })
         .then((response) => {
-          console.log(response.data);
           commit("ADD_COCKTAIL_BOOKMARK_USER_LIST", response.data);
           commit("SET_COCKTAIL_BOOKMARK_USER_PAGE", page + 1);
         })

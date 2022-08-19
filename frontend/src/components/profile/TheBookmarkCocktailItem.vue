@@ -1,6 +1,6 @@
 <template>
   <!-- 카드 -->
-  <div class="bookmark-item-card">
+  <div class="bookmark-item-card" @click="clickDetail">
     <!-- 이미지 -->
     <div
       class="bookmark-item-image"
@@ -11,12 +11,7 @@
     <p>{{ nameKR }}</p>
 
     <!-- 상세보기 -->
-    <button
-      class="bookmark-item-btn detail"
-      @click="clickDetail"
-    >
-      상세보기
-    </button>
+    <button class="bookmark-item-btn detail">상세보기</button>
   </div>
 </template>
 
@@ -35,10 +30,10 @@ const props = defineProps<{
   bookmark: userBookmarkData;
 }>();
 
-const cocktailId = props.bookmark.cocktailId
+const cocktailId = props.bookmark.cocktailId;
 
-const originalCocktailImg = props.bookmark.img
-const nameKR = props.bookmark.nameKR
+const originalCocktailImg = props.bookmark.img;
+const nameKR = props.bookmark.nameKR;
 
 const clickDetail = () => {
   router.push({
@@ -48,7 +43,6 @@ const clickDetail = () => {
     },
   });
 };
-
 </script>
 
 <style scoped lang="scss">
@@ -94,6 +88,5 @@ const clickDetail = () => {
     background-color: $primary400;
     color: $white;
   }
-
 }
 </style>

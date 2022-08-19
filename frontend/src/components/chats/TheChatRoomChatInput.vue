@@ -1,9 +1,9 @@
 <template>
-  <section class="the-chat-room-form">
+  <section class="the-chat-room-form" :class="{ active: chatRoomStatus }">
     <form @submit.prevent="submitTheChatRoomForm">
       <input
         type="text"
-        maxlength="40"
+        maxlength="60"
         placeholder="메세지를 입력해주세요"
         v-model="chatInputValue"
       />
@@ -17,7 +17,6 @@
         <span class="material-icons"> send </span>
       </button>
     </form>
-    <div class="the-chat-room-div"></div>
     <div class="the-chat-room-emoji" v-show="chatRoomStatus">
       <div
         v-for="(emoji, index) in emojiList"
@@ -117,30 +116,14 @@ const submitTheChatRoomForm = () => {
 </script>
 
 <style scoped lang="scss">
-@keyframes start {
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-  from {
-    transform: translate3d(0, 100%, 0);
-  }
-}
-
-@keyframes end {
-  to {
-    transform: translate3d(0, 100%, 0);
-  }
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 .the-chat-room-form {
   @include flex(column);
+  gap: 8px;
   position: fixed;
-  bottom: 80px;
-  border-radius: 1em 1em 0em 0em;
+  bottom: 50px;
   width: calc(100% - 32px);
+  height: 80px;
+  border-radius: 1em 1em 0em 0em;
   background-color: $white;
 
   @media #{$tablet} {
@@ -198,11 +181,7 @@ const submitTheChatRoomForm = () => {
       margin-top: 5px;
     }
   }
-  .the-chat-room-div {
-    width: 100%;
-    height: 8px;
-    background-color: $white;
-  }
+
   .the-chat-room-emoji {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(14%, auto));
@@ -219,5 +198,9 @@ const submitTheChatRoomForm = () => {
       cursor: pointer;
     }
   }
+}
+
+.active {
+  bottom: 256px;
 }
 </style>

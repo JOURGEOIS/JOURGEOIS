@@ -144,18 +144,6 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
         return;
       }
 
-      // 개인정보 수집
-      const isAgreeRequired = !isAgree;
-      if (isAgreeRequired) {
-        dispatch(
-          "modal/changeErrorModalMessage",
-          "개인정보 수집에 동의해주세요",
-          { root: true }
-        );
-        dispatch("modal/blinkErrorModalAppStatus", {}, { root: true });
-        return;
-      }
-
       // 비속어 검사
       const titleCheck = checkBadWord(title);
       const descriptionCheck = checkBadWord(description);
@@ -163,6 +151,18 @@ export const cocktailAwards: Module<CocktailAwardsState, RootState> = {
         dispatch(
           "modal/changeErrorModalMessage",
           "부적절한 언어가 포함되었습니다",
+          { root: true }
+        );
+        dispatch("modal/blinkErrorModalAppStatus", {}, { root: true });
+        return;
+      }
+
+      // 개인정보 수집
+      const isAgreeRequired = !isAgree;
+      if (isAgreeRequired) {
+        dispatch(
+          "modal/changeErrorModalMessage",
+          "개인정보 수집에 동의해주세요",
           { root: true }
         );
         dispatch("modal/blinkErrorModalAppStatus", {}, { root: true });

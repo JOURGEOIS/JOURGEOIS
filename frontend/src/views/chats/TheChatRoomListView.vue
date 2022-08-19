@@ -64,6 +64,7 @@ onBeforeMount(async () => {
 
 // Unmounted되면 Snapshot 닫기
 onUnmounted(() => {
+  store.dispatch("chatRoom/resetChatRoomList");
   store.dispatch("chatRoom/checkChatRoomList");
 });
 

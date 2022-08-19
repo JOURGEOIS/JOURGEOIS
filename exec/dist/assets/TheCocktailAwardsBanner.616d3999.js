@@ -1,0 +1,1 @@
+import{d as s,h as r,c as t,n as o,u as c,o as l,_}from"./index.b8a0ac78.js";const p=s({__name:"TheCocktailAwardsBanner",props:{imageUrl:null},setup(e){const a=e,n=r(()=>`url(${a.imageUrl})`);return(d,i)=>(l(),t("div",{style:o({backgroundImage:c(n)}),class:"the-cocktail-awards-banner"},null,4))}});const m=_(p,[["__scopeId","data-v-75791526"]]);export{m as T};

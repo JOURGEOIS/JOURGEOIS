@@ -37,4 +37,8 @@ out/
 .vscode/
 
 ### local ###
-# **/src/main/resources/application.yml
+**/src/main/resources/*.yml
+**/src/main/resources/*.properties
+**/src/main/resources/*.json
+
+

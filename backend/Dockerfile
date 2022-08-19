@@ -2,7 +2,7 @@ FROM openjdk:11-jdk
 
 WORKDIR /app
 
-COPY ./build/libs/*SNAPSHOT.jar application.jar
+COPY ../build/libs/*SNAPSHOT.jar application.jar
 
 EXPOSE 8080
 

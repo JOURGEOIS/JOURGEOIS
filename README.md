@@ -220,7 +220,7 @@
 
 | Docs               | Link                                                         |
 | ------------------ | ------------------------------------------------------------ |
-| **Wiki**           | **[링크**]()                                                 |
+| **Wiki**           | **[링크](https://github.com/piacu/jourgeois-repo/wiki)**     |
 | FE 요구사항 정의서 | [링크](https://docs.google.com/spreadsheets/d/1zRahvEscoiUu_VIQf6rIBG2hMWhvO97oRn21FOwlSLQ/edit?usp=sharing) |
 | BE 요구사항 정의서 | [링크](https://docs.google.com/spreadsheets/d/1pf_7axAoF9G9fQhXGwSEn_ehM93N6FQ2jPbWGZi1NVA/edit?usp=sharing) |
 | QA                 | [링크](https://docs.google.com/spreadsheets/d/1w5iTH2fNnUKf4BgKUhDzwl-UsSLsurpaS8ZLt6HL7PA/edit?usp=sharing) |

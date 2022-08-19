@@ -13,8 +13,8 @@ services:
                         - "443:443"
                 restart: always
                 volumes:
-                        - /home/ubuntu/cnf/etc/myweb:/usr/share/nginx/html
-                        - /home/ubuntu/cnf/etc/certbot-etc:/etc/letsencrypt
+                        #– ./myweb:/usr/share/nginx/html
+      		#– ./certbot-etc:/etc/letsencrypt
                         - ./nginx/nginx.conf:/etc/nginx/nginx.conf
         nginx:
                 build: ./frontend
@@ -26,34 +26,31 @@ services:
                 environment:
                         MARIADB_DATABASE: test
                         MARIADB_USER: test
-                        MARIADB_PASSWORD: 1234
+                        MARIADB_PASSWORD: 1q2w3e4r!@#
                         MARIADB_ROOT_PASSWORD: 1q2w3e4r!@#
                 volumes:
-                        - /home/ubuntu/cnf/db/data/mysql:/var/lib/mysql
-                        - /home/ubuntu/cnf/db/cnf:/etc/mysql/conf.d
+                        – ./cnf/db/cnf:/etc/mysql/conf.d
                 ports:
                         - "3306:3306"
         redis:
                 image: redis:alpine
-                volumes:
-                        - /home/ubuntu/cnf/redis/data:/data
         springboot:
                 build: ./backend
                 restart: always
                 environment:
                         SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/test?useUnicode=true
                         SPRING_DATASOURCE_USERNAME: test
-                        SPRING_DATASOURCE_PASSWORD: 1234
+                        SPRING_DATASOURCE_PASSWORD: 1q2w3e4r!@#
                 ports:
                         - "8080"
                 depends_on:
                         - db
                         - redis
-        certbot:
-                depends_on:
-                        - nginxproxy
-                image: certbot/certbot
-                volumes:
-                        - /home/ubuntu/cnf/etc/certbot-etc:/etc/letsencrypt
-                        - /home/ubuntu/cnf/etc/myweb:/usr/share/nginx/html
-                command: certonly --webroot --webroot-path=/usr/share/nginx/html --email jourgeois.ad@gmail.com --agree-tos --no-eff-email -d jourgeois.com -d www.jourgeois.com --keep-until-expiring
+        #certbot:
+        #       depends_on:
+        #                - nginxproxy
+        #        image: certbot/certbot
+        #        volumes:
+        #                – ./certbot-etc:/etc/letsencrypt
+        #                – ./myweb:/usr/share/nginx/html
+        #	      command: certonly --weboot --webroot-path=/usr/share/nginx/html --email "인증서 재발급시 필요한 인증 메일 주소" --agree-tos --no-eff-email -d “서버 주소 도메인”--keep-until-expiring

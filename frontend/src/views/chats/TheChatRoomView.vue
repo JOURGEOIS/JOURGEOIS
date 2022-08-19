@@ -96,9 +96,9 @@ onMounted(() => {
     @include flex(column);
     align-items: center;
     position: absolute;
-    top: 144px;
+    top: 176px;
     width: 100%;
-    height: calc(100% - 224px);
+    height: calc(100% - 288px);
 
     @media #{$tablet} {
       width: 80%;
@@ -110,7 +110,7 @@ onMounted(() => {
   }
 
   > .active {
-    height: calc(100% - 432px);
+    height: calc(100% - 496px);
   }
 }
 </style>

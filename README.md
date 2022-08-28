@@ -122,6 +122,9 @@
 
 ### **4. 칵테일 추천**
 
+|HOME|전체보기|검색어 추천|
+|:---:|:---:|:---:|
+|![4-1  홈 전체](https://user-images.githubusercontent.com/86189596/187073679-29d486b2-b497-4a6f-9a5e-cd7b8db38169.gif)|![4-2  전체 보기](https://user-images.githubusercontent.com/86189596/187073684-227c62ee-d4e2-4f9f-a5b2-ae437bec3c27.gif)|![4-3  인기 검색어 검색](https://user-images.githubusercontent.com/86189596/187073682-72e711ad-6674-4df6-9907-24a7d6d37d78.gif)|
 
 
 - `상황별 추천`: 친구들과 함께, 연인과 함께 등 상황별 어울리는 칵테일 추천
@@ -144,7 +147,9 @@
 
 ### 6. 칵테일 어워즈
 
-
+|어워즈 탭|어워즈 등록|
+|:---:|:---:|
+|![6-1  어워즈 탭](https://user-images.githubusercontent.com/86189596/187073836-aa11915c-a236-4ba6-bb21-e1823d91f7c8.gif)|![6-2  어워즈 등록](https://user-images.githubusercontent.com/86189596/187073796-cda2c0f5-bb94-4ed7-9c81-924d96366327.gif)|
 
 - `참여`: 일정 기간동안 열리는 칵테일 관련 어워즈에 참가자로서 참여 가능
 - `투표`: 참가작들을 한 눈에 보고 마음에 드는 칵테일에 투표
@@ -153,7 +158,9 @@
 
 ### **7. 프로필**
 
-
+|프로필 탭|공개 설정|
+|:---:|:---:|
+|![7-1  프로필 페이지 탭](https://user-images.githubusercontent.com/86189596/187073804-3ddb7409-f7dc-4ad3-bb72-6f0051991c6f.gif)|![7-2  비공개 공개 설정](https://user-images.githubusercontent.com/86189596/187073805-533931e5-46f7-42ae-aa47-ae0dc73b90b9.gif)|
 
 - `채팅`: 채팅을 통한 즉각적인 소통
 - `프로필 공개 설정`: 다른 유저에게 프로필 노출 여부 선택

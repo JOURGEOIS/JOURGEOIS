@@ -3,9 +3,10 @@
 ![icon-bold-line-nobackground](https://user-images.githubusercontent.com/26267376/185445173-385ec22d-5987-4efc-bbd4-9be4d0b2042c.png)
 <br>
 
-- [Notion](https://www.notion.so/JOURGEOIS-7e834c817aac447a93f05d1b8573c52e)
-- [Figma](https://www.figma.com/file/B7asQUxDc0TBGqNyaGr0fW/%EA%B3%B5%ED%86%B5%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-JJUA?node-id=83%3A571)
-- [UCC](https://youtu.be/rWbYcB-sBJ0)
+### 🍸 https://jourgeois.com/
+**모바일 환경을 기반으로 제작되었기 때문에, 모바일로 보는 것을 추천드립니다 😉**
+
+### [Notion](https://www.notion.so/JOURGEOIS-7e834c817aac447a93f05d1b8573c52e) / [Figma](https://www.figma.com/file/B7asQUxDc0TBGqNyaGr0fW/%EA%B3%B5%ED%86%B5%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-JJUA?node-id=83%3A571) / [UCC](https://youtu.be/rWbYcB-sBJ0) / [WIKI](https://github.com/piacu/jourgeois-repo/wiki)
 
 <br>
 
@@ -44,53 +45,17 @@
 
 # ⚡ **기술 스택**
 
-### 1. **Frontend**
-
-- Vue : 3.2.37
-- Vue-router : 4.1.2
-- Vuex : 4.0.2
-- Sass : 1.53.0
-- Node-sass : 7.0.1
-- Ssas-loader: 7.1.0
-- Typescript : 4.6.4
-- Vite : 3.0.0
-- Vue-tsc : 0.38.4
-
-<br>
-
-### 2. **Backend**
-
-- Java : OpenJDK 11
-- Spring Boot 2.7.1
-- Spring Data JPA 2.7.1
-- Spring Security 5.7.2
-- JWT
-- OAuth 2.0
-
-<br>
-
-### 3. **DB**
-
-- MariaDB 10.8
-- Redis
-- Cloud Firestore
-
-<br>
-
-### 4. **CI/CD**
-
-- AWS EC2
-- Docker
-- Jenkins
-- NGINX
-- SSL
-
-<br>
-
-### 5. IDE
-
-- IntelliJ IDEA 2022.1.3
-- Vscode 1.70.0
+| 1. Frontend        | 2. Backend            | 3. DB           | 4. CI/CD | 5. IDE                 |
+| ------------------ | --------------------- | --------------- | -------- | ---------------------- |
+| Vue  3.2.37        | Java  `OpenJDK 11`    | MariaDB 10.8    | AWS EC2  | IntelliJ IDEA 2022.1.3 |
+| Vue-router 4.1.2   | Spring Boot 2.7.1     | Redis           | Docker   | Vscode 1.70.0          |
+| Vue-tsc  0.38.4    | Spring Data JPA 2.7.1 | Cloud Firestore | Jenkins  |                        |
+| Vuex  4.0.2        | Spring Security 5.7.2 |                 | NGINX    |                        |
+| Sass  1.53.0       | JWT                   |                 | SSL      |                        |
+| Node-sass  7.0.1   | OAuth 2.0             |                 |          |                        |
+| Ssas-loader  7.1.0 |                       |                 |          |                        |
+| Typescript 4.6.4   |                       |                 |          |                        |
+| Vite 3.0.0         |                       |                 |          |                        |
 
 <br>
 
@@ -110,11 +75,16 @@
 
 ### **1. 칵테일 정보**
 
+
+
+
+
+- `검색`: 칵테일 이름, 재료 키워드로 검색 & 자동완성을 기능을 통해 편리하게 검색 가능
+- `필터`: 도수, 재료 필터를 통한 맞춤 칵테일 검색
+
 <br>
 
-![Frame 219](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20219.png)
 
-<br>
 
 - `정보`: 다양한 칵테일에 대한 정보 확인 (재료, 도수, 레시피 등)
 - `후기`: 유저들의 칵테일에 대한 솔직한 후기
@@ -122,31 +92,16 @@
 
 <br>
 
-![Frame 220](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20220.png)
-
-<br>
-
-- `검색`: 칵테일 이름, 재료 키워드로 검색 & 자동완성을 기능을 통해 편리하게 검색 가능
-- `필터`: 도수, 재료 필터를 통한 맞춤 칵테일 검색
-
-<br>
-
 ### 2. 게시글
 
-<br>
 
-![Frame 221](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20221.png)
-
-<br>
 
 - **`커스텀 칵테일`: 나만의 칵테일을 만들어 재료, 레시피를 유저들과 공유**
 - `일반 게시글`: 칵테일 바 후기, 일상 이야기 등 일반 게시글도 업로드 가능
 
 <br>
 
-![Frame 218](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20218.png)
 
-<br>
 
 - `댓글과 좋아요`: 댓글과 좋아요를 통한 유저들 간의 소통
 - `공유하기`: 페이스북, 트위터, 카카오톡 공유하기 기능을 활용한 게시글 공유
@@ -155,11 +110,11 @@
 
 ### **3. 뉴스피드**
 
-<br>
 
-![Frame 222](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20222.png)
 
-<br>
+
+
+
 
 - `팔로우, 팔로잉`: 유저를 팔로우하여, 팔로우한 유저들의 게시글을 일괄적으로 확인
 
@@ -167,9 +122,7 @@
 
 ### **4. 칵테일 추천**
 
-<br>
 
-![Frame 206](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20206.png)<br>
 
 - `상황별 추천`: 친구들과 함께, 연인과 함께 등 상황별 어울리는 칵테일 추천
 - `취향 분석`: 취향 분석을 통한 비슷한 칵테일 추천
@@ -181,7 +134,7 @@
 
 ### 5. 채팅 & 알림
 
-![Frame 213](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20213.png)
+
 
 - `실시간 채팅`: 1:1 채팅을 통한 실시간 소통
 - `알림`: 다른 유저가 나를 팔로우하거나, 내가 작성한 게시글에 반응하면 생성되는 알림
@@ -191,11 +144,7 @@
 
 ### 6. 칵테일 어워즈
 
-<br>
 
-![Frame 225](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20225.png)
-
-<br>
 
 - `참여`: 일정 기간동안 열리는 칵테일 관련 어워즈에 참가자로서 참여 가능
 - `투표`: 참가작들을 한 눈에 보고 마음에 드는 칵테일에 투표
@@ -204,11 +153,7 @@
 
 ### **7. 프로필**
 
-<br>
 
-![Frame 226](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/Frame%20226.png)
-
-<br>
 
 - `채팅`: 채팅을 통한 즉각적인 소통
 - `프로필 공개 설정`: 다른 유저에게 프로필 노출 여부 선택
@@ -218,12 +163,14 @@
 
 # 📖 문서
 
-| Docs               | Link                                                         |
+| Docs               | Link                                                         | 
 | ------------------ | ------------------------------------------------------------ |
-| **Wiki**           | **[링크](https://github.com/piacu/jourgeois-repo/wiki)**     |
-| FE 요구사항 정의서 | [링크](https://docs.google.com/spreadsheets/d/1zRahvEscoiUu_VIQf6rIBG2hMWhvO97oRn21FOwlSLQ/edit?usp=sharing) |
-| BE 요구사항 정의서 | [링크](https://docs.google.com/spreadsheets/d/1pf_7axAoF9G9fQhXGwSEn_ehM93N6FQ2jPbWGZi1NVA/edit?usp=sharing) |
-| QA                 | [링크](https://docs.google.com/spreadsheets/d/1w5iTH2fNnUKf4BgKUhDzwl-UsSLsurpaS8ZLt6HL7PA/edit?usp=sharing) |
+| FE 요구사항 정의서  | [링크](https://docs.google.com/spreadsheets/d/1zRahvEscoiUu_VIQf6rIBG2hMWhvO97oRn21FOwlSLQ/edit?usp=sharing) |
+| BE 요구사항 정의서  | [링크](https://docs.google.com/spreadsheets/d/1pf_7axAoF9G9fQhXGwSEn_ehM93N6FQ2jPbWGZi1NVA/edit?usp=sharing) |
+| QA                 | [링크](https://docs.google.com/spreadsheets/d/1w5iTH2fNnUKf4BgKUhDzwl-UsSLsurpaS8ZLt6HL7PA/edit?usp=sharing) | 
 | WBS                | [링크](https://docs.google.com/spreadsheets/d/1gVU32Xnl-toC6h20yMdjTmaKZh2UeZDDjoCkMPYtOb0/edit?usp=sharing) |
+| 1주차 발표자료      | [링크](https://cyclic-traffic-ddc.notion.site/PJT-SUB1-637bd95b39e84943af073e884babdb85) |
+| 2주차 발표자료      | [링크](https://cyclic-traffic-ddc.notion.site/PJT-SUB2-b571b3a448954e5e813e3df121b6ad45) |
+| 3주차 발표자료      | [링크](https://cyclic-traffic-ddc.notion.site/PJT-Final-ccc674c39e2443a3b1be65bc3c5ed024) |
 
 <br>

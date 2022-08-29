@@ -75,15 +75,19 @@
 
 ### **1. 칵테일 정보**
 
-
-
-
+|검색|필터|
+|:---:|:---:|
+|![jourjeous_1-1](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_1-1.gif)|![jourjeous_1-2](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_1-2.gif)|
 
 - `검색`: 칵테일 이름, 재료 키워드로 검색 & 자동완성을 기능을 통해 편리하게 검색 가능
 - `필터`: 도수, 재료 필터를 통한 맞춤 칵테일 검색
 
 <br>
+<br>
 
+|칵테일 정보|칵테일 북마크|커스텀 칵테일|
+|:---:|:---:|:---:|
+|![jourjeous_1-3](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_1-3.gif)|![jourjeous_1-4](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_1-4.gif)|![jourjeous_1-5](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_1-5.gif)|
 
 
 - `정보`: 다양한 칵테일에 대한 정보 확인 (재료, 도수, 레시피 등)
@@ -93,29 +97,27 @@
 <br>
 
 ### 2. 게시글
-
-
-
+|커스텀 칵테일|일반 게시글|
+|:---:|:---:|
+|![jourjeous_2-1](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_2-1.gif)|![jourjeous_2-2](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_2-2.gif)|
 - **`커스텀 칵테일`: 나만의 칵테일을 만들어 재료, 레시피를 유저들과 공유**
 - `일반 게시글`: 칵테일 바 후기, 일상 이야기 등 일반 게시글도 업로드 가능
 
 <br>
+<br>
 
-
-
+|댓글과 좋아요|공유하기|
+|:---:|:---:|
+|![jourjeous_2-3](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_2-3.gif)|![jourjeous_2-4](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_2-4.gif)|
 - `댓글과 좋아요`: 댓글과 좋아요를 통한 유저들 간의 소통
 - `공유하기`: 페이스북, 트위터, 카카오톡 공유하기 기능을 활용한 게시글 공유
 
 <br>
 
 ### **3. 뉴스피드**
-
-
-
-
-
-
-
+|뉴스피드 리스트|뉴스피드 게시글|
+|:---:|:---:|
+|![jourjeous_3-1](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_3-1.gif)|![jourjeous_3-2](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_3-2.gif)|
 - `팔로우, 팔로잉`: 유저를 팔로우하여, 팔로우한 유저들의 게시글을 일괄적으로 확인
 
 <br>
@@ -136,9 +138,9 @@
 <br>
 
 ### 5. 채팅 & 알림
-
-
-
+|채팅|알림|
+|:---:|:---:|
+|![jourjeous_5-1](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_5-1.gif)|![jourjeous_5-2](https://raw.githubusercontent.com/JaeKP/image_repo/main/img/jourjeous_5-2.gif)|
 - `실시간 채팅`: 1:1 채팅을 통한 실시간 소통
 - `알림`: 다른 유저가 나를 팔로우하거나, 내가 작성한 게시글에 반응하면 생성되는 알림
 - `알림 명세`: 알림 상세 명세를 클릭하여, 어디서 알림이 발생했는지 확인 가능
